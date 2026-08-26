@@ -27,6 +27,9 @@ public sealed class AgenticModelSelector
 {
     private static readonly IReadOnlyList<ToolDefinition> WeatherTool = [BuiltInTools.GetWeather.ToDefinition()];
 
+    /// <summary>Presupuesto de la sonda de thinking; el mismo que usa probe.py.</summary>
+    private const int ThinkingProbeBudget = 200;
+
     private readonly ITokenRouterClient _client;
     private readonly Action<string> _log;
 
@@ -110,6 +113,7 @@ public sealed class AgenticModelSelector
         // Informativas: no deciden si el modelo es agentico.
         await ProbeJsonModeAsync(modelId, report, cancellationToken).ConfigureAwait(false);
         await ProbeSystemMessageAsync(modelId, report, cancellationToken).ConfigureAwait(false);
+        await ProbeThinkingAsync(modelId, report, cancellationToken).ConfigureAwait(false);
 
         return report;
     }
@@ -163,11 +167,11 @@ public sealed class AgenticModelSelector
                 cancellationToken).ConfigureAwait(false);
 
             var parsed = CompletionParser.Parse(raw);
-            var supported = !string.IsNullOrWhiteSpace(parsed.Content) || parsed.IsReasoningOnly;
+            var supported = !string.IsNullOrWhiteSpace(parsed.Content) || parsed.IsThinkingOnly;
             var evidence = parsed.Content is { Length: > 0 }
                 ? $"content=\"{Shorten(parsed.Content, 60)}\""
-                : parsed.IsReasoningOnly
-                    ? "solo reasoning_content"
+                : parsed.IsThinkingOnly
+                    ? "solo razonamiento, sin content"
                     : $"vacio (finish_reason={parsed.FinishReason})";
 
             report.Record(new CapabilityProbe(CapabilityNames.Chat, supported, evidence, stopwatch.Elapsed.TotalMilliseconds, null));
@@ -269,6 +273,110 @@ public sealed class AgenticModelSelector
             report.Record(new CapabilityProbe(
                 CapabilityNames.SystemMessage, false, string.Empty, stopwatch.Elapsed.TotalMilliseconds, $"[{ex.StatusCode}] {Shorten(ex.ProviderMessage)}"));
         }
+    }
+
+    /// <summary>
+    /// Manda el parametro thinking y comprueba si vuelve razonamiento. Es la sonda que
+    /// decide para que modelos se activa: puerto de _probe_reasoning de probe.py.
+    /// Un 400 por el parametro cuenta como "no lo soporta", no como fallo de la corrida.
+    /// </summary>
+    private async Task ProbeThinkingAsync(string modelId, ModelCapabilityReport report, CancellationToken cancellationToken)
+    {
+        var stopwatch = Stopwatch.StartNew();
+        try
+        {
+            var raw = await _client.CreateChatCompletionAsync(
+                new ChatRequest
+                {
+                    Model = modelId,
+                    Messages = [ChatMessage.FromUser("What is 17 * 23? Show your work briefly.")],
+                    // 400 con presupuesto de 200: hay que dejarle con que responder despues de pensar.
+                    MaxTokens = 400,
+                    Temperature = 0,
+                    Thinking = ThinkingOptions.Enabled(ThinkingProbeBudget),
+                },
+                cancellationToken).ConfigureAwait(false);
+
+            var thinking = CompletionParser.Parse(raw).Thinking;
+            var evidence = thinking.Observed
+                ? thinking.ToString()
+                : "sin reasoning_content";
+
+            report.Record(new CapabilityProbe(
+                CapabilityNames.Thinking, thinking.Observed, evidence, stopwatch.Elapsed.TotalMilliseconds, null));
+        }
+        catch (TokenRouterException ex)
+        {
+            // El cliente ya reintenta sin thinking cuando el backend rechaza el campo, asi
+            // que llegar aqui significa que fallo por otra cosa.
+            report.Record(new CapabilityProbe(
+                CapabilityNames.Thinking, false, string.Empty, stopwatch.Elapsed.TotalMilliseconds, $"[{ex.StatusCode}] {Shorten(ex.ProviderMessage)}"));
+        }
+    }
+
+    /// <summary>Lo que el ultimo sondeo sabe de una capacidad, por modelo.</summary>
+    public sealed record CapabilityIndex(IReadOnlySet<string> Supported, IReadOnlySet<string> Unsupported)
+    {
+        public static CapabilityIndex Empty { get; } = new(
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase),
+            new HashSet<string>(StringComparer.OrdinalIgnoreCase));
+
+        public int Known => Supported.Count + Unsupported.Count;
+    }
+
+    /// <summary>
+    /// Lee del artefacto que modelos pasaron o fallaron una capacidad. Es lo que deja al
+    /// harness activar el thinking donde hay evidencia sin volver a sondear en cada arranque.
+    /// Un modelo que nunca se sondeo no aparece en ninguno de los dos conjuntos: no saber
+    /// no es lo mismo que saber que no.
+    /// </summary>
+    public static CapabilityIndex LoadCapabilityIndex(string capability, string artifactPath)
+    {
+        if (!File.Exists(artifactPath))
+        {
+            return CapabilityIndex.Empty;
+        }
+
+        var supported = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var unsupported = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        try
+        {
+            using var document = JsonDocument.Parse(File.ReadAllText(artifactPath));
+
+            foreach (var section in new[] { "agentic_models", "all_probed" })
+            {
+                if (!document.RootElement.TryGetProperty(section, out var models) ||
+                    models.ValueKind != JsonValueKind.Array)
+                {
+                    continue;
+                }
+
+                foreach (var model in models.EnumerateArray())
+                {
+                    if (model.TryGetProperty("model_id", out var id) is false ||
+                        id.GetString() is not { Length: > 0 } modelId ||
+                        model.TryGetProperty("capabilities", out var capabilities) is false ||
+                        capabilities.ValueKind != JsonValueKind.Object ||
+                        capabilities.TryGetProperty(capability, out var probe) is false ||
+                        probe.TryGetProperty("supported", out var flag) is false)
+                    {
+                        continue;
+                    }
+
+                    (flag.ValueKind == JsonValueKind.True ? supported : unsupported).Add(modelId);
+                }
+            }
+        }
+        catch (JsonException)
+        {
+            // artefacto corrupto: se prefiere no saber a inventarse soporte
+            return CapabilityIndex.Empty;
+        }
+
+        // Una respuesta positiva pesa mas que una negativa vieja del mismo artefacto.
+        unsupported.ExceptWith(supported);
+        return new CapabilityIndex(supported, unsupported);
     }
 
     /// <summary>Guarda el reporte completo. Devuelve la ruta escrita.</summary>

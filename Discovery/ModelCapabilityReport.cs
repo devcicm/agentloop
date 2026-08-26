@@ -9,10 +9,13 @@ public static class CapabilityNames
     public const string JsonMode = "json_mode";
     public const string SystemMessage = "system_message";
 
+    /// <summary>El modelo acepta el parametro thinking y devuelve razonamiento.</summary>
+    public const string Thinking = "thinking";
+
     /// <summary>Las tres que un modelo debe pasar para considerarse agentico.</summary>
     public static readonly string[] RequiredForAgentic = [Accessible, Chat, ToolCalling];
 
-    public static readonly string[] All = [Accessible, Chat, ToolCalling, JsonMode, SystemMessage];
+    public static readonly string[] All = [Accessible, Chat, ToolCalling, JsonMode, SystemMessage, Thinking];
 }
 
 /// <summary>Resultado de una sonda individual.</summary>

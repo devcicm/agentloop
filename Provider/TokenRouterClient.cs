@@ -1,4 +1,4 @@
-using System.Net.Http.Headers;
+﻿using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -71,10 +71,60 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         return models;
     }
 
+    /// <summary>
+    /// Politica de thinking compartida con quien arma las peticiones. El cliente solo la
+    /// usa para apuntar los modelos que rechazan el parametro; decidir cuando activarlo
+    /// no es cosa de la capa de transporte.
+    /// </summary>
+    public ThinkingPolicy? ThinkingPolicy { get; init; }
+
+    /// <summary>Aviso de que un modelo rechazo el thinking y se reintento sin el.</summary>
+    public Action<string>? OnThinkingRejected { get; init; }
+
     public async Task<JsonElement> CreateChatCompletionAsync(ChatRequest request, CancellationToken cancellationToken = default)
     {
         var payload = JsonSerializer.Serialize(WithStream(request, stream: false), PayloadOptions);
-        return await SendJsonAsync(HttpMethod.Post, "/chat/completions", payload, cancellationToken).ConfigureAwait(false);
+
+        try
+        {
+            return await SendJsonAsync(HttpMethod.Post, "/chat/completions", payload, cancellationToken).ConfigureAwait(false);
+        }
+        catch (TokenRouterException ex) when (request.Thinking is not null && RejectsThinking(ex))
+        {
+            // El backend no entiende el parametro. Perder el turno entero por un campo
+            // opcional seria absurdo: se reintenta una vez sin el y se apunta el modelo
+            // para que las siguientes peticiones salgan ya limpias.
+            var first = ThinkingPolicy?.MarkUnsupported(request.Model) ?? true;
+            if (first)
+            {
+                OnThinkingRejected?.Invoke($"{request.Model} rechaza thinking ({ex.ProviderMessage}); se reintenta sin el.");
+            }
+
+            var withoutThinking = JsonSerializer.Serialize(
+                WithStream(request with { Thinking = null }, stream: false), PayloadOptions);
+
+            return await SendJsonAsync(HttpMethod.Post, "/chat/completions", withoutThinking, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    /// <summary>
+    /// Distingue "no conozco este campo" de un 400 de verdad. Solo se degrada cuando el
+    /// error nombra el parametro: si no, reintentar sin thinking taparia el error real.
+    /// </summary>
+    private static bool RejectsThinking(TokenRouterException ex)
+    {
+        if (ex.StatusCode is not (400 or 404 or 422))
+        {
+            return false;
+        }
+
+        return Mentions(ex.ProviderMessage) || Mentions(ex.RawPayload);
+
+        static bool Mentions(string? text) =>
+            text is not null &&
+            (text.Contains("thinking", StringComparison.OrdinalIgnoreCase) ||
+             text.Contains("budget_tokens", StringComparison.OrdinalIgnoreCase) ||
+             text.Contains("reasoning", StringComparison.OrdinalIgnoreCase));
     }
 
     public async IAsyncEnumerable<JsonElement> StreamChatCompletionAsync(
@@ -241,20 +291,8 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         return request;
     }
 
-    private static ChatRequest WithStream(ChatRequest request, bool stream) => new()
-    {
-        Model = request.Model,
-        Messages = request.Messages,
-        Tools = request.Tools,
-        ToolChoice = request.ToolChoice,
-        ParallelToolCalls = request.ParallelToolCalls,
-        ResponseFormat = request.ResponseFormat,
-        Temperature = request.Temperature,
-        TopP = request.TopP,
-        MaxTokens = request.MaxTokens,
-        Stop = request.Stop,
-        Stream = stream ? true : null,
-    };
+    private static ChatRequest WithStream(ChatRequest request, bool stream)
+        => request with { Stream = stream ? true : null };
 
     private static string ReadString(JsonElement element, string property)
         => element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String

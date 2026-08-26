@@ -1,6 +1,7 @@
 ﻿using System.Diagnostics;
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 using System.Xml.Linq;
 using AgentLoop.Configuration;
 using AgentLoop.Discovery;
@@ -56,11 +57,13 @@ internal static class Program
         var tools = BuiltInTools.DefaultRegistry();
         var maxIterations = IntOption(args, "--max-iterations", 12);
         string model;
+        ThinkingPolicy policy;
 
         try
         {
             ApplyPromptOptions(thread, args);
             model = ResolveModel(args);
+            policy = ResolveThinkingPolicy(args);
             thread.Variables.WithDefaults(model, tools.Names);
         }
         catch (InvalidOperationException ex)
@@ -69,7 +72,7 @@ internal static class Program
             return 64;
         }
 
-        PrintInteractiveBanner(model, tools);
+        PrintInteractiveBanner(model, tools, policy);
 
         // Un solo cliente para toda la sesion: reusar el HttpClient evita agotar
         // sockets y se crea perezosamente para que 'ayuda' funcione sin key.
@@ -110,7 +113,7 @@ internal static class Program
                     return lastExitCode;
                 }
 
-                if (TryHandleSessionCommand(thread, verb, rest))
+                if (TryHandleSessionCommand(thread, policy, model, verb, rest))
                 {
                     continue;
                 }
@@ -135,12 +138,14 @@ internal static class Program
                     {
                         if (client is null)
                         {
-                            client = BuildClient(out var keySource);
+                            // Un solo cliente y una sola politica para la sesion: lo que aprenda
+                            // sobre el thinking de un modelo vale para los turnos siguientes.
+                            client = BuildClient(out var keySource, policy);
                             Console.WriteLine($"key: {keySource}");
                             Console.WriteLine();
                         }
 
-                        return await AgentTurnAsync(client, thread, prompt, model, tools, maxIterations, cancellationToken);
+                        return await AgentTurnAsync(client, thread, prompt, model, tools, policy, maxIterations, cancellationToken);
                     });
                 }
 
@@ -162,6 +167,7 @@ internal static class Program
         string prompt,
         string model,
         ToolRegistry tools,
+        ThinkingPolicy policy,
         int maxIterations,
         CancellationToken cancellationToken)
     {
@@ -172,6 +178,7 @@ internal static class Program
         {
             MaxTokens = 512,
             Temperature = 0,
+            Thinking = policy,
             Trace = line => Console.WriteLine($"    {line}"),
         };
 
@@ -201,16 +208,46 @@ internal static class Program
 
         Console.WriteLine(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)");
         Console.WriteLine();
+
+        if (context.ThinkingObserved)
+        {
+            Console.WriteLine($"[thinking: {context.LastThinking}]");
+        }
+
         Console.WriteLine($"[hilo: {thread.Messages.Count} mensajes | intercambios {thread.Exchanges} | turnos LLM {thread.Turns} | {thread.TotalUsage}]");
 
         return result.Succeeded ? 0 : 1;
     }
 
     /// <summary>Comandos que solo existen dentro de la sesion. Devuelve true si consumio la linea.</summary>
-    private static bool TryHandleSessionCommand(ConversationThread thread, string verb, string rest)
+    private static bool TryHandleSessionCommand(
+        ConversationThread thread,
+        ThinkingPolicy policy,
+        string model,
+        string verb,
+        string rest)
     {
         switch (verb)
         {
+            case "pensar" or "thinking":
+                RunSessionEdit(() =>
+                {
+                    var value = rest.Trim();
+                    if (value.Length > 0)
+                    {
+                        // El presupuesto se acepta pegado: 'pensar on 512'.
+                        var parts = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        policy.Preference = ThinkingPolicy.ParsePreference(parts[0]);
+                        if (parts.Length > 1 && int.TryParse(parts[1], out var budget))
+                        {
+                            policy.BudgetTokens = budget;
+                        }
+                    }
+
+                    Console.WriteLine($"  thinking: {DescribeThinking(policy, model)}");
+                });
+                return true;
+
             case "nuevo" or "reset":
                 thread.Clear();
                 Console.WriteLine("Hilo reiniciado; las variables y la plantilla se mantienen.");
@@ -273,10 +310,11 @@ internal static class Program
         }
     }
 
-    private static void PrintInteractiveBanner(string model, ToolRegistry tools)
+    private static void PrintInteractiveBanner(string model, ToolRegistry tools, ThinkingPolicy policy)
     {
         Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
         Console.WriteLine($"modelo: {model} | tools: {string.Join(", ", tools.Names)}");
+        Console.WriteLine($"thinking: {DescribeThinking(policy, model)}");
         Console.WriteLine();
         Console.WriteLine("El agente mantiene el hilo entre turnos. Escribe y ya:");
         Console.WriteLine("  <texto libre>        se lo manda al agente recordando lo anterior");
@@ -288,6 +326,7 @@ internal static class Program
         Console.WriteLine("  unset clave          lo quita");
         Console.WriteLine("  sistema              muestra el prompt de sistema ya interpolado");
         Console.WriteLine("  plantilla <texto|archivo>   cambia la plantilla de sistema");
+        Console.WriteLine("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
         Console.WriteLine("  chat | discover | selftest | ayuda   utilidades sueltas, sin hilo");
         Console.WriteLine("  salir                cierra");
         Console.WriteLine();
@@ -478,7 +517,8 @@ internal static class Program
     private static async Task<int> ChatAsync(string[] args, CancellationToken cancellationToken)
     {
         var prompt = PositionalOrDefault(args, "Responde solo con la palabra OK.");
-        using var client = BuildClient(out var source);
+        var policy = ResolveThinkingPolicy(args);
+        using var client = BuildClient(out var source, policy);
         var model = ResolveModel(args);
 
         var thread = new ConversationThread();
@@ -487,6 +527,7 @@ internal static class Program
 
         Console.WriteLine($"key: {source}");
         Console.WriteLine($"modelo: {model}");
+        Console.WriteLine($"thinking: {DescribeThinking(policy, model)}");
         Console.WriteLine($"prompt: {prompt}");
         Console.WriteLine();
 
@@ -499,8 +540,10 @@ internal static class Program
                     ChatMessage.FromSystem(thread.RenderSystemPrompt()),
                     ChatMessage.FromUser(TextSanitizer.Plain(prompt)),
                 ],
-                MaxTokens = 512,
+                // El razonamiento se paga del mismo max_tokens, asi que se deja margen.
+                MaxTokens = policy.EnsureHeadroom(512, model),
                 Temperature = 0,
+                Thinking = policy.For(model),
             },
             cancellationToken);
 
@@ -509,9 +552,10 @@ internal static class Program
         Console.WriteLine($"finish_reason : {parsed.FinishReason}");
         Console.WriteLine($"backend       : {parsed.Model}");
         Console.WriteLine($"usage         : {parsed.Usage}");
-        if (parsed.Reasoning is not null)
+        Console.WriteLine($"thinking      : {parsed.Thinking}");
+        if (parsed.Thinking.Text is { Length: > 0 } thought)
         {
-            Console.WriteLine($"reasoning     : {Shorten(parsed.Reasoning, 200)}");
+            Console.WriteLine($"  {Shorten(thought, 200)}");
         }
 
         Console.WriteLine();
@@ -570,21 +614,24 @@ internal static class Program
     {
         var prompt = PositionalOrDefault(args, "Suma 17 y 23 usando la herramienta y dime el resultado.");
         var maxIterations = IntOption(args, "--max-iterations", 12);
+        var policy = ResolveThinkingPolicy(args);
 
-        using var client = BuildClient(out var source);
+        using var client = BuildClient(out var source, policy);
         var model = ResolveModel(args);
         var tools = BuiltInTools.DefaultRegistry();
 
-        Console.WriteLine($"key    : {source}");
-        Console.WriteLine($"modelo : {model}");
-        Console.WriteLine($"tools  : {string.Join(", ", tools.Names)}");
-        Console.WriteLine($"prompt : {prompt}");
+        Console.WriteLine($"key      : {source}");
+        Console.WriteLine($"modelo   : {model}");
+        Console.WriteLine($"tools    : {string.Join(", ", tools.Names)}");
+        Console.WriteLine($"thinking : {DescribeThinking(policy, model)}");
+        Console.WriteLine($"prompt   : {prompt}");
         Console.WriteLine();
 
         var machine = new AgentStateMachine(client, model, tools)
         {
             MaxTokens = 512,
             Temperature = 0,
+            Thinking = policy,
             Trace = line => Console.WriteLine($"    {line}"),
         };
 
@@ -616,6 +663,7 @@ internal static class Program
         Console.WriteLine($"Turnos LLM  : {context.Turns}");
         Console.WriteLine($"Tools       : {context.ToolExecutions.Count} ejecutadas");
         Console.WriteLine($"Tokens      : {context.TotalUsage}");
+        Console.WriteLine($"Thinking    : {(context.ThinkingObserved ? context.LastThinking.ToString() : "no observado")}");
         if (result.Error is not null)
         {
             Console.WriteLine($"Error       : {result.Error.Message}");
@@ -651,7 +699,10 @@ internal static class Program
         Console.WriteLine();
         var promptOk = PromptSelfTest();
 
-        var ok = loopOk && promptOk;
+        Console.WriteLine();
+        var thinkingOk = ThinkingSelfTest();
+
+        var ok = loopOk && promptOk && thinkingOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;
@@ -766,7 +817,150 @@ internal static class Program
 
     // ---------------------------------------------------------------- soporte
 
-    private static TokenRouterClient BuildClient(out string keySource)
+    /// <summary>
+    /// Verifica sin red el typing del thinking: que el parametro se serialice como lo espera
+    /// el gateway, que las cuatro formas de respuesta se parseen a la misma estructura y que
+    /// la politica solo lo active donde toca.
+    /// </summary>
+    private static bool ThinkingSelfTest()
+    {
+        Console.WriteLine("Self-test de thinking: peticion, parseo y politica.");
+        Console.WriteLine();
+
+        var results = new List<(string Name, bool Ok)>();
+
+        // --- peticion -------------------------------------------------------
+        var enabled = Serialize(new ChatRequest
+        {
+            Model = "m",
+            Messages = [ChatMessage.FromUser("hola")],
+            Thinking = ThinkingOptions.Enabled(200),
+        });
+
+        using (var doc = JsonDocument.Parse(enabled))
+        {
+            var thinking = doc.RootElement.GetProperty("thinking");
+            results.Add(("thinking va en la raiz con type y budget_tokens",
+                thinking.GetProperty("type").GetString() == "enabled" &&
+                thinking.GetProperty("budget_tokens").GetInt32() == 200));
+        }
+
+        var without = Serialize(new ChatRequest { Model = "m", Messages = [ChatMessage.FromUser("hola")] });
+        results.Add(("sin thinking no aparece el campo", !without.Contains("thinking")));
+
+        var tooSmall = false;
+        try
+        {
+            ThinkingOptions.Enabled(1);
+        }
+        catch (ArgumentOutOfRangeException)
+        {
+            tooSmall = true;
+        }
+
+        results.Add(("un presupuesto ridiculo falla al construirse", tooSmall));
+
+        // --- parseo ---------------------------------------------------------
+        var fromField = ParseFixture("""
+            {"choices":[{"message":{"content":"391","reasoning_content":"17*23 = 391"},"finish_reason":"stop"}],
+             "usage":{"prompt_tokens":10,"completion_tokens":40,"total_tokens":50,
+                      "completion_tokens_details":{"reasoning_tokens":25}}}
+            """);
+
+        results.Add(("reasoning_content -> traza tipada",
+            fromField.Thinking.Source == ThinkingSource.ReasoningContent &&
+            fromField.Thinking.Text.Contains("391") &&
+            fromField.HasThinking));
+
+        results.Add(("los tokens de razonamiento se contabilizan",
+            fromField.Thinking.TokenCount == 25 && fromField.Usage.ThinkingTokens == 25));
+
+        var fromBlocks = ParseFixture("""
+            {"choices":[{"message":{"content":[{"type":"thinking","thinking":"veamos","signature":"abc"},
+                                               {"type":"redacted_thinking"},
+                                               {"type":"text","text":"391"}]},"finish_reason":"stop"}]}
+            """);
+
+        results.Add(("bloques de content -> thinking y texto separados",
+            fromBlocks.Thinking.Source == ThinkingSource.ContentBlocks &&
+            fromBlocks.Thinking.Text == "veamos" &&
+            fromBlocks.Content == "391"));
+
+        results.Add(("el bloque censurado cuenta como razonamiento",
+            fromBlocks.Thinking.HasRedacted && fromBlocks.Thinking.Observed));
+
+        results.Add(("la firma del bloque se conserva", fromBlocks.Thinking.HasSignature));
+
+        var inline = ParseFixture("""
+            {"choices":[{"message":{"content":"<think>17*23</think>El resultado es 391."},"finish_reason":"stop"}]}
+            """);
+
+        results.Add(("<think> se separa del contenido",
+            inline.Thinking.Source == ThinkingSource.InlineTags &&
+            inline.Thinking.Text == "17*23" &&
+            inline.Content == "El resultado es 391."));
+
+        var usageOnly = ParseFixture("""
+            {"choices":[{"message":{"content":"391"},"finish_reason":"stop"}],
+             "usage":{"prompt_tokens":10,"completion_tokens":40,"total_tokens":50,
+                      "completion_tokens_details":{"reasoning_tokens":30}}}
+            """);
+
+        results.Add(("razonamiento cobrado pero no expuesto queda registrado",
+            usageOnly.Thinking.Source == ThinkingSource.UsageOnly &&
+            usageOnly.Thinking.HasRedacted &&
+            usageOnly.Thinking.TokenCount == 30));
+
+        var none = ParseFixture("""{"choices":[{"message":{"content":"391"},"finish_reason":"stop"}]}""");
+        results.Add(("sin razonamiento la traza queda vacia",
+            none.Thinking.IsEmpty && !none.HasThinking && none.Content == "391"));
+
+        var onlyThinking = ParseFixture("""
+            {"choices":[{"message":{"content":null,"reasoning_content":"me quede pensando"},"finish_reason":"length"}]}
+            """);
+
+        results.Add(("razono sin llegar a responder se distingue", onlyThinking.IsThinkingOnly));
+
+        // --- politica -------------------------------------------------------
+        var auto = new ThinkingPolicy(ThinkingPreference.Auto, 256, knownUnsupported: ["modelo-tonto"]);
+        results.Add(("auto activa en un modelo desconocido", auto.For("modelo-nuevo") is not null));
+        results.Add(("auto no insiste con el que no lo soporta", auto.For("modelo-tonto") is null));
+
+        auto.MarkUnsupported("modelo-nuevo");
+        results.Add(("un rechazo en vivo desactiva el modelo", auto.For("modelo-nuevo") is null));
+
+        auto.MarkSupported("modelo-nuevo");
+        results.Add(("la evidencia positiva lo vuelve a activar", auto.For("modelo-nuevo") is not null));
+
+        var never = new ThinkingPolicy(ThinkingPreference.Never);
+        results.Add(("off no manda el parametro nunca", never.For("modelo-nuevo") is null));
+
+        var always = new ThinkingPolicy(ThinkingPreference.Always, 256, knownUnsupported: ["modelo-tonto"]);
+        results.Add(("on lo manda aunque conste que no lo soporta", always.For("modelo-tonto") is not null));
+
+        results.Add(("con thinking activo se sube el tope de tokens",
+            auto.EnsureHeadroom(128, "modelo-nuevo") >= 256 + ThinkingPolicy.AnswerHeadroomTokens &&
+            never.EnsureHeadroom(128, "modelo-nuevo") == 128));
+
+        foreach (var (name, ok) in results)
+        {
+            Console.WriteLine($"  [{(ok ? "ok" : "FALLA")}] {name}");
+        }
+
+        return results.All(r => r.Ok);
+
+        static string Serialize(ChatRequest request) => JsonSerializer.Serialize(
+            request,
+            new JsonSerializerOptions { DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull });
+
+        static ParsedCompletion ParseFixture(string json)
+        {
+            using var document = JsonDocument.Parse(json);
+            return CompletionParser.Parse(document.RootElement.Clone());
+        }
+    }
+
+    private static TokenRouterClient BuildClient(out string keySource, ThinkingPolicy? thinking = null)
     {
         if (!SecretStore.TryGetTokenRouterApiKey(out var apiKey, out var reason))
         {
@@ -774,8 +968,39 @@ internal static class Program
         }
 
         keySource = $"{SecretStore.Mask(apiKey!)} (desde {reason})";
-        return new TokenRouterClient(new TokenRouterOptions { ApiKey = apiKey! });
+        return new TokenRouterClient(new TokenRouterOptions { ApiKey = apiKey! })
+        {
+            ThinkingPolicy = thinking,
+            OnThinkingRejected = note => Console.WriteLine($"    (thinking) {note}"),
+        };
     }
+
+    /// <summary>
+    /// Politica de razonamiento de esta invocacion. Por defecto 'auto': activo salvo en los
+    /// modelos que el ultimo 'discover' marco sin soporte, mas los que lo rechacen en vivo.
+    /// </summary>
+    private static ThinkingPolicy ResolveThinkingPolicy(string[] args)
+    {
+        var preference = StringOption(args, "--thinking") is { } raw
+            ? ThinkingPolicy.ParsePreference(raw)
+            : ThinkingPreference.Auto;
+
+        var budget = IntOption(args, "--thinking-budget", ThinkingPolicy.DefaultBudgetTokens);
+        var path = Path.Combine(SecretStore.ResolveRepositoryRoot(), ModelsArtifact);
+        var index = AgenticModelSelector.LoadCapabilityIndex(CapabilityNames.Thinking, path);
+
+        return new ThinkingPolicy(preference, budget, index.Supported, index.Unsupported);
+    }
+
+    /// <summary>Una linea legible con el estado del thinking para el modelo en uso.</summary>
+    private static string DescribeThinking(ThinkingPolicy policy, string model) => policy.Preference switch
+    {
+        ThinkingPreference.Never => "off (no se manda el parametro)",
+        ThinkingPreference.Always => $"on siempre, budget={policy.BudgetTokens}",
+        _ when policy.IsSupported(model) => $"auto -> activo, budget={policy.BudgetTokens} (soporte confirmado)",
+        _ when policy.IsUnsupported(model) => "auto -> inactivo (este modelo no lo soporta)",
+        _ => $"auto -> activo a prueba, budget={policy.BudgetTokens} (sin sondeo previo)",
+    };
 
     /// <summary>--model &gt; primer modelo agentico descubierto &gt; fallback conocido.</summary>
     private static string ResolveModel(string[] args)
@@ -914,7 +1139,7 @@ internal static class Program
               selftest              Prueba el corte del loop sin tocar la red.
               interactive           Prompt interactivo con hilo de conversacion (lo que usa F5 en
                                     Visual Studio). Dentro: nuevo, historial, vars, set, unset,
-                                    sistema, plantilla, salir.
+                                    sistema, plantilla, pensar, salir.
 
             Opciones:
               --model <id>          Modelo a usar (por defecto: el primero de artifacts/agentic-models.json).
@@ -924,6 +1149,8 @@ internal static class Program
               --system "<texto>"    Plantilla de prompt de sistema con huecos {{variable}}.
               --system-file <ruta>  La misma plantilla, leida de un archivo.
               --var clave=valor     Define un parametro de la plantilla. Repetible.
+              --thinking <modo>     auto (por defecto), on u off. Ver la seccion Thinking.
+              --thinking-budget <n> Tokens que puede gastar razonando (256).
 
             Plantillas:
               El prompt de sistema se interpola con {{variable}}. El modo de escapado va
@@ -939,6 +1166,23 @@ internal static class Program
                 dotnet run -- run "Resume esto" \
                   --system "Eres {{rol}}. Responde en {{idioma}}. <d>{{xml:dato}}</d>" \
                   --var rol=analista --var "dato=<ACME> & socios"
+
+            Thinking:
+              El razonamiento explicito viaja como {"type":"enabled","budget_tokens":n} en
+              la raiz de la peticion y vuelve tipado en ThinkingTrace: bloques, origen
+              (reasoning_content, bloques de content, <think> en linea o solo coste) y
+              tokens gastados.
+
+              Con --thinking auto va activo salvo en los modelos que el ultimo 'discover'
+              marco sin soporte. Si un modelo rechaza el parametro, la peticion se reintenta
+              una vez sin el y ese modelo queda apuntado para el resto de la sesion, asi que
+              no se pierde ni un turno por pedirlo.
+
+              'discover' sonda la capacidad 'thinking' y la guarda en el artefacto: correrlo
+              es lo que hace que 'auto' sepa de que modelos fiarse.
+
+              Pensar gasta del mismo max_tokens que la respuesta, asi que con thinking activo
+              el harness sube el tope para que quede margen para contestar.
 
             La API key se lee de local-secrets/tokenrouter-api-key.txt, o de la
             variable de entorno TOKENROUTER_API_KEY.

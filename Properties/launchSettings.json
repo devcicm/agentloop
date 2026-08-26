@@ -16,6 +16,10 @@
       "commandName": "Project",
       "commandLineArgs": "chat \"Responde solo con la palabra OK.\""
     },
+    "chat sin thinking": {
+      "commandName": "Project",
+      "commandLineArgs": "chat \"Cuanto es 17 por 23?\" --thinking off"
+    },
     "discover": {
       "commandName": "Project",
       "commandLineArgs": "discover --target 3"

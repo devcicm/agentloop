@@ -39,6 +39,15 @@ public sealed class AgentContext
 
     public ParsedCompletion? LastCompletion { get; set; }
 
+    /// <summary>El razonamiento de cada turno, en orden. Vacio si el modelo no lo expone.</summary>
+    public List<ThinkingTrace> Thinking { get; } = [];
+
+    /// <summary>Razonamiento del ultimo turno; <see cref="ThinkingTrace.Empty"/> si no hubo.</summary>
+    public ThinkingTrace LastThinking => Thinking.Count > 0 ? Thinking[^1] : ThinkingTrace.Empty;
+
+    /// <summary>El modelo razono en algun turno de este contexto.</summary>
+    public bool ThinkingObserved => Thinking.Any(t => t.Observed);
+
     public List<ToolExecution> ToolExecutions { get; } = [];
 
     public TokenUsage TotalUsage { get; set; } = TokenUsage.Empty;

@@ -1,4 +1,5 @@
-using System.Text.Json;
+﻿using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace AgentLoop.Parsing;
 
@@ -6,21 +7,48 @@ namespace AgentLoop.Parsing;
 /// CAPA 2 - traduce el JSON crudo del proveedor a tipos del harness.
 /// Sin estado y sin red: se puede probar con fixtures. Puerto de tokenrouter/parsers.py.
 /// </summary>
-public static class CompletionParser
+public static partial class CompletionParser
 {
     private static readonly IReadOnlyList<ParsedToolCall> NoToolCalls = [];
     private static readonly IReadOnlyList<JsonElement> NoDeltas = [];
 
-    public static ParsedCompletion Parse(JsonElement raw) => new(
-        Id: ReadString(raw, "id"),
-        Model: ReadString(raw, "model"),
-        Created: ReadInt64(raw, "created"),
-        FinishReason: ExtractFinishReason(raw),
-        Content: ExtractContent(raw),
-        Reasoning: ExtractReasoning(raw),
-        ToolCalls: ExtractToolCalls(raw),
-        Usage: ExtractUsage(raw),
-        Raw: raw);
+    public static ParsedCompletion Parse(JsonElement raw)
+    {
+        var content = ExtractContent(raw);
+        var usage = ExtractUsage(raw);
+        var thinking = ExtractThinking(raw);
+
+        // Algunos backends no tienen campo aparte y encajan el razonamiento entre
+        // <think>...</think> dentro del texto. Si se deja pasar, el usuario acaba leyendo
+        // el razonamiento como si fuera la respuesta.
+        if (thinking.IsEmpty && content is not null &&
+            TrySplitInlineThinking(content, out var inline, out var cleaned))
+        {
+            thinking = ThinkingTrace.FromText(inline, ThinkingSource.InlineTags);
+            content = cleaned.Length > 0 ? cleaned : null;
+        }
+
+        // El proveedor puede cobrar tokens de razonamiento sin ensenar ni una linea:
+        // se registra como censurado en vez de fingir que no penso.
+        if (thinking.IsEmpty && usage.ThinkingTokens > 0)
+        {
+            thinking = new ThinkingTrace(
+                [new ThinkingBlock(ThinkingBlockKind.Redacted, string.Empty)],
+                ThinkingSource.UsageOnly,
+                usage.ThinkingTokens);
+        }
+
+        return new ParsedCompletion(
+            Id: ReadString(raw, "id"),
+            Model: ReadString(raw, "model"),
+            Created: ReadInt64(raw, "created"),
+            FinishReason: ExtractFinishReason(raw),
+            Content: content,
+            Thinking: thinking.WithTokenCount(usage.ThinkingTokens),
+            ToolCalls: ExtractToolCalls(raw),
+            Usage: usage,
+            Raw: raw);
+    }
 
     /// <summary>
     /// Texto del primer choice. Acepta content como string y como array de partes
@@ -63,19 +91,150 @@ public static class CompletionParser
         }
     }
 
-    /// <summary>Cadena de razonamiento si el modelo la expone (reasoning_content), si no null.</summary>
-    public static string? ExtractReasoning(JsonElement raw)
+    /// <summary>
+    /// Razonamiento del modelo, tipado. Cubre las formas que se ven en la practica: el
+    /// campo <c>reasoning_content</c> (string o array), bloques <c>thinking</c> dentro de
+    /// <c>content</c>, y el caso censurado sin texto. El coste en tokens lo pone
+    /// <see cref="Parse"/> a partir de usage, que es donde vive.
+    /// </summary>
+    public static ThinkingTrace ExtractThinking(JsonElement raw)
     {
-        if (!TryGetMessage(raw, out var message) ||
-            !message.TryGetProperty("reasoning_content", out var reasoning) ||
-            reasoning.ValueKind != JsonValueKind.String)
+        if (!TryGetMessage(raw, out var message))
         {
-            return null;
+            return ThinkingTrace.Empty;
         }
 
-        var value = reasoning.GetString();
-        return string.IsNullOrWhiteSpace(value) ? null : value;
+        if (message.TryGetProperty("reasoning_content", out var reasoning))
+        {
+            switch (reasoning.ValueKind)
+            {
+                case JsonValueKind.String:
+                    var text = reasoning.GetString();
+                    if (!string.IsNullOrWhiteSpace(text))
+                    {
+                        return ThinkingTrace.FromText(text, ThinkingSource.ReasoningContent);
+                    }
+
+                    break;
+
+                case JsonValueKind.Array:
+                    // Sin "type" explicito: aqui todo lo que hay es razonamiento.
+                    var reasoningBlocks = ReadThinkingBlocks(reasoning, defaultToThinking: true);
+                    if (reasoningBlocks.Count > 0)
+                    {
+                        return new ThinkingTrace(reasoningBlocks, ThinkingSource.ReasoningContent, 0);
+                    }
+
+                    break;
+            }
+        }
+
+        // Estilo Anthropic: los bloques de pensamiento viajan mezclados con el texto.
+        if (message.TryGetProperty("content", out var content) && content.ValueKind == JsonValueKind.Array)
+        {
+            var blocks = ReadThinkingBlocks(content, defaultToThinking: false);
+            if (blocks.Count > 0)
+            {
+                return new ThinkingTrace(blocks, ThinkingSource.ContentBlocks, 0);
+            }
+        }
+
+        return ThinkingTrace.Empty;
     }
+
+    /// <summary>
+    /// Separa &lt;think&gt;...&lt;/think&gt; del texto de respuesta. Devuelve false si no
+    /// habia nada que separar, para no tocar el content en el caso normal.
+    /// </summary>
+    public static bool TrySplitInlineThinking(string content, out string thinking, out string cleaned)
+    {
+        thinking = string.Empty;
+        cleaned = content;
+
+        if (!content.Contains("<think", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var matches = InlineThinkingRegex().Matches(content);
+        if (matches.Count == 0)
+        {
+            return false;
+        }
+
+        thinking = string.Join("\n", matches.Select(m => m.Groups[1].Value.Trim())).Trim();
+        cleaned = InlineThinkingRegex().Replace(content, string.Empty).Trim();
+        return true;
+    }
+
+    /// <summary>Bloques de razonamiento de un array; ignora los que son texto normal.</summary>
+    private static IReadOnlyList<ThinkingBlock> ReadThinkingBlocks(JsonElement array, bool defaultToThinking)
+    {
+        var blocks = new List<ThinkingBlock>();
+
+        foreach (var item in array.EnumerateArray())
+        {
+            if (item.ValueKind == JsonValueKind.String)
+            {
+                if (defaultToThinking && item.GetString() is { Length: > 0 } loose)
+                {
+                    blocks.Add(new ThinkingBlock(ThinkingBlockKind.Thinking, loose));
+                }
+
+                continue;
+            }
+
+            if (item.ValueKind != JsonValueKind.Object)
+            {
+                continue;
+            }
+
+            var type = ReadString(item, "type");
+            ThinkingBlockKind kind;
+
+            switch (type)
+            {
+                case "redacted_thinking" or "redacted":
+                    kind = ThinkingBlockKind.Redacted;
+                    break;
+
+                case "thinking_summary" or "summary" or "reasoning_summary":
+                    kind = ThinkingBlockKind.Summary;
+                    break;
+
+                case "thinking" or "reasoning":
+                    kind = ThinkingBlockKind.Thinking;
+                    break;
+
+                case "" when defaultToThinking:
+                    kind = ThinkingBlockKind.Thinking;
+                    break;
+
+                default:
+                    continue;
+            }
+
+            var text = ReadString(item, "thinking");
+            if (text.Length == 0)
+            {
+                text = ReadString(item, "text");
+            }
+
+            // Un bloque censurado sin texto sigue siendo evidencia de que penso.
+            if (text.Length == 0 && kind != ThinkingBlockKind.Redacted)
+            {
+                continue;
+            }
+
+            var signature = ReadString(item, "signature");
+            blocks.Add(new ThinkingBlock(kind, text, signature.Length == 0 ? null : signature));
+        }
+
+        return blocks;
+    }
+
+    [GeneratedRegex(@"<think(?:ing)?>(.*?)</think(?:ing)?>", RegexOptions.Singleline | RegexOptions.IgnoreCase)]
+    private static partial Regex InlineThinkingRegex();
 
     /// <summary>
     /// Tool calls normalizadas. Los argumentos llegan como string JSON: si no parsea,
@@ -120,10 +279,23 @@ public static class CompletionParser
             return TokenUsage.Empty;
         }
 
+        // El desglose de razonamiento cuelga de completion_tokens_details en el formato
+        // OpenAI; algunos gateways lo suben un nivel.
+        var thinkingTokens = usage.TryGetProperty("completion_tokens_details", out var details) &&
+                             details.ValueKind == JsonValueKind.Object
+            ? ReadInt32(details, "reasoning_tokens")
+            : 0;
+
+        if (thinkingTokens == 0)
+        {
+            thinkingTokens = ReadInt32(usage, "reasoning_tokens");
+        }
+
         return new TokenUsage(
             ReadInt32(usage, "prompt_tokens"),
             ReadInt32(usage, "completion_tokens"),
-            ReadInt32(usage, "total_tokens"));
+            ReadInt32(usage, "total_tokens"),
+            thinkingTokens);
     }
 
     /// <summary>Normaliza un chunk de streaming (objeto completo, no solo el delta).</summary>
@@ -146,7 +318,7 @@ public static class CompletionParser
                 ? role.GetString()
                 : null,
             Content: ReadString(delta, "content"),
-            Reasoning: ReadString(delta, "reasoning_content"),
+            Thinking: ReadString(delta, "reasoning_content"),
             ToolCallDeltas: toolCallDeltas.Count > 0 ? toolCallDeltas : NoDeltas,
             FinishReason: ExtractFinishReasonFrom(chunk));
     }

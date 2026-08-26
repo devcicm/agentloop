@@ -56,6 +56,13 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
 
     public bool ParallelToolCalls { get; init; }
 
+    /// <summary>
+    /// Politica de razonamiento explicito. Null = no se manda el parametro nunca, que es
+    /// el comportamiento de antes. Con politica puesta, el thinking va activo salvo en los
+    /// modelos que ya se sabe que no lo soportan.
+    /// </summary>
+    public ThinkingPolicy? Thinking { get; init; }
+
     /// <summary>Callback de traza; recibe una linea legible por paso.</summary>
     public Action<string>? Trace { get; init; }
 
@@ -91,6 +98,8 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
     private async ValueTask<AgentState> RequestAsync(AgentContext context, CancellationToken cancellationToken)
     {
         var definitions = _tools.ToDefinitions();
+        var thinking = Thinking?.For(Model);
+
         var request = new ChatRequest
         {
             Model = Model,
@@ -99,11 +108,15 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
             ToolChoice = definitions is null ? null : "auto",
             ParallelToolCalls = definitions is null ? null : ParallelToolCalls,
             Temperature = Temperature,
-            MaxTokens = MaxTokens,
+            // El presupuesto de razonamiento sale del mismo max_tokens: sin margen extra
+            // el modelo se lo gasta pensando y devuelve content vacio.
+            MaxTokens = Thinking?.EnsureHeadroom(MaxTokens, Model) ?? MaxTokens,
+            Thinking = thinking,
         };
 
         context.Turns++;
-        Trace?.Invoke($"turno {context.Turns}: POST /chat/completions ({context.Messages.Count} mensajes)");
+        var thinkingNote = thinking is null ? string.Empty : $", thinking {thinking}";
+        Trace?.Invoke($"turno {context.Turns}: POST /chat/completions ({context.Messages.Count} mensajes{thinkingNote})");
 
         context.PendingResponse = await _client.CreateChatCompletionAsync(request, cancellationToken).ConfigureAwait(false);
         return AgentState.Parsing;
@@ -120,9 +133,24 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
         context.PendingResponse = null;
         context.LastCompletion = parsed;
         context.TotalUsage = context.TotalUsage.Add(parsed.Usage);
+        context.Thinking.Add(parsed.Thinking);
 
-        // El bloque de tool_calls debe volver al proveedor exactamente como llego.
-        context.Messages.Add(ChatMessage.FromAssistant(parsed.Content, parsed.RawToolCalls, parsed.Reasoning));
+        if (parsed.Thinking.Observed)
+        {
+            // Soporte confirmado por la respuesta, no por una lista: la evidencia manda.
+            if (Thinking?.MarkSupported(Model) == true)
+            {
+                Trace?.Invoke($"  thinking confirmado en {Model} ({parsed.Thinking})");
+            }
+        }
+
+        // El bloque de tool_calls debe volver al proveedor exactamente como llego, y el
+        // razonamiento se reenvia solo si lo hubo: mandar reasoning_content vacio confunde
+        // a los backends que lo validan.
+        context.Messages.Add(ChatMessage.FromAssistant(
+            parsed.Content,
+            parsed.RawToolCalls,
+            parsed.Thinking.Text is { Length: > 0 } thought ? thought : null));
 
         if (parsed.HasToolCalls)
         {
@@ -160,8 +188,8 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
         // Un modelo que agoto el presupuesto razonando devuelve content=null: se reporta
         // el razonamiento en vez de dejar el resultado vacio sin explicacion.
         context.FinalContent = completion?.Content
-            ?? (completion?.IsReasoningOnly == true
-                ? $"(sin content; solo reasoning) {completion.Reasoning}"
+            ?? (completion?.IsThinkingOnly == true
+                ? $"(sin content; el modelo se quedo en el razonamiento) {completion.Thinking.Text}"
                 : string.Empty);
 
         return AgentState.Completed;

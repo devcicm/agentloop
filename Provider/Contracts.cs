@@ -1,4 +1,4 @@
-using System.Text.Json;
+﻿using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace AgentLoop.Provider;
@@ -76,8 +76,12 @@ public sealed class ResponseFormat
     public static ResponseFormat JsonObject => new() { Type = "json_object" };
 }
 
-/// <summary>Payload de POST /chat/completions. Las propiedades nulas no se serializan.</summary>
-public sealed class ChatRequest
+/// <summary>
+/// Payload de POST /chat/completions. Las propiedades nulas no se serializan.
+/// Es un record para poder derivar variantes con 'with' (stream on/off, thinking fuera)
+/// sin volver a copiar campo a campo y olvidarse de uno.
+/// </summary>
+public sealed record ChatRequest
 {
     [JsonPropertyName("model")]
     public required string Model { get; init; }
@@ -111,6 +115,14 @@ public sealed class ChatRequest
 
     [JsonPropertyName("stream")]
     public bool? Stream { get; init; }
+
+    /// <summary>
+    /// Razonamiento explicito. Va en la raiz del payload, no dentro de un mensaje, y el
+    /// modelo devuelve lo que penso en <c>message.reasoning_content</c>. Null = no se manda
+    /// el campo, que es lo que esperan los modelos que no lo entienden.
+    /// </summary>
+    [JsonPropertyName("thinking")]
+    public ThinkingOptions? Thinking { get; init; }
 }
 
 /// <summary>Entrada de GET /models.</summary>

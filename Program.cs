@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using System.Text.Json;
 using AgentLoop.Configuration;
 using AgentLoop.Discovery;
@@ -14,6 +15,30 @@ internal static class Program
     private const string ModelsArtifact = "artifacts/agentic-models.json";
 
     private static async Task<int> Main(string[] args)
+    {
+        var exitCode = await ExecuteAsync(args);
+        PauseIfRequested(exitCode);
+        return exitCode;
+    }
+
+    /// <summary>
+    /// Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el
+    /// resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal
+    /// no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts.
+    /// </summary>
+    private static void PauseIfRequested(int exitCode)
+    {
+        if (!Debugger.IsAttached || Console.IsInputRedirected)
+        {
+            return;
+        }
+
+        Console.WriteLine();
+        Console.WriteLine($"[codigo de salida {exitCode}] Pulsa una tecla para cerrar...");
+        Console.ReadKey(intercept: true);
+    }
+
+    private static async Task<int> ExecuteAsync(string[] args)
     {
         using var cancellation = new CancellationTokenSource();
         Console.CancelKeyPress += (_, e) =>

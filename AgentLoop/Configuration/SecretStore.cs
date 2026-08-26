@@ -1,0 +1,107 @@
+namespace AgentLoop.Configuration;
+
+/// <summary>
+/// Resuelve secretos locales. Prioridad: archivo en local-secrets/ &gt; variable de entorno.
+/// </summary>
+public static class SecretStore
+{
+    public const string ApiKeyFileName = "tokenrouter-api-key.txt";
+    public const string ApiKeyEnvVar = "TOKENROUTER_API_KEY";
+    private const string SecretsDirName = "local-secrets";
+
+    /// <summary>Devuelve la API key de TokenRouter o lanza con un mensaje accionable.</summary>
+    public static string GetTokenRouterApiKey()
+        => TryGetTokenRouterApiKey(out var key, out var reason)
+            ? key!
+            : throw new InvalidOperationException(reason);
+
+    public static bool TryGetTokenRouterApiKey(out string? apiKey, out string reason)
+    {
+        var path = FindSecretsFile(ApiKeyFileName);
+        if (path is not null)
+        {
+            var fromFile = File.ReadAllText(path).Trim();
+            if (fromFile.Length > 0)
+            {
+                apiKey = fromFile;
+                reason = $"archivo {path}";
+                return true;
+            }
+        }
+
+        var fromEnv = Environment.GetEnvironmentVariable(ApiKeyEnvVar)?.Trim();
+        if (!string.IsNullOrEmpty(fromEnv))
+        {
+            apiKey = fromEnv;
+            reason = $"variable de entorno {ApiKeyEnvVar}";
+            return true;
+        }
+
+        apiKey = null;
+        reason =
+            $"No se encontro la API key de TokenRouter.{Environment.NewLine}" +
+            $"  1) Pegala en una sola linea en {SecretsDirName}/{ApiKeyFileName}" +
+            (path is not null ? $" (el archivo existe pero esta vacio: {path})" : " (el archivo no existe)") +
+            $"{Environment.NewLine}  2) O define la variable de entorno {ApiKeyEnvVar}";
+        return false;
+    }
+
+    /// <summary>Ruta del archivo de secreto, o null si no existe en ningun ancestro.</summary>
+    public static string? FindSecretsFile(string fileName)
+    {
+        var dir = FindSecretsDirectory();
+        if (dir is null)
+        {
+            return null;
+        }
+
+        var candidate = Path.Combine(dir, fileName);
+        return File.Exists(candidate) ? candidate : null;
+    }
+
+    /// <summary>
+    /// Sube desde el directorio del binario buscando local-secrets/. Es necesario porque
+    /// en ejecucion el CWD es bin/Debug/net9.0/, no la raiz del repo.
+    /// </summary>
+    public static string? FindSecretsDirectory()
+    {
+        foreach (var start in new[] { AppContext.BaseDirectory, Directory.GetCurrentDirectory() })
+        {
+            var dir = new DirectoryInfo(start);
+            while (dir is not null)
+            {
+                var candidate = Path.Combine(dir.FullName, SecretsDirName);
+                if (Directory.Exists(candidate))
+                {
+                    return candidate;
+                }
+
+                dir = dir.Parent;
+            }
+        }
+
+        return null;
+    }
+
+    /// <summary>Raiz del repo (el padre de local-secrets/), o el CWD como ultimo recurso.</summary>
+    public static string ResolveRepositoryRoot()
+    {
+        var secrets = FindSecretsDirectory();
+        return secrets is not null
+            ? Directory.GetParent(secrets)!.FullName
+            : Directory.GetCurrentDirectory();
+    }
+
+    /// <summary>Enmascara una key para poder loguearla sin filtrarla.</summary>
+    public static string Mask(string secret)
+    {
+        if (string.IsNullOrEmpty(secret))
+        {
+            return "(vacio)";
+        }
+
+        return secret.Length <= 10
+            ? new string('*', secret.Length)
+            : $"{secret[..6]}...{secret[^4..]}";
+    }
+}

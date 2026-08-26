@@ -482,3 +482,11 @@ $RECYCLE.BIN/
 
 # Vim temporary swap files
 *.swp
+
+##### Harness AgentLoop #####
+# Secretos locales: NUNCA se versionan (excepto el README explicativo)
+local-secrets/*
+!local-secrets/README.md
+
+# Salidas del sondeo de modelos
+artifacts/

@@ -49,6 +49,7 @@ internal static class Program
         Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
         Console.WriteLine("Escribe el comando tal cual, sin el 'dotnet run --' delante.");
         Console.WriteLine("  selftest | chat \"hola\" | run \"Suma 17 y 23\" | discover --target 3");
+        Console.WriteLine("Cualquier otro texto se manda al agente, como si fuera 'run <texto>'.");
         Console.WriteLine("'ayuda' lista todo, 'salir' cierra.");
         Console.WriteLine();
 
@@ -83,6 +84,13 @@ internal static class Program
                 continue;
             }
 
+            if (!IsKnownCommand(commandArgs[0]))
+            {
+                // Lo natural al teclear es hablarle al agente. La linea entera va como
+                // un unico argumento para que no la troceen ni las comillas ni los espacios.
+                commandArgs = ["run", line];
+            }
+
             Console.WriteLine();
             lastExitCode = await ExecuteAsync(commandArgs);
             Console.WriteLine();
@@ -90,6 +98,11 @@ internal static class Program
             Console.WriteLine();
         }
     }
+
+    private static bool IsKnownCommand(string token) => token.ToLowerInvariant() is
+        "chat" or "discover" or "run" or "selftest"
+        or "help" or "--help" or "-h" or "ayuda"
+        or "interactive" or "interactivo" or "repl";
 
     /// <summary>
     /// Trocea una linea en argumentos respetando comillas dobles, para que
@@ -428,10 +441,31 @@ internal static class Program
         return TokenRouterOptions.FallbackModelId;
     }
 
+    /// <summary>
+    /// Une todo lo posicional en un solo prompt. Sin esto, 'chat el clima de hoy' sin
+    /// comillas llegaba al modelo como 'el' y la respuesta parecia culpa del LLM.
+    /// Las opciones --x se saltan junto con su valor, vengan antes o despues del texto.
+    /// </summary>
     private static string PositionalOrDefault(string[] args, string fallback)
     {
-        var positional = args.Skip(1).FirstOrDefault(a => !a.StartsWith("--", StringComparison.Ordinal));
-        return string.IsNullOrWhiteSpace(positional) ? fallback : positional;
+        var words = new List<string>();
+
+        for (var i = 1; i < args.Length; i++)
+        {
+            if (args[i].StartsWith("--", StringComparison.Ordinal))
+            {
+                if (i + 1 < args.Length && !args[i + 1].StartsWith("--", StringComparison.Ordinal))
+                {
+                    i++; // la opcion se lleva su valor: --model qwen/... no es prompt
+                }
+
+                continue;
+            }
+
+            words.Add(args[i]);
+        }
+
+        return words.Count == 0 ? fallback : string.Join(' ', words);
     }
 
     private static string? StringOption(string[] args, string name)

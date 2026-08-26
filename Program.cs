@@ -307,7 +307,7 @@ internal static class Program
             AgentLoop - harness agentico minimo sobre TokenRouter
 
             Uso:
-              dotnet run --project AgentLoop -- <comando> [opciones]
+              dotnet run -- <comando> [opciones]
 
             Comandos:
               chat "<prompt>"       Una llamada suelta. Verifica capa de comunicacion + capa de parseo.

@@ -1,4 +1,4 @@
-using AgentLoop.Parsing;
+﻿using AgentLoop.Parsing;
 using AgentLoop.Provider;
 using AgentLoop.Tools;
 
@@ -7,12 +7,23 @@ namespace AgentLoop.StateMachines;
 /// <summary>Estado mutable que la maquina de estados va llenando a lo largo del loop.</summary>
 public sealed class AgentContext
 {
-    public AgentContext(string userPrompt, string? systemPrompt = null)
+    /// <param name="history">
+    /// Conversacion previa, sin mensaje de sistema: lo aporta este constructor recien
+    /// renderizado. Asi el hilo se mantiene entre turnos sin arrastrar un system prompt
+    /// viejo con la hora o el modelo de hace veinte mensajes.
+    /// </param>
+    public AgentContext(string userPrompt, string? systemPrompt = null, IEnumerable<ChatMessage>? history = null)
     {
         UserPrompt = userPrompt;
+
         if (!string.IsNullOrWhiteSpace(systemPrompt))
         {
             Messages.Add(ChatMessage.FromSystem(systemPrompt));
+        }
+
+        if (history is not null)
+        {
+            Messages.AddRange(history.Where(m => m.Role != ChatRoles.System));
         }
 
         Messages.Add(ChatMessage.FromUser(userPrompt));

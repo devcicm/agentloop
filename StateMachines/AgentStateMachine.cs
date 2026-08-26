@@ -1,4 +1,5 @@
-using AgentLoop.Parsing;
+﻿using AgentLoop.Parsing;
+using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.Tools;
 
@@ -142,7 +143,10 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
         {
             var execution = await _tools.ExecuteAsync(call, cancellationToken).ConfigureAwait(false);
             context.ToolExecutions.Add(execution);
-            context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, execution.Output));
+            // Una tool que devuelve texto suelto o un stack trace descoloca a los modelos
+            // que asumen JSON en role=tool; se envuelve en vez de mandarlo crudo.
+            var output = TextSanitizer.EnsureJsonObject(execution.Output);
+            context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
             Trace?.Invoke($"  tool {call.Name}({call.RawArguments}) -> {Shorten(execution.Output)}");
         }
 

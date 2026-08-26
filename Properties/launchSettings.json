@@ -1,5 +1,9 @@
 {
   "profiles": {
+    "cli interactivo": {
+      "commandName": "Project",
+      "commandLineArgs": "interactive"
+    },
     "ayuda": {
       "commandName": "Project",
       "commandLineArgs": "help"

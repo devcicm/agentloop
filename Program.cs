@@ -1,4 +1,5 @@
-using System.Diagnostics;
+﻿using System.Diagnostics;
+using System.Text;
 using System.Text.Json;
 using AgentLoop.Configuration;
 using AgentLoop.Discovery;
@@ -16,9 +17,122 @@ internal static class Program
 
     private static async Task<int> Main(string[] args)
     {
+        if (ShouldRunInteractive(args))
+        {
+            return await InteractiveAsync();
+        }
+
         var exitCode = await ExecuteAsync(args);
         PauseIfRequested(exitCode);
         return exitCode;
+    }
+
+    /// <summary>
+    /// Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no
+    /// hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de
+    /// verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir.
+    /// Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre.
+    /// </summary>
+    private static bool ShouldRunInteractive(string[] args)
+    {
+        if (args.Length == 1 && args[0].ToLowerInvariant() is "interactive" or "interactivo" or "repl")
+        {
+            return true;
+        }
+
+        return args.Length == 0 && !Console.IsInputRedirected;
+    }
+
+    /// <summary>Bucle de lectura: cada linea se trocea igual que una linea de terminal.</summary>
+    private static async Task<int> InteractiveAsync()
+    {
+        Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
+        Console.WriteLine("Escribe el comando tal cual, sin el 'dotnet run --' delante.");
+        Console.WriteLine("  selftest | chat \"hola\" | run \"Suma 17 y 23\" | discover --target 3");
+        Console.WriteLine("'ayuda' lista todo, 'salir' cierra.");
+        Console.WriteLine();
+
+        var lastExitCode = 0;
+
+        while (true)
+        {
+            Console.Write("agentloop> ");
+            var line = Console.ReadLine();
+
+            if (line is null)
+            {
+                // stdin cerrado: no queda nada que leer, salir es lo unico sensato.
+                Console.WriteLine();
+                return lastExitCode;
+            }
+
+            line = line.Trim();
+            if (line.Length == 0)
+            {
+                continue;
+            }
+
+            if (line.ToLowerInvariant() is "salir" or "exit" or "quit" or "q")
+            {
+                return lastExitCode;
+            }
+
+            var commandArgs = SplitArguments(line);
+            if (commandArgs.Length == 0)
+            {
+                continue;
+            }
+
+            Console.WriteLine();
+            lastExitCode = await ExecuteAsync(commandArgs);
+            Console.WriteLine();
+            Console.WriteLine($"[codigo de salida {lastExitCode}]");
+            Console.WriteLine();
+        }
+    }
+
+    /// <summary>
+    /// Trocea una linea en argumentos respetando comillas dobles, para que
+    /// run "Suma 17 y 23" llegue como un solo argumento igual que desde la shell.
+    /// </summary>
+    private static string[] SplitArguments(string line)
+    {
+        var tokens = new List<string>();
+        var current = new StringBuilder();
+        var inQuotes = false;
+        var hasToken = false;
+
+        foreach (var ch in line)
+        {
+            if (ch == '"')
+            {
+                inQuotes = !inQuotes;
+                hasToken = true; // "" es un argumento vacio deliberado, no ruido
+                continue;
+            }
+
+            if (!inQuotes && char.IsWhiteSpace(ch))
+            {
+                if (hasToken)
+                {
+                    tokens.Add(current.ToString());
+                    current.Clear();
+                    hasToken = false;
+                }
+
+                continue;
+            }
+
+            current.Append(ch);
+            hasToken = true;
+        }
+
+        if (hasToken)
+        {
+            tokens.Add(current.ToString());
+        }
+
+        return [.. tokens];
     }
 
     /// <summary>
@@ -41,26 +155,21 @@ internal static class Program
     private static async Task<int> ExecuteAsync(string[] args)
     {
         using var cancellation = new CancellationTokenSource();
-        Console.CancelKeyPress += (_, e) =>
+
+        // El modo interactivo llama aqui una vez por comando: el handler se
+        // desengancha al salir para no acumular suscripciones muertas.
+        void OnCancel(object? sender, ConsoleCancelEventArgs e)
         {
             e.Cancel = true;
             cancellation.Cancel();
             Console.WriteLine("\nCancelando...");
-        };
+        }
 
-        var command = args.Length > 0 ? args[0].ToLowerInvariant() : "help";
+        Console.CancelKeyPress += OnCancel;
 
         try
         {
-            return command switch
-            {
-                "chat" => await ChatAsync(args, cancellation.Token),
-                "discover" => await DiscoverAsync(args, cancellation.Token),
-                "run" => await RunAsync(args, cancellation.Token),
-                "selftest" => await SelfTestAsync(cancellation.Token),
-                "help" or "--help" or "-h" => PrintHelp(),
-                _ => Fail($"Comando desconocido: '{command}'"),
-            };
+            return await DispatchAsync(args, cancellation.Token);
         }
         catch (OperationCanceledException)
         {
@@ -82,6 +191,26 @@ internal static class Program
             Console.Error.WriteLine($"ERROR: {ex.Message}");
             return 1;
         }
+        finally
+        {
+            Console.CancelKeyPress -= OnCancel;
+        }
+    }
+
+    private static async Task<int> DispatchAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var command = args.Length > 0 ? args[0].ToLowerInvariant() : "help";
+
+        return command switch
+        {
+            "chat" => await ChatAsync(args, cancellationToken),
+            "discover" => await DiscoverAsync(args, cancellationToken),
+            "run" => await RunAsync(args, cancellationToken),
+            "selftest" => await SelfTestAsync(cancellationToken),
+            "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
+            "interactive" or "interactivo" or "repl" => await InteractiveAsync(),
+            _ => Fail($"Comando desconocido: '{command}'"),
+        };
     }
 
     // ---------------------------------------------------------------- comandos
@@ -333,12 +462,14 @@ internal static class Program
 
             Uso:
               dotnet run -- <comando> [opciones]
+              dotnet run                          (sin argumentos: abre el CLI interactivo)
 
             Comandos:
               chat "<prompt>"       Una llamada suelta. Verifica capa de comunicacion + capa de parseo.
               discover              Sondea el catalogo y reporta 3 modelos con capacidades agenticas.
               run "<prompt>"        Corre la maquina de estados dentro del loop con tool calling.
               selftest              Prueba el corte del loop sin tocar la red.
+              interactive           Abre un prompt para teclear comandos (lo que usa F5 en Visual Studio).
 
             Opciones:
               --model <id>          Modelo a usar (por defecto: el primero de artifacts/agentic-models.json).

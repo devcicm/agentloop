@@ -77,6 +77,18 @@ public sealed class ResponseFormat
 }
 
 /// <summary>
+/// Ajustes del modo streaming. <c>include_usage</c> hace que llegue un ultimo chunk con
+/// el consumo de tokens: sin el, una respuesta en streaming no se puede contabilizar.
+/// </summary>
+public sealed class StreamOptions
+{
+    public static readonly StreamOptions WithUsage = new() { IncludeUsage = true };
+
+    [JsonPropertyName("include_usage")]
+    public bool? IncludeUsage { get; init; }
+}
+
+/// <summary>
 /// Payload de POST /chat/completions. Las propiedades nulas no se serializan.
 /// Es un record para poder derivar variantes con 'with' (stream on/off, thinking fuera)
 /// sin volver a copiar campo a campo y olvidarse de uno.
@@ -115,6 +127,10 @@ public sealed record ChatRequest
 
     [JsonPropertyName("stream")]
     public bool? Stream { get; init; }
+
+    /// <summary>Solo viaja cuando la peticion es de streaming; el cliente lo omite si no.</summary>
+    [JsonPropertyName("stream_options")]
+    public StreamOptions? StreamOptions { get; init; }
 
     /// <summary>
     /// Razonamiento explicito. Va en la raiz del payload, no dentro de un mensaje, y el

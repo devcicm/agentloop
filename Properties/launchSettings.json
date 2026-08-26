@@ -20,6 +20,14 @@
       "commandName": "Project",
       "commandLineArgs": "chat \"Cuanto es 17 por 23?\" --thinking off"
     },
+    "chat en stream": {
+      "commandName": "Project",
+      "commandLineArgs": "chat \"Cuanto es 17 por 23? Explica corto.\" --stream"
+    },
+    "run en stream": {
+      "commandName": "Project",
+      "commandLineArgs": "run \"Suma 17 y 23 usando la herramienta y dime el resultado.\" --stream"
+    },
     "discover": {
       "commandName": "Project",
       "commandLineArgs": "discover --target 3"

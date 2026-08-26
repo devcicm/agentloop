@@ -107,6 +107,46 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         }
     }
 
+    /// <summary>Abre el stream, degradando el thinking igual que en la llamada normal.</summary>
+    private async Task<HttpResponseMessage> OpenStreamAsync(ChatRequest request, CancellationToken cancellationToken)
+    {
+        try
+        {
+            return await SendStreamRequestAsync(request, cancellationToken).ConfigureAwait(false);
+        }
+        catch (TokenRouterException ex) when (request.Thinking is not null && RejectsThinking(ex))
+        {
+            var first = ThinkingPolicy?.MarkUnsupported(request.Model) ?? true;
+            if (first)
+            {
+                OnThinkingRejected?.Invoke($"{request.Model} rechaza thinking ({ex.ProviderMessage}); se reintenta sin el.");
+            }
+
+            return await SendStreamRequestAsync(request with { Thinking = null }, cancellationToken).ConfigureAwait(false);
+        }
+    }
+
+    private async Task<HttpResponseMessage> SendStreamRequestAsync(ChatRequest request, CancellationToken cancellationToken)
+    {
+        var payload = JsonSerializer.Serialize(WithStream(request, stream: true), PayloadOptions);
+
+        var response = await SendWithRetryAsync(
+            () => BuildRequest(HttpMethod.Post, "/chat/completions", payload),
+            HttpCompletionOption.ResponseHeadersRead,
+            cancellationToken).ConfigureAwait(false);
+
+        if (response.IsSuccessStatusCode)
+        {
+            return response;
+        }
+
+        using (response)
+        {
+            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            throw BuildException((int)response.StatusCode, errorBody);
+        }
+    }
+
     /// <summary>
     /// Distingue "no conozco este campo" de un 400 de verdad. Solo se degrada cuando el
     /// error nombra el parametro: si no, reintentar sin thinking taparia el error real.
@@ -131,18 +171,9 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         ChatRequest request,
         [EnumeratorCancellation] CancellationToken cancellationToken = default)
     {
-        var payload = JsonSerializer.Serialize(WithStream(request, stream: true), PayloadOptions);
-
-        using var response = await SendWithRetryAsync(
-            () => BuildRequest(HttpMethod.Post, "/chat/completions", payload),
-            HttpCompletionOption.ResponseHeadersRead,
-            cancellationToken).ConfigureAwait(false);
-
-        if (!response.IsSuccessStatusCode)
-        {
-            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
-            throw BuildException((int)response.StatusCode, errorBody);
-        }
+        // La apertura va aparte porque un iterador no puede llevar try/catch alrededor de
+        // un yield, y el reintento sin thinking tiene que poder ocurrir antes del primer chunk.
+        using var response = await OpenStreamAsync(request, cancellationToken).ConfigureAwait(false);
 
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
         using var reader = new StreamReader(stream, Encoding.UTF8);
@@ -291,8 +322,12 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         return request;
     }
 
-    private static ChatRequest WithStream(ChatRequest request, bool stream)
-        => request with { Stream = stream ? true : null };
+    /// <summary>stream_options solo tiene sentido con stream=true; fuera de ahi se omite.</summary>
+    private static ChatRequest WithStream(ChatRequest request, bool stream) => request with
+    {
+        Stream = stream ? true : null,
+        StreamOptions = stream ? request.StreamOptions : null,
+    };
 
     private static string ReadString(JsonElement element, string property)
         => element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String

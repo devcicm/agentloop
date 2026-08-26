@@ -72,7 +72,14 @@ internal static class Program
             return 64;
         }
 
-        PrintInteractiveBanner(model, tools, policy);
+        var settings = new SessionSettings
+        {
+            Thinking = policy,
+            Model = model,
+            Stream = ResolveStreaming(args, fallback: true),
+        };
+
+        PrintInteractiveBanner(tools, settings);
 
         // Un solo cliente para toda la sesion: reusar el HttpClient evita agotar
         // sockets y se crea perezosamente para que 'ayuda' funcione sin key.
@@ -113,7 +120,7 @@ internal static class Program
                     return lastExitCode;
                 }
 
-                if (TryHandleSessionCommand(thread, policy, model, verb, rest))
+                if (TryHandleSessionCommand(thread, settings, verb, rest))
                 {
                     continue;
                 }
@@ -145,7 +152,7 @@ internal static class Program
                             Console.WriteLine();
                         }
 
-                        return await AgentTurnAsync(client, thread, prompt, model, tools, policy, maxIterations, cancellationToken);
+                        return await AgentTurnAsync(client, thread, prompt, tools, settings, maxIterations, cancellationToken);
                     });
                 }
 
@@ -160,26 +167,50 @@ internal static class Program
         }
     }
 
+    /// <summary>
+    /// Lo que la sesion interactiva puede cambiar en caliente. Va por referencia para que
+    /// 'pensar' y 'stream' afecten al turno siguiente sin rearrancar el CLI.
+    /// </summary>
+    private sealed class SessionSettings
+    {
+        public required ThinkingPolicy Thinking { get; init; }
+
+        public required string Model { get; init; }
+
+        public bool Stream { get; set; }
+    }
+
     /// <summary>Un intercambio del usuario, con el hilo y los parametros de la sesion puestos.</summary>
     private static async Task<int> AgentTurnAsync(
         ITokenRouterClient client,
         ConversationThread thread,
         string prompt,
-        string model,
         ToolRegistry tools,
-        ThinkingPolicy policy,
+        SessionSettings settings,
         int maxIterations,
         CancellationToken cancellationToken)
     {
+        var model = settings.Model;
+
         // Se refrescan aqui para que {{hora}} sea la del turno, no la del arranque.
         thread.Variables.WithDefaults(model, tools.Names);
+
+        // El renderer se comparte entre las llamadas del turno: cierra el bloque abierto
+        // antes de cada traza para que el texto en vivo no se mezcle con el log del loop.
+        var renderer = settings.Stream ? new DeltaRenderer() : null;
 
         var machine = new AgentStateMachine(client, model, tools)
         {
             MaxTokens = 512,
             Temperature = 0,
-            Thinking = policy,
-            Trace = line => Console.WriteLine($"    {line}"),
+            Thinking = settings.Thinking,
+            Stream = settings.Stream,
+            OnDelta = renderer is null ? null : renderer.Render,
+            Trace = line =>
+            {
+                renderer?.Close();
+                Console.WriteLine($"    {line}");
+            },
         };
 
         var context = thread.StartTurn(prompt);
@@ -188,7 +219,11 @@ internal static class Program
         {
             MaxIterations = maxIterations,
             BreakWhen = iteration => iteration.Context.FinalContent is not null,
-            OnIteration = iteration => Console.WriteLine($"[{iteration.Iteration,2}] {iteration.LastTransition}"),
+            OnIteration = iteration =>
+            {
+                renderer?.Close();
+                Console.WriteLine($"[{iteration.Iteration,2}] {iteration.LastTransition}");
+            },
         };
 
         var result = await loop.RunAsync(context, cancellationToken);
@@ -222,13 +257,33 @@ internal static class Program
     /// <summary>Comandos que solo existen dentro de la sesion. Devuelve true si consumio la linea.</summary>
     private static bool TryHandleSessionCommand(
         ConversationThread thread,
-        ThinkingPolicy policy,
-        string model,
+        SessionSettings settings,
         string verb,
         string rest)
     {
+        var policy = settings.Thinking;
+        var model = settings.Model;
+
         switch (verb)
         {
+            case "stream" or "vivo":
+                RunSessionEdit(() =>
+                {
+                    var value = rest.Trim();
+                    if (value.Length > 0)
+                    {
+                        settings.Stream = value.ToLowerInvariant() switch
+                        {
+                            "on" or "si" or "true" or "1" => true,
+                            "off" or "no" or "false" or "0" => false,
+                            _ => throw new InvalidOperationException($"stream: valor no reconocido '{value}' (usa on u off)."),
+                        };
+                    }
+
+                    Console.WriteLine($"  stream: {(settings.Stream ? "activo (se pinta segun llega)" : "apagado (respuesta completa)")}");
+                });
+                return true;
+
             case "pensar" or "thinking":
                 RunSessionEdit(() =>
                 {
@@ -310,11 +365,12 @@ internal static class Program
         }
     }
 
-    private static void PrintInteractiveBanner(string model, ToolRegistry tools, ThinkingPolicy policy)
+    private static void PrintInteractiveBanner(ToolRegistry tools, SessionSettings settings)
     {
         Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
-        Console.WriteLine($"modelo: {model} | tools: {string.Join(", ", tools.Names)}");
-        Console.WriteLine($"thinking: {DescribeThinking(policy, model)}");
+        Console.WriteLine($"modelo: {settings.Model} | tools: {string.Join(", ", tools.Names)}");
+        Console.WriteLine($"thinking: {DescribeThinking(settings.Thinking, settings.Model)}");
+        Console.WriteLine($"stream: {(settings.Stream ? "activo" : "apagado")}");
         Console.WriteLine();
         Console.WriteLine("El agente mantiene el hilo entre turnos. Escribe y ya:");
         Console.WriteLine("  <texto libre>        se lo manda al agente recordando lo anterior");
@@ -327,6 +383,7 @@ internal static class Program
         Console.WriteLine("  sistema              muestra el prompt de sistema ya interpolado");
         Console.WriteLine("  plantilla <texto|archivo>   cambia la plantilla de sistema");
         Console.WriteLine("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
+        Console.WriteLine("  stream on|off        pinta la respuesta segun llega o de golpe");
         Console.WriteLine("  chat | discover | selftest | ayuda   utilidades sueltas, sin hilo");
         Console.WriteLine("  salir                cierra");
         Console.WriteLine();
@@ -518,6 +575,7 @@ internal static class Program
     {
         var prompt = PositionalOrDefault(args, "Responde solo con la palabra OK.");
         var policy = ResolveThinkingPolicy(args);
+        var stream = ResolveStreaming(args);
         using var client = BuildClient(out var source, policy);
         var model = ResolveModel(args);
 
@@ -528,34 +586,72 @@ internal static class Program
         Console.WriteLine($"key: {source}");
         Console.WriteLine($"modelo: {model}");
         Console.WriteLine($"thinking: {DescribeThinking(policy, model)}");
+        Console.WriteLine($"modo: {(stream ? "stream" : "respuesta completa")}");
         Console.WriteLine($"prompt: {prompt}");
         Console.WriteLine();
 
-        var raw = await client.CreateChatCompletionAsync(
-            new ChatRequest
-            {
-                Model = model,
-                Messages =
-                [
-                    ChatMessage.FromSystem(thread.RenderSystemPrompt()),
-                    ChatMessage.FromUser(TextSanitizer.Plain(prompt)),
-                ],
-                // El razonamiento se paga del mismo max_tokens, asi que se deja margen.
-                MaxTokens = policy.EnsureHeadroom(512, model),
-                Temperature = 0,
-                Thinking = policy.For(model),
-            },
-            cancellationToken);
+        var request = new ChatRequest
+        {
+            Model = model,
+            Messages =
+            [
+                ChatMessage.FromSystem(thread.RenderSystemPrompt()),
+                ChatMessage.FromUser(TextSanitizer.Plain(prompt)),
+            ],
+            // El razonamiento se paga del mismo max_tokens, asi que se deja margen.
+            MaxTokens = policy.EnsureHeadroom(512, model),
+            Temperature = 0,
+            Thinking = policy.For(model),
 
-        var parsed = CompletionParser.Parse(raw);
+            // Sin include_usage el stream no trae el consumo y no habria como contarlo.
+            StreamOptions = stream ? StreamOptions.WithUsage : null,
+        };
+
+        ParsedCompletion parsed;
+        var streamNote = string.Empty;
+
+        if (stream)
+        {
+            var renderer = new DeltaRenderer();
+            var accumulator = new StreamAccumulator();
+
+            await foreach (var chunk in client.StreamChatCompletionAsync(request, cancellationToken))
+            {
+                var delta = accumulator.Add(chunk);
+                if (!delta.IsEmpty)
+                {
+                    renderer.Render(delta);
+                }
+            }
+
+            renderer.Close();
+            Console.WriteLine();
+
+            streamNote = $"{accumulator.Chunks} chunks, {accumulator.Deltas} con contenido" +
+                         (accumulator.HasUsage ? string.Empty : ", sin usage (el backend no lo manda)");
+
+            // El acumulador rearma la respuesta completa: de aqui en adelante da igual
+            // por que camino llego.
+            parsed = accumulator.Build();
+        }
+        else
+        {
+            parsed = CompletionParser.Parse(await client.CreateChatCompletionAsync(request, cancellationToken));
+        }
 
         Console.WriteLine($"finish_reason : {parsed.FinishReason}");
         Console.WriteLine($"backend       : {parsed.Model}");
         Console.WriteLine($"usage         : {parsed.Usage}");
         Console.WriteLine($"thinking      : {parsed.Thinking}");
-        if (parsed.Thinking.Text is { Length: > 0 } thought)
+        if (!stream && parsed.Thinking.Text is { Length: > 0 } thought)
         {
             Console.WriteLine($"  {Shorten(thought, 200)}");
+        }
+
+        if (stream)
+        {
+            Console.WriteLine($"stream        : {streamNote}");
+            return 0;
         }
 
         Console.WriteLine();
@@ -615,6 +711,7 @@ internal static class Program
         var prompt = PositionalOrDefault(args, "Suma 17 y 23 usando la herramienta y dime el resultado.");
         var maxIterations = IntOption(args, "--max-iterations", 12);
         var policy = ResolveThinkingPolicy(args);
+        var stream = ResolveStreaming(args);
 
         using var client = BuildClient(out var source, policy);
         var model = ResolveModel(args);
@@ -624,15 +721,26 @@ internal static class Program
         Console.WriteLine($"modelo   : {model}");
         Console.WriteLine($"tools    : {string.Join(", ", tools.Names)}");
         Console.WriteLine($"thinking : {DescribeThinking(policy, model)}");
+        Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
         Console.WriteLine($"prompt   : {prompt}");
         Console.WriteLine();
+
+        // Un solo renderer para todo el loop: cierra el bloque abierto antes de cada traza
+        // para que lo que llega en vivo no se entrelace con el log de iteraciones.
+        var renderer = stream ? new DeltaRenderer() : null;
 
         var machine = new AgentStateMachine(client, model, tools)
         {
             MaxTokens = 512,
             Temperature = 0,
             Thinking = policy,
-            Trace = line => Console.WriteLine($"    {line}"),
+            Stream = stream,
+            OnDelta = renderer is null ? null : renderer.Render,
+            Trace = line =>
+            {
+                renderer?.Close();
+                Console.WriteLine($"    {line}");
+            },
         };
 
         var thread = new ConversationThread();
@@ -649,7 +757,10 @@ internal static class Program
             BreakWhen = iteration => iteration.Context.FinalContent is not null,
 
             OnIteration = iteration =>
-                Console.WriteLine($"[{iteration.Iteration,2}] {iteration.LastTransition}"),
+            {
+                renderer?.Close();
+                Console.WriteLine($"[{iteration.Iteration,2}] {iteration.LastTransition}");
+            },
         };
 
         var result = await loop.RunAsync(context, cancellationToken);
@@ -702,7 +813,10 @@ internal static class Program
         Console.WriteLine();
         var thinkingOk = ThinkingSelfTest();
 
-        var ok = loopOk && promptOk && thinkingOk;
+        Console.WriteLine();
+        var streamOk = StreamSelfTest();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;
@@ -822,6 +936,130 @@ internal static class Program
     /// el gateway, que las cuatro formas de respuesta se parseen a la misma estructura y que
     /// la politica solo lo active donde toca.
     /// </summary>
+    /// <summary>
+    /// Verifica sin red que el acumulador de streaming reconstruye lo mismo que llega en
+    /// una respuesta completa. La propiedad que importa es la equivalencia: si stream y
+    /// no-stream no producen el mismo <see cref="ParsedCompletion"/>, el resto del harness
+    /// se comporta distinto segun un flag y eso es una fuente de bugs invisible.
+    /// </summary>
+    private static bool StreamSelfTest()
+    {
+        Console.WriteLine("Self-test de streaming: acumulacion de chunks, thinking y tool calls.");
+        Console.WriteLine();
+
+        static JsonElement Chunk(string json) => JsonDocument.Parse(json).RootElement.Clone();
+
+        static StreamAccumulator Feed(params string[] chunks)
+        {
+            var accumulator = new StreamAccumulator();
+            foreach (var chunk in chunks)
+            {
+                accumulator.Add(Chunk(chunk));
+            }
+
+            return accumulator;
+        }
+
+        var results = new List<(string Name, bool Ok)>();
+
+        // 1) Texto troceado: el contenido se pega en orden y el finish_reason sobrevive.
+        var text = Feed(
+            """{"id":"c1","model":"m","choices":[{"delta":{"role":"assistant","content":"Hola"}}]}""",
+            """{"choices":[{"delta":{"content":" mundo"}}]}""",
+            """{"choices":[{"delta":{},"finish_reason":"stop"}]}""");
+
+        var textParsed = text.Build();
+        results.Add(("el texto troceado se reensambla", textParsed.Content == "Hola mundo"));
+        results.Add(("el finish_reason del ultimo chunk se conserva", textParsed.FinishReason == "stop"));
+        results.Add(("los chunks vacios no cuentan como delta", text.Chunks == 3 && text.Deltas == 2));
+
+        // 2) reasoning_content en delta: se tipa igual que en la respuesta completa.
+        var reasoning = Feed(
+            """{"choices":[{"delta":{"reasoning_content":"deja"}}]}""",
+            """{"choices":[{"delta":{"reasoning_content":"me pensar"}}]}""",
+            """{"choices":[{"delta":{"content":"42"},"finish_reason":"stop"}]}""");
+
+        var reasoningParsed = reasoning.Build();
+        results.Add(("el razonamiento troceado se reensambla", reasoning.ThinkingText == "dejame pensar"));
+        results.Add(("el thinking del stream se tipa como reasoning_content",
+            reasoningParsed.Thinking.Source == ThinkingSource.ReasoningContent && reasoningParsed.Thinking.Observed));
+        results.Add(("razonamiento y contenido no se mezclan", reasoningParsed.Content == "42"));
+
+        // 3) <think> partido justo en la frontera de dos chunks: el corte no debe perderse.
+        var inline = Feed(
+            """{"choices":[{"delta":{"content":"<thi"}}]}""",
+            """{"choices":[{"delta":{"content":"nk>calculando</think>listo"},"finish_reason":"stop"}]}""");
+
+        var inlineParsed = inline.Build();
+        results.Add(("el <think> partido entre chunks se separa igual",
+            inlineParsed.Thinking.Source == ThinkingSource.InlineTags && inlineParsed.Content == "listo"));
+
+        // 4) Tool calls fragmentadas: id y nombre solo vienen en el primer trozo, los
+        //    argumentos llegan a cachos y hay que concatenarlos por index.
+        var tools = Feed(
+            """{"choices":[{"delta":{"tool_calls":[{"index":0,"id":"call_a","type":"function","function":{"name":"add_numbers","arguments":"{\"a\":"}}]}}]}""",
+            """{"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"arguments":"17,\"b\":23}"}}]}}]}""",
+            """{"choices":[{"delta":{},"finish_reason":"tool_calls"}]}""");
+
+        var toolsParsed = tools.Build();
+        var call = toolsParsed.ToolCalls.FirstOrDefault();
+        results.Add(("los fragmentos de tool call se funden por index", toolsParsed.ToolCalls.Count == 1));
+        results.Add(("la tool conserva id y nombre", call is { Id: "call_a", Name: "add_numbers" }));
+        results.Add(("los argumentos troceados parsean como JSON",
+            call is { ArgumentsParseFailed: false } && call.Arguments.GetProperty("a").GetInt32() == 17
+            && call.Arguments.GetProperty("b").GetInt32() == 23));
+        results.Add(("las tool calls reensambladas son reenviables al gateway",
+            toolsParsed.RawToolCalls is { ValueKind: JsonValueKind.Array } raw && raw.GetArrayLength() == 1
+            && raw[0].GetProperty("function").GetProperty("arguments").GetString() == """{"a":17,"b":23}"""));
+
+        // 5) usage del chunk final (stream_options.include_usage), razonamiento incluido.
+        var usage = Feed(
+            """{"choices":[{"delta":{"content":"ok"},"finish_reason":"stop"}]}""",
+            """{"choices":[],"usage":{"prompt_tokens":10,"completion_tokens":7,"total_tokens":17,"completion_tokens_details":{"reasoning_tokens":4}}}""");
+
+        var usageParsed = usage.Build();
+        results.Add(("el usage del ultimo chunk se recoge", usage.HasUsage));
+        results.Add(("el usage del stream cuenta tokens de razonamiento",
+            usageParsed.Usage is { PromptTokens: 10, CompletionTokens: 7, ThinkingTokens: 4 }));
+
+        // 6) La propiedad central: stream y no-stream tienen que dar lo mismo.
+        var completo = CompletionParser.Parse(Chunk(
+            """{"id":"c9","model":"m","choices":[{"message":{"role":"assistant","content":"Hola mundo","reasoning_content":"dejame pensar"},"finish_reason":"stop"}],"usage":{"prompt_tokens":10,"completion_tokens":7,"total_tokens":17}}"""));
+
+        var troceado = Feed(
+            """{"id":"c9","model":"m","choices":[{"delta":{"role":"assistant","reasoning_content":"dejame"}}]}""",
+            """{"choices":[{"delta":{"reasoning_content":" pensar","content":"Hola"}}]}""",
+            """{"choices":[{"delta":{"content":" mundo"},"finish_reason":"stop"}]}""",
+            """{"choices":[],"usage":{"prompt_tokens":10,"completion_tokens":7,"total_tokens":17}}""").Build();
+
+        results.Add(("stream y no-stream producen el mismo contenido", troceado.Content == completo.Content));
+        results.Add(("stream y no-stream producen el mismo thinking",
+            troceado.Thinking.Text == completo.Thinking.Text && troceado.Thinking.Source == completo.Thinking.Source));
+        results.Add(("stream y no-stream producen el mismo usage", troceado.Usage == completo.Usage));
+        results.Add(("stream y no-stream coinciden en finish_reason", troceado.FinishReason == completo.FinishReason));
+
+        // 7) Chunks basura: keep-alives y choices vacios no deben romper la acumulacion.
+        var ruido = Feed(
+            """{"choices":[]}""",
+            """{"foo":"bar"}""",
+            """{"choices":[{"delta":{"content":"a"},"finish_reason":"stop"}]}""");
+
+        results.Add(("los chunks sin delta se ignoran sin romper", ruido.Build().Content == "a"));
+
+        // 8) Sin finish_reason explicito, se deduce del contenido acumulado.
+        var sinFinish = Feed("""{"choices":[{"delta":{"tool_calls":[{"index":0,"function":{"name":"t","arguments":"{}"}}]}}]}""");
+        results.Add(("sin finish_reason se deduce tool_calls", sinFinish.Build().FinishReason == "tool_calls"));
+        results.Add(("las tool calls sin id reciben uno sintetico",
+            sinFinish.Build().ToolCalls[0].Id is { Length: > 0 }));
+
+        foreach (var (name, ok) in results)
+        {
+            Console.WriteLine($"  [{(ok ? "ok" : "FALLA")}] {name}");
+        }
+
+        return results.All(r => r.Ok);
+    }
+
     private static bool ThinkingSelfTest()
     {
         Console.WriteLine("Self-test de thinking: peticion, parseo y politica.");
@@ -960,6 +1198,96 @@ internal static class Program
         }
     }
 
+    /// <summary>
+    /// Pinta un stream en la consola separando razonamiento de respuesta. Sin esto los dos
+    /// se mezclan en el mismo hilo de texto y no se sabe que es lo que el modelo esta
+    /// contestando y que es lo que esta rumiando.
+    /// </summary>
+    private sealed class DeltaRenderer
+    {
+        private bool _thinkingOpen;
+        private bool _contentOpen;
+
+        public void Render(StreamDelta delta)
+        {
+            if (delta.HasThinking)
+            {
+                if (!_thinkingOpen)
+                {
+                    CloseContent();
+                    Write("(pensando) ", ConsoleColor.DarkGray);
+                    _thinkingOpen = true;
+                }
+
+                Write(delta.Thinking, ConsoleColor.DarkGray);
+            }
+
+            if (delta.Content.Length > 0)
+            {
+                if (!_contentOpen)
+                {
+                    CloseThinking();
+                    _contentOpen = true;
+                }
+
+                Console.Write(delta.Content);
+            }
+
+            foreach (var toolDelta in delta.ToolCallDeltas)
+            {
+                // Los argumentos llegan troceados; aqui solo interesa saber que ya se esta pidiendo.
+                if (toolDelta.TryGetProperty("function", out var function) &&
+                    function.TryGetProperty("name", out var name) &&
+                    name.GetString() is { Length: > 0 } toolName)
+                {
+                    CloseThinking();
+                    CloseContent();
+                    Write($"(llamando a {toolName})", ConsoleColor.DarkCyan);
+
+                    // Deja la linea abierta a proposito: la cierra el siguiente bloque
+                    // o Close(), y asi la traza del loop no se pega a este aviso.
+                    _contentOpen = true;
+                }
+            }
+        }
+
+        public void Close()
+        {
+            CloseThinking();
+            CloseContent();
+        }
+
+        private void CloseThinking()
+        {
+            if (!_thinkingOpen)
+            {
+                return;
+            }
+
+            _thinkingOpen = false;
+            Console.WriteLine();
+        }
+
+        private void CloseContent()
+        {
+            if (!_contentOpen)
+            {
+                return;
+            }
+
+            _contentOpen = false;
+            Console.WriteLine();
+        }
+
+        private static void Write(string text, ConsoleColor color)
+        {
+            var previous = Console.ForegroundColor;
+            Console.ForegroundColor = color;
+            Console.Write(text);
+            Console.ForegroundColor = previous;
+        }
+    }
+
     private static TokenRouterClient BuildClient(out string keySource, ThinkingPolicy? thinking = null)
     {
         if (!SecretStore.TryGetTokenRouterApiKey(out var apiKey, out var reason))
@@ -1046,6 +1374,11 @@ internal static class Program
         {
             if (args[i].StartsWith("--", StringComparison.Ordinal))
             {
+                if (BooleanFlags.Contains(args[i], StringComparer.OrdinalIgnoreCase))
+                {
+                    continue; // no lleva valor: lo de detras sigue siendo prompt
+                }
+
                 if (i + 1 < args.Length && !args[i + 1].StartsWith("--", StringComparison.Ordinal))
                 {
                     i++; // la opcion se lleva su valor: --model qwen/... no es prompt
@@ -1102,6 +1435,16 @@ internal static class Program
         }
     }
 
+    /// <summary>Opciones sin valor: hay que conocerlas para no comerse el prompt que va detras.</summary>
+    private static readonly string[] BooleanFlags = ["--stream", "--no-stream"];
+
+    private static bool HasFlag(string[] args, string name)
+        => args.Any(a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));
+
+    /// <summary>--stream, o --no-stream para apagarlo cuando el defecto lo trae puesto.</summary>
+    private static bool ResolveStreaming(string[] args, bool fallback = false)
+        => HasFlag(args, "--no-stream") ? false : HasFlag(args, "--stream") || fallback;
+
     private static string? StringOption(string[] args, string name)
     {
         var index = Array.FindIndex(args, a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));
@@ -1139,7 +1482,7 @@ internal static class Program
               selftest              Prueba el corte del loop sin tocar la red.
               interactive           Prompt interactivo con hilo de conversacion (lo que usa F5 en
                                     Visual Studio). Dentro: nuevo, historial, vars, set, unset,
-                                    sistema, plantilla, pensar, salir.
+                                    sistema, plantilla, pensar, stream, salir.
 
             Opciones:
               --model <id>          Modelo a usar (por defecto: el primero de artifacts/agentic-models.json).
@@ -1151,6 +1494,8 @@ internal static class Program
               --var clave=valor     Define un parametro de la plantilla. Repetible.
               --thinking <modo>     auto (por defecto), on u off. Ver la seccion Thinking.
               --thinking-budget <n> Tokens que puede gastar razonando (256).
+              --stream              Pinta la respuesta segun llega. --no-stream la apaga
+                                    (el CLI interactivo la trae puesta).
 
             Plantillas:
               El prompt de sistema se interpola con {{variable}}. El modo de escapado va
@@ -1183,6 +1528,21 @@ internal static class Program
 
               Pensar gasta del mismo max_tokens que la respuesta, asi que con thinking activo
               el harness sube el tope para que quede margen para contestar.
+
+            Streaming:
+              Con --stream la respuesta llega por SSE y se pinta mientras el modelo la
+              escribe: el razonamiento en gris con el prefijo (pensando) y la respuesta
+              en texto normal, para no confundir lo que rumia con lo que contesta.
+
+              Los chunks se acumulan y se rearman en una respuesta con la misma forma que
+              la no-streaming, asi que el thinking, las tool calls y el consumo salen
+              tipados igual por los dos caminos; el selftest comprueba justo esa
+              equivalencia. Las tool calls llegan troceadas (el id y el nombre solo en el
+              primer trozo, los argumentos a cachos) y se funden por su indice.
+
+              El consumo solo viaja en el stream si se pide con stream_options.include_usage,
+              que el harness manda siempre que hay stream; si el backend lo ignora, se avisa
+              en vez de reportar cero tokens.
 
             La API key se lee de local-secrets/tokenrouter-api-key.txt, o de la
             variable de entorno TOKENROUTER_API_KEY.

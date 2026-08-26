@@ -1,4 +1,5 @@
-﻿using AgentLoop.Parsing;
+﻿using System.Text.Json;
+using AgentLoop.Parsing;
 using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.Tools;
@@ -63,6 +64,15 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
     /// </summary>
     public ThinkingPolicy? Thinking { get; init; }
 
+    /// <summary>
+    /// Pide la respuesta en streaming. El turno acaba en el mismo sitio: los chunks se
+    /// juntan en una respuesta con forma normal, asi que el resto de la maquina no cambia.
+    /// </summary>
+    public bool Stream { get; init; }
+
+    /// <summary>Cada trozo que llega en streaming, ya normalizado. Solo se invoca si <see cref="Stream"/>.</summary>
+    public Action<StreamDelta>? OnDelta { get; init; }
+
     /// <summary>Callback de traza; recibe una linea legible por paso.</summary>
     public Action<string>? Trace { get; init; }
 
@@ -112,14 +122,44 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
             // el modelo se lo gasta pensando y devuelve content vacio.
             MaxTokens = Thinking?.EnsureHeadroom(MaxTokens, Model) ?? MaxTokens,
             Thinking = thinking,
+            // Sin include_usage un turno en streaming no se puede contabilizar.
+            StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
 
         context.Turns++;
         var thinkingNote = thinking is null ? string.Empty : $", thinking {thinking}";
-        Trace?.Invoke($"turno {context.Turns}: POST /chat/completions ({context.Messages.Count} mensajes{thinkingNote})");
+        var modeNote = Stream ? ", stream" : string.Empty;
+        Trace?.Invoke($"turno {context.Turns}: POST /chat/completions ({context.Messages.Count} mensajes{thinkingNote}{modeNote})");
 
-        context.PendingResponse = await _client.CreateChatCompletionAsync(request, cancellationToken).ConfigureAwait(false);
+        context.PendingResponse = Stream
+            ? await StreamRequestAsync(request, cancellationToken).ConfigureAwait(false)
+            : await _client.CreateChatCompletionAsync(request, cancellationToken).ConfigureAwait(false);
+
         return AgentState.Parsing;
+    }
+
+    /// <summary>
+    /// Consume el stream entero y devuelve la respuesta armada. Los deltas se van
+    /// entregando segun llegan; el razonamiento tambien, que es justo lo que se quiere ver.
+    /// </summary>
+    private async Task<JsonElement> StreamRequestAsync(ChatRequest request, CancellationToken cancellationToken)
+    {
+        var accumulator = new StreamAccumulator();
+
+        await foreach (var chunk in _client.StreamChatCompletionAsync(request, cancellationToken).ConfigureAwait(false))
+        {
+            var delta = accumulator.Add(chunk);
+            if (!delta.IsEmpty)
+            {
+                OnDelta?.Invoke(delta);
+            }
+        }
+
+        var usageNote = accumulator.HasUsage ? string.Empty : " (sin usage: el backend no lo manda)";
+        Trace?.Invoke($"  stream: {accumulator.Chunks} chunks, {accumulator.Content.Length} chars de texto, " +
+                      $"{accumulator.ThinkingText.Length} de razonamiento{usageNote}");
+
+        return accumulator.BuildRaw();
     }
 
     private AgentState ParseResponse(AgentContext context)

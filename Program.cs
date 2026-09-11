@@ -1264,10 +1264,7 @@ internal static class Program
         Console.WriteLine();
         var compositionOk = AgentLoop.Harness.Composition.CompositionSelfTest.Run();
 
-        Console.WriteLine();
-        var scriptedOk = AgentLoop.Harness.Runner.ScriptedRunnerSelfTest.Run();
-
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && scriptedOk;
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

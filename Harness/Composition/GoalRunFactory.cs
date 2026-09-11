@@ -111,7 +111,7 @@ public static class GoalRunFactory
     /// <summary>
     /// Variante para callers que quieren el setup completo y ademas conectar el
     /// bus al StepRecorder (asi los AgentEvents se vuelven BusEventSteps en el
-    /// Journey). Es la combinacion que usan JournalAsync y ScriptedRunner.
+    /// Journey). Es la combinacion que usa JournalAsync.
     /// </summary>
     public static GoalRunSetup BuildWithBusRecording(
         Core.Run run,

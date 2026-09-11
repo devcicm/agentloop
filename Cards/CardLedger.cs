@@ -17,7 +17,8 @@ public sealed record CardPlay(
         get
         {
             var first = Fields.Values.FirstOrDefault() ?? string.Empty;
-            return first.Length > 90 ? first[..90] + "..." : first;
+            var clean = AgentLoop.Prompting.TextSanitizer.Plain(first);
+            return clean.Length > 90 ? clean[..90] + "..." : clean;
         }
     }
 
@@ -81,7 +82,7 @@ public sealed class CardTransaction
     public TimeSpan Elapsed => (ClosedAt ?? DateTimeOffset.Now) - OpenedAt;
 
     public override string ToString()
-        => $"{Id} nivel {Depth}: {Objective} ({Steps.Count} pasos, {(Verified ? "comprobada" : "sin comprobar")})";
+        => $"{Id} nivel {Depth}: {AgentLoop.Prompting.TextSanitizer.Plain(Objective)} ({Steps.Count} pasos, {(Verified ? "comprobada" : "sin comprobar")})";
 }
 
 /// <summary>
@@ -237,7 +238,7 @@ public sealed class CardLedger
 
         if (PendingDebt() is { } debt)
         {
-            builder.AppendLine($"  pendiente: {debt}");
+            builder.AppendLine($"  pendiente: {AgentLoop.Prompting.TextSanitizer.Plain(debt)}");
         }
 
         return builder.ToString().TrimEnd();

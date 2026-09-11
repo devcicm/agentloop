@@ -1277,7 +1277,10 @@ internal static class Program
         Console.WriteLine();
         var goalOk = await GoalSelfTest(cancellationToken);
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk;
+        Console.WriteLine();
+        var sanitizeOk = SanitizationSelfTest.Run();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

@@ -155,16 +155,83 @@ public static class TextSanitizer
     /// Garantiza que lo que se devuelve a un mensaje role=tool sea un objeto JSON.
     /// Una herramienta que devuelve texto suelto (o un stack trace) descoloca a los
     /// modelos que asumen JSON en ese rol; se envuelve en lugar de mandarlo crudo.
+    ///
+    /// Reglas:
+    /// - Objeto JSON no vacio con contenido: pasa tal cual (el modelo recibe la estructura real).
+    /// - Objeto vacio {}: no aporta nada, se envuelve en {"text":""}.
+    /// - Array JSON valido: se envuelve en {"items":[...]}.
+    /// - Primitivo JSON valido (numero, true/false/null, string): se envuelve en {"value":...}.
+    /// - Lo que no parsea como JSON: se envuelve en {"text":...} con el valor escapado.
+    /// Asi el modelo siempre ve un objeto en role=tool, sin perder semantica cuando
+    /// la herramienta devuelve un array o un primitivo.
     /// </summary>
     public static string EnsureJsonObject(string? value)
     {
         var clean = Plain(value);
-
-        if (clean.Length > 0 && clean.TrimStart().StartsWith('{') && IsWellFormedJson(clean))
+        if (clean.Length == 0)
         {
-            return clean;
+            return "{\"text\":\"\"}";
+        }
+
+        var trimmed = clean.TrimStart();
+
+        if (trimmed.StartsWith('{'))
+        {
+            if (IsWellFormedJson(clean))
+            {
+                if (IsEmptyObject(clean))
+                {
+                    return "{\"text\":\"\"}";
+                }
+
+                return clean;
+            }
+
+            return $"{{\"text\":{JsonLiteral(clean)}}}";
+        }
+
+        if (trimmed.StartsWith('['))
+        {
+            if (IsWellFormedJson(clean))
+            {
+                return $"{{\"items\":{JsonLiteral(clean)}}}";
+            }
+
+            return $"{{\"text\":{JsonLiteral(clean)}}}";
+        }
+
+        if (IsJsonPrimitive(trimmed))
+        {
+            return $"{{\"value\":{JsonLiteral(clean)}}}";
         }
 
         return $"{{\"text\":{JsonLiteral(clean)}}}";
+    }
+
+    private static bool IsEmptyObject(string value)
+    {
+        try
+        {
+            using var doc = JsonDocument.Parse(value);
+            return doc.RootElement.ValueKind == JsonValueKind.Object && doc.RootElement.EnumerateObject().MoveNext() == false;
+        }
+        catch (JsonException)
+        {
+            return false;
+        }
+    }
+
+    private static bool IsJsonPrimitive(string trimmed)
+    {
+        if (trimmed.Length == 0)
+        {
+            return false;
+        }
+
+        var first = trimmed[0];
+        return first is '"' or '-' or '+' or '0' or '1' or '2' or '3' or '4' or '5' or '6' or '7' or '8' or '9'
+            || trimmed.StartsWith("true", StringComparison.Ordinal)
+            || trimmed.StartsWith("false", StringComparison.Ordinal)
+            || trimmed.StartsWith("null", StringComparison.Ordinal);
     }
 }

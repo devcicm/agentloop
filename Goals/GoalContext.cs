@@ -2,6 +2,7 @@ using System.Text;
 using AgentLoop.Cards;
 using AgentLoop.Events;
 using AgentLoop.Parsing;
+using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.Terminals;
 
@@ -94,7 +95,7 @@ public sealed class GoalContext
 
         foreach (var item in events)
         {
-            builder.AppendLine(item.ToPrompt());
+            builder.AppendLine(TextSanitizer.Plain(item.ToPrompt()));
         }
 
         builder.AppendLine();
@@ -116,7 +117,7 @@ public sealed class GoalContext
         {
             foreach (var handle in Supervisor.Handles.TakeLast(6))
             {
-                builder.AppendLine($"  {handle}");
+                builder.AppendLine($"  {TextSanitizer.Plain(handle.ToString())}");
             }
         }
 
@@ -126,7 +127,7 @@ public sealed class GoalContext
             builder.AppendLine("OBSERVADORES");
             foreach (var watcher in watchers.TakeLast(4))
             {
-                builder.AppendLine($"  {watcher}");
+                builder.AppendLine($"  {TextSanitizer.Plain(watcher.ToString())}");
             }
         }
 

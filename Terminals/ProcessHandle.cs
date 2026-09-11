@@ -151,7 +151,7 @@ public sealed class ProcessHandle : IDisposable
         var builder = new StringBuilder();
         foreach (var line in Tail(count))
         {
-            builder.AppendLine(line.ToString());
+            builder.AppendLine(AgentLoop.Prompting.TextSanitizer.Plain(line.ToString()));
         }
 
         return builder.ToString().TrimEnd();

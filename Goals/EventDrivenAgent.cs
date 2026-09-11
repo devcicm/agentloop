@@ -279,9 +279,9 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         }
 
         context.Messages.Add(ChatMessage.FromAssistant(
-            parsed.Content,
+            TextSanitizer.Plain(parsed.Content),
             parsed.RawToolCalls,
-            parsed.Thinking.Text is { Length: > 0 } thought ? thought : null));
+            parsed.Thinking.Text is { Length: > 0 } thought ? TextSanitizer.Plain(thought) : null));
 
         if (parsed.HasToolCalls)
         {
@@ -314,7 +314,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
 
             var output = TextSanitizer.EnsureJsonObject(execution.Output);
             context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
-            Trace?.Invoke($"  {call.Name}({Shorten(call.RawArguments, 90)}) -> {Shorten(execution.Output, 140)}");
+            Trace?.Invoke($"  {call.Name}({Shorten(TextSanitizer.Plain(call.RawArguments), 90)}) -> {Shorten(TextSanitizer.Plain(execution.Output), 140)}");
         }
 
         if (context.Ledger.GoalMet)
@@ -398,7 +398,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         builder.AppendLine("ENTORNO");
         builder.AppendLine($"  sistema: {(OperatingSystem.IsWindows() ? "Windows" : Environment.OSVersion.Platform.ToString())}");
         builder.AppendLine($"  interprete por defecto: {policy.DefaultShell.ToString().ToLowerInvariant()}");
-        builder.AppendLine($"  directorio de trabajo: {policy.WorkingDirectory}");
+        builder.AppendLine($"  directorio de trabajo: {TextSanitizer.Plain(policy.WorkingDirectory)}");
         builder.AppendLine($"  politica: {policy.Mode.ToString().ToLowerInvariant()}, hasta {policy.MaxConcurrent} procesos a la vez,");
         builder.AppendLine($"  tope por comando {policy.DefaultTimeout.TotalSeconds:0}s (maximo {policy.MaxTimeout.TotalMinutes:0}m)");
         builder.AppendLine($"  presupuesto total de la operacion: {context.Goal.Budget.TotalSeconds:0}s");

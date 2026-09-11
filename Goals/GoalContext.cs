@@ -43,6 +43,15 @@ public sealed class GoalContext
 
     public int IdleWaits { get; set; }
 
+    /// <summary>
+    /// Respuestas seguidas del modelo sin ninguna tool call. Se resetea a 0 en
+    /// cuanto el modelo usa una herramienta. El reactor lo usa para endurecer
+    /// el aviso: a partir de la segunda narracion seguida se le muestra un
+    /// ejemplo concreto de llamada, porque la lista de tarjetas legales sola
+    /// no basta para algunos modelos.
+    /// </summary>
+    public int TextOnlyStreak { get; set; }
+
     public TokenUsage TotalUsage { get; set; } = TokenUsage.Empty;
 
     public List<ThinkingTrace> Thinking { get; } = [];

@@ -340,18 +340,25 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
 
         if (parsed.HasToolCalls)
         {
+            context.TextOnlyStreak = 0;
             PendingNote = $"{parsed.ToolCalls.Count} llamada(s): {string.Join(", ", parsed.ToolCalls.Select(t => t.Name))}";
             return ReactorState.Despachando;
         }
 
         // Texto suelto sin herramientas: el modelo esta narrando en vez de operar. No se
         // le corta el paso, se le devuelve el aviso como un evento mas y que reaccione.
+        // A partir de la segunda narracion seguida se le muestra un ejemplo concreto
+        // de llamada: la lista de tarjetas legales sola no basta para algunos modelos
+        // y cada ciclo desperdiciado cuesta ~1 min de llamada al modelo.
+        context.TextOnlyStreak++;
         var said = parsed.Content is { Length: > 0 } text ? Shorten(text) : "(nada)";
-        context.Bus.Publish(
-            AgentEventKind.Aviso,
-            "reactor",
-            $"respondiste texto sin usar herramientas ({said}). La operacion no se cierra hablando: " +
-            $"juega una tarjeta o ejecuta algo. Legales ahora: {string.Join(", ", context.Ledger.AllowedNow())}.");
+        var aviso = $"respondiste texto sin usar herramientas ({said}). La operacion no se cierra hablando: " +
+            $"juega una tarjeta o ejecuta algo. Legales ahora: {string.Join(", ", context.Ledger.AllowedNow())}.";
+        if (context.TextOnlyStreak >= 2)
+        {
+            aviso += $" Ejemplo concreto (copia la estructura, adapta el contenido): {BuildToolExample(context)}";
+        }
+        context.Bus.Publish(AgentEventKind.Aviso, "reactor", aviso);
 
         PendingNote = "respuesta sin herramientas";
         return ReactorState.Esperando;
@@ -464,4 +471,43 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
 
     private static string Shorten(string value, int max = 120)
         => value.Length <= max ? value : value[..max] + "...";
+
+    /// <summary>
+    /// Ejemplo concreto de llamada a la tool tarjeta para el estado actual del
+    /// ledger. Prefiere "avanzar" (el paso natural con una transaccion abierta)
+    /// y cae a la primera tarjeta legal. Los valores son placeholders: el modelo
+    /// debe adaptarlos a lo que realmente observo.
+    /// </summary>
+    private static string BuildToolExample(GoalContext context)
+    {
+        var allowed = context.Ledger.AllowedNow();
+        if (allowed.Count == 0)
+        {
+            return "tarjeta({\"nombre\":\"abrir\",\"objetivo\":\"...\",\"plan\":\"...\"})";
+        }
+
+        var pick = allowed.Contains("avanzar", StringComparer.OrdinalIgnoreCase)
+            ? "avanzar"
+            : allowed[0];
+        var card = context.Ledger.Deck.Find(pick);
+        var fields = card is null
+            ? new Dictionary<string, string> { ["paso"] = "..." }
+            : card.RequiredFields.ToDictionary(
+                f => f,
+                f => f switch
+                {
+                    "objetivo" => "lo que hay que conseguir",
+                    "plan" => "como pienso conseguirlo",
+                    "paso" => "lo que observe al ejecutar el ultimo comando",
+                    "comprobacion" => "que verifique contra salida real",
+                    "resultado" => "lo que dice la salida real",
+                    "evidencia" => "codigo de salida y linea exacta vista",
+                    "motivo" => "por que no es alcanzable",
+                    _ => "...",
+                },
+                StringComparer.Ordinal);
+
+        var args = string.Join(",", fields.Select(kv => $"\"{kv.Key}\":\"{kv.Value}\""));
+        return $"tarjeta({{\"nombre\":\"{pick}\",{args}}})";
+    }
 }

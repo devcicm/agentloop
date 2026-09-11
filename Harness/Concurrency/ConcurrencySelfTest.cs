@@ -78,6 +78,37 @@ public static class ConcurrencySelfTest
         results.Add(("CardLedger: 200 avanzar concurrentes todos aceptados", okCount == 200 && failCount == 0));
         results.Add(("CardLedger: jugadas registradas exactamente 201 (1 abrir + 200 avanzar)", ledger.Plays.Count == 201));
 
+        // --- CardLedger reads concurrentes con writes: writers primero, luego readers ---
+        var readLedger = new AgentLoop.Cards.CardLedger(AgentLoop.Cards.CardDeck.Transaccional);
+        readLedger.Play("abrir", new Dictionary<string, string> { ["objetivo"] = "stress read", ["plan"] = "leer y escribir" });
+        Parallel.For(0, 32, w =>
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                readLedger.Play("avanzar", new Dictionary<string, string> { ["paso"] = $"x{i}" });
+            }
+        });
+
+        var readErrors = 0;
+        Parallel.For(0, 32, r =>
+        {
+            for (var i = 0; i < 50; i++)
+            {
+                try
+                {
+                    var _ = readLedger.Plays;
+                    var __ = readLedger.OpenCount;
+                    var ___ = readLedger.AllowedNow();
+                }
+                catch
+                {
+                    Interlocked.Increment(ref readErrors);
+                }
+            }
+        });
+        results.Add(("CardLedger: 32 readers concurrentes con 32 writers, sin excepciones", readErrors == 0));
+        results.Add(("CardLedger: reads no pierden jugadas ni duplican", readLedger.Plays.Count == 1 + 32 * 50));
+
         // Salida
         Console.WriteLine();
         Console.WriteLine("Self-test de concurrencia:");

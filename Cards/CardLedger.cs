@@ -122,15 +122,53 @@ public sealed class CardLedger
 
     public bool Finished => GoalMet || Aborted;
 
-    public int OpenCount => _open.Count;
+    /// <summary>Toma el lock del ledger para que un read concurrente con Play no vea colecciones a medio mutar.</summary>
+    private IDisposable ReadScope() => _gate.Lock();
 
-    public CardTransaction? Current => _open.Count > 0 ? _open.Peek() : null;
+    public int OpenCount
+    {
+        get
+        {
+            using var _ = ReadScope();
+            return _open.Count;
+        }
+    }
 
-    public IReadOnlyList<CardPlay> Plays => _plays;
+    public CardTransaction? Current
+    {
+        get
+        {
+            using var _ = ReadScope();
+            return _open.Count > 0 ? _open.Peek() : null;
+        }
+    }
 
-    public IReadOnlyList<CardTransaction> ClosedTransactions => _closed;
+    public IReadOnlyList<CardPlay> Plays
+    {
+        get
+        {
+            using var _ = ReadScope();
+            return _plays.ToArray();
+        }
+    }
 
-    public int Rejected => _plays.Count(p => !p.Accepted);
+    public IReadOnlyList<CardTransaction> ClosedTransactions
+    {
+        get
+        {
+            using var _ = ReadScope();
+            return _closed.ToArray();
+        }
+    }
+
+    public int Rejected
+    {
+        get
+        {
+            using var _ = ReadScope();
+            return _plays.Count(p => !p.Accepted);
+        }
+    }
 
     /// <summary>Juega una tarjeta. Nunca lanza: una jugada invalida vuelve rechazada con el motivo.</summary>
     public CardPlay Play(string name, IReadOnlyDictionary<string, string> fields)
@@ -202,6 +240,7 @@ public sealed class CardLedger
     /// <summary>Que tarjetas son legales en este momento. Va en el prompt de cada ciclo.</summary>
     public IReadOnlyList<string> AllowedNow()
     {
+        using var _ = ReadScope();
         if (Finished)
         {
             return [];
@@ -221,6 +260,7 @@ public sealed class CardLedger
     /// <summary>La deuda pendiente: lo que falta para que la operacion cuente como terminada.</summary>
     public string? PendingDebt()
     {
+        using var _ = ReadScope();
         if (GoalMet)
         {
             return null;
@@ -241,6 +281,7 @@ public sealed class CardLedger
 
     public string DescribeState()
     {
+        using var _ = ReadScope();
         var builder = new StringBuilder();
         builder.AppendLine($"tarjetas jugadas: {_plays.Count} ({Rejected} rechazadas) | abiertas: {_open.Count} | cerradas: {_closed.Count}");
 

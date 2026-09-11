@@ -105,6 +105,7 @@ public sealed class CardLedger
     private readonly Stack<CardTransaction> _open = new();
     private readonly List<CardPlay> _plays = [];
     private readonly List<CardTransaction> _closed = [];
+    private readonly AgentLoop.Harness.Concurrency.AsyncLock _gate = new();
     private int _opened;
 
     public CardLedger(CardDeck deck) => Deck = deck;
@@ -133,6 +134,12 @@ public sealed class CardLedger
 
     /// <summary>Juega una tarjeta. Nunca lanza: una jugada invalida vuelve rechazada con el motivo.</summary>
     public CardPlay Play(string name, IReadOnlyDictionary<string, string> fields)
+    {
+        using var _ = _gate.Lock();
+        return PlayCore(name, fields);
+    }
+
+    private CardPlay PlayCore(string name, IReadOnlyDictionary<string, string> fields)
     {
         var card = Deck.Find(name);
 

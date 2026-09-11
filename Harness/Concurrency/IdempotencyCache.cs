@@ -34,13 +34,15 @@ public sealed class IdempotencyCache
 
     public int Capacity => _capacity;
 
+    private long _accessCounter;
+
     public bool TryGet(string key, out string value)
     {
         if (_entries.TryGetValue(key, out var entry))
         {
             // Hit: refresca el LRU creando una Entry nueva (records son
             // inmutables). El ConcurrentDictionary la reemplaza.
-            _entries[key] = entry.WithAccess(Environment.TickCount64);
+            _entries[key] = entry.WithAccess(Interlocked.Increment(ref _accessCounter));
             value = entry.Value;
             return true;
         }
@@ -56,7 +58,7 @@ public sealed class IdempotencyCache
             EvictOldest();
         }
 
-        _entries[key] = new Entry(value, Environment.TickCount64);
+        _entries[key] = new Entry(value, Interlocked.Increment(ref _accessCounter));
     }
 
     public void Clear() => _entries.Clear();

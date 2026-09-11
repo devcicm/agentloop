@@ -10,11 +10,15 @@ namespace AgentLoop.Harness.Concurrency;
 /// transicionar el lifecycle del Run, escribir el Snapshot) manteniendo el
 /// modelo async de C#.
 ///
+/// Tiene dos formas de adquisicion: <see cref="LockAsync"/> para contextos
+/// async (no bloquea hilo) y <see cref="Lock"/> para contextos sync (la
+/// seccion critica no tiene awaits). Misma exclusion, distinto coste.
+///
 /// Uso tipico:
 /// <code>
 /// private static readonly AsyncLock _gate = new();
-/// using var guard = await _gate.LockAsync(ct);
-/// // seccion critica aqui
+/// using var guard = await _gate.LockAsync(ct);  // async
+/// using var sync = _gate.Lock();                 // sync (solo dentro de secciones sin await)
 /// </code>
 /// </summary>
 public sealed class AsyncLock
@@ -27,6 +31,13 @@ public sealed class AsyncLock
     public async Task<LockGuard> LockAsync(CancellationToken cancellationToken = default)
     {
         await _semaphore.WaitAsync(cancellationToken).ConfigureAwait(false);
+        return new LockGuard(_semaphore);
+    }
+
+    /// <summary>Variante sincrona: bloquea el hilo actual hasta adquirir el lock.</summary>
+    public LockGuard Lock()
+    {
+        _semaphore.Wait();
         return new LockGuard(_semaphore);
     }
 

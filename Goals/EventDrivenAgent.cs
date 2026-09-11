@@ -119,20 +119,34 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         // del budget: la peticion HTTP se cancela, la Task se completa con
         // OperationCanceledException, y aqui abajo se traduce a Fallido con motivo
         // de timeout en vez de propagarse como cancelacion del usuario.
-        using var deadlineCts = new CancellationTokenSource(context.Remaining);
+        //
+        // Despachando queda fuera del watchdog a proposito, igual que queda fuera
+        // del corte por Expired de arriba: las tool calls ya decididas tienen su
+        // propio tope por politica y no se cancelan a mitad.
+        if (CurrentState == ReactorState.Despachando)
+        {
+            return await DispatchAsync(context, cancellationToken).ConfigureAwait(false);
+        }
+
+        var remaining = context.Remaining;
+        if (remaining < TimeSpan.Zero)
+        {
+            remaining = TimeSpan.Zero;
+        }
+
+        using var deadlineCts = new CancellationTokenSource(remaining);
         using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, deadlineCts.Token);
         var linkedToken = linkedCts.Token;
 
         try
         {
-            return CurrentState switch
-            {
-                ReactorState.Arranque => Start(context),
-                ReactorState.Esperando => await WaitAsync(context, linkedToken).ConfigureAwait(false),
-                ReactorState.Razonando => await ReasonAsync(context, linkedToken).ConfigureAwait(false),
-                ReactorState.Despachando => await DispatchAsync(context, linkedToken).ConfigureAwait(false),
-                _ => CurrentState,
-            };
+        return CurrentState switch
+        {
+            ReactorState.Arranque => Start(context),
+            ReactorState.Esperando => await WaitAsync(context, linkedToken).ConfigureAwait(false),
+            ReactorState.Razonando => await ReasonAsync(context, linkedToken).ConfigureAwait(false),
+            _ => CurrentState,
+        };
         }
         catch (OperationCanceledException) when (deadlineCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
         {

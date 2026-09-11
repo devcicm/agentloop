@@ -995,25 +995,32 @@ internal static class Program
     /// </summary>
     private static async Task<int> LobosAsync(string[] args, CancellationToken cancellationToken)
     {
+        // El objetivo del poema es el primer argumento posicional; los
+        // flags (--model, --deadline, etc.) se pasan tal cual.
+        var objetivo = args.Length > 1 && !args[1].StartsWith("--", StringComparison.Ordinal)
+            ? args[1]
+            : "Escribe el cántico inicial del doblaje latino de Wolf's Rain en notes/wolf-rain-poem.md y verifícalo contra una fuente real.";
+
         // Reusa el flujo del comando goal: parsea los mismos flags, monta
         // policy y modelo, y delega en GoalAsync para que la ejecucion sea
         // exactamente la misma que cualquier otro goal del CLI.
-        var lobosArgs = new[] { "goal" }
-            .Concat(args.Where(a => !string.Equals(a, "lobos", StringComparison.OrdinalIgnoreCase)))
+        var lobosArgs = new[] { "goal", objetivo }
+            .Concat(args.Skip(1).Where(a => !string.Equals(a, objetivo, StringComparison.Ordinal)
+                && !string.Equals(a, "lobos", StringComparison.OrdinalIgnoreCase)))
             .ToArray();
 
-        var model = ResolveModel(args);
-        var deadline = IntOption(args, "--deadline", 120);
-        var maxCycles = IntOption(args, "--max-ciclos", 8);
-        var thinking = ResolveThinkingPolicy(args);
-        var stream = ResolveStreaming(args);
+        var model = ResolveModel(lobosArgs);
+        var deadline = IntOption(lobosArgs, "--deadline", 60);
+        var maxCycles = IntOption(lobosArgs, "--max-ciclos", 5);
+        var thinking = ResolveThinkingPolicy(lobosArgs);
+        var stream = ResolveStreaming(lobosArgs);
 
-        Console.WriteLine($"key      : {SecretStore.Mask(File.ReadAllText(SecretStore.FindSecretsFile(SecretStore.ApiKeyFileName)!).Trim())}");
-        Console.WriteLine($"modelo   : {model}");
-        Console.WriteLine($"deadline : {deadline}s");
+        Console.WriteLine($"key       : {SecretStore.Mask(File.ReadAllText(SecretStore.FindSecretsFile(SecretStore.ApiKeyFileName)!).Trim())}");
+        Console.WriteLine($"modelo    : {model}");
+        Console.WriteLine($"deadline  : {deadline}s");
         Console.WriteLine($"max-ciclos: {maxCycles}");
-        Console.WriteLine($"thinking : {DescribeThinking(thinking, model)}");
-        Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
+        Console.WriteLine($"thinking  : {DescribeThinking(thinking, model)}");
+        Console.WriteLine($"modo      : {(stream ? "stream" : "respuesta completa")}");
         Console.WriteLine();
         Console.WriteLine("Ejecutando goal con el modelo real. Sin mocks, sin atajos.");
         Console.WriteLine();
@@ -1312,7 +1319,10 @@ internal static class Program
         Console.WriteLine();
         var compositionOk = AgentLoop.Harness.Composition.CompositionSelfTest.Run();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk;
+        Console.WriteLine();
+        var watchdogOk = AgentLoop.Goals.WatchdogSelfTest.Run();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

@@ -19,11 +19,14 @@ public static class OperationTools
 {
     public static ToolRegistry Build(CardLedger ledger, ProcessSupervisor supervisor, EventBus bus)
     {
-        // Tools read-only que se benefician del cache: el mismo argumento
-        // produce el mismo resultado, asi que repetir la llamada no aporta
-        // nada. Tools con efectos reales (tarjeta, ejecutar, lanzar, esperar,
-        // flujo) no se cachean: el modelo podria querer reintentar y la
-        // idempotencia bloquearia el reintento.
+        // IdempotentTool solo se aplica a tools verdaderamente read-only:
+        // procesos (lista snapshot estable) y kill (matar un proceso ya
+        // muerto es no-op). leer NO se cachea porque su llamada real
+        // avanza el cursor del ProcessHandle, asi dos llamadas con la
+        // misma clave devolverian contenido cacheado aunque el proceso
+        // haya seguido emitiendo. observar NO se cachea porque cada
+        // llamada registra un watcher nuevo con id nuevo. ejecutar,
+        // lanzar, esperar, flujo y tarjeta tampoco (efectos reales).
         var cache = new AgentLoop.Harness.Concurrency.IdempotencyCache(capacity: 256);
 
         return new ToolRegistry(
@@ -32,10 +35,10 @@ public static class OperationTools
             RunTool(supervisor),
             LaunchTool(supervisor),
             WaitTool(supervisor, bus),
-            new AgentLoop.Tools.IdempotentTool(ReadTool(supervisor), cache),
+            ReadTool(supervisor),
             new AgentLoop.Tools.IdempotentTool(ProcessesTool(supervisor), cache),
             new AgentLoop.Tools.IdempotentTool(KillTool(supervisor), cache),
-            new AgentLoop.Tools.IdempotentTool(WatchTool(supervisor), cache),
+            WatchTool(supervisor),
             FlowTool(supervisor),
         ]);
     }

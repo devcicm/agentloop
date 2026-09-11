@@ -377,6 +377,28 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
             var output = TextSanitizer.EnsureJsonObject(execution.Output);
             context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
             Trace?.Invoke($"  {call.Name}({Shorten(TextSanitizer.Plain(call.RawArguments), 90)}) -> {Shorten(TextSanitizer.Plain(execution.Output), 140)}");
+
+            if (string.Equals(call.Name, "tarjeta", StringComparison.OrdinalIgnoreCase))
+            {
+                context.ToolCallsSinceCard = 0;
+            }
+            else
+            {
+                context.ToolCallsSinceCard++;
+            }
+        }
+
+        // El modelo ejecuta herramientas pero no declara progreso con tarjetas:
+        // sin este aviso puede quemar todo el presupuesto en ejecutar/leer sin
+        // que el libro mayor avance. Se resetea al avisar para no spamear.
+        if (context.ToolCallsSinceCard >= 3 && !context.Ledger.GoalMet && !context.Ledger.Aborted)
+        {
+            context.Bus.Publish(
+                AgentEventKind.Aviso,
+                "reactor",
+                $"llevas {context.ToolCallsSinceCard} llamada(s) seguidas sin jugar tarjeta: ejecutar comandos no mueve el libro mayor, solo las tarjetas lo mueven. " +
+                $"Ejemplo concreto (copia la estructura, adapta el contenido): {BuildToolExample(context)}");
+            context.ToolCallsSinceCard = 0;
         }
 
         if (context.Ledger.GoalMet)

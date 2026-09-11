@@ -52,6 +52,15 @@ public sealed class GoalContext
     /// </summary>
     public int TextOnlyStreak { get; set; }
 
+    /// <summary>
+    /// Tool calls seguidas sin jugar ninguna tarjeta. Se resetea a 0 cuando el
+    /// modelo juega una tarjeta. El reactor lo usa para detectar el otro modo
+    /// de estancamiento: el modelo ejecuta herramientas (ejecutar, leer, etc.)
+    /// pero nunca declara progreso con tarjetas. A partir de 3 seguidas se le
+    /// recuerda con ejemplo concreto.
+    /// </summary>
+    public int ToolCallsSinceCard { get; set; }
+
     public TokenUsage TotalUsage { get; set; } = TokenUsage.Empty;
 
     public List<ThinkingTrace> Thinking { get; } = [];

@@ -569,6 +569,7 @@ internal static class Program
             "run" => await RunAsync(args, cancellationToken),
             "goal" or "objetivo" => await GoalAsync(args, cancellationToken),
             "journal" or "diario" => await JournalAsync(args, cancellationToken),
+            "lobos" => await LobosAsync(args, cancellationToken),
             "selftest" => await SelfTestAsync(cancellationToken),
             "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
             "interactive" or "interactivo" or "repl" => await InteractiveAsync(args),
@@ -977,6 +978,100 @@ internal static class Program
         var markdownPath = Path.Combine(journalDir, $"{run.Id:N}.md");
         Console.WriteLine();
         Console.WriteLine($"markdown : {markdownPath}");
+
+        return result.IsSuccess ? 0 : 1;
+    }
+
+    /// <summary>
+    /// Smoke test end-to-end del harness con un Run que pide un cántico
+    /// de Wolf's Rain. Usa ScriptedRunner para evitar depender del modelo:
+    /// ejecuta la secuencia canonica abrir/avanzar/comprobar/cerrar y
+    /// produce Snapshot + Journey en artifacts/journeys/.
+    ///
+    /// Demuestra que el flujo completo del harness (RunContext, StepRecorder,
+    /// GoalRunFactory, BusEventStep, RunStore, JourneyWriter) funciona
+    /// end-to-end sin gastar creditos del proveedor, y deja el artefacto
+    /// en disco para inspeccion.
+    /// </summary>
+    private static async Task<int> LobosAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var objective = PositionalOrDefault(args,
+            "Escribir el cántico inicial del doblaje latino de Wolf's Rain en notes/wolf-rain-poem.md y verificarlo contra una fuente real.");
+
+        var run = Harness.Core.Run.FromObjective(objective, 60);
+
+        var journalDir = StringOption(args, "--journal-dir")
+            ?? Path.Combine(SecretStore.ResolveRepositoryRoot(), "artifacts", "journeys");
+        Directory.CreateDirectory(journalDir);
+        var store = new Harness.Durable.FileRunStore(journalDir);
+
+        var sequence = new Harness.Runner.ScriptedRunner.ScriptedStep[]
+        {
+            new("abrir", new Dictionary<string, string>
+            {
+                ["objetivo"] = objective,
+                ["plan"] = "investigar el cantico inicial del doblaje latino, escribir la nota, verificar, cerrar.",
+            }),
+            new("avanzar", new Dictionary<string, string>
+            {
+                ["paso"] = "consultar wolfsrain.fandom.com para confirmar la transcripcion del cantico inicial",
+            }),
+            new("avanzar", new Dictionary<string, string>
+            {
+                ["paso"] = "crear notes/wolf-rain-poem.md con el cantico y un encabezado Markdown",
+            }),
+            new("avanzar", new Dictionary<string, string>
+            {
+                ["paso"] = "releer el archivo para confirmar que el contenido esta en disco",
+            }),
+            new("comprobar", new Dictionary<string, string>
+            {
+                ["comprobacion"] = "leer el archivo y verificar que contiene el cantico del doblaje latino",
+                ["resultado"] = "archivo presente con el cantico 'Vagando por la tierra, corriendo tras la luna...'",
+            }),
+            new("cerrar", new Dictionary<string, string>
+            {
+                ["resultado"] = "nota creada en notes/wolf-rain-poem.md con el cántico del doblaje latino",
+                ["evidencia"] = "archivo existe y contiene el cántico verificado contra la wiki",
+            }),
+        };
+
+        var runner = new Harness.Runner.ScriptedRunner(sequence, store);
+        var options = new Harness.Runner.RunnerOptions { DeadlineSeconds = 60 };
+
+        Console.WriteLine($"run.id    : {run.Id:N}");
+        Console.WriteLine($"objetivo  : {run.Objective}");
+        Console.WriteLine($"journal   : {journalDir}");
+        Console.WriteLine();
+
+        var (result, journey) = await runner.RunAsync(run, options, cancellationToken).ConfigureAwait(false);
+
+        var markdownPath = Path.Combine(journalDir, $"{run.Id:N}.md");
+        await File.WriteAllTextAsync(markdownPath, Harness.Core.JourneyWriter.ToMarkdown(journey), cancellationToken).ConfigureAwait(false);
+
+        Console.WriteLine();
+        Console.WriteLine("--- journey ------------------------------------------");
+        Console.WriteLine($"status   : {journey.FinalStatus}");
+        Console.WriteLine($"outcome  : {journey.Outcome}");
+        Console.WriteLine($"steps    : {journey.Steps.Count} (model={journey.ModelCalls}, tool={journey.ToolCalls}, wait={journey.Waits}, err={journey.Errors})");
+        Console.WriteLine($"elapsed  : {journey.Elapsed.TotalSeconds:0}s");
+
+        Console.WriteLine();
+        Console.WriteLine("--- pasos ---");
+        foreach (var step in journey.Steps)
+        {
+            var summary = string.Join(", ", step.Data.Take(2).Select(kv => $"{kv.Key}={kv.Value}"));
+            if (summary.Length > 100) summary = summary[..100] + "...";
+            Console.WriteLine($"  #{step.Sequence} [{step.Kind}] {step.Name} ({step.Elapsed.TotalMilliseconds:0}ms) - {summary}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine($"markdown  : {markdownPath}");
+
+        Console.WriteLine();
+        Console.WriteLine(result.IsSuccess
+            ? "VEREDICTO : PASS - el harness cierra el goal end-to-end con ScriptedRunner"
+            : $"VEREDICTO : FAIL - {((Harness.Core.RunResult.Failure)result).Reason}");
 
         return result.IsSuccess ? 0 : 1;
     }

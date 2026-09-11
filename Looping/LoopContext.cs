@@ -70,9 +70,6 @@ public sealed record LoopResult<TState, TContext>(
                 _ => Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason>.Fail(LoopFailureReason.ConditionNotMet),
             };
 
-    [Obsolete("Usar Result.IsOk. Se conserva por compatibilidad con el SelfTest."), System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public bool Succeeded => BreakReason is LoopBreakReason.ConditionMet or LoopBreakReason.TerminalState && Error is null;
-
     public override string ToString()
         => $"IsBroken={IsBroken} BreakReason={BreakReason} Iterations={Iterations} FinalState={FinalState}";
 }

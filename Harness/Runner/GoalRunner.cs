@@ -118,7 +118,7 @@ public sealed class GoalRunner : IRunner
             var loopResult = await loop.RunAsync(goalContext, cancellationToken).ConfigureAwait(false);
             context.EndedAt = DateTimeOffset.Now;
 
-            var succeeded = loopResult.Succeeded && ledger.GoalMet;
+            var succeeded = loopResult.Result.IsOk && ledger.GoalMet;
             var result = succeeded
                 ? (RunResult)new RunResult.Success(ledger.Outcome ?? "objetivo cumplido")
                 : new RunResult.Failure(goalContext.FailureReason ?? ledger.PendingDebt() ?? "operacion no cerrada", loopResult.Error);

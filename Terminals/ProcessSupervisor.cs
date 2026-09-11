@@ -91,9 +91,6 @@ public sealed record ShellResult(
             : ExitCode == 0
                 ? Harness.Functional.Result<ShellOutcome, ShellFailureReason>.Ok(new ShellOutcome(ExitCode ?? 0, Output, Truncated, Duration))
                 : Harness.Functional.Result<ShellOutcome, ShellFailureReason>.Fail(ExitCode.HasValue ? ShellFailureReason.NonZeroExit : ShellFailureReason.Unknown);
-
-    [Obsolete("Usar Result.IsOk. Se conserva por compatibilidad con el SelfTest."), System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
-    public bool Succeeded => !TimedOut && ExitCode == 0;
 }
 
 /// <summary>

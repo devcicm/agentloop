@@ -235,7 +235,7 @@ internal static class Program
 
         Console.WriteLine();
 
-        if (result.Succeeded)
+        if (result.Result.IsOk)
         {
             thread.CommitTurn(context);
         }
@@ -256,7 +256,7 @@ internal static class Program
 
         Console.WriteLine($"[hilo: {thread.Messages.Count} mensajes | intercambios {thread.Exchanges} | turnos LLM {thread.Turns} | {thread.TotalUsage}]");
 
-        return result.Succeeded ? 0 : 1;
+        return result.Result.IsOk ? 0 : 1;
     }
 
     /// <summary>Comandos que solo existen dentro de la sesion. Devuelve true si consumio la linea.</summary>
@@ -790,7 +790,7 @@ internal static class Program
         Console.WriteLine();
         Console.WriteLine("--- respuesta ----------------------------------------");
         Console.WriteLine(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)");
-        return result.Succeeded ? 0 : 1;
+        return result.Result.IsOk ? 0 : 1;
     }
 
     /// <summary>

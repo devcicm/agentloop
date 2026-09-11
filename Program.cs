@@ -1286,7 +1286,10 @@ internal static class Program
         Console.WriteLine();
         var idempotentOk = AgentLoop.Tools.IdempotentToolSelfTest.Run();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk;
+        Console.WriteLine();
+        var lifecycleOk = AgentLoop.Harness.Lifecycle.LifecycleAndBusDedupSelfTest.Run();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

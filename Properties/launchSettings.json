@@ -28,6 +28,14 @@
       "commandName": "Project",
       "commandLineArgs": "run \"Suma 17 y 23 usando la herramienta y dime el resultado.\" --stream"
     },
+    "goal (operacion por eventos)": {
+      "commandName": "Project",
+      "commandLineArgs": "goal \"Averigua cuantos ficheros .cs hay en este directorio y sus subdirectorios, y deja constancia del numero exacto.\" --deadline 240"
+    },
+    "goal en simulacion": {
+      "commandName": "Project",
+      "commandLineArgs": "goal \"Comprueba que version de dotnet esta instalada.\" --politica simular --deadline 180"
+    },
     "discover": {
       "commandName": "Project",
       "commandLineArgs": "discover --target 3"

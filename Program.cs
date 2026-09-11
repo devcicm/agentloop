@@ -3,13 +3,18 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Xml.Linq;
+using AgentLoop.Cards;
+using AgentLoop.Concurrency;
 using AgentLoop.Configuration;
 using AgentLoop.Discovery;
+using AgentLoop.Events;
+using AgentLoop.Goals;
 using AgentLoop.Looping;
 using AgentLoop.Parsing;
 using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.StateMachines;
+using AgentLoop.Terminals;
 using AgentLoop.Tools;
 
 namespace AgentLoop;
@@ -561,6 +566,7 @@ internal static class Program
             "chat" => await ChatAsync(args, cancellationToken),
             "discover" => await DiscoverAsync(args, cancellationToken),
             "run" => await RunAsync(args, cancellationToken),
+            "goal" or "objetivo" => await GoalAsync(args, cancellationToken),
             "selftest" => await SelfTestAsync(cancellationToken),
             "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
             "interactive" or "interactivo" or "repl" => await InteractiveAsync(args),
@@ -786,6 +792,388 @@ internal static class Program
         return result.Succeeded ? 0 : 1;
     }
 
+    /// <summary>
+    /// Una operacion dirigida por eventos. No hay turnos: hay un objetivo, un mazo de
+    /// tarjetas de estado y un supervisor de procesos. El loop de la CAPA 4 sigue siendo
+    /// el mismo, pero lo que corta ya no es una respuesta final del modelo sino la tarjeta
+    /// de cierre del libro mayor.
+    /// </summary>
+    private static async Task<int> GoalAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var objective = PositionalOrDefault(args, "Averigua que version de dotnet hay instalada y deja constancia.");
+        var deadline = IntOption(args, "--deadline", 300);
+        var maxCycles = IntOption(args, "--max-ciclos", 80);
+        var thinking = ResolveThinkingPolicy(args);
+        var stream = ResolveStreaming(args);
+
+        ExecutionPolicy policy;
+        try
+        {
+            policy = new ExecutionPolicy
+            {
+                Mode = ParsePolicyMode(StringOption(args, "--politica")),
+                DefaultShell = ShellCommand.ParseShell(StringOption(args, "--shell")),
+                WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
+                MaxConcurrent = IntOption(args, "--max-procesos", 4),
+                Confirm = ConfirmCommand,
+            };
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException)
+        {
+            return Fail(ex.Message);
+        }
+
+        if (!Directory.Exists(policy.WorkingDirectory))
+        {
+            return Fail($"El directorio de trabajo no existe: {policy.WorkingDirectory}");
+        }
+
+        using var client = BuildClient(out var source, thinking);
+        var model = ResolveModel(args);
+
+        // Un solo renderer para todo: cierra el bloque abierto antes de cada linea de
+        // traza o evento, para que lo que llega en vivo no se entrelace con el log.
+        var renderer = stream ? new DeltaRenderer() : null;
+        var console = new object();
+
+        void Log(string line, ConsoleColor? color = null)
+        {
+            lock (console)
+            {
+                renderer?.Close();
+                var previous = Console.ForegroundColor;
+                if (color is not null)
+                {
+                    Console.ForegroundColor = color.Value;
+                }
+
+                Console.WriteLine(line);
+                Console.ForegroundColor = previous;
+            }
+        }
+
+        // Los eventos se pintan segun se publican, que es justo el punto: la salida de un
+        // proceso hijo aparece desde su propio hilo de captura mientras el agente piensa.
+        var bus = new EventBus
+        {
+            OnPublished = item => Log($"  · {item}", EventColor(item.Kind)),
+        };
+
+        using var supervisor = new ProcessSupervisor(bus, policy);
+        var ledger = new CardLedger(CardDeck.Transaccional);
+        var tools = OperationTools.Build(ledger, supervisor, bus);
+
+        var context = new GoalContext
+        {
+            Goal = Goal.Of(objective, deadline),
+            Bus = bus,
+            Ledger = ledger,
+            Supervisor = supervisor,
+        };
+
+        Console.WriteLine($"key      : {source}");
+        Console.WriteLine($"modelo   : {model}");
+        Console.WriteLine($"tools    : {string.Join(", ", tools.Names)}");
+        Console.WriteLine($"tarjetas : {string.Join(", ", ledger.Deck.Names)} (cierra: {ledger.Deck.Final.Name})");
+        Console.WriteLine($"thinking : {DescribeThinking(thinking, model)}");
+        Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
+        Console.WriteLine($"politica : {policy}");
+        Console.WriteLine($"objetivo : {objective}");
+        Console.WriteLine();
+
+        var machine = new EventDrivenAgent(client, model, tools)
+        {
+            MaxTokens = IntOption(args, "--max-tokens", 900),
+            Temperature = 0,
+            Thinking = thinking,
+            Stream = stream,
+            OnDelta = renderer is null ? null : renderer.Render,
+            Trace = line => Log($"    {line}"),
+        };
+
+        var loop = new AgentLoopRunner<ReactorState, GoalContext>(machine)
+        {
+            MaxIterations = maxCycles,
+
+            // La bandera se levanta con la tarjeta de cierre, no con una respuesta del
+            // modelo: hasta que el libro mayor no cuadre, la operacion sigue abierta.
+            BreakWhen = iteration => iteration.Context.Ledger.GoalMet,
+
+            OnIteration = iteration => Log($"[{iteration.Iteration,2}] {iteration.LastTransition}", ConsoleColor.DarkGray),
+        };
+
+        var result = await loop.RunAsync(context, cancellationToken);
+        renderer?.Close();
+
+        Console.WriteLine();
+        Console.WriteLine("--- operacion ----------------------------------------");
+        Console.WriteLine($"IsBroken    : {loop.IsBroken}");
+        Console.WriteLine($"BreakReason : {loop.BreakReason}");
+        Console.WriteLine($"Estado final: {result.FinalState}");
+        Console.WriteLine($"Resumen     : {context.Summary()}");
+        Console.WriteLine($"Thinking    : {(context.ThinkingObserved ? "observado" : "no observado")}");
+
+        // Solo si la operacion no salio: un 503 del que se recupero no es un error final,
+        // y ponerlo aqui bajo una operacion cumplida solo confunde al que lee el log.
+        if (result.Error is not null && !ledger.GoalMet)
+        {
+            Console.WriteLine($"Error       : {result.Error.Message}");
+        }
+
+        Console.WriteLine();
+        Console.WriteLine("--- libro mayor --------------------------------------");
+        Console.WriteLine(ledger.DescribeState());
+        foreach (var play in ledger.Plays)
+        {
+            Console.WriteLine($"  {play}");
+        }
+
+        Console.WriteLine();
+        if (ledger.GoalMet)
+        {
+            Console.WriteLine($"CUMPLIDO: {ledger.Outcome}");
+            return 0;
+        }
+
+        Console.WriteLine($"SIN CERRAR: {context.FailureReason ?? ledger.Outcome ?? ledger.PendingDebt() ?? "la tarjeta de cierre nunca se jugo"}");
+        return 1;
+    }
+
+    private static PolicyMode ParsePolicyMode(string? value) => value?.Trim().ToLowerInvariant() switch
+    {
+        null or "" or "auto" => PolicyMode.Auto,
+        "confirmar" or "confirm" => PolicyMode.Confirmar,
+        "simular" or "dry" or "seco" => PolicyMode.Simular,
+        var other => throw new InvalidOperationException($"Politica desconocida: {other}. Usa auto, confirmar o simular."),
+    };
+
+    /// <summary>Confirmacion por consola para --politica confirmar. Sin tty, se rechaza.</summary>
+    private static bool ConfirmCommand(ShellCommand command)
+    {
+        if (Console.IsInputRedirected)
+        {
+            return false;
+        }
+
+        var previous = Console.ForegroundColor;
+        Console.ForegroundColor = ConsoleColor.Yellow;
+        Console.WriteLine();
+        Console.WriteLine($"  ejecutar? {command}");
+        Console.Write("  [s/N] ");
+        Console.ForegroundColor = previous;
+
+        var answer = Console.ReadLine()?.Trim().ToLowerInvariant();
+        return answer is "s" or "si" or "y" or "yes";
+    }
+
+    private static ConsoleColor EventColor(AgentEventKind kind) => kind switch
+    {
+        AgentEventKind.Error or AgentEventKind.TarjetaRechazada => ConsoleColor.Red,
+        AgentEventKind.Tarjeta => ConsoleColor.Green,
+        AgentEventKind.Observador => ConsoleColor.Magenta,
+        AgentEventKind.ProcesoIniciado or AgentEventKind.ProcesoFin => ConsoleColor.Cyan,
+        AgentEventKind.Aviso => ConsoleColor.Yellow,
+        _ => ConsoleColor.DarkGray,
+    };
+
+    /// <summary>
+    /// Verifica sin red la mecanica de la operacion dirigida por eventos: los reset events,
+    /// el bus, las reglas transaccionales del libro mayor y el supervisor de procesos.
+    ///
+    /// Lo que se comprueba aqui no son literales sino propiedades: que una espera sin senal
+    /// caduca y con senal no, que una tarjeta fuera de orden se rechaza, que cerrar la
+    /// transaccion anidada no cierra la operacion. Esos son los invariantes que sostienen
+    /// todo lo demas, y son justo los que se rompen en silencio.
+    /// </summary>
+    private static async Task<bool> GoalSelfTest(CancellationToken cancellationToken)
+    {
+        Console.WriteLine("Self-test de operaciones: reset events, bus, tarjetas y procesos.");
+        Console.WriteLine();
+
+        var results = new List<(string Name, bool Ok)>();
+        var corto = TimeSpan.FromMilliseconds(120);
+
+        // --- reset events ------------------------------------------------
+        var manual = new AsyncManualResetEvent();
+        results.Add(("el latch manual nace cerrado", !manual.IsSet));
+        results.Add(("esperar un latch cerrado caduca", !await manual.WaitAsync(corto, cancellationToken)));
+
+        manual.Set();
+        results.Add(("una vez abierto, esperar vuelve al instante", await manual.WaitAsync(corto, cancellationToken)));
+        results.Add(("y sigue abierto para el que llega tarde", await manual.WaitAsync(TimeSpan.Zero, cancellationToken)));
+
+        manual.Reset();
+        results.Add(("Reset lo vuelve a cerrar", !manual.IsSet));
+
+        // El waiter se registra ANTES de la senal: es el caso que importa, el de la carrera.
+        var parked = manual.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken);
+        manual.Set();
+        results.Add(("un waiter aparcado se libera al abrir", await parked));
+
+        var auto = new AsyncAutoResetEvent();
+        auto.Set();
+        results.Add(("el auto-reset guarda una senal pendiente", await auto.WaitAsync(corto, cancellationToken)));
+        results.Add(("y solo una: la segunda espera caduca", !await auto.WaitAsync(corto, cancellationToken)));
+
+        // --- bus de eventos ----------------------------------------------
+        var bus = new EventBus();
+        results.Add(("un bus vacio no despierta a nadie", !await bus.WaitAsync(corto, cancellationToken)));
+
+        bus.Publish(AgentEventKind.Aviso, "test", "algo paso");
+        results.Add(("publicar deja el evento pendiente", bus.PendingCount == 1));
+        results.Add(("con pendientes, esperar no bloquea", await bus.WaitAsync(TimeSpan.Zero, cancellationToken)));
+
+        var drained = bus.Drain();
+        results.Add(("Drain se lleva lo pendiente y vacia la cola", drained.Count == 1 && bus.PendingCount == 0));
+        results.Add(("el historial conserva lo drenado", bus.History.Count == 1));
+
+        var despertado = false;
+        var durmiendo = Task.Run(async () => despertado = await bus.WaitAsync(TimeSpan.FromSeconds(2), cancellationToken), cancellationToken);
+        await Task.Delay(30, cancellationToken);
+        bus.Publish(AgentEventKind.Latido, "test", "despierta");
+        await durmiendo;
+        results.Add(("publicar despierta a quien estaba esperando", despertado));
+
+        // --- libro mayor de tarjetas -------------------------------------
+        var ledger = new CardLedger(CardDeck.Transaccional);
+
+        results.Add(("una tarjeta inventada se rechaza", !ledger.Play("inventada", Fields()).Accepted));
+        results.Add(("avanzar sin abrir se rechaza", !ledger.Play("avanzar", Fields(("paso", "algo"))).Accepted));
+        results.Add(("abrir sin sus campos se rechaza", !ledger.Play("abrir", Fields(("objetivo", "x"))).Accepted));
+
+        results.Add(("abrir con todo se acepta", ledger.Play("abrir", Fields(("objetivo", "contar"), ("plan", "usar ls"))).Accepted));
+        results.Add(("y deja la transaccion abierta", ledger.OpenCount == 1 && !ledger.GoalMet));
+        results.Add(("cerrar sin comprobar se rechaza", !ledger.Play("cerrar", Fields(("resultado", "9"), ("evidencia", "salida"))).Accepted));
+
+        results.Add(("avanzar dentro de la transaccion se acepta", ledger.Play("avanzar", Fields(("paso", "ejecuto ls"))).Accepted));
+
+        // Anidada: es una subtarea, y cerrarla NO puede dar la operacion por cumplida.
+        results.Add(("se puede abrir una transaccion dentro de otra",
+            ledger.Play("abrir", Fields(("objetivo", "subtarea"), ("plan", "mirar"))).Accepted && ledger.OpenCount == 2));
+        results.Add(("comprobar en la anidada se acepta", ledger.Play("comprobar", Fields(("comprobacion", "conte"), ("resultado", "9"))).Accepted));
+        results.Add(("cerrar la anidada se acepta", ledger.Play("cerrar", Fields(("resultado", "9"), ("evidencia", "codigo 0"))).Accepted));
+        results.Add(("pero NO cumple el objetivo: queda la raiz", !ledger.GoalMet && ledger.OpenCount == 1));
+        results.Add(("y el sistema sabe que queda deuda", ledger.PendingDebt() is not null));
+
+        results.Add(("comprobar en la raiz se acepta", ledger.Play("comprobar", Fields(("comprobacion", "revise"), ("resultado", "9 ficheros"))).Accepted));
+        results.Add(("cerrar la raiz se acepta", ledger.Play("cerrar", Fields(("resultado", "9 ficheros"), ("evidencia", "salida de ls"))).Accepted));
+        results.Add(("ahora si: objetivo cumplido", ledger.GoalMet && ledger.OpenCount == 0));
+        results.Add(("y ya no queda ninguna tarjeta legal", ledger.AllowedNow().Count == 0));
+        results.Add(("jugar despues del cierre se rechaza", !ledger.Play("avanzar", Fields(("paso", "tarde"))).Accepted));
+
+        var abortado = new CardLedger(CardDeck.Transaccional);
+        abortado.Play("abrir", Fields(("objetivo", "imposible"), ("plan", "intentarlo")));
+        abortado.Play("abortar", Fields(("motivo", "no hay permisos")));
+        results.Add(("abortar cierra la operacion sin cumplirla", abortado.Aborted && !abortado.GoalMet));
+
+        // --- politica -----------------------------------------------------
+        var policy = new ExecutionPolicy { WorkingDirectory = Environment.CurrentDirectory };
+        results.Add(("la politica veta un borrado de raiz",
+            !policy.Evaluate(new ShellCommand(ShellKind.Bash, "rm -rf / --no-preserve-root")).Allowed));
+        results.Add(("y deja pasar lo inocente",
+            policy.Evaluate(new ShellCommand(ShellKind.Bash, "echo hola")).Allowed));
+        results.Add(("el tope de tiempo se recorta al maximo",
+            policy.Clamp(TimeSpan.FromHours(3)) == policy.MaxTimeout));
+
+        var seco = new ExecutionPolicy { Mode = PolicyMode.Simular };
+        var secoBus = new EventBus();
+        using (var secoSupervisor = new ProcessSupervisor(secoBus, seco))
+        {
+            var simulado = await secoSupervisor.RunAsync(
+                new ShellCommand(seco.DefaultShell, "echo esto no deberia correr"),
+                TimeSpan.FromSeconds(5),
+                cancellationToken);
+
+            results.Add(("en modo simular no se ejecuta nada",
+                simulado.Simulated && secoSupervisor.Total == 0));
+        }
+
+        // --- supervisor de procesos ---------------------------------------
+        var runBus = new EventBus();
+        using var supervisor = new ProcessSupervisor(runBus, new ExecutionPolicy
+        {
+            WorkingDirectory = Environment.CurrentDirectory,
+        });
+
+        var marca = "AGENTLOOP_" + Guid.NewGuid().ToString("N")[..8].ToUpperInvariant();
+        var eco = await supervisor.RunAsync(
+            new ShellCommand(supervisor.Policy.DefaultShell, $"echo {marca}"),
+            TimeSpan.FromSeconds(30),
+            cancellationToken);
+
+        results.Add(("un comando corto termina con codigo 0", eco.ExitCode == 0 && !eco.TimedOut));
+        results.Add(("y su salida se captura", eco.Output.Any(l => l.Text.Contains(marca, StringComparison.Ordinal))));
+        results.Add(("el final del proceso se publico como evento",
+            runBus.History.Any(e => e.Kind == AgentEventKind.ProcesoFin)));
+
+        var handle = supervisor.Find(eco.ProcessId);
+        results.Add(("el latch del proceso quedo abierto", handle is { Running: false } && handle.Terminado.IsSet));
+
+        // El observador se registra antes de lanzar: vigila lo que llegue, no lo pasado.
+        var senal = "LISTO_" + Guid.NewGuid().ToString("N")[..6].ToUpperInvariant();
+        var watcher = supervisor.Watch(senal);
+        var lento = OperatingSystem.IsWindows()
+            ? $"Write-Output arrancando; Start-Sleep -Milliseconds 250; Write-Output {senal}"
+            : $"echo arrancando; sleep 0.25; echo {senal}";
+
+        var fondo = await supervisor.LaunchAsync(
+            new ShellCommand(supervisor.Policy.DefaultShell, lento, Label: "lento"),
+            cancellationToken);
+
+        results.Add(("lanzar vuelve al instante, sin esperar al proceso", fondo.Id.Length > 0));
+        results.Add(("el observador se dispara cuando aparece el patron",
+            await watcher.Hit.WaitAsync(TimeSpan.FromSeconds(30), cancellationToken)));
+        results.Add(("y trae la linea que lo disparo",
+            watcher.MatchedLine?.Contains(senal, StringComparison.Ordinal) == true));
+
+        results.Add(("esperar el fin del proceso funciona",
+            await fondo.Terminado.WaitAsync(TimeSpan.FromSeconds(30), cancellationToken)));
+
+        var nuevas = fondo.ReadNew(50);
+        results.Add(("leer devuelve la salida acumulada", nuevas.Count >= 2));
+        results.Add(("y no la devuelve dos veces", fondo.ReadNew(50).Count == 0));
+
+        var puerta = supervisor.Puerta.IsSet;
+        supervisor.Pausar();
+        var cerrada = !supervisor.Puerta.IsSet;
+        supervisor.Reanudar();
+        results.Add(("la puerta de ejecucion se cierra y se abre", puerta && cerrada && supervisor.Puerta.IsSet));
+
+        // --- poda de la conversacion ---------------------------------------
+        var context = new GoalContext
+        {
+            Goal = Goal.Of("probar la poda", 60),
+            Bus = new EventBus(),
+            Ledger = new CardLedger(CardDeck.Transaccional),
+            Supervisor = supervisor,
+            MaxMessages = 6,
+        };
+
+        context.Messages.Add(ChatMessage.FromSystem("contrato"));
+        for (var i = 0; i < 5; i++)
+        {
+            context.Messages.Add(ChatMessage.FromUser($"parte {i}"));
+            context.Messages.Add(ChatMessage.FromAssistant($"reaccion {i}"));
+            context.Messages.Add(ChatMessage.FromToolResult($"call{i}", "ejecutar", "{}"));
+        }
+
+        context.Trim();
+        results.Add(("la poda respeta el tope", context.Messages.Count <= context.MaxMessages + 2));
+        results.Add(("nunca tira el prompt de sistema", context.Messages[0].Role == ChatRoles.System));
+        results.Add(("y no deja resultados de herramienta huerfanos",
+            context.Messages[1].Role != ChatRoles.Tool));
+
+        foreach (var (name, ok) in results)
+        {
+            Console.WriteLine($"  [{(ok ? "ok" : "FALLA")}] {name}");
+        }
+
+        return results.All(r => r.Ok);
+    }
+
+    private static Dictionary<string, string> Fields(params (string Key, string Value)[] pairs)
+        => pairs.ToDictionary(p => p.Key, p => p.Value, StringComparer.Ordinal);
+
     /// <summary>Verifica sin red que la bandera del loop corta por si sola.</summary>
     private static async Task<int> SelfTestAsync(CancellationToken cancellationToken)
     {
@@ -816,7 +1204,10 @@ internal static class Program
         Console.WriteLine();
         var streamOk = StreamSelfTest();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk;
+        Console.WriteLine();
+        var goalOk = await GoalSelfTest(cancellationToken);
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;
@@ -1479,6 +1870,8 @@ internal static class Program
               chat "<prompt>"       Una llamada suelta. Verifica capa de comunicacion + capa de parseo.
               discover              Sondea el catalogo y reporta 3 modelos con capacidades agenticas.
               run "<prompt>"        Corre la maquina de estados dentro del loop con tool calling.
+              goal "<objetivo>"     Operacion dirigida por eventos: tarjetas de estado y terminales
+                                    (bash, sh, powershell, pwsh, cmd). Ver la seccion Operaciones.
               selftest              Prueba el corte del loop sin tocar la red.
               interactive           Prompt interactivo con hilo de conversacion (lo que usa F5 en
                                     Visual Studio). Dentro: nuevo, historial, vars, set, unset,
@@ -1489,6 +1882,12 @@ internal static class Program
               --target <n>          discover: cuantos modelos agenticos buscar (3).
               --max-candidates <n>  discover: cuantos modelos sondear como maximo (30).
               --max-iterations <n>  run: tope de iteraciones del loop (12).
+              --deadline <s>        goal: presupuesto de la operacion en segundos (300).
+              --max-ciclos <n>      goal: tope de ciclos del reactor (80).
+              --max-procesos <n>    goal: procesos simultaneos permitidos (4).
+              --shell <interprete>  goal: interprete por defecto (bash, sh, powershell, pwsh, cmd).
+              --cwd <ruta>          goal: directorio de trabajo de los comandos.
+              --politica <modo>     goal: auto (por defecto), confirmar o simular.
               --system "<texto>"    Plantilla de prompt de sistema con huecos {{variable}}.
               --system-file <ruta>  La misma plantilla, leida de un archivo.
               --var clave=valor     Define un parametro de la plantilla. Repetible.
@@ -1511,6 +1910,27 @@ internal static class Program
                 dotnet run -- run "Resume esto" \
                   --system "Eres {{rol}}. Responde en {{idioma}}. <d>{{xml:dato}}</d>" \
                   --var rol=analista --var "dato=<ACME> & socios"
+
+            Operaciones (goal):
+              No hay turnos. Hay un objetivo, un bus de eventos y un supervisor de procesos.
+              El agente declara donde esta jugando tarjetas de estado (abrir, avanzar,
+              comprobar, cerrar, abortar) y el sistema lleva el libro mayor: son transacciones,
+              se pueden anidar, y la operacion NO cuenta como cumplida hasta que se juega la
+              tarjeta de cierre. Ni el reloj ni una respuesta bonita la cierran.
+
+              Lo corto se ejecuta con ejecutar; lo largo se arranca con lanzar y se sigue con
+              esperar, leer y observar. Las esperas son sobre reset events, asi que el agente
+              nunca bloquea un hilo: mientras duerme, los procesos hijos siguen volcando salida
+              y cada linea, patron o final publica un evento que lo despierta.
+
+              Con --politica simular no se ejecuta nada y se responde que habria pasado; con
+              confirmar, cada comando pasa por un [s/N] en consola. Hay una lista de comandos
+              irreversibles vetada siempre. No es un sandbox: evita el accidente, no contiene
+              a nadie decidido.
+
+              Ejemplo:
+                dotnet run -- goal "Cuenta los .cs del repo y deja constancia del numero" \
+                  --deadline 180 --politica auto --stream
 
             Thinking:
               El razonamiento explicito viaja como {"type":"enabled","budget_tokens":n} en

@@ -569,6 +569,7 @@ internal static class Program
             "run" => await RunAsync(args, cancellationToken),
             "goal" or "objetivo" => await GoalAsync(args, cancellationToken),
             "journal" or "diario" => await JournalAsync(args, cancellationToken),
+            "lobos" => await LobosAsync(args, cancellationToken),
             "selftest" => await SelfTestAsync(cancellationToken),
             "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
             "interactive" or "interactivo" or "repl" => await InteractiveAsync(args),
@@ -979,6 +980,53 @@ internal static class Program
         Console.WriteLine($"markdown : {markdownPath}");
 
         return result.IsSuccess ? 0 : 1;
+    }
+
+    /// <summary>
+    /// Test honesto con el modelo real: ejecuta el goal contra GLM 5.3
+    /// (o el modelo que se pase con --model) y reporta honestamente el
+    /// resultado. Sin ScriptedRunner, sin cántico hardcoded, sin
+    /// ScriptedStep. Si el modelo cumple el protocolo de tarjetas,
+    /// imprime CUMPLIDO; si no, imprime SIN CERRAR con el motivo.
+    ///
+    /// Uso:
+    ///   dotnet run --project AgentLoop.csproj -- lobos
+    ///   dotnet run --project AgentLoop.csproj -- lobos --model z-ai/glm-5.3-free --deadline 60
+    /// </summary>
+    private static async Task<int> LobosAsync(string[] args, CancellationToken cancellationToken)
+    {
+        // Reusa el flujo del comando goal: parsea los mismos flags, monta
+        // policy y modelo, y delega en GoalAsync para que la ejecucion sea
+        // exactamente la misma que cualquier otro goal del CLI.
+        var lobosArgs = new[] { "goal" }
+            .Concat(args.Where(a => !string.Equals(a, "lobos", StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
+
+        var model = ResolveModel(args);
+        var deadline = IntOption(args, "--deadline", 120);
+        var maxCycles = IntOption(args, "--max-ciclos", 8);
+        var thinking = ResolveThinkingPolicy(args);
+        var stream = ResolveStreaming(args);
+
+        Console.WriteLine($"key      : {SecretStore.Mask(File.ReadAllText(SecretStore.FindSecretsFile(SecretStore.ApiKeyFileName)!).Trim())}");
+        Console.WriteLine($"modelo   : {model}");
+        Console.WriteLine($"deadline : {deadline}s");
+        Console.WriteLine($"max-ciclos: {maxCycles}");
+        Console.WriteLine($"thinking : {DescribeThinking(thinking, model)}");
+        Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
+        Console.WriteLine();
+        Console.WriteLine("Ejecutando goal con el modelo real. Sin mocks, sin atajos.");
+        Console.WriteLine();
+
+        var exit = await GoalAsync(lobosArgs, cancellationToken).ConfigureAwait(false);
+
+        // Banner final honesto: nada de VEREDICTO_PASS prefabricado.
+        Console.WriteLine();
+        Console.WriteLine(exit == 0
+            ? "FINAL: el goal se cumplio (ledger.GoalMet=true)."
+            : "FINAL: el goal NO se cumplio. Ver la seccion 'SIN CERRAR' arriba para el motivo del reactor.");
+
+        return exit;
     }
 
     private static PolicyMode ParsePolicyMode(string? value) => value?.Trim().ToLowerInvariant() switch

@@ -105,7 +105,7 @@ public sealed class CardLedger
     private readonly Stack<CardTransaction> _open = new();
     private readonly List<CardPlay> _plays = [];
     private readonly List<CardTransaction> _closed = [];
-    private readonly AgentLoop.Harness.Concurrency.AsyncLock _gate = new();
+    private readonly object _sync = new();
     private int _opened;
 
     public CardLedger(CardDeck deck) => Deck = deck;
@@ -122,8 +122,36 @@ public sealed class CardLedger
 
     public bool Finished => GoalMet || Aborted;
 
-    /// <summary>Toma el lock del ledger para que un read concurrente con Play no vea colecciones a medio mutar.</summary>
-    private IDisposable ReadScope() => _gate.Lock();
+    /// <summary>
+    /// Toma el lock del ledger para que un read concurrente con Play no vea colecciones
+    /// a medio mutar. Es un Monitor (reentrante), no un SemaphoreSlim: DescribeState
+    /// llama a PendingDebt y Rejected por dentro, y con un semaforo eso se deadlockea
+    /// en el mismo hilo. Ver commit del watchdog.
+    /// </summary>
+    private SyncScope ReadScope() => new(_sync);
+
+    private sealed class SyncScope : IDisposable
+    {
+        private readonly object _sync;
+        private bool _released;
+
+        public SyncScope(object sync)
+        {
+            _sync = sync;
+            Monitor.Enter(_sync);
+        }
+
+        public void Dispose()
+        {
+            if (_released)
+            {
+                return;
+            }
+
+            _released = true;
+            Monitor.Exit(_sync);
+        }
+    }
 
     public int OpenCount
     {
@@ -173,7 +201,7 @@ public sealed class CardLedger
     /// <summary>Juega una tarjeta. Nunca lanza: una jugada invalida vuelve rechazada con el motivo.</summary>
     public CardPlay Play(string name, IReadOnlyDictionary<string, string> fields)
     {
-        using var _ = _gate.Lock();
+        using var _ = ReadScope();
         return PlayCore(name, fields);
     }
 

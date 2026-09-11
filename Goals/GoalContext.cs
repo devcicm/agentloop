@@ -60,6 +60,15 @@ public sealed class GoalContext
 
     public bool Expired => Remaining <= TimeSpan.Zero;
 
+    /// <summary>
+    /// Lo marca el reactor cuando el watchdog del deadline corta una llamada
+    /// al modelo o una espera sobre el bus. Lo usa OnExecuteAsync para
+    /// distinguir entre cancelacion del usuario (Ctrl+C) y cancelacion
+    /// por presupuesto agotado, y devolver Fallido con motivo de timeout
+    /// en el segundo caso.
+    /// </summary>
+    public bool DeadlineReached { get; set; }
+
     public bool ThinkingObserved => Thinking.Any(t => t.Observed);
 
     /// <summary>

@@ -98,7 +98,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     protected override bool CanTransition(ReactorState from, ReactorState to)
         => Allowed.TryGetValue(from, out var targets) && targets.Contains(to);
 
-    protected override ValueTask<ReactorState> OnExecuteAsync(GoalContext context, CancellationToken cancellationToken)
+    protected override async ValueTask<ReactorState> OnExecuteAsync(GoalContext context, CancellationToken cancellationToken)
     {
         // El presupuesto es una red, no el criterio: si salta, la operacion se declara
         // fallida precisamente porque nadie llego a jugar la tarjeta de cierre.
@@ -110,17 +110,40 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         {
             context.FailureReason = $"se agoto el presupuesto de {context.Goal.Budget.TotalSeconds:0}s sin tarjeta de cierre";
             PendingNote = context.FailureReason;
-            return ValueTask.FromResult(ReactorState.Fallido);
+            return ReactorState.Fallido;
         }
 
-        return CurrentState switch
+        // Watchdog: el deadline del objetivo se transforma en un CancellationToken que
+        // se cancela cuando context.Remaining llega a 0. Asi una llamada al modelo
+        // o una espera sobre el bus que se cuelga no bloquea el reactor mas alla
+        // del budget: la peticion HTTP se cancela, la Task se completa con
+        // OperationCanceledException, y aqui abajo se traduce a Fallido con motivo
+        // de timeout en vez de propagarse como cancelacion del usuario.
+        using var deadlineCts = new CancellationTokenSource(context.Remaining);
+        using var linkedCts = CancellationTokenSource.CreateLinkedTokenSource(cancellationToken, deadlineCts.Token);
+        var linkedToken = linkedCts.Token;
+
+        try
         {
-            ReactorState.Arranque => ValueTask.FromResult(Start(context)),
-            ReactorState.Esperando => WaitAsync(context, cancellationToken),
-            ReactorState.Razonando => ReasonAsync(context, cancellationToken),
-            ReactorState.Despachando => DispatchAsync(context, cancellationToken),
-            _ => ValueTask.FromResult(CurrentState),
-        };
+            return CurrentState switch
+            {
+                ReactorState.Arranque => Start(context),
+                ReactorState.Esperando => await WaitAsync(context, linkedToken).ConfigureAwait(false),
+                ReactorState.Razonando => await ReasonAsync(context, linkedToken).ConfigureAwait(false),
+                ReactorState.Despachando => await DispatchAsync(context, linkedToken).ConfigureAwait(false),
+                _ => CurrentState,
+            };
+        }
+        catch (OperationCanceledException) when (deadlineCts.IsCancellationRequested && !cancellationToken.IsCancellationRequested)
+        {
+            // El watchdog corto la llamada, no el usuario. Se marca el context para
+            // que el resto del harness distinga entre cancelado y timeout, y se
+            // devuelve Fallido con el motivo explicito.
+            context.DeadlineReached = true;
+            context.FailureReason = $"watchdog del deadline: presupuesto de {context.Goal.Budget.TotalSeconds:0}s agotado durante una llamada";
+            PendingNote = context.FailureReason;
+            return ReactorState.Fallido;
+        }
     }
 
     /// <summary>

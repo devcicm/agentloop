@@ -3,6 +3,7 @@ using AgentLoop.Events;
 using AgentLoop.Harness.Core;
 using AgentLoop.Harness.Observability;
 using AgentLoop.Harness.Steps;
+using AgentLoop.Harness.Testing;
 using AgentLoop.Provider;
 
 namespace AgentLoop.Harness.Composition;
@@ -68,24 +69,5 @@ public static class CompositionSelfTest
         }
 
         return results.All(r => r.Ok);
-    }
-
-    /// <summary>Cliente fake que no hace red, solo devuelve JSON vacio.</summary>
-    private sealed class FakeTokenRouterClient : ITokenRouterClient
-    {
-        public Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default)
-            => Task.FromResult<IReadOnlyList<ModelInfo>>([]);
-
-        public Task<System.Text.Json.JsonElement> CreateChatCompletionAsync(ChatRequest request, CancellationToken cancellationToken = default)
-        {
-            var json = """{"id":"fake","choices":[{"index":0,"finish_reason":"stop","message":{"role":"assistant","content":""}}],"usage":{"prompt_tokens":0,"completion_tokens":0,"total_tokens":0}}""";
-            return Task.FromResult(System.Text.Json.JsonDocument.Parse(json).RootElement.Clone());
-        }
-
-        public async IAsyncEnumerable<System.Text.Json.JsonElement> StreamChatCompletionAsync(ChatRequest request, [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
-        {
-            await Task.Yield();
-            yield break;
-        }
     }
 }

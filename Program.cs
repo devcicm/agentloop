@@ -1335,10 +1335,10 @@ internal static class Program
         var results = new List<(string Name, bool Ok)>();
 
         var template = PromptTemplate.Parse("m={{modelo}}\n<contexto>\n{{xml:contexto}}\n</contexto>");
-        var variables = new PromptVariables().Set("modelo", "qwen/qwen3.8-max-free").Set("contexto", Hostile);
+        var variables = new PromptVariables().Set("modelo", "z-ai/glm-5.3-free").Set("contexto", Hostile);
         var rendered = template.Render(variables);
 
-        results.Add(("interpolacion de parametros", rendered.Contains("m=qwen/qwen3.8-max-free")));
+        results.Add(("interpolacion de parametros", rendered.Contains("m=z-ai/glm-5.3-free")));
         results.Add(("no quedan huecos sin resolver", !rendered.Contains("{{")));
 
         // El bloque tiene que seguir siendo XML valido y devolver el texto intacto al leerlo.

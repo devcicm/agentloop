@@ -208,7 +208,9 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     /// <summary>Caidas del proveedor y limites de ritmo: culpa de la red, no del plan.</summary>
     private static bool IsTransient(Exception error) => error switch
     {
-        TokenRouterException provider => (int)provider.StatusCode >= 500 || (int)provider.StatusCode == 429,
+        // Status 0 = sin respuesta HTTP (timeout de transporte, DNS, conexion).
+        // Es transitorio por definicion: el servidor nunca dijo que no.
+        TokenRouterException provider => (int)provider.StatusCode >= 500 || (int)provider.StatusCode == 429 || (int)provider.StatusCode == 0,
         HttpRequestException or TaskCanceledException or TimeoutException => true,
         _ => false,
     };

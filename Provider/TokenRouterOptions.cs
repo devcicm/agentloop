@@ -5,8 +5,12 @@ public sealed class TokenRouterOptions
 {
     public const string DefaultBaseUrl = "https://api.tokenrouter.com/v1";
 
-    /// <summary>Unico modelo confirmado como accesible con cuota $0.00 (ver README de tokenrouter-client).</summary>
-    public const string FallbackModelId = "qwen/qwen3.8-max-free";
+    /// <summary>
+    /// Unico modelo agentico accesible con la cuenta y cuota actuales
+    /// (saldo $0.00 devuelve 403 en todos los demas). Verificado contra
+    /// artifacts/agentic-models.json (refresh tras cada discover).
+    /// </summary>
+    public const string FallbackModelId = "z-ai/glm-5.3-free";
 
     public required string ApiKey { get; init; }
 

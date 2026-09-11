@@ -49,7 +49,7 @@ public sealed class GoalRunner : IRunner
         {
             setup.RunContext.Steps.OnRunStart(run.Id);
 
-            var machine = new EventDrivenAgent(_client, run.Model ?? "qwen/qwen3.8-max-free", setup.Tools)
+            var machine = new EventDrivenAgent(_client, run.Model ?? TokenRouterOptions.FallbackModelId, setup.Tools)
             {
                 Trace = line => setup.RunContext.Steps.OnLog(new StructuredLog(
                     DateTimeOffset.Now,

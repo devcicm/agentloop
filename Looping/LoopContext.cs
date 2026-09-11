@@ -35,6 +35,18 @@ public sealed record LoopContext<TState, TContext>(
     StateTransition<TState>? LastTransition)
     where TState : struct, Enum;
 
+/// <summary>Motivo de fallo de un loop: termino con error o por una condicion no satisfecha.</summary>
+public enum LoopFailureReason
+{
+    Errored,
+    ConditionNotMet,
+    Cancelled,
+    Faulted,
+}
+
+/// <summary>Outcome de un loop exitoso: por que se rompio la bandera y cuantas iteraciones llevo.</summary>
+public sealed record LoopOutcome<TState>(LoopBreakReason Reason, int Iterations, TState FinalState) where TState : struct, Enum;
+
 /// <summary>Resultado final del loop: siempre dice por que se detuvo.</summary>
 public sealed record LoopResult<TState, TContext>(
     bool IsBroken,
@@ -46,6 +58,19 @@ public sealed record LoopResult<TState, TContext>(
     IReadOnlyList<StateTransition<TState>> History)
     where TState : struct, Enum
 {
+    /// <summary>Vista como tipo suma. Ok cuando ConditionMet o TerminalState sin error.</summary>
+    public Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason> Result
+        => Error is not null
+            ? Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason>.Fail(LoopFailureReason.Errored)
+            : BreakReason switch
+            {
+                LoopBreakReason.ConditionMet or LoopBreakReason.TerminalState => Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason>.Ok(new LoopOutcome<TState>(BreakReason, Iterations, FinalState)),
+                LoopBreakReason.Cancelled => Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason>.Fail(LoopFailureReason.Cancelled),
+                LoopBreakReason.Faulted => Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason>.Fail(LoopFailureReason.Faulted),
+                _ => Harness.Functional.Result<LoopOutcome<TState>, LoopFailureReason>.Fail(LoopFailureReason.ConditionNotMet),
+            };
+
+    [Obsolete("Usar Result.IsOk. Se conserva por compatibilidad con el SelfTest."), System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public bool Succeeded => BreakReason is LoopBreakReason.ConditionMet or LoopBreakReason.TerminalState && Error is null;
 
     public override string ToString()

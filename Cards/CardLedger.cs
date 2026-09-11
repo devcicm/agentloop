@@ -12,6 +12,12 @@ public sealed record CardPlay(
     int Depth,
     DateTimeOffset At)
 {
+    /// <summary>Vista como tipo suma: Ok si fue aceptada, Fail con el motivo si no.</summary>
+    public Harness.Functional.Result<CardPlay, string> Result
+        => Accepted
+            ? Harness.Functional.Result<CardPlay, string>.Ok(this)
+            : Harness.Functional.Result<CardPlay, string>.Fail(Rejection ?? "sin motivo");
+
     public string Summary
     {
         get

@@ -62,6 +62,17 @@ public sealed class OutputWatcher
             : $"{Id} /{Pattern}/ vigilando {ProcessId ?? "todo"}";
 }
 
+/// <summary>Motivo de fallo de una ejecucion de shell.</summary>
+public enum ShellFailureReason
+{
+    TimedOut,
+    NonZeroExit,
+    Unknown,
+}
+
+/// <summary>Outcome de un comando que salio bien: su codigo de salida y la salida capturada.</summary>
+public sealed record ShellOutcome(int ExitCode, IReadOnlyList<OutputLine> Output, bool Truncated, TimeSpan Duration);
+
 /// <summary>Resultado de una ejecucion con espera.</summary>
 public sealed record ShellResult(
     string ProcessId,
@@ -73,6 +84,15 @@ public sealed record ShellResult(
     IReadOnlyList<OutputLine> Output,
     bool Truncated)
 {
+    /// <summary>Vista como tipo suma. Ok solo si termino a tiempo con codigo 0.</summary>
+    public Harness.Functional.Result<ShellOutcome, ShellFailureReason> Result
+        => TimedOut
+            ? Harness.Functional.Result<ShellOutcome, ShellFailureReason>.Fail(ShellFailureReason.TimedOut)
+            : ExitCode == 0
+                ? Harness.Functional.Result<ShellOutcome, ShellFailureReason>.Ok(new ShellOutcome(ExitCode ?? 0, Output, Truncated, Duration))
+                : Harness.Functional.Result<ShellOutcome, ShellFailureReason>.Fail(ExitCode.HasValue ? ShellFailureReason.NonZeroExit : ShellFailureReason.Unknown);
+
+    [Obsolete("Usar Result.IsOk. Se conserva por compatibilidad con el SelfTest."), System.ComponentModel.EditorBrowsable(System.ComponentModel.EditorBrowsableState.Never)]
     public bool Succeeded => !TimedOut && ExitCode == 0;
 }
 

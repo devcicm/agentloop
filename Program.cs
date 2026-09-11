@@ -9,6 +9,7 @@ using AgentLoop.Configuration;
 using AgentLoop.Discovery;
 using AgentLoop.Events;
 using AgentLoop.Goals;
+using AgentLoop.Harness;
 using AgentLoop.Looping;
 using AgentLoop.Parsing;
 using AgentLoop.Prompting;
@@ -853,36 +854,26 @@ internal static class Program
             }
         }
 
-        // Los eventos se pintan segun se publican, que es justo el punto: la salida de un
-        // proceso hijo aparece desde su propio hilo de captura mientras el agente piensa.
-        var bus = new EventBus
-        {
-            OnPublished = item => Log($"  · {item}", EventColor(item.Kind)),
-        };
-
-        using var supervisor = new ProcessSupervisor(bus, policy);
-        var ledger = new CardLedger(CardDeck.Transaccional);
-        var tools = OperationTools.Build(ledger, supervisor, bus);
-
-        var context = new GoalContext
-        {
-            Goal = Goal.Of(objective, deadline),
-            Bus = bus,
-            Ledger = ledger,
-            Supervisor = supervisor,
-        };
+        // El setup completo lo construye la factory. Aqui solo inyectamos los
+        // callbacks custom (Log para eventos y trazas, renderer para deltas) y
+        // ejecutamos el loop con el contexto que la factory devolvio.
+        var run = Harness.Core.Run.FromObjective(objective, deadline, model);
+        var scope = new Scope(policy, [model], [], []);
+        var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
+            run, scope, client, [],
+            item => Log($"  · {item}", EventColor(item.Kind)));
 
         Console.WriteLine($"key      : {source}");
         Console.WriteLine($"modelo   : {model}");
-        Console.WriteLine($"tools    : {string.Join(", ", tools.Names)}");
-        Console.WriteLine($"tarjetas : {string.Join(", ", ledger.Deck.Names)} (cierra: {ledger.Deck.Final.Name})");
+        Console.WriteLine($"tools    : {string.Join(", ", setup.Tools.Names)}");
+        Console.WriteLine($"tarjetas : {string.Join(", ", setup.Ledger.Deck.Names)} (cierra: {setup.Ledger.Deck.Final.Name})");
         Console.WriteLine($"thinking : {DescribeThinking(thinking, model)}");
         Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
         Console.WriteLine($"politica : {policy}");
         Console.WriteLine($"objetivo : {objective}");
         Console.WriteLine();
 
-        var machine = new EventDrivenAgent(client, model, tools)
+        var machine = new EventDrivenAgent(client, model, setup.Tools)
         {
             MaxTokens = IntOption(args, "--max-tokens", 900),
             Temperature = 0,
@@ -895,30 +886,27 @@ internal static class Program
         var loop = new AgentLoopRunner<ReactorState, GoalContext>(machine)
         {
             MaxIterations = maxCycles,
-
-            // La bandera se levanta con la tarjeta de cierre, no con una respuesta del
-            // modelo: hasta que el libro mayor no cuadre, la operacion sigue abierta.
             BreakWhen = iteration => iteration.Context.Ledger.GoalMet,
-
             OnIteration = iteration => Log($"[{iteration.Iteration,2}] {iteration.LastTransition}", ConsoleColor.DarkGray),
         };
 
-        var result = await loop.RunAsync(context, cancellationToken);
+        var loopResult = await loop.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
         renderer?.Close();
+
+        var ledger = setup.Ledger;
+        var context = setup.GoalContext;
 
         Console.WriteLine();
         Console.WriteLine("--- operacion ----------------------------------------");
         Console.WriteLine($"IsBroken    : {loop.IsBroken}");
         Console.WriteLine($"BreakReason : {loop.BreakReason}");
-        Console.WriteLine($"Estado final: {result.FinalState}");
+        Console.WriteLine($"Estado final: {loopResult.FinalState}");
         Console.WriteLine($"Resumen     : {context.Summary()}");
         Console.WriteLine($"Thinking    : {(context.ThinkingObserved ? "observado" : "no observado")}");
 
-        // Solo si la operacion no salio: un 503 del que se recupero no es un error final,
-        // y ponerlo aqui bajo una operacion cumplida solo confunde al que lee el log.
-        if (result.Error is not null && !ledger.GoalMet)
+        if (loopResult.Error is not null && !ledger.GoalMet)
         {
-            Console.WriteLine($"Error       : {result.Error.Message}");
+            Console.WriteLine($"Error       : {loopResult.Error.Message}");
         }
 
         Console.WriteLine();

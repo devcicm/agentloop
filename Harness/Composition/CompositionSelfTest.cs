@@ -31,7 +31,7 @@ public static class CompositionSelfTest
         var observers = new List<IRunObserver>();
         var fakeClient = new FakeTokenRouterClient();
 
-        var setup = GoalRunFactory.Build(run, scope, fakeClient, observers);
+        var setup = GoalRunFactory.BuildWithBusRecording(run, scope, fakeClient, observers);
 
         results.Add(("setup no es null", setup != null));
         results.Add(("setup.Bus es EventBus", setup!.Bus is EventBus));

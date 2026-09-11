@@ -92,27 +92,6 @@ public static class GoalRunFactory
             Status = RunStatus.Running,
         };
 
-        // Cableado por convencion: bus.OnPublished -> BusEventStep en el recorder.
-        // Asi cualquier AgentEvent del Run queda como Step en el Journey.
-        bus.OnPublished = item =>
-        {
-            try
-            {
-                stepRecorder.Record(new BusEventStep(
-                    stepRecorder.NextSequence(),
-                    item.At,
-                    item.Sequence,
-                    item.Kind.ToString(),
-                    item.Source,
-                    item.Text,
-                    item.Data));
-            }
-            catch
-            {
-                // Un step que falla no rompe el reactor.
-            }
-        };
-
         var runner = new GoalRunner(client);
 
         return new GoalRunSetup
@@ -127,6 +106,60 @@ public static class GoalRunFactory
             Runner = runner,
             RunContext = runContext,
         };
+    }
+
+    /// <summary>
+    /// Variante para callers que quieren el setup completo y ademas conectar el
+    /// bus al StepRecorder (asi los AgentEvents se vuelven BusEventSteps en el
+    /// Journey). Es la combinacion que usan JournalAsync y ScriptedRunner.
+    /// </summary>
+    public static GoalRunSetup BuildWithBusRecording(
+        Core.Run run,
+        Scope scope,
+        ITokenRouterClient client,
+        IReadOnlyList<IRunObserver> observers)
+    {
+        var setup = Build(run, scope, client, observers);
+
+        setup.Bus.OnPublished = item =>
+        {
+            try
+            {
+                setup.StepRecorder.Record(new BusEventStep(
+                    setup.StepRecorder.NextSequence(),
+                    item.At,
+                    item.Sequence,
+                    item.Kind.ToString(),
+                    item.Source,
+                    item.Text,
+                    item.Data));
+            }
+            catch
+            {
+                // Un step que falla no rompe el reactor.
+            }
+        };
+
+        return setup;
+    }
+
+    /// <summary>
+    /// Variante para callers que quieren el setup pero con un OnPublished custom
+    /// en el bus (por ejemplo, el comando goal del CLI que pinta eventos con
+    /// colores via Log). El caller pasa el callback y el factory cablea el resto.
+    /// </summary>
+    public static GoalRunSetup BuildWithBusHook(
+        Core.Run run,
+        Scope scope,
+        ITokenRouterClient client,
+        IReadOnlyList<IRunObserver> observers,
+        Action<AgentEvent> onPublished)
+    {
+        ArgumentNullException.ThrowIfNull(onPublished);
+
+        var setup = Build(run, scope, client, observers);
+        setup.Bus.OnPublished = onPublished;
+        return setup;
     }
 
     /// <summary>

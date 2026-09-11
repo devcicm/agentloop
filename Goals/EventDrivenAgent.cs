@@ -49,6 +49,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
 
     private readonly ITokenRouterClient _client;
     private readonly ToolRegistry _tools;
+    private readonly AgentLoop.Harness.Patterns.RetryPattern _retryPattern;
     private int _transitorios;
     private TimeSpan _pausa;
 
@@ -58,6 +59,10 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         _client = client;
         _tools = tools;
         Model = model;
+        _retryPattern = new AgentLoop.Harness.Patterns.RetryPattern(
+            maxAttempts: 3,
+            baseDelay: TimeSpan.FromSeconds(3),
+            maxDelay: TimeSpan.FromSeconds(15));
     }
 
     public string Model { get; }
@@ -123,6 +128,10 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     /// una llamada; esto es el escalon de arriba: si el proveedor se cae con procesos vivos
     /// y presupuesto por delante, se espera y se vuelve, en vez de tirar por la borda una
     /// transaccion a medio abrir por un problema que no es del agente.
+    ///
+    /// El backoff exponencial vive en <see cref="AgentLoop.Harness.Patterns.RetryPattern"/>
+    /// desde commit C: este metodo solo consume el patron declarativo en vez de llevar su
+    /// propia copia de la receta.
     /// </summary>
     protected override ValueTask<ReactorState> OnErrorAsync(Exception error, GoalContext context, CancellationToken cancellationToken)
     {
@@ -133,9 +142,18 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         context.FailureReason = reason;
         Trace?.Invoke($"error: {reason}");
 
-        if (IsTransient(error) && ++_transitorios <= MaxTransientFailures && !context.Expired)
+        var context2 = new AgentLoop.Harness.Patterns.PatternContext(
+            Attempt: _transitorios + 1,
+            LastError: error,
+            Elapsed: context.Elapsed,
+            Cancelled: cancellationToken.IsCancellationRequested);
+
+        var retry = _retryPattern.Apply(context2);
+
+        if (IsTransient(error) && retry.Action == AgentLoop.Harness.Patterns.PatternAction.Retry && !context.Expired)
         {
-            _pausa = TimeSpan.FromSeconds(Math.Min(15, 3 * _transitorios));
+            _transitorios++;
+            _pausa = retry.RetryAfter;
             context.Bus.Publish(
                 AgentEventKind.Aviso,
                 "reactor",

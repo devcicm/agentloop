@@ -958,7 +958,6 @@ internal static class Program
         var run = Harness.Core.Run.FromObjective(objective, deadline, model);
 
         using var client = BuildClient(out var source, policy);
-        var runner = new Harness.Runner.GoalRunner(client);
 
         var journalDir = StringOption(args, "--journal-dir")
             ?? Path.Combine(SecretStore.ResolveRepositoryRoot(), "artifacts", "journeys");
@@ -977,7 +976,8 @@ internal static class Program
         Console.WriteLine($"journal  : {journalDir}");
         Console.WriteLine();
 
-        var (result, journey) = await runner.RunAsync(run, options, cancellationToken).ConfigureAwait(false);
+        var (result, journey) = await Harness.Composition.GoalRunFactory.RunWithRunnerAsync(
+            run, options, client, store, cancellationToken).ConfigureAwait(false);
 
         Console.WriteLine();
         Console.WriteLine($"--- journey ------------------------------------------");
@@ -986,24 +986,8 @@ internal static class Program
         Console.WriteLine($"steps    : {journey.Steps.Count} (model={journey.ModelCalls}, tool={journey.ToolCalls}, wait={journey.Waits}, err={journey.Errors})");
         Console.WriteLine($"elapsed  : {journey.Elapsed.TotalSeconds:0}s");
 
-        var snapshot = new Harness.Durable.RunSnapshot(
-            Harness.Durable.RunSnapshot.CurrentVersion,
-            run.Id,
-            objective,
-            journey.FinalStatus,
-            journey.FailureReason,
-            journey.StartedAt,
-            journey.EndedAt,
-            journey.Steps,
-            journey.Metrics);
-
-        await store.SaveAsync(snapshot, cancellationToken).ConfigureAwait(false);
-
         var markdownPath = Path.Combine(journalDir, $"{run.Id:N}.md");
-        await File.WriteAllTextAsync(markdownPath, Harness.Core.JourneyWriter.ToMarkdown(journey), cancellationToken).ConfigureAwait(false);
-
         Console.WriteLine();
-        Console.WriteLine($"snapshot : {Path.Combine(journalDir, $"{run.Id:N}.json")}");
         Console.WriteLine($"markdown : {markdownPath}");
 
         return result.IsSuccess ? 0 : 1;
@@ -1289,7 +1273,10 @@ internal static class Program
         Console.WriteLine();
         var lifecycleOk = AgentLoop.Harness.Lifecycle.LifecycleAndBusDedupSelfTest.Run();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk;
+        Console.WriteLine();
+        var compositionOk = AgentLoop.Harness.Composition.CompositionSelfTest.Run();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

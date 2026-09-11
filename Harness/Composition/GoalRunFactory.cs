@@ -1,0 +1,187 @@
+using AgentLoop.Cards;
+using AgentLoop.Configuration;
+using AgentLoop.Events;
+using AgentLoop.Goals;
+using AgentLoop.Harness.Core;
+using AgentLoop.Harness.Durable;
+using AgentLoop.Harness.Observability;
+using AgentLoop.Harness.Runner;
+using AgentLoop.Harness.Steps;
+using AgentLoop.Harness.Traceability;
+using AgentLoop.Provider;
+using AgentLoop.Terminals;
+using AgentLoop.Tools;
+
+namespace AgentLoop.Harness.Composition;
+
+/// <summary>
+/// Composition Root del harness de goal: el unico sitio que sabe montar
+/// todos los componentes y cablearlos entre si. Dado un Run + un Scope
+/// + un cliente TokenRouter + unos observers, devuelve un GoalRunSetup
+/// con EventBus, ProcessSupervisor, CardLedger, OperationTools,
+/// GoalContext, StepRecorder, MetricsCollector, RunContext y
+/// GoalRunner, listos para ejecutar.
+///
+/// Antes de este commit, GoalAsync (Program.cs), JournalAsync (Program.cs)
+/// y GoalRunner.RunAsync (Harness/Runner) construian cada uno su propio
+/// Scope, Bus, Supervisor, Ledger, Tools, GoalContext y Machine. Tres
+/// copias del mismo setup con pequenas variaciones. Ahora cualquier
+/// consumidor llama a Build() y obtiene un setup consistente.
+///
+/// Responsabilidad centralizada: si manana cambia la forma de cablear
+/// el bus con el supervisor (por ejemplo, meter la deduplicacion que
+/// se aplico en commit M), solo se toca aqui y todos los consumidores
+/// se benefician.
+/// </summary>
+public static class GoalRunFactory
+{
+    /// <summary>Setup completo y listo para ejecutar. Todos los campos son publicos y de solo lectura.</summary>
+    public sealed class GoalRunSetup
+    {
+        public required EventBus Bus { get; init; }
+        public required ProcessSupervisor Supervisor { get; init; }
+        public required CardLedger Ledger { get; init; }
+        public required ToolRegistry Tools { get; init; }
+        public required GoalContext GoalContext { get; init; }
+        public required StepRecorder StepRecorder { get; init; }
+        public required MetricsCollector Metrics { get; init; }
+        public required GoalRunner Runner { get; init; }
+        public required RunContext RunContext { get; init; }
+    }
+
+    /// <summary>
+    /// Construye el setup completo. El <paramref name="client"/> se construye fuera porque
+    /// depende de configuracion externa (SecretStore); aqui lo recibimos listo.
+    /// </summary>
+    public static GoalRunSetup Build(
+        Core.Run run,
+        Scope scope,
+        ITokenRouterClient client,
+        IReadOnlyList<IRunObserver> observers)
+    {
+        ArgumentNullException.ThrowIfNull(run);
+        ArgumentNullException.ThrowIfNull(scope);
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentNullException.ThrowIfNull(observers);
+
+        var correlation = Correlation.Start();
+
+        var bus = new EventBus();
+        var supervisor = new ProcessSupervisor(bus, scope.Policy);
+        var ledger = new CardLedger(CardDeck.Transaccional);
+        var tools = OperationTools.Build(ledger, supervisor, bus);
+        var goalContext = new GoalContext
+        {
+            Goal = run.Goal,
+            Bus = bus,
+            Ledger = ledger,
+            Supervisor = supervisor,
+        };
+
+        var stepRecorder = new StepRecorder(run.Id, observers);
+        var metrics = new MetricsCollector();
+
+        var runContext = new RunContext
+        {
+            RunId = run.Id,
+            Goal = goalContext,
+            Correlation = correlation,
+            Scope = scope,
+            Steps = stepRecorder,
+            Metrics = metrics,
+            Status = RunStatus.Running,
+        };
+
+        // Cableado por convencion: bus.OnPublished -> BusEventStep en el recorder.
+        // Asi cualquier AgentEvent del Run queda como Step en el Journey.
+        bus.OnPublished = item =>
+        {
+            try
+            {
+                stepRecorder.Record(new BusEventStep(
+                    stepRecorder.NextSequence(),
+                    item.At,
+                    item.Sequence,
+                    item.Kind.ToString(),
+                    item.Source,
+                    item.Text,
+                    item.Data));
+            }
+            catch
+            {
+                // Un step que falla no rompe el reactor.
+            }
+        };
+
+        var runner = new GoalRunner(client);
+
+        return new GoalRunSetup
+        {
+            Bus = bus,
+            Supervisor = supervisor,
+            Ledger = ledger,
+            Tools = tools,
+            GoalContext = goalContext,
+            StepRecorder = stepRecorder,
+            Metrics = metrics,
+            Runner = runner,
+            RunContext = runContext,
+        };
+    }
+
+    /// <summary>
+    /// Helper de journal: monta el setup, ejecuta el Run via GoalRunner,
+    /// persiste el Snapshot en el RunStore y escribe el Journey en
+    /// markdown. Es la composicion completa del comando 'journal' en
+    /// un solo call site: el CLI ya no cablea Run + RunStore + Journey
+    /// writer, solo invoca este metodo.
+    /// </summary>
+    public static async Task<(RunResult Result, Journey Journey)> RunWithRunnerAsync(
+        Core.Run run,
+        RunnerOptions options,
+        ITokenRouterClient client,
+        IRunStore store,
+        CancellationToken cancellationToken = default)
+    {
+        ArgumentNullException.ThrowIfNull(run);
+        ArgumentNullException.ThrowIfNull(options);
+        ArgumentNullException.ThrowIfNull(client);
+        ArgumentNullException.ThrowIfNull(store);
+
+        var policy = new ExecutionPolicy
+        {
+            WorkingDirectory = Path.GetFullPath(options.WorkingDirectory),
+            MaxConcurrent = options.MaxConcurrent,
+        };
+        var scope = Scope.Minimal(policy);
+        var setup = Build(run, scope, client, Array.Empty<IRunObserver>());
+
+        try
+        {
+            var (result, journey) = await setup.Runner.RunAsync(run, options, cancellationToken).ConfigureAwait(false);
+
+            var snapshot = new RunSnapshot(
+                RunSnapshot.CurrentVersion,
+                run.Id,
+                run.Objective,
+                journey.FinalStatus,
+                journey.FailureReason,
+                journey.StartedAt,
+                journey.EndedAt,
+                journey.Steps,
+                journey.Metrics);
+
+            await store.SaveAsync(snapshot, cancellationToken).ConfigureAwait(false);
+
+            var journalDir = (store as FileRunStore)?.Root ?? SecretStore.ResolveRepositoryRoot();
+            var markdownPath = Path.Combine(journalDir, $"{run.Id:N}.md");
+            await File.WriteAllTextAsync(markdownPath, JourneyWriter.ToMarkdown(journey), cancellationToken).ConfigureAwait(false);
+
+            return (result, journey);
+        }
+        finally
+        {
+            setup.Supervisor.Dispose();
+        }
+    }
+}

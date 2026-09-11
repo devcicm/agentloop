@@ -567,6 +567,7 @@ internal static class Program
             "discover" => await DiscoverAsync(args, cancellationToken),
             "run" => await RunAsync(args, cancellationToken),
             "goal" or "objetivo" => await GoalAsync(args, cancellationToken),
+            "journal" or "diario" => await JournalAsync(args, cancellationToken),
             "selftest" => await SelfTestAsync(cancellationToken),
             "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
             "interactive" or "interactivo" or "repl" => await InteractiveAsync(args),
@@ -937,6 +938,75 @@ internal static class Program
 
         Console.WriteLine($"SIN CERRAR: {context.FailureReason ?? ledger.Outcome ?? ledger.PendingDebt() ?? "la tarjeta de cierre nunca se jugo"}");
         return 1;
+    }
+
+    /// <summary>
+    /// Comando 'journal': corre el harness via <see cref="GoalRunner"/> y persiste el
+    /// Journey a artifacts/journeys/&lt;runId&gt;.md. Pensado para pruebas end-to-end
+    /// del harness: el RunContext, StepRecorder y Durable se ejercitan de verdad
+    /// sin tocar el flujo principal de 'goal'.
+    /// </summary>
+    private static async Task<int> JournalAsync(string[] args, CancellationToken cancellationToken)
+    {
+        var objective = PositionalOrDefault(args, "averigua que version de dotnet hay instalada y dejala escrita en una nota");
+        var deadline = IntOption(args, "--deadline", 120);
+        var maxCycles = IntOption(args, "--max-ciclos", 30);
+        var stream = ResolveStreaming(args);
+        var policy = ResolveThinkingPolicy(args);
+        var model = ResolveModel(args);
+
+        var run = Harness.Core.Run.FromObjective(objective, deadline, model);
+
+        using var client = BuildClient(out var source, policy);
+        var runner = new Harness.Runner.GoalRunner(client);
+
+        var journalDir = StringOption(args, "--journal-dir")
+            ?? Path.Combine(SecretStore.ResolveRepositoryRoot(), "artifacts", "journeys");
+        var store = new Harness.Durable.FileRunStore(journalDir);
+
+        var options = new Harness.Runner.RunnerOptions
+        {
+            DeadlineSeconds = deadline,
+            MaxIterations = maxCycles,
+        };
+
+        Console.WriteLine($"key      : {source}");
+        Console.WriteLine($"run      : {run.Id:N}");
+        Console.WriteLine($"modelo   : {run.Model}");
+        Console.WriteLine($"objetivo : {objective}");
+        Console.WriteLine($"journal  : {journalDir}");
+        Console.WriteLine();
+
+        var (result, journey) = await runner.RunAsync(run, options, cancellationToken).ConfigureAwait(false);
+
+        Console.WriteLine();
+        Console.WriteLine($"--- journey ------------------------------------------");
+        Console.WriteLine($"status   : {journey.FinalStatus}");
+        Console.WriteLine($"outcome  : {journey.Outcome}");
+        Console.WriteLine($"steps    : {journey.Steps.Count} (model={journey.ModelCalls}, tool={journey.ToolCalls}, wait={journey.Waits}, err={journey.Errors})");
+        Console.WriteLine($"elapsed  : {journey.Elapsed.TotalSeconds:0}s");
+
+        var snapshot = new Harness.Durable.RunSnapshot(
+            Harness.Durable.RunSnapshot.CurrentVersion,
+            run.Id,
+            objective,
+            journey.FinalStatus,
+            journey.FailureReason,
+            journey.StartedAt,
+            journey.EndedAt,
+            journey.Steps,
+            journey.Metrics);
+
+        await store.SaveAsync(snapshot, cancellationToken).ConfigureAwait(false);
+
+        var markdownPath = Path.Combine(journalDir, $"{run.Id:N}.md");
+        await File.WriteAllTextAsync(markdownPath, Harness.Core.JourneyWriter.ToMarkdown(journey), cancellationToken).ConfigureAwait(false);
+
+        Console.WriteLine();
+        Console.WriteLine($"snapshot : {Path.Combine(journalDir, $"{run.Id:N}.json")}");
+        Console.WriteLine($"markdown : {markdownPath}");
+
+        return result.IsSuccess ? 0 : 1;
     }
 
     private static PolicyMode ParsePolicyMode(string? value) => value?.Trim().ToLowerInvariant() switch

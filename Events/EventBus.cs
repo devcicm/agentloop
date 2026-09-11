@@ -34,7 +34,7 @@ public sealed class EventBus
     public TimeSpan DedupWindow { get; init; } = TimeSpan.FromSeconds(2);
 
     /// <summary>Traza en vivo de cada publicacion (la consola del CLI se engancha aqui).</summary>
-    public Action<AgentEvent>? OnPublished { get; init; }
+    public Action<AgentEvent>? OnPublished { get; set; }
 
     /// <summary>Llamado cuando un evento se descarta por deduplicacion. Util para observabilidad.</summary>
     public Action<AgentEvent>? OnDuplicateDiscarded { get; set; }

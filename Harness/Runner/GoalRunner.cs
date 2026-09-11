@@ -73,6 +73,29 @@ public sealed class GoalRunner : IRunner
             Status = RunStatus.Running,
         };
 
+        // Wire bus -> Step: cada AgentEvent publicado durante el Run se
+        // convierte en un BusEventStep con su Correlation. Asi el Journey
+        // del comando journal muestra cada ciclo de narracion, cada aviso
+        // y cada tool call, no solo el TransitionStep final.
+        bus.OnPublished = item =>
+        {
+            try
+            {
+                context.Steps.Record(new BusEventStep(
+                    context.Steps.NextSequence(),
+                    item.At,
+                    item.Sequence,
+                    item.Kind.ToString(),
+                    item.Source,
+                    item.Text,
+                    item.Data));
+            }
+            catch
+            {
+                // Un step que falla no rompe el reactor.
+            }
+        };
+
         context.Steps.OnRunStart(run.Id);
 
         var machine = new EventDrivenAgent(_client, run.Model ?? "qwen/qwen3.8-max-free", tools)

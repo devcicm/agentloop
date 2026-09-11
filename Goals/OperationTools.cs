@@ -18,18 +18,27 @@ namespace AgentLoop.Goals;
 public static class OperationTools
 {
     public static ToolRegistry Build(CardLedger ledger, ProcessSupervisor supervisor, EventBus bus)
-        => new(
+    {
+        // Tools read-only que se benefician del cache: el mismo argumento
+        // produce el mismo resultado, asi que repetir la llamada no aporta
+        // nada. Tools con efectos reales (tarjeta, ejecutar, lanzar, esperar,
+        // flujo) no se cachean: el modelo podria querer reintentar y la
+        // idempotencia bloquearia el reintento.
+        var cache = new AgentLoop.Harness.Concurrency.IdempotencyCache(capacity: 256);
+
+        return new ToolRegistry(
         [
             CardTool(ledger, bus),
             RunTool(supervisor),
             LaunchTool(supervisor),
             WaitTool(supervisor, bus),
-            ReadTool(supervisor),
-            ProcessesTool(supervisor),
-            KillTool(supervisor),
-            WatchTool(supervisor),
+            new AgentLoop.Tools.IdempotentTool(ReadTool(supervisor), cache),
+            new AgentLoop.Tools.IdempotentTool(ProcessesTool(supervisor), cache),
+            new AgentLoop.Tools.IdempotentTool(KillTool(supervisor), cache),
+            new AgentLoop.Tools.IdempotentTool(WatchTool(supervisor), cache),
             FlowTool(supervisor),
         ]);
+    }
 
     private static DelegateTool CardTool(CardLedger ledger, EventBus bus)
     {

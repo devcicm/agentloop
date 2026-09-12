@@ -570,6 +570,7 @@ internal static class Program
             "goal" or "objetivo" => await GoalAsync(args, cancellationToken),
             "journal" or "diario" => await JournalAsync(args, cancellationToken),
             "lobos" => await LobosAsync(args, cancellationToken),
+            "diagnostico" or "diagnosis" => await DiagnosticoAsync(args),
             "selftest" => await SelfTestAsync(cancellationToken),
             "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
             "interactive" or "interactivo" or "repl" => await InteractiveAsync(args),
@@ -1036,6 +1037,86 @@ internal static class Program
         return exit;
     }
 
+    /// <summary>
+    /// Diagnostico post-mortem de un run a partir de su snapshot persistido.
+    /// Solo lee disco: no toca la red ni ejecuta el modelo.
+    ///
+    /// Uso:
+    ///   dotnet run --project AgentLoop.csproj -- diagnostico
+    ///   dotnet run --project AgentLoop.csproj -- diagnostico last --journal-dir artifacts/journeys
+    ///   dotnet run --project AgentLoop.csproj -- diagnostico &lt;runId|ruta&gt;
+    ///
+    /// Devuelve 0 si el informe se imprimio (aunque el run diagnosticado haya
+    /// fallado: diagnosticar no es ejecutar) y 1 si el snapshot no se pudo leer.
+    /// </summary>
+    private static Task<int> DiagnosticoAsync(string[] args)
+    {
+        var journalDir = StringOption(args, "--journal-dir")
+            ?? Path.Combine(SecretStore.ResolveRepositoryRoot(), "artifacts", "journeys");
+        var selector = args.Length > 1 && !args[1].StartsWith("--", StringComparison.Ordinal)
+            ? args[1]
+            : "last";
+
+        string? path = null;
+        if (selector is "last" or "ultimo" or "")
+        {
+            path = Directory.Exists(journalDir)
+                ? Directory.EnumerateFiles(journalDir, "*.json", SearchOption.TopDirectoryOnly)
+                    .OrderByDescending(f => new FileInfo(f).LastWriteTimeUtc)
+                    .FirstOrDefault()
+                : null;
+        }
+        else if (Guid.TryParse(selector, out var id))
+        {
+            path = Path.Combine(journalDir, $"{id:N}.json");
+        }
+        else
+        {
+            var candidate = Path.IsPathRooted(selector) ? selector : Path.Combine(journalDir, selector);
+            path = candidate.EndsWith(".json", StringComparison.OrdinalIgnoreCase) ? candidate : candidate + ".json";
+        }
+
+        if (path is null || !File.Exists(path))
+        {
+            Console.Error.WriteLine($"diagnostico: no se encontro snapshot '{selector}' en {journalDir}");
+            return Task.FromResult(1);
+        }
+
+        string json;
+        try
+        {
+            json = File.ReadAllText(path);
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            Console.Error.WriteLine($"diagnostico: no se pudo leer {path}: {ex.Message}");
+            return Task.FromResult(1);
+        }
+
+        var d = Harness.Core.JourneyDiagnosis.Analyze(json, SecretStore.ResolveRepositoryRoot());
+        PrintDiagnosis(d, path);
+        return Task.FromResult(0);
+    }
+
+    private static void PrintDiagnosis(Harness.Core.JourneyDiagnosis d, string path)
+    {
+        Console.WriteLine("--- diagnostico ----------------------------------------");
+        Console.WriteLine($"snapshot : {path}");
+        Console.WriteLine($"run      : {d.RunId}");
+        Console.WriteLine($"objetivo : {(d.Objective.Length == 0 ? "(vacio)" : d.Objective)}");
+        Console.WriteLine($"estado   : {d.Status}");
+        Console.WriteLine($"cierre   : {d.Classification}");
+        Console.WriteLine($"motivo   : {(string.IsNullOrEmpty(d.FailureReason) ? "(ninguno)" : d.FailureReason)}");
+        Console.WriteLine($"elapsed  : {d.ElapsedSeconds:0}s | pasos: {d.StepCount}");
+        Console.WriteLine($"tarjetas : abrir={d.Abrir} avanzar={d.Avanzar} comprobar={d.Comprobar} cerrar={d.Cerrar} abortar={d.Abortar} rechazadas={d.Rejected}");
+        Console.WriteLine($"narracion: {d.Narrations} sin herramientas (avisos con ejemplo: {d.Nudges}, seguidos de tarjeta: {d.NudgesFollowedByCard})");
+        Console.WriteLine($"procesos : iniciados={d.ProcessStarts} terminados={d.ProcessEnds} codigo!=0: {d.NonZeroExits}");
+        Console.WriteLine($"pausa max: {d.MaxStepGapSeconds:0}s ({(d.MaxStepGapWhere.Length == 0 ? "sin datos" : d.MaxStepGapWhere)})");
+        Console.WriteLine($"tokens   : no persistidos en el snapshot (ver resumen del log en vivo)");
+        Console.WriteLine($"archivos : {(d.ReferencedFiles.Count == 0 ? "(ninguno referenciado)" : string.Join(", ", d.ReferencedFiles.Select(f => d.ExistingFiles.Contains(f, StringComparer.OrdinalIgnoreCase) ? f + " [existe]" : f + " [ausente]")))}");
+        Console.WriteLine($"accion   : {d.RecommendedAction}");
+    }
+
     private static PolicyMode ParsePolicyMode(string? value) => value?.Trim().ToLowerInvariant() switch
     {
         null or "" or "auto" => PolicyMode.Auto,
@@ -1344,7 +1425,10 @@ internal static class Program
         Console.WriteLine();
         var watchdogOk = AgentLoop.Goals.WatchdogSelfTest.Run();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk;
+        Console.WriteLine();
+        var diagnosisOk = Harness.Core.JourneyDiagnosis.SelfTest();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;
@@ -2010,6 +2094,7 @@ internal static class Program
               goal "<objetivo>"     Operacion dirigida por eventos: tarjetas de estado y terminales
                                     (bash, sh, powershell, pwsh, cmd). Ver la seccion Operaciones.
               selftest              Prueba el corte del loop sin tocar la red.
+              diagnostico [runId]   Diagnostico post-mortem de un journey persistido (solo lee disco).
               interactive           Prompt interactivo con hilo de conversacion (lo que usa F5 en
                                     Visual Studio). Dentro: nuevo, historial, vars, set, unset,
                                     sistema, plantilla, pensar, stream, salir.

@@ -1236,6 +1236,28 @@ internal static class Program
         supervisor.Reanudar();
         results.Add(("la puerta de ejecucion se cierra y se abre", puerta && cerrada && supervisor.Puerta.IsSet));
 
+        // --- ejemplo de nudge segun estado del ledger -------------------------
+        var nudgeLedger = new CardLedger(CardDeck.Transaccional);
+        var nudgeContext = new GoalContext
+        {
+            Goal = Goal.Of("probar nudge", 60),
+            Bus = new EventBus(),
+            Ledger = nudgeLedger,
+            Supervisor = supervisor,
+        };
+
+        results.Add(("ejemplo con nada abierto sugiere abrir",
+            EventDrivenAgent.BuildToolExample(nudgeContext).Contains("\"nombre\":\"abrir\"")));
+        nudgeLedger.Play("abrir", Fields(("objetivo", "x"), ("plan", "y")));
+        results.Add(("ejemplo con transaccion abierta sugiere avanzar",
+            EventDrivenAgent.BuildToolExample(nudgeContext).Contains("\"nombre\":\"avanzar\"")));
+        nudgeLedger.Play("avanzar", Fields(("paso", "lei la salida")));
+        results.Add(("ejemplo con avances sugiere comprobar",
+            EventDrivenAgent.BuildToolExample(nudgeContext).Contains("\"nombre\":\"comprobar\"")));
+        nudgeLedger.Play("comprobar", Fields(("comprobacion", "revise"), ("resultado", "ok")));
+        results.Add(("ejemplo con transaccion verificada sugiere cerrar",
+            EventDrivenAgent.BuildToolExample(nudgeContext).Contains("\"nombre\":\"cerrar\"")));
+
         // --- poda de la conversacion ---------------------------------------
         var context = new GoalContext
         {

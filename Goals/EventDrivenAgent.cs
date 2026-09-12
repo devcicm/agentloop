@@ -498,11 +498,13 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
 
     /// <summary>
     /// Ejemplo concreto de llamada a la tool tarjeta para el estado actual del
-    /// ledger. Prefiere "avanzar" (el paso natural con una transaccion abierta)
-    /// y cae a la primera tarjeta legal. Los valores son placeholders: el modelo
-    /// debe adaptarlos a lo que realmente observo.
+    /// ledger. Elige la tarjeta mas progresiva entre las legales: cerrar si la
+    /// transaccion ya esta verificada, comprobar si ya hay avances registrados,
+    /// avanzar como paso natural con transaccion abierta, y la primera legal
+    /// en otro caso. Los valores son placeholders: el modelo debe adaptarlos
+    /// a lo que realmente observo.
     /// </summary>
-    private static string BuildToolExample(GoalContext context)
+    internal static string BuildToolExample(GoalContext context)
     {
         var allowed = context.Ledger.AllowedNow();
         if (allowed.Count == 0)
@@ -510,9 +512,31 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
             return "tarjeta({\"nombre\":\"abrir\",\"objetivo\":\"...\",\"plan\":\"...\"})";
         }
 
-        var pick = allowed.Contains("avanzar", StringComparer.OrdinalIgnoreCase)
-            ? "avanzar"
-            : allowed[0];
+        bool Legal(string name) => allowed.Contains(name, StringComparer.OrdinalIgnoreCase);
+
+        string pick;
+        var current = context.Ledger.Current;
+        var advances = current is null
+            ? 0
+            : current.Steps.Count(p => p.Accepted && string.Equals(p.Name, "avanzar", StringComparison.OrdinalIgnoreCase));
+
+        if (current?.Verified == true && Legal("cerrar"))
+        {
+            pick = "cerrar";
+        }
+        else if (advances >= 1 && Legal("comprobar"))
+        {
+            pick = "comprobar";
+        }
+        else if (Legal("avanzar"))
+        {
+            pick = "avanzar";
+        }
+        else
+        {
+            pick = allowed[0];
+        }
+
         var card = context.Ledger.Deck.Find(pick);
         var fields = card is null
             ? new Dictionary<string, string> { ["paso"] = "..." }

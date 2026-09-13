@@ -1428,7 +1428,13 @@ internal static class Program
         Console.WriteLine();
         var diagnosisOk = Harness.Core.JourneyDiagnosis.SelfTest();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk;
+        Console.WriteLine();
+        var dispatcherOk = DispatcherStressSelfTest.Run();
+
+        Console.WriteLine();
+        var pipelineProbeOk = DispatcherPipelineProbe.Run();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

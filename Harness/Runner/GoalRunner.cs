@@ -60,8 +60,16 @@ public sealed class GoalRunner : IRunner
 
             var loop = new Looping.AgentLoopRunner<ReactorState, GoalContext>(machine)
             {
-                MaxIterations = options.MaxIterations,
-                BreakWhen = iteration => iteration.Context.Ledger.GoalMet,
+                // options.MaxIterations son ciclos del reactor (llamadas al
+                // modelo), no iteraciones del loop: cada ciclo consume varias
+                // iteraciones (razonar, esperar, despachar). Se evalua el tope
+                // de ciclos en BreakWhen y MaxIterations es la red de seguridad.
+                MaxIterations = Math.Max(options.MaxIterations * 4, options.MaxIterations + 8),
+                BreakWhen = iteration =>
+                    iteration.Context.Ledger.GoalMet
+                    || iteration.Context.Ledger.Aborted
+                    || iteration.Context.Expired
+                    || iteration.Context.Cycles >= options.MaxIterations,
             };
 
             var loopResult = await loop.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);

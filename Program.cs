@@ -887,8 +887,17 @@ internal static class Program
 
         var loop = new AgentLoopRunner<ReactorState, GoalContext>(machine)
         {
-            MaxIterations = maxCycles,
-            BreakWhen = iteration => iteration.Context.Ledger.GoalMet,
+            // Cada ciclo del reactor consume varias iteraciones del loop
+            // (Arranque, Razonar, Esperar, Despachar...). El tope que pide el
+            // usuario (--max-ciclos) son llamadas al modelo, no iteraciones:
+            // se evalua en BreakWhen con context.Cycles y MaxIterations queda
+            // como red de seguridad por si una transicion se atasca.
+            MaxIterations = Math.Max(maxCycles * 4, maxCycles + 8),
+            BreakWhen = iteration =>
+                iteration.Context.Ledger.GoalMet
+                || iteration.Context.Ledger.Aborted
+                || iteration.Context.Expired
+                || iteration.Context.Cycles >= maxCycles,
             OnIteration = iteration => Log($"[{iteration.Iteration,2}] {iteration.LastTransition}", ConsoleColor.DarkGray),
         };
 

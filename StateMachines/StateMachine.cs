@@ -80,6 +80,11 @@ public abstract class StateMachine<TState, TContext>
         try
         {
             next = await OnExecuteAsync(context, cancellationToken).ConfigureAwait(false);
+            // La ejecucion salio bien: si habia un error de un paso anterior
+            // (p. ej. un 503 transitorio ya reintentado), deja de ser el error
+            // vigente. Sin esto, LastError se queda pegado y el resumen final
+            // muestra un fallo del que la operacion ya se recupero.
+            LastError = null;
         }
         catch (OperationCanceledException)
         {

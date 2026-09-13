@@ -53,6 +53,15 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     private int _transitorios;
     private TimeSpan _pausa;
 
+    /// <summary>
+    /// Presupuesto de tokens adaptativo. Cuando el modelo devuelve
+    /// finish_reason=length sin tool calls, se queda sin tokens antes de
+    /// emitir la accion (los modelos que razonan por defecto queman el
+    /// presupuesto pensando). A partir de ahi se dobla el tope (hasta 8192)
+    /// para que quepan razonamiento + herramienta en la misma respuesta.
+    /// </summary>
+    private int? _adaptiveMaxTokens;
+
     public EventDrivenAgent(ITokenRouterClient client, string model, ToolRegistry tools)
         : base(ReactorState.Arranque)
     {
@@ -316,6 +325,11 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         var definitions = _tools.ToDefinitions();
         var thinking = Thinking?.For(Model);
 
+        var baseMax = Thinking?.EnsureHeadroom(MaxTokens, Model) ?? MaxTokens;
+        var effectiveMax = _adaptiveMaxTokens is > 0 && _adaptiveMaxTokens > baseMax
+            ? _adaptiveMaxTokens.Value
+            : baseMax;
+
         var request = new ChatRequest
         {
             Model = Model,
@@ -324,7 +338,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
             ToolChoice = definitions is null ? null : "auto",
             ParallelToolCalls = definitions is null ? null : ParallelToolCalls,
             Temperature = Temperature,
-            MaxTokens = Thinking?.EnsureHeadroom(MaxTokens, Model) ?? MaxTokens,
+            MaxTokens = effectiveMax,
             Thinking = thinking,
             StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
@@ -356,26 +370,36 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         if (parsed.HasToolCalls)
         {
             context.TextOnlyStreak = 0;
+            _adaptiveMaxTokens = null; // volvio a producir accion: no hace falta el extra
             PendingNote = $"{parsed.ToolCalls.Count} llamada(s): {string.Join(", ", parsed.ToolCalls.Select(t => t.Name))}";
             return ReactorState.Despachando;
         }
 
-        // Texto suelto sin herramientas: el modelo esta narrando en vez de operar. No se
-        // le corta el paso, se le devuelve el aviso como un evento mas y que reaccione.
-        // A partir de la segunda narracion seguida se le muestra un ejemplo concreto
-        // de llamada: la lista de tarjetas legales sola no basta para algunos modelos
-        // y cada ciclo desperdiciado cuesta ~1 min de llamada al modelo.
+        // Sin tool calls. Distinguimos dos casos:
+        //   - finish_reason=length: el modelo se quedo sin tokens (razono de
+        //     mas) antes de emitir la accion. Se sube el presupuesto y se le
+        //     pide ser directo.
+        //   - texto/narracion: el modelo hablo en vez de operar.
+        // En ambos se le da un ejemplo concreto copiable; la lista de tarjetas
+        // legales sola no basta y cada ciclo cuesta ~1 min de llamada.
+        var truncated = string.Equals(parsed.FinishReason, "length", StringComparison.OrdinalIgnoreCase);
+        if (truncated)
+        {
+            var next = Math.Min(8192, Math.Max(effectiveMax * 2, 2048));
+            _adaptiveMaxTokens = next;
+            Trace?.Invoke($"  respuesta truncada por max_tokens; subo el tope a {next}");
+        }
+
         context.TextOnlyStreak++;
         var said = parsed.Content is { Length: > 0 } text ? Shorten(text) : "(nada)";
-        var aviso = $"respondiste texto sin usar herramientas ({said}). La operacion no se cierra hablando: " +
-            $"juega una tarjeta o ejecuta algo. Legales ahora: {string.Join(", ", context.Ledger.AllowedNow())}.";
-        if (context.TextOnlyStreak >= 2)
-        {
-            aviso += $" Ejemplo concreto (copia la estructura, adapta el contenido): {BuildToolExample(context)}";
-        }
+        var aviso = truncated
+            ? $"tu respuesta se trunco por el limite de tokens antes de llamar a una herramienta (contenido: {said}). Se breve: piensa menos y actua. "
+            : $"respondiste texto sin usar herramientas ({said}). La operacion no se cierra hablando. ";
+        aviso += $"Juega una tarjeta o ejecuta algo ahora. Legales ahora: {string.Join(", ", context.Ledger.AllowedNow())}. ";
+        aviso += $"Ejemplo concreto (copia la estructura, adapta el contenido): {BuildToolExample(context)}";
         context.Bus.Publish(AgentEventKind.Aviso, "reactor", aviso);
 
-        PendingNote = "respuesta sin herramientas";
+        PendingNote = truncated ? "respuesta truncada por tokens" : "respuesta sin herramientas";
         return ReactorState.Esperando;
     }
 

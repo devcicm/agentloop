@@ -877,7 +877,7 @@ internal static class Program
 
         var machine = new EventDrivenAgent(client, model, setup.Tools)
         {
-            MaxTokens = IntOption(args, "--max-tokens", 900),
+            MaxTokens = IntOption(args, "--max-tokens", 2048),
             Temperature = 0,
             Thinking = thinking,
             Stream = stream,
@@ -1465,7 +1465,10 @@ internal static class Program
         Console.WriteLine();
         var pipelineProbeOk = DispatcherPipelineProbe.Run();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk;
+        Console.WriteLine();
+        var truncationOk = TruncationRecoverySelfTest.Run();
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

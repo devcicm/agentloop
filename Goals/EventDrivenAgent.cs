@@ -263,6 +263,19 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         // que el plazo del objetivo la corte. Asi no se gasta una llamada al modelo cada
         // 2 s solo para preguntar "¿pasa algo?": es el mismo patron del lector de huellas,
         // donde el wait bloquea hasta que el SDK habla.
+        //
+        // Si el plazo ya vencio (Remaining <= 0) no esperamos nada: devolvemos
+        // Razonando y el watchdog de arriba en OnExecuteAsync convierte en Fallido.
+        // Esperar con timeout <= 0 en el AsyncAutoResetEvent del bus cae en un bucle
+        // de iteraciones vacias que no aporta nada.
+        if (context.Remaining <= TimeSpan.Zero)
+        {
+            PendingNote = hasLiveProcesses
+                ? "plazo agotado con procesos vivos"
+                : "plazo agotado sin procesos vivos";
+            return ReactorState.Razonando;
+        }
+
         var timeout = hasLiveProcesses
             ? context.Remaining
             : (context.Remaining < IdleSlice ? context.Remaining : IdleSlice);
@@ -371,14 +384,55 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         var completion = context.Last
             ?? throw new InvalidOperationException("No hay llamadas que despachar.");
 
+        // Cada tool call se ejecuta en su propio try para que un fallo del
+        // dispatcher en una llamada (exception de sanitize, add a Messages,
+        // Trace, etc.) no impida despachar el resto. El reactor sigue con la
+        // siguiente llamada y publica un Error por la que fallo.
         foreach (var call in completion.ToolCalls)
         {
-            var execution = await _tools.ExecuteAsync(call, cancellationToken).ConfigureAwait(false);
+            if (cancellationToken.IsCancellationRequested)
+            {
+                // El usuario o el watchdog cortaron: no seguimos despachando.
+                Trace?.Invoke($"  despacho cancelado en {call.Name}");
+                break;
+            }
+
+            ToolExecution execution;
+            try
+            {
+                execution = await _tools.ExecuteAsync(call, cancellationToken).ConfigureAwait(false);
+            }
+            catch (OperationCanceledException)
+            {
+                Trace?.Invoke($"  {call.Name} cancelado por watchdog o usuario");
+                break;
+            }
+            catch (Exception ex)
+            {
+                Trace?.Invoke($"  error ejecutando {call.Name}: {ex.GetType().Name}: {ex.Message}");
+                context.Bus.Publish(
+                    AgentEventKind.Error,
+                    "dispatcher",
+                    $"fallo {call.Name}: {ex.GetType().Name}: {ex.Message}");
+                continue;
+            }
+
             context.ToolCalls++;
 
-            var output = TextSanitizer.EnsureJsonObject(execution.Output);
-            context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
-            Trace?.Invoke($"  {call.Name}({Shorten(TextSanitizer.Plain(call.RawArguments), 90)}) -> {Shorten(TextSanitizer.Plain(execution.Output), 140)}");
+            try
+            {
+                var output = TextSanitizer.EnsureJsonObject(execution.Output);
+                context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
+                Trace?.Invoke($"  {call.Name}({Shorten(TextSanitizer.Plain(call.RawArguments), 90)}) -> {Shorten(TextSanitizer.Plain(execution.Output), 140)}");
+            }
+            catch (Exception ex)
+            {
+                Trace?.Invoke($"  error post-despacho de {call.Name}: {ex.GetType().Name}: {ex.Message}");
+                context.Bus.Publish(
+                    AgentEventKind.Error,
+                    "dispatcher",
+                    $"fallo post-despacho de {call.Name}: {ex.GetType().Name}: {ex.Message}");
+            }
 
             if (string.Equals(call.Name, "tarjeta", StringComparison.OrdinalIgnoreCase))
             {

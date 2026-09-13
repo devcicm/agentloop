@@ -1023,6 +1023,37 @@ internal static class Program
         Console.WriteLine($"thinking  : {DescribeThinking(thinking, model)}");
         Console.WriteLine($"modo      : {(stream ? "stream" : "respuesta completa")}");
         Console.WriteLine();
+
+        // Preflight: si el modelo no esta disponible, se advierte y NO se
+        // ejecuta la prueba. Correr un goal de minutos contra un modelo que
+        // devuelve 403/404 es gastar tiempo para nada. Se puede saltar con
+        // --sin-check para diagnosticar el fallo real del gateway.
+        var skipCheck = HasFlag(lobosArgs, "--sin-check") || HasFlag(lobosArgs, "--skip-model-check");
+        if (!skipCheck)
+        {
+            Console.WriteLine($"Sondeando disponibilidad de {model}...");
+            using var probeClient = BuildClient(out _);
+            var (available, reason) = await ProbeModelAvailabilityAsync(probeClient, model, cancellationToken).ConfigureAwait(false);
+
+            if (!available)
+            {
+                Console.WriteLine();
+                Console.WriteLine("ADVERTENCIA: el modelo no esta disponible; NO se ejecuta la prueba de lobos.");
+                Console.WriteLine($"  motivo : {reason}");
+                Console.WriteLine($"  accion : revisa el catalogo con 'discover', recarga saldo, o pasa --model <otro>.");
+                Console.WriteLine($"           para forzar la ejecucion de todos modos: --sin-check");
+                return 2;
+            }
+
+            Console.WriteLine($"modelo disponible: {reason}");
+            Console.WriteLine();
+        }
+        else
+        {
+            Console.WriteLine("(preflight de modelo omitido con --sin-check)");
+            Console.WriteLine();
+        }
+
         Console.WriteLine("Ejecutando goal con el modelo real. Sin mocks, sin atajos.");
         Console.WriteLine();
 
@@ -1922,6 +1953,58 @@ internal static class Program
     }
 
     /// <summary>
+    /// Comprueba en vivo que el modelo responde antes de lanzar una prueba larga.
+    /// Un ping minimo (una pregunta de un token, sin thinking) distingue:
+    ///   - disponible: el gateway devolvio 200.
+    ///   - sin acceso/saldo (401/402/403): la cuenta no puede usarlo.
+    ///   - no disponible (404 / model_not_found / no available channel): el
+    ///     gateway no lo sirve.
+    ///   - transporte (status 0): no se pudo contactar.
+    /// No lanza: devuelve el veredicto para que el caller decida.
+    /// </summary>
+    private static async Task<(bool Available, string Reason)> ProbeModelAvailabilityAsync(
+        ITokenRouterClient client, string model, CancellationToken cancellationToken)
+    {
+        try
+        {
+            var request = new ChatRequest
+            {
+                Model = model,
+                Messages = [ChatMessage.FromUser("ping")],
+                MaxTokens = 8,
+                Temperature = 0,
+                Thinking = null,
+            };
+
+            await client.CreateChatCompletionAsync(request, cancellationToken).ConfigureAwait(false);
+            return (true, "el modelo respondio a un ping minimo");
+        }
+        catch (TokenRouterException ex) when (ex.IsQuotaOrAccess)
+        {
+            return (false, $"sin acceso o saldo para '{model}': {ex.ProviderMessage}");
+        }
+        catch (TokenRouterException ex) when (
+            ex.StatusCode == 404 ||
+            ex.ProviderMessage.Contains("model_not_found", StringComparison.OrdinalIgnoreCase) ||
+            ex.ProviderMessage.Contains("No available channel", StringComparison.OrdinalIgnoreCase))
+        {
+            return (false, $"'{model}' no esta disponible en el gateway: {ex.ProviderMessage}");
+        }
+        catch (TokenRouterException ex)
+        {
+            return (false, $"el gateway devolvio [{ex.StatusCode}] {ex.ProviderMessage}");
+        }
+        catch (OperationCanceledException)
+        {
+            return (false, "el ping de disponibilidad se cancelo");
+        }
+        catch (Exception ex)
+        {
+            return (false, $"fallo al sondear '{model}': {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
+    /// <summary>
     /// Politica de razonamiento de esta invocacion. Por defecto 'auto': activo salvo en los
     /// modelos que el ultimo 'discover' marco sin soporte, mas los que lo rechacen en vivo.
     /// </summary>
@@ -2054,7 +2137,7 @@ internal static class Program
     }
 
     /// <summary>Opciones sin valor: hay que conocerlas para no comerse el prompt que va detras.</summary>
-    private static readonly string[] BooleanFlags = ["--stream", "--no-stream"];
+    private static readonly string[] BooleanFlags = ["--stream", "--no-stream", "--sin-check", "--skip-model-check"];
 
     private static bool HasFlag(string[] args, string name)
         => args.Any(a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));

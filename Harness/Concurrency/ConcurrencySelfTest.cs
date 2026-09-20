@@ -50,6 +50,21 @@ public static class ConcurrencySelfTest
         var d2 = IdempotencyKey.ComputeKey("leer", new Dictionary<string, object?> { ["b"] = 2, ["a"] = 1 });
         results.Add(("IdempotencyKey estable ante reordenamiento", d1 == d2));
 
+        // Canonico: el texto JSON crudo se normaliza antes de hashear, asi el
+        // mismo argumento reordenado o con distinto espaciado colapsa.
+        var r1 = IdempotencyKey.ComputeKey("leer", "{\"proceso\":\"p1\",\"lineas\":40}");
+        var r2 = IdempotencyKey.ComputeKey("leer", "{\"lineas\":40, \"proceso\" : \"p1\"}");
+        results.Add(("clave canonica: reorden y espacios no cambian", r1 == r2));
+        var n1 = IdempotencyKey.ComputeKey("leer", "{\"a\":{\"x\":1,\"y\":2}}");
+        var n2 = IdempotencyKey.ComputeKey("leer", "{\"a\":{\"y\":2,\"x\":1}}");
+        results.Add(("clave canonica: anidado reordenado no cambia", n1 == n2));
+        var a1 = IdempotencyKey.ComputeKey("leer", "[1,2]");
+        var a2 = IdempotencyKey.ComputeKey("leer", "[2,1]");
+        results.Add(("clave canonica: arrays conservan orden", a1 != a2));
+        var bad1 = IdempotencyKey.ComputeKey("leer", "{no json");
+        var bad2 = IdempotencyKey.ComputeKey("leer", "{no json");
+        results.Add(("no-JSON: determinista pero sin colapsar", bad1 == bad2 && bad1 != r1));
+
         // --- IdempotencyCache ---
         var cache = new IdempotencyCache(capacity: 4);
         cache.Set("a", "1");

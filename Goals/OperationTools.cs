@@ -27,7 +27,11 @@ public static class OperationTools
         // haya seguido emitiendo. observar NO se cachea porque cada
         // llamada registra un watcher nuevo con id nuevo. ejecutar,
         // lanzar, esperar, flujo y tarjeta tampoco (efectos reales).
-        var cache = new AgentLoop.Harness.Concurrency.IdempotencyCache(capacity: 256);
+        //
+        // El cache lleva TTL de 30s: dentro de un run activo la lista de
+        // procesos cambia (arrancan y terminan), asi que un snapshot de
+        // hace minutos es peor que volver a preguntar.
+        var cache = new AgentLoop.Harness.Concurrency.IdempotencyCache(capacity: 256, ttl: TimeSpan.FromSeconds(30));
 
         return new ToolRegistry(
         [

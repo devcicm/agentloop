@@ -82,6 +82,59 @@ public static class IdempotentToolSelfTest
         results.Add(("64 hilos en paralelo: inner ejecuta 1 vez", concurrente == 1));
         results.Add(("64 hilos: hits + misses = 64", concurrentWrapper.Hits + concurrentWrapper.Misses == 64));
 
+        // Fallo async: la clave se libera y el reintento ejecuta de nuevo
+        // (agentico: registrar despues del efecto, o liberar si falla).
+        var attempts = 0;
+        var flakyInner = new DelegateTool(
+            "flaky",
+            "falla la primera vez",
+            """{"type":"object","properties":{}}""",
+            (_, _) =>
+            {
+                if (Interlocked.Increment(ref attempts) == 1)
+                {
+                    return new ValueTask<string>(Task.FromException<string>(new InvalidOperationException("boom")));
+                }
+
+                return ValueTask.FromResult("{}");
+            });
+        var flakyWrapper = new IdempotentTool(flakyInner);
+        var flakyArgs = JsonDocument.Parse("""{}""").RootElement;
+        var threw = false;
+        try
+        {
+            flakyWrapper.InvokeAsync(flakyArgs, CancellationToken.None).GetAwaiter().GetResult();
+        }
+        catch (InvalidOperationException)
+        {
+            threw = true;
+        }
+
+        results.Add(("fallo lanza en vez de quedarse pegado", threw));
+        var recovered = flakyWrapper.InvokeAsync(flakyArgs, CancellationToken.None).GetAwaiter().GetResult();
+        results.Add(("fallo libera la clave: reintento ejecuta y devuelve", attempts == 2 && recovered == "{}"));
+
+        // TTL: expirado cuenta como miss y vuelve a ejecutar.
+        var ttlCache = new IdempotencyCache(capacity: 4, ttl: TimeSpan.FromMilliseconds(50));
+        var ttlCalls = 0;
+        var ttlInner = new DelegateTool(
+            "ttl",
+            "cuenta llamadas",
+            """{"type":"object","properties":{}}""",
+            (_, _) =>
+            {
+                Interlocked.Increment(ref ttlCalls);
+                return ValueTask.FromResult("v");
+            });
+        var ttlWrapper = new IdempotentTool(ttlInner, ttlCache);
+        var ttlArgs = JsonDocument.Parse("""{}""").RootElement;
+        ttlWrapper.InvokeAsync(ttlArgs, CancellationToken.None).GetAwaiter().GetResult();
+        ttlWrapper.InvokeAsync(ttlArgs, CancellationToken.None).GetAwaiter().GetResult();
+        results.Add(("dentro del TTL sirve cache", ttlCalls == 1));
+        Thread.Sleep(150);
+        ttlWrapper.InvokeAsync(ttlArgs, CancellationToken.None).AsTask().GetAwaiter().GetResult();
+        results.Add(("TTL expirado vuelve a ejecutar", ttlCalls == 2));
+
         Console.WriteLine();
         Console.WriteLine("Self-test de IdempotentTool:");
         foreach (var (name, ok) in results)

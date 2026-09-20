@@ -10,6 +10,13 @@ namespace AgentLoop.Harness.Durable;
 /// artifacts/agentic-models.json). Se ignora el contenido si la version del
 /// snapshot no coincide con la actual.
 ///
+/// Single writer (agentico): cada run escribe solo su propio
+/// &lt;runId&gt;.json y los RunId son Guid unicos por run, asi que dos runs
+/// nunca compiten por el mismo archivo. Dentro de un proceso, un solo
+/// GoalRunner escribe por run. No hay lock global porque no hay recurso
+/// compartido que proteger; si manana dos procesos escribieran el mismo
+/// directorio haria falta un lock por directorio (InstanceLock).
+///
 /// El listado es eager (recorre el directorio) porque se espera que el
 /// numero de Runs por sesion sea bajo; si crece, se puede cambiar a un
 /// indice o a SQLite sin tocar la interfaz.

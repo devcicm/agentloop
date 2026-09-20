@@ -61,7 +61,40 @@ public sealed class IdempotentTool : ITool
         // directamente, asi que despues del await comparamos el timestamp
         // de la entrada con el actual.
         var before = _cache.GetCount();
-        var task = _cache.GetOrAddTaskAsync(key, () => _inner.InvokeAsync(arguments, cancellationToken).AsTask());
+
+        Task<string> task;
+        try
+        {
+            task = _cache.GetOrAddTaskAsync(key, () => _inner.InvokeAsync(arguments, cancellationToken).AsTask());
+        }
+        catch
+        {
+            // El factory lanzo sincronico (el Lazy lo cachearia como fallo
+            // pegado): liberar y propagar para que el reintento ejecute.
+            _cache.Remove(key);
+            throw;
+        }
+
+        // Agentico: la clave se registra despues del efecto, o se libera si
+        // el efecto falla. Sin esto, un fallo transitorio quedaria cacheado
+        // para siempre y el reintento recibiria el mismo error sin ejecutar.
+        _ = task.ContinueWith(
+            t =>
+            {
+                if (t.IsFaulted)
+                {
+                    _ = t.Exception;
+                }
+
+                if (t.IsFaulted || t.IsCanceled)
+                {
+                    _cache.Remove(key);
+                }
+            },
+            CancellationToken.None,
+            TaskContinuationOptions.ExecuteSynchronously,
+            TaskScheduler.Default);
+
         var after = _cache.GetCount();
 
         if (after > before)

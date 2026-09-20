@@ -556,6 +556,9 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         builder.AppendLine("    parado delante de un proceso: la salida y el fin te llegan como eventos.");
         builder.AppendLine("  - La evidencia de la tarjeta de cierre tiene que ser un dato real que hayas visto:");
         builder.AppendLine("    un codigo de salida, una linea de salida concreta, un contenido leido. No lo inventes.");
+        builder.AppendLine("  - El cierre se valida contra evidencia real en codigo: si el objetivo menciona un");
+        builder.AppendLine("    archivo, debe existir con contenido en el momento de cerrar. Si falta algo, el");
+        builder.AppendLine("    rechazo te dice que (required_evidence): consigue esa evidencia y reintenta.");
         builder.AppendLine("  - Si un comando falla, no repitas lo mismo: lee la salida y cambia de enfoque.");
         builder.AppendLine();
 

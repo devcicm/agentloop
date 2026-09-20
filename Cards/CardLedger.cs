@@ -99,6 +99,11 @@ public sealed class CardTransaction
 /// sin comprobacion, y una apertura anidada obliga a cerrar de dentro hacia fuera. El
 /// objetivo solo cuenta como cumplido cuando la pila queda vacia por un cierre, nunca por
 /// agotarse el tiempo o los pasos.
+///
+/// Además hay puerta de aceptación (agentico): al cerrar se verifica evidencia real
+/// en código (archivos mencionados en el objetivo deben existir con contenido).
+/// Un cf-report.md de 0 bytes no cierra nada en verde; el rechazo dice qué falta
+/// (required_evidence) para que el reintento sepa qué le falta.
 /// </summary>
 public sealed class CardLedger
 {
@@ -111,6 +116,19 @@ public sealed class CardLedger
     public CardLedger(CardDeck deck) => Deck = deck;
 
     public CardDeck Deck { get; }
+
+    /// <summary>
+    /// Directorio contra el que se resuelven las rutas relativas mencionadas
+    /// en los objetivos. Lo fija el composition root con el working directory
+    /// de la política; por defecto el directorio actual (los tests usan temp).
+    /// </summary>
+    public string WorkingDirectory { get; set; } = Environment.CurrentDirectory;
+
+    /// <summary>
+    /// Manifiesto donde la puerta de aceptación registra cada verificación de
+    /// artefacto. Vive en el ledger para que el gate y el reporte lean lo mismo.
+    /// </summary>
+    public AgentLoop.Goals.EvidenceManifest Evidence { get; } = new();
 
     /// <summary>El objetivo se cumplio: la transaccion raiz entrego su tarjeta de cierre.</summary>
     public bool GoalMet { get; private set; }
@@ -253,6 +271,22 @@ public sealed class CardLedger
                         "no se puede cerrar sin comprobar: juega la tarjeta de comprobacion con evidencia real antes del cierre.");
                 }
 
+                // Puerta de aceptación (agentico): antes de aceptar el cierre se
+                // comprueba evidencia real en código, no la palabra del modelo. Si
+                // el objetivo menciona archivos, deben existir con contenido; si
+                // falta algo, el rechazo dice exactamente qué (required_evidence)
+                // para que el reintento sepa qué le falta.
+                var faltante = RequiredEvidenceFor(_open.Peek());
+                if (faltante.Count > 0)
+                {
+                    return Reject(
+                        name,
+                        card,
+                        fields,
+                        $"falta evidencia real para cerrar: {string.Join("; ", faltante)}. " +
+                        "La tarjeta de cierre exige artefactos o salidas verificables, no solo texto.");
+                }
+
                 return CloseTransaction(card, fields, aborting: false);
 
             case CardKind.Aborto:
@@ -283,6 +317,35 @@ public sealed class CardLedger
             .Where(c => c.Kind != CardKind.Cierre || _open.Peek().Verified)
             .Select(c => c.Name)
             .ToArray();
+    }
+
+    /// <summary>
+    /// Evidencia que falta para poder cerrar la transacción abierta (vacío =
+    /// puede cerrar). Es lo que el rechazo de cierre devuelve como
+    /// required_evidence y lo que el reporte SIN CERRAR muestra. Solo mira
+    /// archivos mencionados en el objetivo; sin menciones, mandan las reglas
+    /// existentes del libro mayor.
+    /// </summary>
+    public IReadOnlyList<string> RequiredEvidence()
+    {
+        using var _ = ReadScope();
+        if (Finished || _open.Count == 0)
+        {
+            return [];
+        }
+
+        return RequiredEvidenceFor(_open.Peek());
+    }
+
+    private IReadOnlyList<string> RequiredEvidenceFor(CardTransaction transaction)
+    {
+        var paths = AgentLoop.Goals.AcceptanceCriteria.DerivePaths(transaction.Objective);
+        if (paths.Count == 0)
+        {
+            return [];
+        }
+
+        return AgentLoop.Goals.AcceptanceCriteria.MissingEvidence(paths, WorkingDirectory, Evidence);
     }
 
     /// <summary>La deuda pendiente: lo que falta para que la operacion cuente como terminada.</summary>

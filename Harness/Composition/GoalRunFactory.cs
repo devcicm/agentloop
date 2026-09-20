@@ -69,6 +69,9 @@ public static class GoalRunFactory
         var bus = new EventBus();
         var supervisor = new ProcessSupervisor(bus, scope.Policy);
         var ledger = new CardLedger(CardDeck.Transaccional);
+        // La puerta de aceptación resuelve las rutas del objetivo contra este
+        // directorio (el --cwd de la política).
+        ledger.WorkingDirectory = scope.Policy.WorkingDirectory;
         var tools = OperationTools.Build(ledger, supervisor, bus);
         var goalContext = new GoalContext
         {

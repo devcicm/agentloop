@@ -936,6 +936,12 @@ internal static class Program
         }
 
         Console.WriteLine($"SIN CERRAR: {context.FailureReason ?? ledger.Outcome ?? ledger.PendingDebt() ?? "la tarjeta de cierre nunca se jugo"}");
+        var faltante = ledger.RequiredEvidence();
+        if (!ledger.GoalMet && faltante.Count > 0)
+        {
+            Console.WriteLine($"Evidencia faltante: {string.Join("; ", faltante)}");
+        }
+
         return 1;
     }
 
@@ -1278,6 +1284,52 @@ internal static class Program
         results.Add(("ahora si: objetivo cumplido", ledger.GoalMet && ledger.OpenCount == 0));
         results.Add(("y ya no queda ninguna tarjeta legal", ledger.AllowedNow().Count == 0));
         results.Add(("jugar despues del cierre se rechaza", !ledger.Play("avanzar", Fields(("paso", "tarde"))).Accepted));
+
+        // --- puerta de aceptación ------------------------------------------
+        // Sin menciones de archivo, el cierre se rige por las reglas de siempre.
+        var sinArchivos = new CardLedger(CardDeck.Transaccional);
+        sinArchivos.Play("abrir", Fields(("objetivo", "contar cosas"), ("plan", "usar ls")));
+        sinArchivos.Play("comprobar", Fields(("comprobacion", "conte"), ("resultado", "9")));
+        results.Add(("sin archivos mencionados el cierre no cambia",
+            sinArchivos.Play("cerrar", Fields(("resultado", "9"), ("evidencia", "salida"))).Accepted
+            && sinArchivos.GoalMet));
+
+        // Con un archivo en el objetivo, cerrar sin el archivo se rechaza con
+        // required_evidence, y con el archivo se acepta.
+        var acceptDir = Path.Combine(Path.GetTempPath(), "agentloop-accept-" + Guid.NewGuid().ToString("N"));
+        Directory.CreateDirectory(acceptDir);
+        try
+        {
+            var conArchivo = new CardLedger(CardDeck.Transaccional) { WorkingDirectory = acceptDir };
+            conArchivo.Play("abrir", Fields(("objetivo", "escribe notes/n.md"), ("plan", "usar echo")));
+            conArchivo.Play("comprobar", Fields(("comprobacion", "revise"), ("resultado", "listo")));
+
+            var sinEvidencia = conArchivo.Play("cerrar", Fields(("resultado", "listo"), ("evidencia", "lo vi")));
+            results.Add(("cerrar sin el archivo se rechaza",
+                !sinEvidencia.Accepted && sinEvidencia.Rejection is not null && sinEvidencia.Rejection.Contains("n.md")));
+            results.Add(("RequiredEvidence nombra lo que falta",
+                conArchivo.RequiredEvidence().Any(m => m.Contains("n.md"))));
+
+            await File.WriteAllTextAsync(Path.Combine(acceptDir, "n.md"), "# nota", cancellationToken);
+            // La ruta con subdirectorio tambien vale: el objetivo dice notes/n.md.
+            Directory.CreateDirectory(Path.Combine(acceptDir, "notes"));
+            await File.WriteAllTextAsync(Path.Combine(acceptDir, "notes", "n.md"), "# nota", cancellationToken);
+
+            var conEvidencia = conArchivo.Play("cerrar", Fields(("resultado", "listo"), ("evidencia", "notes/n.md con contenido")));
+            results.Add(("cerrar con el archivo se acepta", conEvidencia.Accepted && conArchivo.GoalMet));
+            results.Add(("tras cerrar no queda evidencia faltante", conArchivo.RequiredEvidence().Count == 0));
+
+            var entries = conArchivo.Evidence.Entries;
+            results.Add(("el manifiesto registra la verificacion",
+                entries.Any(e => e.Path.EndsWith("n.md", StringComparison.OrdinalIgnoreCase) && e.Bytes > 0 && e.Hash.Length == 12)));
+            results.Add(("el agregado es estable ante re-verificacion",
+                conArchivo.Evidence.Snapshot().AggregateHash == conArchivo.Evidence.Snapshot().AggregateHash
+                && conArchivo.Evidence.Snapshot().AggregateHash.Length == 16));
+        }
+        finally
+        {
+            Directory.Delete(acceptDir, recursive: true);
+        }
 
         var abortado = new CardLedger(CardDeck.Transaccional);
         abortado.Play("abrir", Fields(("objetivo", "imposible"), ("plan", "intentarlo")));

@@ -69,7 +69,9 @@ public static class OperationTools
             name: "tarjeta",
             description: "Juega una tarjeta de estado para declarar en que punto de la operacion estas. " +
                          "El sistema la valida: una tarjeta fuera de orden o sin sus campos se rechaza y te dice por que. " +
-                         "La operacion NO cuenta como cumplida hasta que juegues la tarjeta de cierre.",
+                         "La operacion NO cuenta como cumplida hasta que juegues la tarjeta de cierre. " +
+                         "El cierre se valida contra evidencia real en codigo: si el objetivo menciona un archivo, " +
+                         "debe existir con contenido, y si falta algo el rechazo te dice que (required_evidence).",
             parametersJsonSchema: schema,
             handler: (arguments, _) =>
             {
@@ -97,6 +99,7 @@ public static class OperationTools
                     pendiente = ledger.PendingDebt(),
                     legales_ahora = ledger.AllowedNow(),
                     objetivo_cumplido = ledger.GoalMet,
+                    evidencia_faltante = ledger.RequiredEvidence(),
                 }));
             });
     }

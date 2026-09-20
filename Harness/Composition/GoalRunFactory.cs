@@ -205,7 +205,8 @@ public static class GoalRunFactory
                 journey.StartedAt,
                 journey.EndedAt,
                 journey.Steps,
-                journey.Metrics);
+                journey.Metrics,
+                journey.Evidence);
 
             await store.SaveAsync(snapshot, cancellationToken).ConfigureAwait(false);
 

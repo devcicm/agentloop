@@ -143,6 +143,7 @@ public sealed class GoalRunner : IRunner
             context.Elapsed,
             context.Steps.Steps,
             context.Metrics.Snapshot(),
-            context.FailureReason);
+            context.FailureReason,
+            context.Goal.Ledger.Evidence.Snapshot());
     }
 }

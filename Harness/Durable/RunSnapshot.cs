@@ -1,3 +1,4 @@
+using AgentLoop.Goals;
 using AgentLoop.Harness.Core;
 using AgentLoop.Harness.Steps;
 
@@ -11,7 +12,9 @@ namespace AgentLoop.Harness.Durable;
 /// ultimo ciclo.
 ///
 /// Versionado por si el formato cambia: si subimos Major, los snapshots
-/// viejos se rechazan en LoadAsync.
+/// viejos se rechazan en LoadAsync. Los campos opcionales con valor por
+/// defecto (como Evidence) NO suben version: los snapshots viejos que no
+/// los traen deserializan con el valor por defecto.
 /// </summary>
 public sealed record RunSnapshot(
     int Version,
@@ -22,7 +25,8 @@ public sealed record RunSnapshot(
     DateTimeOffset StartedAt,
     DateTimeOffset? EndedAt,
     IReadOnlyList<Step> Steps,
-    IReadOnlyDictionary<string, long> Metrics)
+    IReadOnlyDictionary<string, long> Metrics,
+    EvidenceSnapshot? Evidence = null)
 {
     public const int CurrentVersion = 1;
 }

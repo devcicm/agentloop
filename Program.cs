@@ -1160,6 +1160,7 @@ internal static class Program
         Console.WriteLine($"pausa max: {d.MaxStepGapSeconds:0}s ({(d.MaxStepGapWhere.Length == 0 ? "sin datos" : d.MaxStepGapWhere)})");
         Console.WriteLine($"tokens   : no persistidos en el snapshot (ver resumen del log en vivo)");
         Console.WriteLine($"archivos : {(d.ReferencedFiles.Count == 0 ? "(ninguno referenciado)" : string.Join(", ", d.ReferencedFiles.Select(f => d.ExistingFiles.Contains(f, StringComparer.OrdinalIgnoreCase) ? f + " [existe]" : f + " [ausente]")))}");
+        Console.WriteLine($"evidencia: {(d.EvidenceAggregate.Length == 0 ? "(no registrada en el snapshot)" : $"{d.EvidenceVerified} archivo(s) verificados, agregado {d.EvidenceAggregate}")}");
         Console.WriteLine($"accion   : {d.RecommendedAction}");
     }
 

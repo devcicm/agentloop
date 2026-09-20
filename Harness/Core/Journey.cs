@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using AgentLoop.Goals;
 using AgentLoop.Harness.Observability;
 using AgentLoop.Harness.Steps;
 
@@ -21,7 +22,8 @@ public sealed record Journey(
     TimeSpan Elapsed,
     IReadOnlyList<Step> Steps,
     IReadOnlyDictionary<string, long> Metrics,
-    string? FailureReason = null)
+    string? FailureReason = null,
+    EvidenceSnapshot? Evidence = null)
 {
     public int ModelCalls { get; } = Steps.Count(s => s is ModelStep);
     public int ToolCalls { get; } = Steps.Count(s => s is ToolStep);
@@ -52,6 +54,17 @@ public static class JourneyWriter
         if (!string.IsNullOrEmpty(journey.FailureReason))
         {
             builder.AppendLine($"- **Fallo**: {journey.FailureReason}");
+        }
+
+        if (journey.Evidence is { } evidence && evidence.Files.Count > 0)
+        {
+            builder.AppendLine();
+            builder.AppendLine("## Evidencia");
+            builder.AppendLine($"Agregado: `{evidence.AggregateHash}`");
+            foreach (var file in evidence.Files)
+            {
+                builder.AppendLine($"- `{file.Path}` ({file.Bytes} bytes, sha `{file.Hash}`){(file.Ok ? string.Empty : " — SIN VERIFICAR")}");
+            }
         }
 
         if (journey.Metrics.Count > 0)

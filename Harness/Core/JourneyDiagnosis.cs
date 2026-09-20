@@ -41,6 +41,8 @@ public sealed record JourneyDiagnosis(
     string MaxStepGapWhere,
     IReadOnlyList<string> ReferencedFiles,
     IReadOnlyList<string> ExistingFiles,
+    int EvidenceVerified,
+    string EvidenceAggregate,
     string Classification,
     string RecommendedAction)
 {
@@ -62,7 +64,7 @@ public sealed record JourneyDiagnosis(
             return new JourneyDiagnosis(
                 "(desconocido)", string.Empty, "desconocido", string.Empty, null,
                 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, string.Empty,
-                [], [], "ilegible",
+                [], [], 0, string.Empty, "ilegible",
                 "el snapshot no parsea como JSON: revisar el archivo.");
         }
     }
@@ -221,13 +223,42 @@ public sealed record JourneyDiagnosis(
 
         var classification = Classify(status, failure, rejected, comprobar, cerrar, abrir, avanzar);
         var action = Recommend(classification, comprobar, avanzar, abrir, existing.Length, referenced.Length);
+        var (evidenceVerified, evidenceAggregate) = ReadEvidence(root);
 
         return new JourneyDiagnosis(
             runId, objective, status, outcome, failure, elapsed, steps.Length,
             abrir, avanzar, comprobar, cerrar, abortar, rejected,
             narrations, nudgeIndexes.Count, followed,
             starts, ends, nonZero, maxGap, maxGapWhere,
-            referenced, existing, classification, action);
+            referenced, existing, evidenceVerified, evidenceAggregate, classification, action);
+    }
+
+    private static (int Verified, string Aggregate) ReadEvidence(JsonElement root)
+    {
+        if (!TryProp(root, "evidence", out var evidence) || evidence.ValueKind != JsonValueKind.Object)
+        {
+            return (0, string.Empty);
+        }
+
+        var verified = 0;
+        if (TryProp(evidence, "files", out var files) && files.ValueKind == JsonValueKind.Array)
+        {
+            foreach (var file in files.EnumerateArray())
+            {
+                if (file.ValueKind == JsonValueKind.Object
+                    && TryProp(file, "ok", out var ok)
+                    && ok.ValueKind == JsonValueKind.True)
+                {
+                    verified++;
+                }
+            }
+        }
+
+        var aggregate = TryProp(evidence, "aggregateHash", out var agg) && agg.ValueKind == JsonValueKind.String
+            ? agg.GetString() ?? string.Empty
+            : string.Empty;
+
+        return (verified, aggregate);
     }
 
     private static string? CardAction(string text)
@@ -460,6 +491,17 @@ public sealed record JourneyDiagnosis(
         results.Add(("vacio da desconocido", empty.Classification == "desconocido" && empty.StepCount == 0));
         var broken = Analyze("{no json", "/bogus");
         results.Add(("ilegible no lanza", broken.Classification == "ilegible"));
+
+        // 10. Evidencia del manifiesto: se cuenta lo verificado y se lee el agregado.
+        var withEvidence = Analyze(
+            "{\"runId\":\"00000000000000000000000000000001\",\"objective\":\"x\",\"status\":6,\"outcome\":\"ok\"," +
+            "\"failureReason\":null,\"startedAt\":\"2026-09-11T03:00:00Z\",\"endedAt\":\"2026-09-11T03:05:00Z\"," +
+            "\"steps\":[],\"metrics\":{}," +
+            "\"Evidence\":{\"Files\":[{\"Path\":\"notes/x.md\",\"Bytes\":120,\"Hash\":\"ABCDEF123456\",\"Ok\":true,\"At\":\"2026-09-11T03:04:00Z\"}],\"AggregateHash\":\"0123456789ABCDEF\"}}",
+            "/bogus");
+        results.Add(("evidencia verificada se cuenta", withEvidence.EvidenceVerified == 1));
+        results.Add(("agregado de evidencia se lee", withEvidence.EvidenceAggregate == "0123456789ABCDEF"));
+        results.Add(("sin evidencia da cero y vacio", empty.EvidenceVerified == 0 && empty.EvidenceAggregate == string.Empty));
 
         Console.WriteLine();
         Console.WriteLine("Self-test de diagnostico de journeys:");

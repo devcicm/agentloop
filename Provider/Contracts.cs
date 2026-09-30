@@ -139,6 +139,9 @@ public sealed record ChatRequest
     /// </summary>
     [JsonPropertyName("thinking")]
     public ThinkingOptions? Thinking { get; init; }
+
+    [JsonPropertyName("chat_template_kwargs")]
+    public IReadOnlyDictionary<string, object?>? ChatTemplateKwargs { get; init; }
 }
 
 /// <summary>Entrada de GET /models.</summary>

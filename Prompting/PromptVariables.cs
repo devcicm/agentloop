@@ -85,6 +85,8 @@ public sealed partial class PromptVariables
         Set("herramientas", tools.Length == 0 ? "(ninguna)" : tools);
         Set("fecha", now.ToString("yyyy-MM-dd"));
         Set("hora", now.ToString("HH:mm"));
+        Set("directorio_actual", Environment.CurrentDirectory);
+        Set("sistema_operativo", Environment.OSVersion.ToString());
 
         // Las que el usuario puede pisar pero deben existir para que el render no falle.
         if (!Contains("idioma")) Set("idioma", "espanol");

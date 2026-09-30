@@ -1,0 +1,102 @@
+﻿[
+    {
+        "Path":  "docs/analisis-harness-poema-2026-09-27.md",
+        "Bytes":  18457,
+        "SHA256":  "D0A9C8AC96B8EC08831FAE0E1461898259B6AAD334E43DF607BE0D7D70694255"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/after-fix-build.txt",
+        "Bytes":  2742,
+        "SHA256":  "F0B672E981CBC6136675CA55AE073BB9F083DD9F0657D40494E734F08AB11867"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/after-fix-probe.json",
+        "Bytes":  4976,
+        "SHA256":  "E2F9B7D7BCEF4E33694B80E0109FB3451131FA3CEB1D8FEA998AE5D8CC0E7AD7"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/after-fix-selftest.txt",
+        "Bytes":  27864,
+        "SHA256":  "494D66D22271374CFD1A78E7CCE19907606A23AF8644ADBE476F7AD3664EB689"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/audit-summary.json",
+        "Bytes":  1167,
+        "SHA256":  "9DF97F5012BBC8AC723651DF47F8373AC078A76F191DDFCBFEDE8401D563DBCB"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/before-fix.patch",
+        "Bytes":  0,
+        "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/before-fix-commit.txt",
+        "Bytes":  45,
+        "SHA256":  "358E49FCD5C603A76FAF25F1A51C9DD925D992F68BA716507D360F47A9928F7F"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/before-fix-status.txt",
+        "Bytes":  68,
+        "SHA256":  "096399612BAEF1212E15F890BE0151CADBB8D555032F93E31251E7635385522B"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/build.txt",
+        "Bytes":  1375,
+        "SHA256":  "8BE16F79E321D0BB2F24B1F8A2D11504B52B05CAAAB83E8DD4F6DD6F6ED8CF23"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/chat-nvidia-console.txt",
+        "Bytes":  393,
+        "SHA256":  "0E6DEFCED2E824034892A55F09089DB44249FBDCCEF002A185E79645E89334CF"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/HarnessProbe.cs.txt",
+        "Bytes":  5879,
+        "SHA256":  "1471635ADA78C562C2B87ADAAA47D0516B3E7A8707760959FB3EA7130ACEA963"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/harness-probe.json",
+        "Bytes":  2263,
+        "SHA256":  "83E987DF1A611429816E30F01C0D23F797E141FC7CC6D64D7E755CE4846F392E"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/nvidia-catalog-after-fix.json",
+        "Bytes":  326,
+        "SHA256":  "887539C7FC905849A8C67A4D3386C96DE2D984B23078EDC5F402AD0F7FD64D2D"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/nvidia-ping-after-fix.json",
+        "Bytes":  132,
+        "SHA256":  "84E56C3FD77F6B87F21737D33B60CCE07B4732F51B2EB0808E3CF519476C2714"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/nvidia-poem-evidence.json",
+        "Bytes":  294,
+        "SHA256":  "7015A30E23828D7565C2741FA08C0EA68BC4D8BBEEE866A108DB4C88893E36E6"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/nvidia-poem-run.txt",
+        "Bytes":  15094,
+        "SHA256":  "4A906999E89441E0E14C4A493B4FBA0277AAC33EF399502E0ADB784526E36D2A"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/provider-catalog.json",
+        "Bytes":  480,
+        "SHA256":  "55CBC898B32C05BC8A88A712DAC3C9825CF3FB143C44079970FBD26E6F9AA7CE"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/remote-goal.txt",
+        "Bytes":  4201,
+        "SHA256":  "7CBA1310BC5AF4004743E153F408BF45BF28034E1F206C5BCA0D884F121C4EF0"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/run-probe.ps1",
+        "Bytes":  1639,
+        "SHA256":  "74EA3AF9320BBE2E11F5AD726D6C5B5313F24E5F2EC2358BBFA54E81C47D6882"
+    },
+    {
+        "Path":  "docs/evidence/2026-09-27/selftest.txt",
+        "Bytes":  13931,
+        "SHA256":  "EAE19BD2CFD841CFFE76964A127C5D5C84ED4F3DDEEDDE079ACFB0A5BEA4E128"
+    }
+]

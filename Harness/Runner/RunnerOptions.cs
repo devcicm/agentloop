@@ -1,4 +1,5 @@
 using AgentLoop.Harness.Core;
+using AgentLoop.Provider;
 
 namespace AgentLoop.Harness.Runner;
 
@@ -22,4 +23,8 @@ public sealed class RunnerOptions
 
     /// <summary>Si true, se emite la traza del reactor a stdout.</summary>
     public bool Verbose { get; init; }
+
+    public int MaxTokens { get; init; } = 2048;
+
+    public ThinkingPolicy? Thinking { get; init; }
 }

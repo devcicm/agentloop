@@ -1,0 +1,12 @@
+Comando probado:
+dotnet .\bin\Debug\net9.0\AgentLoop.dll chat "Responde exactamente: CHAT_NVIDIA_OK" --model z-ai/glm-5.3 --thinking off --max-tokens 32
+
+Resultado relevante:
+key: nvapi-...gAja (desde archivo local-secrets/nvidia-api-key.txt)
+modelo: z-ai/glm-5.3
+finish_reason : stop
+backend       : z-ai/glm-5.3
+CHAT_NVIDIA_OK
+exit_code=0
+
+La clave completa no se incluye en esta evidencia.

@@ -1,0 +1,12 @@
+﻿{
+    "CheckedAt":  "2026-09-27T04:27:34.3942244-06:00",
+    "Endpoint":  "GET /v1/models",
+    "StatusCode":  200,
+    "ModelCount":  148,
+    "ConfiguredModel":  "z-ai/glm-5.3-free",
+    "ConfiguredModelListed":  false,
+    "FreeNamedModels":  [
+                            "nvidia/nemotron-3-nano-omni-30b-a3b-reasoning:free"
+                        ],
+    "Note":  "Listado de IDs; la presencia en catalogo no demuestra acceso, gratuidad ni canal operativo."
+}

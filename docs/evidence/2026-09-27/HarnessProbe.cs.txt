@@ -1,0 +1,156 @@
+// Diagnostic fixture: does not contact a provider or create a poem.
+// Load against the built AgentLoop assembly; see run-probe.ps1.
+using System.Text.Json;
+using AgentLoop.Cards;
+using AgentLoop.Goals;
+using AgentLoop.Harness;
+using AgentLoop.Harness.Composition;
+using AgentLoop.Harness.Runner;
+using AgentLoop.Provider;
+using AgentLoop.Terminals;
+using CoreRun = AgentLoop.Harness.Core.Run;
+
+var root = Path.GetFullPath(args[0]);
+Directory.CreateDirectory(root);
+var results = new List<object>();
+
+foreach (var limit in new[] { 3, 4 })
+{
+    var fake = new ThreeCardsClient();
+    var runner = new GoalRunner(fake);
+    var run = CoreRun.FromObjective("Comprobar el protocolo de tres tarjetas", 30, "diagnostic-fixture");
+    var (result, journey) = await runner.RunAsync(run, new RunnerOptions
+    {
+        MaxIterations = limit,
+        WorkingDirectory = root,
+    });
+    results.Add(new
+    {
+        Case = "cycle_limit_and_observability",
+        MaxCycles = limit,
+        ActualModelRequests = fake.Calls,
+        RequestedCards = fake.RequestedCards,
+        ExecutedCards = journey.Steps
+            .Where(s => s.Name == "bus:Tarjeta")
+            .Select(s => s.Data["text"])
+            .ToArray(),
+        Success = result.IsSuccess,
+        Outcome = journey.Outcome,
+        ReportedModelCalls = journey.ModelCalls,
+        ReportedToolCalls = journey.ToolCalls,
+        ReportedMetricCount = journey.Metrics.Count,
+        SentMaxTokens = fake.LastRequest?.MaxTokens,
+        SentThinking = fake.LastRequest?.Thinking,
+        SentToolChoice = fake.LastRequest?.ToolChoice,
+    });
+}
+
+foreach (var preservePath in new[] { true, false })
+{
+    const string path = "notes/poema-inexistente.md";
+    var run = CoreRun.FromObjective($"Crear un poema en {path}", 30, "diagnostic-fixture");
+    var setup = GoalRunFactory.Build(run,
+        Scope.Minimal(new ExecutionPolicy { WorkingDirectory = root }),
+        new ThreeCardsClient(), []);
+    try
+    {
+        setup.Ledger.Play("abrir", new Dictionary<string, string>
+        {
+            ["objetivo"] = preservePath ? run.Objective : "Crear un poema",
+            ["plan"] = "Fixture sin escritura de archivos",
+        });
+        setup.Ledger.Play("comprobar", new Dictionary<string, string>
+        {
+            ["comprobacion"] = "Afirmacion de la fixture; no es evidencia real",
+            ["resultado"] = "Declarado",
+        });
+        var close = setup.Ledger.Play("cerrar", new Dictionary<string, string>
+        {
+            ["resultado"] = "Declarado",
+            ["evidencia"] = "Afirmacion de la fixture; no se creo ningun archivo",
+        });
+        results.Add(new
+        {
+            Case = "acceptance_uses_model_objective",
+            OriginalObjective = run.Objective,
+            PathPreservedByModel = preservePath,
+            FileExists = File.Exists(Path.Combine(root, path)),
+            ClosureAccepted = close.Accepted,
+            Rejection = close.Rejection,
+            GoalMet = setup.Ledger.GoalMet,
+            EvidenceEntries = setup.Ledger.Evidence.Entries.Count,
+        });
+    }
+    finally
+    {
+        setup.Supervisor.Dispose();
+    }
+}
+
+results.Add(new
+{
+    Case = "thinking_off_omits_field",
+    PolicyOffValue = new ThinkingPolicy(ThinkingPreference.Never).For("diagnostic-fixture"),
+    ExplicitDisabledValue = ThinkingOptions.Off,
+});
+
+Console.WriteLine(JsonSerializer.Serialize(results, new JsonSerializerOptions { WriteIndented = true }));
+
+sealed class ThreeCardsClient : ITokenRouterClient
+{
+    public int Calls { get; private set; }
+    public List<string> RequestedCards { get; } = [];
+    public ChatRequest? LastRequest { get; private set; }
+
+    public Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default)
+        => Task.FromResult<IReadOnlyList<ModelInfo>>([]);
+
+    public Task<JsonElement> CreateChatCompletionAsync(ChatRequest request, CancellationToken cancellationToken = default)
+    {
+        LastRequest = request;
+        Calls++;
+        object fields = Calls switch
+        {
+            1 => new { nombre = "abrir", objetivo = "Comprobar protocolo", plan = "Tres tarjetas" },
+            2 => new { nombre = "comprobar", comprobacion = "Fixture de protocolo", resultado = "OK" },
+            3 => new { nombre = "cerrar", resultado = "OK", evidencia = "Fixture de protocolo sin archivos" },
+            _ => throw new InvalidOperationException("Unexpected fourth model call"),
+        };
+        RequestedCards.Add(Calls switch { 1 => "abrir", 2 => "comprobar", _ => "cerrar" });
+        return Task.FromResult(JsonSerializer.SerializeToElement(new
+        {
+            id = $"fixture-{Calls}",
+            model = "diagnostic-fixture",
+            choices = new[]
+            {
+                new
+                {
+                    index = 0,
+                    finish_reason = "tool_calls",
+                    message = new
+                    {
+                        role = "assistant",
+                        content = "",
+                        tool_calls = new[]
+                        {
+                            new
+                            {
+                                id = $"card-{Calls}",
+                                type = "function",
+                                function = new { name = "tarjeta", arguments = JsonSerializer.Serialize(fields) },
+                            },
+                        },
+                    },
+                },
+            },
+            usage = new { prompt_tokens = 10, completion_tokens = 10, total_tokens = 20 },
+        }));
+    }
+
+    public async IAsyncEnumerable<JsonElement> StreamChatCompletionAsync(ChatRequest request,
+        [System.Runtime.CompilerServices.EnumeratorCancellation] CancellationToken cancellationToken = default)
+    {
+        await Task.Yield();
+        yield break;
+    }
+}

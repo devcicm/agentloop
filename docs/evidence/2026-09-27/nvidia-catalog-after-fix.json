@@ -1,0 +1,12 @@
+﻿{
+    "CheckedAt":  "2026-09-27T04:42:08.9282733-06:00",
+    "Provider":  "nvidia",
+    "BaseUrl":  "https://integrate.api.nvidia.com/v1",
+    "StatusCode":  200,
+    "ModelCount":  82,
+    "ConfiguredModel":  "z-ai/glm-5.3",
+    "ConfiguredModelListed":  true,
+    "FreeModelIds":  [
+
+                     ]
+}

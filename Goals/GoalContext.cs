@@ -1,4 +1,5 @@
 using System.Text;
+using System.Text.Json;
 using AgentLoop.Cards;
 using AgentLoop.Events;
 using AgentLoop.Parsing;
@@ -72,6 +73,11 @@ public sealed class GoalContext
     /// <summary>Tope de mensajes vivos; el mas viejo se cae por el borde.</summary>
     public int MaxMessages { get; init; } = 40;
 
+    public int MaxHistoryCharacters { get; init; } = 48000;
+
+    /// <summary>Preferencias y antecedentes de sesion, separados del estado de esta operacion.</summary>
+    public string? SessionContext { get; set; }
+
     public TimeSpan Elapsed => DateTimeOffset.Now - StartedAt;
 
     public TimeSpan Remaining => Goal.Budget - Elapsed;
@@ -96,19 +102,21 @@ public sealed class GoalContext
     /// </summary>
     public void Trim()
     {
-        if (Messages.Count <= MaxMessages)
+        if (Messages.Count <= MaxMessages && JsonSerializer.Serialize(Messages).Length <= MaxHistoryCharacters)
         {
             return;
         }
 
-        var cut = Messages.Count - MaxMessages;
-        while (cut < Messages.Count && Messages[cut].Role == ChatRoles.Tool)
+        var cut = Math.Max(1, Messages.Count - MaxMessages + 1);
+        var lastBrief = Messages.FindLastIndex(m => m.Role == ChatRoles.User);
+        while (cut < lastBrief && (Messages[cut].Role != ChatRoles.User
+            || JsonSerializer.Serialize(Messages.Take(1).Concat(Messages.Skip(cut))).Length > MaxHistoryCharacters))
         {
             cut++;
         }
 
         // El indice 0 es el prompt de sistema: nunca se tira, es el contrato de la operacion.
-        Messages.RemoveRange(1, Math.Max(0, cut - 1));
+        Messages.RemoveRange(1, Math.Max(0, Math.Min(cut, lastBrief) - 1));
     }
 
     /// <summary>El parte que se le entrega al modelo en cada ciclo: que paso y donde esta.</summary>

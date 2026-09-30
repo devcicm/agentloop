@@ -1,0 +1,76 @@
+﻿[
+  {
+    "Case": "cycle_limit_and_observability",
+    "MaxCycles": 3,
+    "ActualModelRequests": 3,
+    "RequestedCards": [
+      "abrir",
+      "comprobar",
+      "cerrar"
+    ],
+    "ExecutedCards": [
+      "abrir (nivel 1) Comprobar protocolo",
+      "comprobar (nivel 1) Fixture de protocolo",
+      "cerrar (nivel 1) OK"
+    ],
+    "Success": true,
+    "Outcome": "OK",
+    "ReportedModelCalls": 3,
+    "ReportedToolCalls": 3,
+    "ReportedMetricCount": 0,
+    "SentMaxTokens": 2048,
+    "SentThinking": null,
+    "SentToolChoice": "auto"
+  },
+  {
+    "Case": "cycle_limit_and_observability",
+    "MaxCycles": 4,
+    "ActualModelRequests": 3,
+    "RequestedCards": [
+      "abrir",
+      "comprobar",
+      "cerrar"
+    ],
+    "ExecutedCards": [
+      "abrir (nivel 1) Comprobar protocolo",
+      "comprobar (nivel 1) Fixture de protocolo",
+      "cerrar (nivel 1) OK"
+    ],
+    "Success": true,
+    "Outcome": "OK",
+    "ReportedModelCalls": 3,
+    "ReportedToolCalls": 3,
+    "ReportedMetricCount": 0,
+    "SentMaxTokens": 2048,
+    "SentThinking": null,
+    "SentToolChoice": "auto"
+  },
+  {
+    "Case": "acceptance_uses_model_objective",
+    "OriginalObjective": "Crear un poema en notes/poema-inexistente.md",
+    "PathPreservedByModel": true,
+    "FileExists": false,
+    "ClosureAccepted": false,
+    "Rejection": "falta evidencia real para cerrar: notes/poema-inexistente.md: no existe o est\u00E1 vac\u00EDo. La tarjeta de cierre exige artefactos o salidas verificables, no solo texto.",
+    "GoalMet": false,
+    "EvidenceEntries": 1
+  },
+  {
+    "Case": "acceptance_uses_model_objective",
+    "OriginalObjective": "Crear un poema en notes/poema-inexistente.md",
+    "PathPreservedByModel": false,
+    "FileExists": false,
+    "ClosureAccepted": false,
+    "Rejection": "falta evidencia real para cerrar: notes/poema-inexistente.md: no existe o est\u00E1 vac\u00EDo. La tarjeta de cierre exige artefactos o salidas verificables, no solo texto.",
+    "GoalMet": false,
+    "EvidenceEntries": 1
+  },
+  {
+    "Case": "thinking_off_omits_field",
+    "PolicyOffValue": null,
+    "ExplicitDisabledValue": {
+      "type": "disabled",
+      "budget_tokens": null
+    }
+  }
+]

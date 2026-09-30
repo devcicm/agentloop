@@ -124,6 +124,9 @@ public sealed class CardLedger
     /// </summary>
     public string WorkingDirectory { get; set; } = Environment.CurrentDirectory;
 
+    /// <summary>Objetivo original del usuario; no puede ser sustituido por el texto del modelo.</summary>
+    public string? AcceptanceObjective { get; set; }
+
     /// <summary>
     /// Manifiesto donde la puerta de aceptación registra cada verificación de
     /// artefacto. Vive en el ledger para que el gate y el reporte lean lo mismo.
@@ -339,7 +342,7 @@ public sealed class CardLedger
 
     private IReadOnlyList<string> RequiredEvidenceFor(CardTransaction transaction)
     {
-        var paths = AgentLoop.Goals.AcceptanceCriteria.DerivePaths(transaction.Objective);
+        var paths = AgentLoop.Goals.AcceptanceCriteria.DerivePaths(AcceptanceObjective ?? transaction.Objective);
         if (paths.Count == 0)
         {
             return [];

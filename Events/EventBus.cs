@@ -1,4 +1,5 @@
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Text.Json;
 using AgentLoop.Concurrency;
 
@@ -48,6 +49,19 @@ public sealed class EventBus
 
     public long DiscardedByDedup => Interlocked.Read(ref _discardedByDedup);
 
+    private long _observerFailures;
+    public long ObserverFailures => Interlocked.Read(ref _observerFailures);
+
+    private void Notify(Action<AgentEvent>? observers, AgentEvent item)
+    {
+        if (observers is null) return;
+        foreach (Action<AgentEvent> observer in observers.GetInvocationList())
+        {
+            try { observer(item); }
+            catch { Interlocked.Increment(ref _observerFailures); }
+        }
+    }
+
     public IReadOnlyList<AgentEvent> History
     {
         get
@@ -79,7 +93,7 @@ public sealed class EventBus
         if (IsDuplicate(item))
         {
             Interlocked.Increment(ref _discardedByDedup);
-            OnDuplicateDiscarded?.Invoke(item);
+            Notify(OnDuplicateDiscarded, item);
             // Devolvemos un AgentEvent "fantasma" con sequence 0 para que el
             // caller pueda comprobar Published (que ya incremento). No se
             // encola ni se anade al historial: el bus lo ignora.
@@ -97,8 +111,8 @@ public sealed class EventBus
             }
         }
 
-        OnPublished?.Invoke(item);
         _signal.Set();
+        Notify(OnPublished, item);
         return item;
     }
 
@@ -150,8 +164,23 @@ public sealed class EventBus
     }
 
     /// <summary>Espera a que entre algo. false = vencio el plazo sin novedades.</summary>
-    public Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
-        => PendingCount > 0 ? Task.FromResult(true) : _signal.WaitAsync(timeout, cancellationToken);
+    public async Task<bool> WaitAsync(TimeSpan timeout, CancellationToken cancellationToken = default)
+    {
+        if (timeout < TimeSpan.Zero && timeout != Timeout.InfiniteTimeSpan)
+            throw new ArgumentOutOfRangeException(nameof(timeout));
+        var clock = Stopwatch.StartNew();
+        while (true)
+        {
+            cancellationToken.ThrowIfCancellationRequested();
+            if (!_pending.IsEmpty) return true;
+            var remaining = timeout == Timeout.InfiniteTimeSpan ? timeout : timeout - clock.Elapsed;
+            if (remaining <= TimeSpan.Zero && timeout != Timeout.InfiniteTimeSpan) return false;
+            if (!await _signal.WaitAsync(remaining, cancellationToken).ConfigureAwait(false))
+                return !_pending.IsEmpty;
+            // Drain puede haber consumido el evento que genero la senal.
+            // Solo una cola con datos autoriza reaccionar; se conserva el plazo original.
+        }
+    }
 
     public IReadOnlyList<AgentEvent> Recent(int count)
     {

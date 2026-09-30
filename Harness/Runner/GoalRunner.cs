@@ -51,11 +51,20 @@ public sealed class GoalRunner : IRunner
 
             var machine = new EventDrivenAgent(_client, run.Model ?? TokenRouterOptions.FallbackModelId, setup.Tools)
             {
+                MaxTokens = options.MaxTokens,
+                Thinking = options.Thinking,
                 Trace = line => setup.RunContext.Steps.OnLog(new StructuredLog(
                     DateTimeOffset.Now,
                     LogLevel.Info,
                     "reactor",
                     line)),
+                OnModelCall = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
+                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model ?? TokenRouterOptions.FallbackModelId,
+                    completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,
+                    completion.Thinking.Observed ? completion.Thinking.ToString() : null)),
+                OnToolCall = (tool, output, succeeded, elapsed) => setup.RunContext.Steps.Record(new ToolStep(
+                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, tool,
+                    string.Empty, output, succeeded, elapsed)),
             };
 
             var loop = new Looping.AgentLoopRunner<ReactorState, GoalContext>(machine)
@@ -69,7 +78,7 @@ public sealed class GoalRunner : IRunner
                     iteration.Context.Ledger.GoalMet
                     || iteration.Context.Ledger.Aborted
                     || iteration.Context.Expired
-                    || iteration.Context.Cycles >= options.MaxIterations,
+                    || (iteration.Context.Cycles >= options.MaxIterations && iteration.State != ReactorState.Despachando),
             };
 
             var loopResult = await loop.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);

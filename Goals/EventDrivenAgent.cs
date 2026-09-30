@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Diagnostics;
 using AgentLoop.Events;
 using AgentLoop.Parsing;
 using AgentLoop.Prompting;
@@ -89,6 +90,10 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     public Action<StreamDelta>? OnDelta { get; init; }
 
     public Action<string>? Trace { get; init; }
+
+    public Action<ParsedCompletion, TimeSpan>? OnModelCall { get; init; }
+
+    public Action<string, string, bool, TimeSpan>? OnToolCall { get; init; }
 
     /// <summary>Cuanto se espera de una tacada antes de volver a mirar el reloj y el estado.</summary>
     public TimeSpan IdleSlice { get; init; } = TimeSpan.FromSeconds(2);
@@ -318,6 +323,11 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     private async ValueTask<ReactorState> ReasonAsync(GoalContext context, CancellationToken cancellationToken)
     {
         var events = context.Bus.Drain(EventsPerBrief);
+        if (events.Count == 0)
+        {
+            PendingNote = "sin eventos pendientes: no se consulta al modelo";
+            return ReactorState.Esperando;
+        }
         context.EventsSeen += events.Count;
         context.Messages.Add(ChatMessage.FromUser(context.Brief(events)));
         context.Trim();
@@ -343,9 +353,13 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
             StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
 
+        if (JsonSerializer.Serialize(request).Length > 600000)
+            throw new InvalidOperationException("El contexto del reactor supera 600000 caracteres JSON. Reduce los resultados de herramientas o los antecedentes de la sesion.");
+
         context.Cycles++;
         Trace?.Invoke($"ciclo {context.Cycles}: {events.Count} evento(s) -> modelo ({context.Messages.Count} mensajes)");
 
+        var requestStarted = Stopwatch.StartNew();
         var raw = Stream
             ? await StreamRequestAsync(request, cancellationToken).ConfigureAwait(false)
             : await _client.CreateChatCompletionAsync(request, cancellationToken).ConfigureAwait(false);
@@ -353,6 +367,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         _transitorios = 0; // la llamada salio bien: la racha de fallos se acabo
         context.FailureReason = null;
         var parsed = CompletionParser.Parse(raw);
+        OnModelCall?.Invoke(parsed, requestStarted.Elapsed);
         context.Last = parsed;
         context.TotalUsage = context.TotalUsage.Add(parsed.Usage);
         context.Thinking.Add(parsed.Thinking);
@@ -421,6 +436,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
                 break;
             }
 
+            var toolStarted = Stopwatch.StartNew();
             ToolExecution execution;
             try
             {
@@ -442,6 +458,11 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
             }
 
             context.ToolCalls++;
+            context.Bus.Publish(
+                execution.Failed ? AgentEventKind.Error : AgentEventKind.HerramientaFinalizada,
+                "dispatcher", $"termino {call.Name}",
+                new { tool_call_id = call.Id, herramienta = call.Name, fallo = execution.Failed });
+            OnToolCall?.Invoke(call.Name, execution.Output, !execution.Failed, toolStarted.Elapsed);
 
             try
             {
@@ -570,6 +591,13 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         builder.AppendLine($"  tope por comando {policy.DefaultTimeout.TotalSeconds:0}s (maximo {policy.MaxTimeout.TotalMinutes:0}m)");
         builder.AppendLine($"  presupuesto total de la operacion: {context.Goal.Budget.TotalSeconds:0}s");
         builder.AppendLine("  hay comandos irreversibles vetados por politica; si te rechazan uno, reformula.");
+
+        if (!string.IsNullOrWhiteSpace(context.SessionContext))
+        {
+            builder.AppendLine();
+            builder.AppendLine("CONTEXTO DE SESION (antecedentes; no acreditan el cierre de esta operacion)");
+            builder.AppendLine(context.SessionContext);
+        }
 
         return builder.ToString().TrimEnd();
     }

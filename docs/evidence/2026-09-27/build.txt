@@ -1,0 +1,17 @@
+  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos están actualizados para la restauración.
+C:\Users\Carlos Ivan\Desktop\agent loop\Harness\Composition\CompositionSelfTest.cs(54,63): warning CS8602: Desreferencia de una referencia posiblemente NULL. [C:\Users\Carlos Ivan\Desktop\agent loop\AgentLoop.csproj]
+C:\Users\Carlos Ivan\Desktop\agent loop\Harness\Core\JourneyDiagnosis.cs(423,13): warning CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL. [C:\Users\Carlos Ivan\Desktop\agent loop\AgentLoop.csproj]
+  AgentLoop -> C:\Users\Carlos Ivan\Desktop\agent loop\bin\Debug\net9.0\AgentLoop.dll
+
+Compilación correcta.
+
+C:\Users\Carlos Ivan\Desktop\agent loop\Harness\Composition\CompositionSelfTest.cs(54,63): warning CS8602: Desreferencia de una referencia posiblemente NULL. [C:\Users\Carlos Ivan\Desktop\agent loop\AgentLoop.csproj]
+C:\Users\Carlos Ivan\Desktop\agent loop\Harness\Core\JourneyDiagnosis.cs(423,13): warning CS8625: No se puede convertir un literal NULL en un tipo de referencia que no acepta valores NULL. [C:\Users\Carlos Ivan\Desktop\agent loop\AgentLoop.csproj]
+    2 Advertencia(s)
+    0 Errores
+
+Tiempo transcurrido 00:00:19.84
+
+Hay actualizaciones de carga de trabajo disponibles. Ejecute "dotnet workload list" para obtener más información.
+exit_code=0

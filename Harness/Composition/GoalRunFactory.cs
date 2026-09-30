@@ -72,6 +72,7 @@ public static class GoalRunFactory
         // La puerta de aceptación resuelve las rutas del objetivo contra este
         // directorio (el --cwd de la política).
         ledger.WorkingDirectory = scope.Policy.WorkingDirectory;
+        ledger.AcceptanceObjective = run.Objective;
         var tools = OperationTools.Build(ledger, supervisor, bus);
         var goalContext = new GoalContext
         {

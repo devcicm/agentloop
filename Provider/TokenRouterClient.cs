@@ -8,7 +8,7 @@ using System.Text.Json.Serialization;
 namespace AgentLoop.Provider;
 
 /// <summary>
-/// CAPA 1 - cliente asincrono OpenAI-compatible para TokenRouter.
+/// CAPA 1 - cliente asincrono OpenAI-compatible para NVIDIA NIM.
 /// Puerto de tokenrouter-client/tokenrouter/client.py.
 /// </summary>
 public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
@@ -323,11 +323,19 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
     }
 
     /// <summary>stream_options solo tiene sentido con stream=true; fuera de ahi se omite.</summary>
-    private static ChatRequest WithStream(ChatRequest request, bool stream) => request with
-    {
-        Stream = stream ? true : null,
-        StreamOptions = stream ? request.StreamOptions : null,
-    };
+    private static ChatRequest WithStream(ChatRequest request, bool stream)
+        => request with
+        {
+            Stream = stream ? true : null,
+            StreamOptions = stream ? request.StreamOptions : null,
+            ChatTemplateKwargs = request.Thinking is not null
+                ? new Dictionary<string, object?>
+                {
+                    ["enable_thinking"] = request.Thinking.Mode == ThinkingMode.Enabled,
+                    ["clear_thinking"] = false,
+                }
+                : null,
+        };
 
     private static string ReadString(JsonElement element, string property)
         => element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String

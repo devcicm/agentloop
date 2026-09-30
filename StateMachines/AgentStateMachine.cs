@@ -126,6 +126,9 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
             StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
 
+        if (JsonSerializer.Serialize(request).Length > 600000)
+            throw new InvalidOperationException("El contexto de la peticion supera 600000 caracteres JSON. Reduce la salida de herramientas, usa contexto compactar o inicia un hilo nuevo. Los recuerdos guardados se conservan.");
+
         context.Turns++;
         var thinkingNote = thinking is null ? string.Empty : $", thinking {thinking}";
         var modeNote = Stream ? ", stream" : string.Empty;

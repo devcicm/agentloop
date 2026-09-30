@@ -5,8 +5,10 @@ namespace AgentLoop.Configuration;
 /// </summary>
 public static class SecretStore
 {
-    public const string ApiKeyFileName = "tokenrouter-api-key.txt";
-    public const string ApiKeyEnvVar = "TOKENROUTER_API_KEY";
+    public const string ApiKeyFileName = "nvidia-api-key.txt";
+    public const string ApiKeyEnvVar = "NVIDIA_API_KEY";
+    private const string LegacyApiKeyFileName = "tokenrouter-api-key.txt";
+    private const string LegacyApiKeyEnvVar = "TOKENROUTER_API_KEY";
     private const string SecretsDirName = "local-secrets";
 
     /// <summary>Devuelve la API key de TokenRouter o lanza con un mensaje accionable.</summary>
@@ -17,7 +19,15 @@ public static class SecretStore
 
     public static bool TryGetTokenRouterApiKey(out string? apiKey, out string reason)
     {
-        var path = FindSecretsFile(ApiKeyFileName);
+        var fromEnv = Environment.GetEnvironmentVariable(ApiKeyEnvVar)?.Trim();
+        if (!string.IsNullOrEmpty(fromEnv))
+        {
+            apiKey = fromEnv;
+            reason = $"variable de entorno {ApiKeyEnvVar}";
+            return true;
+        }
+
+        var path = FindSecretsFile(ApiKeyFileName) ?? FindSecretsFile(LegacyApiKeyFileName);
         if (path is not null)
         {
             var fromFile = File.ReadAllText(path).Trim();
@@ -29,7 +39,7 @@ public static class SecretStore
             }
         }
 
-        var fromEnv = Environment.GetEnvironmentVariable(ApiKeyEnvVar)?.Trim();
+        fromEnv = Environment.GetEnvironmentVariable(LegacyApiKeyEnvVar)?.Trim();
         if (!string.IsNullOrEmpty(fromEnv))
         {
             apiKey = fromEnv;

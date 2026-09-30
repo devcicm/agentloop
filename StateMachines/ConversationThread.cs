@@ -1,6 +1,7 @@
 using AgentLoop.Parsing;
 using AgentLoop.Prompting;
 using AgentLoop.Provider;
+using System.Text.Json;
 
 namespace AgentLoop.StateMachines;
 
@@ -21,6 +22,62 @@ public sealed class ConversationThread
     /// </summary>
     public int MaxMessages { get; init; } = 40;
 
+    public int MaxHistoryCharacters { get; private set; } = 48000;
+    public int HistoryCharacters => JsonSerializer.Serialize(_messages).Length;
+    public int DroppedMessages { get; private set; }
+    public ConversationMemory? Memory { get; set; }
+
+    public void SetHistoryLimit(int characters)
+    {
+        if (characters < 2000 || characters > 500000)
+            throw new InvalidOperationException("El limite del historial debe estar entre 2000 y 500000 caracteres.");
+        MaxHistoryCharacters = characters;
+        Trim();
+    }
+
+    public void Compact()
+    {
+        var lastUser = _messages.FindLastIndex(m => m.Role == ChatRoles.User);
+        if (lastUser > 0) { DroppedMessages += lastUser; _messages.RemoveRange(0, lastUser); }
+        Trim();
+    }
+
+    public void SaveSession(string path) => ConversationMemory.AtomicWrite(path,
+        JsonSerializer.Serialize(_messages, new JsonSerializerOptions { WriteIndented = true }));
+
+    public void LoadSession(string path)
+    {
+        if (new FileInfo(path).Length > 4000000) throw new InvalidOperationException("La sesion supera 4 MB.");
+        var messages = JsonSerializer.Deserialize<List<ChatMessage>>(File.ReadAllText(path))
+            ?? throw new InvalidOperationException("Sesion vacia o invalida.");
+        var pending = new HashSet<string>(StringComparer.Ordinal);
+        foreach (var message in messages)
+        {
+            if (message is null) throw new InvalidOperationException("La sesion contiene un mensaje nulo.");
+            if (message.Role is not (ChatRoles.User or ChatRoles.Assistant or ChatRoles.Tool))
+                throw new InvalidOperationException("Rol no permitido en el historial.");
+            if (message.Role != ChatRoles.Tool && pending.Count > 0)
+                throw new InvalidOperationException("Sesion con resultados de herramientas pendientes.");
+            if (message.Role == ChatRoles.Tool && !pending.Remove(message.ToolCallId ?? ""))
+                throw new InvalidOperationException("Resultado de herramienta huerfano.");
+            if (message.ToolCalls is { } calls)
+            {
+                if (message.Role != ChatRoles.Assistant || calls.ValueKind != JsonValueKind.Array)
+                    throw new InvalidOperationException("Llamadas de herramienta invalidas.");
+                foreach (var call in calls.EnumerateArray())
+                    if (!call.TryGetProperty("id", out var id) || id.ValueKind != JsonValueKind.String
+                        || string.IsNullOrWhiteSpace(id.GetString()) || !pending.Add(id.GetString()!))
+                        throw new InvalidOperationException("Identificador de herramienta invalido o duplicado.");
+            }
+        }
+        if (pending.Count > 0 || messages.Count > 0 && (messages[0].Role != ChatRoles.User || messages[^1].Role != ChatRoles.Assistant || messages[^1].ToolCalls is not null))
+            throw new InvalidOperationException("La sesion debe contener intercambios completos.");
+        Clear();
+        _messages.AddRange(messages);
+        Exchanges = messages.Count(m => m.Role == ChatRoles.User);
+        Trim();
+    }
+
     public PromptTemplate SystemTemplate { get; private set; } = SystemPrompt.Default;
 
     public PromptVariables Variables { get; } = new();
@@ -37,7 +94,7 @@ public sealed class ConversationThread
 
     public void UseSystemTemplate(PromptTemplate template) => SystemTemplate = template;
 
-    public string RenderSystemPrompt() => SystemTemplate.Render(Variables);
+    public string RenderSystemPrompt() => SystemTemplate.Render(Variables) + Memory?.Render();
 
     /// <summary>Prepara el contexto del turno: sistema fresco + historial + nueva entrada.</summary>
     public AgentContext StartTurn(string userPrompt)
@@ -61,6 +118,7 @@ public sealed class ConversationThread
         Exchanges = 0;
         Turns = 0;
         TotalUsage = TokenUsage.Empty;
+        DroppedMessages = 0;
     }
 
     /// <summary>
@@ -70,12 +128,14 @@ public sealed class ConversationThread
     /// </summary>
     private void Trim()
     {
-        if (_messages.Count <= MaxMessages)
+        if (_messages.Count <= MaxMessages && HistoryCharacters <= MaxHistoryCharacters)
         {
             return;
         }
 
-        var drop = _messages.Count - MaxMessages;
+        var drop = Math.Max(1, _messages.Count - MaxMessages);
+        while (drop < _messages.Count && JsonSerializer.Serialize(_messages.Skip(drop)).Length > MaxHistoryCharacters)
+            drop++;
         while (drop < _messages.Count && _messages[drop].Role != ChatRoles.User)
         {
             drop++;
@@ -83,10 +143,12 @@ public sealed class ConversationThread
 
         if (drop >= _messages.Count)
         {
+            DroppedMessages += _messages.Count;
             _messages.Clear();
             return;
         }
 
+        DroppedMessages += drop;
         _messages.RemoveRange(0, drop);
     }
 }

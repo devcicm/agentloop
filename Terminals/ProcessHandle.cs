@@ -26,6 +26,7 @@ public sealed class ProcessHandle : IDisposable
     private int _cursor;
     private int _captured;
     private int _dropped;
+    private int _exited;
 
     internal ProcessHandle(string id, ShellCommand command, Process process, int maxLines)
     {
@@ -49,7 +50,7 @@ public sealed class ProcessHandle : IDisposable
     /// <summary>Latch de fin de proceso. Se abre una vez y se queda abierto.</summary>
     public AsyncManualResetEvent Terminado { get; } = new();
 
-    public bool Running => !Terminado.IsSet;
+    public bool Running => Volatile.Read(ref _exited) == 0;
 
     /// <summary>Tope del buffer en memoria; un proceso hablador no puede comerse la RAM.</summary>
     public int MaxLines { get; }
@@ -162,6 +163,9 @@ public sealed class ProcessHandle : IDisposable
     {
         ExitCode = exitCode;
         EndedAt = DateTimeOffset.Now;
+        // El estado debe ser visible antes del evento ProcesoFin. El latch se
+        // abre despues de publicarlo para quienes esperan el cierre completo.
+        Volatile.Write(ref _exited, 1);
     }
 
     /// <summary>

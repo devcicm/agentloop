@@ -21,6 +21,8 @@ public sealed class ToolRegistry
 
     public int Count => _tools.Count;
 
+    public ToolRegistry Combine(ToolRegistry other) => new(_tools.Values.Concat(other._tools.Values));
+
     public IReadOnlyCollection<string> Names => _tools.Keys;
 
     /// <summary>Schemas para el campo "tools" del request, o null si no hay ninguna.</summary>

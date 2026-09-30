@@ -109,8 +109,6 @@ public sealed class AsyncAutoResetEvent
 
     public void Set()
     {
-        TaskCompletionSource? release = null;
-
         lock (_gate)
         {
             // Los esperadores que se fueron por timeout quedan cancelados en la cola:
@@ -118,20 +116,14 @@ public sealed class AsyncAutoResetEvent
             while (_waiters.Count > 0)
             {
                 var candidate = _waiters.Dequeue();
-                if (!candidate.Task.IsCompleted)
+                if (candidate.TrySetResult())
                 {
-                    release = candidate;
-                    break;
+                    return;
                 }
             }
 
-            if (release is null)
-            {
-                _signaled = true;
-            }
+            _signaled = true;
         }
-
-        release?.TrySetResult();
     }
 
     public Task WaitAsync(CancellationToken cancellationToken = default)
@@ -143,6 +135,7 @@ public sealed class AsyncAutoResetEvent
 
     private async Task<bool> WaitCoreAsync(TimeSpan timeout, CancellationToken cancellationToken)
     {
+        cancellationToken.ThrowIfCancellationRequested();
         TaskCompletionSource waiter;
 
         lock (_gate)
@@ -157,16 +150,20 @@ public sealed class AsyncAutoResetEvent
             _waiters.Enqueue(waiter);
         }
 
-        if (timeout == Timeout.InfiniteTimeSpan)
-        {
-            await waiter.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
-            return true;
-        }
-
         try
         {
-            await waiter.Task.WaitAsync(timeout, cancellationToken).ConfigureAwait(false);
+            if (timeout == Timeout.InfiniteTimeSpan)
+                await waiter.Task.WaitAsync(cancellationToken).ConfigureAwait(false);
+            else
+                await waiter.Task.WaitAsync(timeout, cancellationToken).ConfigureAwait(false);
             return true;
+        }
+        catch (OperationCanceledException)
+        {
+            // Si Set gano justo cuando el token se cancelo, devolvemos la senal
+            // al siguiente esperador en vez de consumirla sin atenderla.
+            if (!waiter.TrySetCanceled() && waiter.Task.IsCompletedSuccessfully) Set();
+            throw;
         }
         catch (TimeoutException)
         {

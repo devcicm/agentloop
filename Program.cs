@@ -44,7 +44,7 @@ internal static class Program
     /// </summary>
     private static bool ShouldRunInteractive(string[] args)
     {
-        if (args.Length == 1 && args[0].ToLowerInvariant() is "interactive" or "interactivo" or "repl")
+        if (args.Length >= 1 && args[0].ToLowerInvariant() is "interactive" or "interactivo" or "repl")
         {
             return true;
         }
@@ -53,26 +53,26 @@ internal static class Program
     }
 
     /// <summary>
-    /// Bucle de lectura del CLI interactivo. Mantiene un <see cref="ConversationThread"/>
-    /// vivo entre lineas: el agente recuerda los turnos anteriores y el prompt de sistema
-    /// se vuelve a renderizar en cada uno con los parametros actuales.
+    /// Entrada de objetivos al reactor. ConversationThread conserva antecedentes y
+    /// recuerdos; no determina el ciclo de ejecucion de las operaciones.
     /// </summary>
     private static async Task<int> InteractiveAsync(string[] args)
     {
         var thread = new ConversationThread();
         var tools = BuiltInTools.DefaultRegistry();
-        var maxIterations = IntOption(args, "--max-iterations", 12);
+        var maxIterations = IntOption(args, "--max-iterations", 24);
         string model;
         ThinkingPolicy policy;
 
         try
         {
+            thread.Memory = new ConversationMemory(Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop"));
             ApplyPromptOptions(thread, args);
             model = ResolveModel(args);
             policy = ResolveThinkingPolicy(args);
             thread.Variables.WithDefaults(model, tools.Names);
         }
-        catch (InvalidOperationException ex)
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or JsonException or UnauthorizedAccessException)
         {
             Console.Error.WriteLine($"ERROR: {ex.Message}");
             return 64;
@@ -134,13 +134,13 @@ internal static class Program
                 Console.WriteLine();
 
                 // Las utilidades sueltas no tocan el hilo; el agente si.
-                if (verb is "chat" or "discover" or "selftest" or "help" or "--help" or "-h" or "ayuda")
+                if (verb is "discover" or "selftest" or "selftest-events" or "goal" or "objetivo" or "journal" or "diario" or "lobos" or "diagnostico" or "help" or "--help" or "-h" or "ayuda")
                 {
                     lastExitCode = await ExecuteAsync(tokens);
                 }
                 else
                 {
-                    var prompt = verb == "run" ? rest : line;
+                    var prompt = verb is "run" or "chat" ? rest : line;
                     if (prompt.Length == 0)
                     {
                         Console.WriteLine("Escribe el texto despues de 'run'.");
@@ -158,7 +158,10 @@ internal static class Program
                             Console.WriteLine();
                         }
 
-                        return await AgentTurnAsync(client, thread, prompt, tools, settings, maxIterations, cancellationToken);
+                        return UsesConversationLoop(verb)
+                            ? await AgentTurnAsync(client, thread, prompt, tools, settings, maxIterations, cancellationToken)
+                            : await AgentOperationAsync(client, thread, prompt, settings,
+                                IntOption(args, "--max-ciclos", 80), IntOption(args, "--deadline", 300), cancellationToken);
                     });
                 }
 
@@ -177,13 +180,83 @@ internal static class Program
     /// Lo que la sesion interactiva puede cambiar en caliente. Va por referencia para que
     /// 'pensar' y 'stream' afecten al turno siguiente sin rearrancar el CLI.
     /// </summary>
-    private sealed class SessionSettings
+    internal sealed class SessionSettings
     {
         public required ThinkingPolicy Thinking { get; init; }
 
-        public required string Model { get; init; }
+        public required string Model { get; set; }
 
         public bool Stream { get; set; }
+    }
+
+    /// <summary>La entrada principal del CLI publica un objetivo y ejecuta el reactor.</summary>
+    internal static bool UsesConversationLoop(string verb) => verb == "chat";
+
+    internal static async Task<int> AgentOperationAsync(
+        ITokenRouterClient client, ConversationThread thread, string objective,
+        SessionSettings settings, int maxCycles, int deadline, CancellationToken cancellationToken)
+    {
+        if (maxCycles < 1 || deadline < 1) throw new InvalidOperationException("Los presupuestos deben ser positivos.");
+        var policy = new ExecutionPolicy { WorkingDirectory = Environment.CurrentDirectory, Confirm = ConfirmCommand };
+        var run = Harness.Core.Run.FromObjective(objective, deadline, settings.Model);
+        var renderer = settings.Stream ? new DeltaRenderer() : null;
+        var consoleGate = new object();
+        void Log(string text)
+        {
+            lock (consoleGate) { renderer?.Close(); Console.WriteLine(text); }
+        }
+        var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
+            run, Scope.Minimal(policy), client, [], item => Log($"  evento {item}"));
+        using var supervisor = setup.Supervisor;
+        var tools = setup.Tools.Combine(BuiltInTools.DefaultRegistry());
+        thread.Variables.WithDefaults(settings.Model, tools.Names);
+        var context = new GoalContext
+        {
+            Goal = setup.GoalContext.Goal, Bus = setup.Bus, Ledger = setup.Ledger, Supervisor = supervisor,
+            MaxHistoryCharacters = thread.MaxHistoryCharacters,
+            SessionContext = thread.RenderSystemPrompt() + "\nAntecedentes del usuario y resultados anteriores:\n"
+                + JsonSerializer.Serialize(thread.Messages),
+        };
+        var machine = new EventDrivenAgent(client, settings.Model, tools)
+        {
+            MaxTokens = 2048, Thinking = settings.Thinking, Stream = settings.Stream,
+            OnDelta = renderer is null ? null : delta => { lock (consoleGate) renderer.Render(delta); },
+            Trace = line => Log($"    {line}"),
+        };
+        var loop = new AgentLoopRunner<ReactorState, GoalContext>(machine)
+        {
+            MaxIterations = Math.Max(maxCycles * 4, maxCycles + 8),
+            BreakWhen = step => context.Ledger.GoalMet || context.Ledger.Aborted || context.Expired
+                || (context.Cycles >= maxCycles && step.State != ReactorState.Despachando),
+        };
+        Console.WriteLine($"motor: eventos | objetivo: {objective}");
+        Console.WriteLine($"tools: {string.Join(", ", tools.Names)}");
+        var result = await loop.RunAsync(context, cancellationToken);
+        renderer?.Close();
+        var succeeded = context.Ledger.GoalMet && result.Result.IsOk;
+        var summary = (succeeded ? "CUMPLIDO: " : "SIN CERRAR: ")
+            + (context.Ledger.Outcome ?? context.FailureReason ?? context.Ledger.PendingDebt() ?? result.BreakReason.ToString());
+        var evidencePath = Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop", "operations",
+            $"{DateTime.UtcNow:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}.json");
+        ConversationMemory.AtomicWrite(evidencePath, JsonSerializer.Serialize(new
+        {
+            objective, model = settings.Model, succeeded, summary, context.Cycles, context.EventsSeen,
+            state = result.FinalState.ToString(), stop = result.BreakReason.ToString(),
+            events = context.Bus.History,
+            cards = context.Ledger.Plays.Select(p => new { p.Name, p.Fields, p.Accepted, p.Rejection, p.Depth, p.At }),
+            messages = context.Messages,
+            context.TotalUsage,
+        }, new JsonSerializerOptions { WriteIndented = true }));
+        // Se conserva el resultado de la operacion, no las tool_calls de otro libro mayor.
+        var record = thread.StartTurn(objective);
+        record.Messages.Add(ChatMessage.FromAssistant(summary + "\nEvidencia local: " + evidencePath));
+        record.Turns = context.Cycles;
+        record.TotalUsage = context.TotalUsage;
+        thread.CommitTurn(record);
+        Log(summary);
+        Log(context.Summary());
+        Log($"Evidencia: {evidencePath}");
+        return succeeded ? 0 : 1;
     }
 
     /// <summary>Un intercambio del usuario, con el hilo y los parametros de la sesion puestos.</summary>
@@ -272,6 +345,80 @@ internal static class Program
 
         switch (verb)
         {
+            case "memoria":
+                if (thread.Memory is null || thread.Memory.Notes.Count == 0) Console.WriteLine("  (sin recuerdos guardados)");
+                else foreach (var note in thread.Memory.Notes) Console.WriteLine($"  {note.Key} = {note.Value}");
+                return true;
+
+            case "recordar":
+                RunSessionEdit(() =>
+                {
+                    if (thread.Memory is null) throw new InvalidOperationException("Memoria no inicializada.");
+                    thread.Memory.Remember(rest);
+                    Console.WriteLine("  Recuerdo guardado para las siguientes sesiones.");
+                });
+                return true;
+
+            case "olvidar":
+                RunSessionEdit(() => Console.WriteLine(thread.Memory?.Forget(rest) == true ? "  Recuerdo eliminado." : "  No existe esa clave."));
+                return true;
+
+            case "contexto":
+                RunSessionEdit(() =>
+                {
+                    if (rest.Equals("compactar", StringComparison.OrdinalIgnoreCase)) thread.Compact();
+                    else if (rest.StartsWith("limite ", StringComparison.OrdinalIgnoreCase) && int.TryParse(rest[7..].Trim(), out var limit)) thread.SetHistoryLimit(limit);
+                    else if (rest.Length > 0) throw new InvalidOperationException("Usa contexto, contexto compactar o contexto limite <caracteres>.");
+                    Console.WriteLine($"  Historial: {thread.Messages.Count}/{thread.MaxMessages} mensajes, {thread.HistoryCharacters}/{thread.MaxHistoryCharacters} caracteres JSON; descartados: {thread.DroppedMessages} mensajes.");
+                    Console.WriteLine($"  Memoria: {thread.Memory?.Notes.Count ?? 0} recuerdos. Compactar conserva el ultimo intercambio; nuevo limpia el historial.");
+                });
+                return true;
+
+            case "sesion":
+                RunSessionEdit(() =>
+                {
+                    var path = Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop", "session.json");
+                    if (rest.Equals("guardar", StringComparison.OrdinalIgnoreCase)) thread.SaveSession(path);
+                    else if (rest.Equals("cargar", StringComparison.OrdinalIgnoreCase)) thread.LoadSession(path);
+                    else throw new InvalidOperationException("Usa sesion guardar o sesion cargar.");
+                    Console.WriteLine($"  Sesion {rest}: {path} ({thread.Messages.Count} mensajes).");
+                });
+                return true;
+
+            case "modelos" or "models":
+                Console.WriteLine("  modelos NVIDIA disponibles:");
+                foreach (var available in TokenRouterOptions.SupportedModels)
+                {
+                    Console.WriteLine($"    {(string.Equals(available, settings.Model, StringComparison.OrdinalIgnoreCase) ? "*" : " ")} {available}");
+                }
+                return true;
+
+            case "modelo" or "model":
+                RunSessionEdit(() =>
+                {
+                    var requested = rest.Trim();
+                    if (requested.Length == 0)
+                    {
+                        Console.WriteLine($"  modelo actual: {settings.Model}");
+                        return;
+                    }
+
+                    var selected = TokenRouterOptions.SupportedModels.FirstOrDefault(m =>
+                        string.Equals(m, requested, StringComparison.OrdinalIgnoreCase)
+                        || (requested.Equals("glm", StringComparison.OrdinalIgnoreCase) && m == TokenRouterOptions.FallbackModelId)
+                        || (requested.Equals("kimi", StringComparison.OrdinalIgnoreCase) && m == TokenRouterOptions.KimiK3ModelId));
+
+                    if (selected is null)
+                    {
+                        throw new InvalidOperationException($"modelo no reconocido: '{requested}'. Usa 'modelos'.");
+                    }
+
+                    settings.Model = selected;
+                    thread.Variables.Set("modelo", selected);
+                    Console.WriteLine($"  modelo cambiado a: {selected}");
+                });
+                return true;
+
             case "stream" or "vivo":
                 RunSessionEdit(() =>
                 {
@@ -365,7 +512,7 @@ internal static class Program
         {
             edit();
         }
-        catch (Exception ex) when (ex is InvalidOperationException or ArgumentOutOfRangeException or IOException)
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentOutOfRangeException or IOException or JsonException or UnauthorizedAccessException)
         {
             Console.Error.WriteLine($"  ERROR: {ex.Message}");
         }
@@ -374,15 +521,22 @@ internal static class Program
     private static void PrintInteractiveBanner(ToolRegistry tools, SessionSettings settings)
     {
         Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
-        Console.WriteLine($"modelo: {settings.Model} | tools: {string.Join(", ", tools.Names)}");
+        Console.WriteLine($"modelo: {settings.Model} | recursos: {string.Join(", ", tools.Names)}");
+        Console.WriteLine("operaciones: tarjeta, ejecutar, lanzar, esperar, leer, procesos, matar, observar, flujo");
+        Console.WriteLine($"modelos NVIDIA: {string.Join(", ", TokenRouterOptions.SupportedModels)}");
         Console.WriteLine($"thinking: {DescribeThinking(settings.Thinking, settings.Model)}");
         Console.WriteLine($"stream: {(settings.Stream ? "activo" : "apagado")}");
         Console.WriteLine();
-        Console.WriteLine("El agente mantiene el hilo entre turnos. Escribe y ya:");
-        Console.WriteLine("  <texto libre>        se lo manda al agente recordando lo anterior");
-        Console.WriteLine("  run <texto>          igual, explicito");
+        Console.WriteLine("Motor principal: eventos, procesos y tarjetas; el cierre exige comprobacion.");
+        Console.WriteLine("  <texto libre>        publica un objetivo al reactor con memoria y antecedentes");
+        Console.WriteLine("  run <texto>          igual, explicito; guarda evidencia local de la operacion");
+        Console.WriteLine("  modelos              lista glm-5.3 y kimi-k3");
+        Console.WriteLine("  modelo <glm|kimi|id> cambia el modelo para la siguiente operacion");
         Console.WriteLine("  nuevo                olvida la conversacion (mantiene variables y plantilla)");
         Console.WriteLine("  historial            muestra los mensajes vivos del hilo");
+        Console.WriteLine("  contexto [compactar|limite N]   consulta o limita el historial en caracteres");
+        Console.WriteLine("  recordar clave=valor | memoria | olvidar clave   recuerdos por proyecto");
+        Console.WriteLine("  sesion guardar|cargar   guarda o recupera el historial local");
         Console.WriteLine("  vars                 lista los parametros del prompt");
         Console.WriteLine("  set clave=valor      define un parametro (p.ej. set idioma=ingles)");
         Console.WriteLine("  unset clave          lo quita");
@@ -390,7 +544,8 @@ internal static class Program
         Console.WriteLine("  plantilla <texto|archivo>   cambia la plantilla de sistema");
         Console.WriteLine("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
         Console.WriteLine("  stream on|off        pinta la respuesta segun llega o de golpe");
-        Console.WriteLine("  chat | discover | selftest | ayuda   utilidades sueltas, sin hilo");
+        Console.WriteLine("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
+        Console.WriteLine("  discover | selftest | ayuda   utilidades sueltas");
         Console.WriteLine("  salir                cierra");
         Console.WriteLine();
     }
@@ -564,9 +719,11 @@ internal static class Program
 
         return command switch
         {
+            "selftest-events" => await EventArchitectureSelfTest.RunAsync(cancellationToken) ? 0 : 1,
             "chat" => await ChatAsync(args, cancellationToken),
             "discover" => await DiscoverAsync(args, cancellationToken),
-            "run" => await RunAsync(args, cancellationToken),
+            "run" => await GoalAsync(args, cancellationToken),
+            "run-chat" => await RunAsync(args, cancellationToken),
             "goal" or "objetivo" => await GoalAsync(args, cancellationToken),
             "journal" or "diario" => await JournalAsync(args, cancellationToken),
             "lobos" => await LobosAsync(args, cancellationToken),
@@ -864,6 +1021,7 @@ internal static class Program
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
             run, scope, client, [],
             item => Log($"  · {item}", EventColor(item.Kind)));
+        using var supervisor = setup.Supervisor;
 
         Console.WriteLine($"key      : {source}");
         Console.WriteLine($"modelo   : {model}");
@@ -897,7 +1055,7 @@ internal static class Program
                 iteration.Context.Ledger.GoalMet
                 || iteration.Context.Ledger.Aborted
                 || iteration.Context.Expired
-                || iteration.Context.Cycles >= maxCycles,
+                || (iteration.Context.Cycles >= maxCycles && iteration.State != ReactorState.Despachando),
             OnIteration = iteration => Log($"[{iteration.Iteration,2}] {iteration.LastTransition}", ConsoleColor.DarkGray),
         };
 
@@ -972,6 +1130,9 @@ internal static class Program
         {
             DeadlineSeconds = deadline,
             MaxIterations = maxCycles,
+            MaxTokens = IntOption(args, "--max-tokens", 2048),
+            Thinking = policy,
+            WorkingDirectory = StringOption(args, "--cwd") ?? Environment.CurrentDirectory,
         };
 
         Console.WriteLine($"key      : {source}");
@@ -1031,7 +1192,8 @@ internal static class Program
         var thinking = ResolveThinkingPolicy(lobosArgs);
         var stream = ResolveStreaming(lobosArgs);
 
-        Console.WriteLine($"key       : {SecretStore.Mask(File.ReadAllText(SecretStore.FindSecretsFile(SecretStore.ApiKeyFileName)!).Trim())}");
+        SecretStore.TryGetTokenRouterApiKey(out var lobosKey, out _);
+        Console.WriteLine($"key       : {SecretStore.Mask(lobosKey ?? string.Empty)}");
         Console.WriteLine($"modelo    : {model}");
         Console.WriteLine($"deadline  : {deadline}s");
         Console.WriteLine($"max-ciclos: {maxCycles}");
@@ -1530,7 +1692,9 @@ internal static class Program
         Console.WriteLine();
         var truncationOk = TruncationRecoverySelfTest.Run();
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk;
+        var eventsOk = await EventArchitectureSelfTest.RunAsync(cancellationToken);
+
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;
@@ -2010,7 +2174,11 @@ internal static class Program
         }
 
         keySource = $"{SecretStore.Mask(apiKey!)} (desde {reason})";
-        return new TokenRouterClient(new TokenRouterOptions { ApiKey = apiKey! })
+        return new TokenRouterClient(new TokenRouterOptions
+        {
+            ApiKey = apiKey!,
+            BaseUrl = Environment.GetEnvironmentVariable("NVIDIA_BASE_URL") ?? TokenRouterOptions.DefaultBaseUrl,
+        })
         {
             ThinkingPolicy = thinking,
             OnThinkingRejected = note => Console.WriteLine($"    (thinking) {note}"),
@@ -2115,7 +2283,11 @@ internal static class Program
                     models.ValueKind == JsonValueKind.Array && models.GetArrayLength() > 0 &&
                     models[0].TryGetProperty("model_id", out var id) && id.GetString() is { Length: > 0 } modelId)
                 {
-                    return modelId;
+                    if (!modelId.EndsWith(":free", StringComparison.OrdinalIgnoreCase)
+                        && !modelId.EndsWith("-free", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return modelId;
+                    }
                 }
             }
             catch (JsonException)
@@ -2235,7 +2407,7 @@ internal static class Program
     {
         Console.WriteLine(
             """
-            AgentLoop - harness agentico minimo sobre TokenRouter
+            AgentLoop - harness dirigido por eventos sobre NVIDIA
 
             Uso:
               dotnet run -- <comando> [opciones]
@@ -2244,12 +2416,14 @@ internal static class Program
             Comandos:
               chat "<prompt>"       Una llamada suelta. Verifica capa de comunicacion + capa de parseo.
               discover              Sondea el catalogo y reporta 3 modelos con capacidades agenticas.
-              run "<prompt>"        Corre la maquina de estados dentro del loop con tool calling.
+              run "<objetivo>"      Alias de goal: reactor por eventos con tarjetas y herramientas.
+              run-chat "<prompt>"   Utilidad anterior de tool calling por turnos.
               goal "<objetivo>"     Operacion dirigida por eventos: tarjetas de estado y terminales
                                     (bash, sh, powershell, pwsh, cmd). Ver la seccion Operaciones.
               selftest              Prueba el corte del loop sin tocar la red.
+              selftest-events       Verifica bus, senales, procesos y reactor sin proveedor remoto.
               diagnostico [runId]   Diagnostico post-mortem de un journey persistido (solo lee disco).
-              interactive           Prompt interactivo con hilo de conversacion (lo que usa F5 en
+              interactive           CLI con reactor de eventos y memoria (lo que usa F5 en
                                     Visual Studio). Dentro: nuevo, historial, vars, set, unset,
                                     sistema, plantilla, pensar, stream, salir.
 
@@ -2257,7 +2431,7 @@ internal static class Program
               --model <id>          Modelo a usar (por defecto: el primero de artifacts/agentic-models.json).
               --target <n>          discover: cuantos modelos agenticos buscar (3).
               --max-candidates <n>  discover: cuantos modelos sondear como maximo (30).
-              --max-iterations <n>  run: tope de iteraciones del loop (12).
+              --max-iterations <n>  run-chat: tope de iteraciones del loop (12).
               --deadline <s>        goal: presupuesto de la operacion en segundos (300).
               --max-ciclos <n>      goal: tope de ciclos del reactor (80).
               --max-procesos <n>    goal: procesos simultaneos permitidos (4).
@@ -2283,7 +2457,7 @@ internal static class Program
               Ya definidas: modelo, herramientas, fecha, hora, idioma, contexto.
 
               Ejemplo:
-                dotnet run -- run "Resume esto" \
+                dotnet run -- run-chat "Resume esto" \
                   --system "Eres {{rol}}. Responde en {{idioma}}. <d>{{xml:dato}}</d>" \
                   --var rol=analista --var "dato=<ACME> & socios"
 
@@ -2340,8 +2514,8 @@ internal static class Program
               que el harness manda siempre que hay stream; si el backend lo ignora, se avisa
               en vez de reportar cero tokens.
 
-            La API key se lee de local-secrets/tokenrouter-api-key.txt, o de la
-            variable de entorno TOKENROUTER_API_KEY.
+            La API key NVIDIA se lee de local-secrets/nvidia-api-key.txt, o de la
+            variable de entorno NVIDIA_API_KEY.
             """);
         return 0;
     }

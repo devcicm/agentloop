@@ -1,0 +1,29 @@
+﻿{
+    "AnalyzedAt":  "2026-09-27T04:28:17.7490577-06:00",
+    "Commit":  "b977a8293227be9f8029b8ce41c06ce94a37dd0e",
+    "DotnetSdk":  "9.0.316",
+    "BuildExitCode":  0,
+    "BuildWarnings":  2,
+    "SelfTestExitCode":  0,
+    "SelfTestPassedAssertions":  295,
+    "HistoricalDiscoveryAt":  "2026-09-11T07:26:11.7577649+00:00",
+    "HistoricalAgenticModels":  [
+                                    "z-ai/glm-5.3-free"
+                                ],
+    "ExistingJourneys":  [
+                             "c4c2db21393440cd9ef474ae794b131e-scripted.md",
+                             "c4c2db21393440cd9ef474ae794b131e.json"
+                         ],
+    "HistoricalPoemExists":  false,
+    "RemotePoemExists":  false,
+    "RemoteExitCode":  1,
+    "RemoteCycles":  3,
+    "RemoteTools":  0,
+    "RemoteCards":  0,
+    "RemoteProcesses":  0,
+    "RemoteElapsedSecondsRounded":  28,
+    "RemoteError":  "HTTP 503: No available channel for model z-ai/glm-5.3-free under group default (distributor); model_not_found",
+    "CycleLimit3Success":  false,
+    "CycleLimit4Success":  true,
+    "MissingFileClosureWhenPathOmitted":  true
+}

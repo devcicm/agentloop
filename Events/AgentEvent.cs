@@ -33,6 +33,9 @@ public enum AgentEventKind
     /// <summary>Algo fallo: politica, proceso que no arranca, herramienta rota.</summary>
     Error,
 
+    /// <summary>Una herramienta termino; sus resultados ya estan en el contexto.</summary>
+    HerramientaFinalizada,
+
     /// <summary>Se pidio parar.</summary>
     Cancelacion,
 }

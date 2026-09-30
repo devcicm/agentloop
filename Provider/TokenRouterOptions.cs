@@ -3,20 +3,25 @@ namespace AgentLoop.Provider;
 /// <summary>Configuracion del cliente HTTP contra el gateway.</summary>
 public sealed class TokenRouterOptions
 {
-    public const string DefaultBaseUrl = "https://api.tokenrouter.com/v1";
+    public const string DefaultBaseUrl = "https://integrate.api.nvidia.com/v1";
 
     /// <summary>
     /// Unico modelo agentico accesible con la cuenta y cuota actuales
     /// (saldo $0.00 devuelve 403 en todos los demas). Verificado contra
     /// artifacts/agentic-models.json (refresh tras cada discover).
     /// </summary>
-    public const string FallbackModelId = "z-ai/glm-5.3-free";
+    public const string FallbackModelId = "z-ai/glm-5.3";
+
+    public const string KimiK3ModelId = "moonshotai/kimi-k3";
+
+    public static IReadOnlyList<string> SupportedModels { get; } =
+        [FallbackModelId, KimiK3ModelId];
 
     public required string ApiKey { get; init; }
 
     public string BaseUrl { get; init; } = DefaultBaseUrl;
 
-    public TimeSpan Timeout { get; init; } = TimeSpan.FromSeconds(60);
+    public TimeSpan Timeout { get; init; } = TimeSpan.FromMinutes(5);
 
     /// <summary>
     /// Reintentos solo para 5xx y 429 transitorios. El backoff exponencial

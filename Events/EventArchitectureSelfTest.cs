@@ -169,7 +169,10 @@ public static class EventArchitectureSelfTest
             {
                 if (!request.Messages.Any(m => m.Role == ChatRoles.Tool && m.Name == "add_numbers" && m.Content!.Contains("40")))
                     throw new InvalidOperationException("No se recibio el resultado real de sumar");
-                calls = [Call("tarjeta", new { nombre = Requests == 2 ? "comprobar" : "cerrar",
+                var observation = request.Messages.Last(m => m.Role == ChatRoles.Tool && m.Name == "add_numbers");
+                using var output = JsonDocument.Parse(observation.Content!);
+                var receiptId = output.RootElement.GetProperty("receipt_id").GetString();
+                calls = [Call("tarjeta", new { nombre = Requests == 2 ? "comprobar" : "cerrar", evidencia_id = receiptId,
                     comprobacion = "resultado de add_numbers", resultado = "40", evidencia = "add_numbers devolvio sum=40" }, "card" + Requests)];
             }
             return Task.FromResult(JsonSerializer.SerializeToElement(new { choices = new[] {

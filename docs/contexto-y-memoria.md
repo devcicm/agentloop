@@ -53,6 +53,10 @@ eventos y reciben los recuerdos y antecedentes. Al terminar guardan un resumen
 en el hilo y un informe en `.agentloop/operations/`. `chat` es la utilidad
 conversacional explicita. Los comandos independientes no cargan esta memoria.
 Ver [validacion de eventos](validacion-eventos-2026-09-28.md).
+Desde el 30 de septiembre las operaciones principales usan un actor por eventos,
+con admision y journal incremental. El contrato y el parte actual tambien estan
+sujetos al presupuesto de caracteres; excederlo detiene la solicitud al modelo.
+Ver [implementacion del coordinador](implementacion-coordinador-eventos-2026-09-30.md).
 
 ## Limites
 

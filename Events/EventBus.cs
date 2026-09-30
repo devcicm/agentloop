@@ -22,6 +22,23 @@ public sealed class EventBus
     private readonly Dictionary<string, DateTimeOffset> _recentHashes = new(StringComparer.Ordinal);
     private readonly object _dedupGate = new();
     private long _sequence;
+    private readonly object _publicationGate = new();
+    private readonly List<Action<AgentEvent>> _subscribers = [];
+    public Guid RunId { get; init; }
+    public bool AsyncObservers { get; init; }
+    private readonly object _observerGate = new();
+    private Task _observerMailbox = Task.CompletedTask;
+
+    public IDisposable Subscribe(Action<AgentEvent> subscriber)
+    {
+        lock (_publicationGate) _subscribers.Add(subscriber);
+        return new Subscription(this, subscriber);
+    }
+
+    private sealed class Subscription(EventBus bus, Action<AgentEvent> handler) : IDisposable
+    {
+        public void Dispose() { lock (bus._publicationGate) bus._subscribers.Remove(handler); }
+    }
 
     /// <summary>Tope del historial en memoria; lo viejo se descarta.</summary>
     public int MaxHistory { get; init; } = 500;
@@ -55,6 +72,18 @@ public sealed class EventBus
     private void Notify(Action<AgentEvent>? observers, AgentEvent item)
     {
         if (observers is null) return;
+        if (AsyncObservers)
+        {
+            lock (_observerGate)
+                _observerMailbox = _observerMailbox.ContinueWith(_ => NotifyInline(observers, item),
+                    CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
+            return;
+        }
+        NotifyInline(observers, item);
+    }
+
+    private void NotifyInline(Action<AgentEvent> observers, AgentEvent item)
+    {
         foreach (Action<AgentEvent> observer in observers.GetInvocationList())
         {
             try { observer(item); }
@@ -73,7 +102,12 @@ public sealed class EventBus
         }
     }
 
-    public AgentEvent Publish(AgentEventKind kind, string source, string text, object? data = null)
+    public AgentEvent Publish(AgentEventKind kind, string source, string text, object? data = null, Guid? causationId = null)
+    {
+        lock (_publicationGate) return PublishOrdered(kind, source, text, data, causationId);
+    }
+
+    private AgentEvent PublishOrdered(AgentEventKind kind, string source, string text, object? data, Guid? causationId)
     {
         var payload = data switch
         {
@@ -88,7 +122,7 @@ public sealed class EventBus
             kind,
             source,
             text,
-            payload);
+            payload) { RunId = RunId, CausationId = causationId };
 
         if (IsDuplicate(item))
         {
@@ -112,6 +146,7 @@ public sealed class EventBus
         }
 
         _signal.Set();
+        foreach (var subscriber in _subscribers.ToArray()) subscriber(item);
         Notify(OnPublished, item);
         return item;
     }

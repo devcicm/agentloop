@@ -183,6 +183,15 @@ public sealed class ExecutionPolicy
 
     /// <summary>Se consulta en modo Confirmar. Devolver false rechaza el comando.</summary>
     public Func<ShellCommand, bool>? Confirm { get; init; }
+    public Func<ShellCommand, CancellationToken, ValueTask<bool>>? AsyncConfirm { get; set; }
+
+    public async ValueTask<PolicyDecision> EvaluateAsync(ShellCommand command, CancellationToken token)
+    {
+        if (Mode != PolicyMode.Confirmar || AsyncConfirm is null) return Evaluate(command);
+        var offender = _denied.FirstOrDefault(r => r.IsMatch(command.Command));
+        if (offender is not null) return new(false, "comando vetado por politica");
+        return await AsyncConfirm(command, token).ConfigureAwait(false) ? new(true, "confirmado") : new(false, "rechazado por operador");
+    }
 
     public PolicyDecision Evaluate(ShellCommand command)
     {

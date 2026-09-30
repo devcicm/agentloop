@@ -17,6 +17,9 @@ public sealed class StepRecorder : IRunObserver
 {
     private readonly ConcurrentQueue<Step> _steps = new();
     private long _sequence;
+    private readonly object _observerGate = new();
+    private Task _observerMailbox = Task.CompletedTask;
+    public bool AsyncObservers { get; init; }
 
     public Guid RunId { get; }
 
@@ -44,17 +47,16 @@ public sealed class StepRecorder : IRunObserver
             Correlation.Current,
             step.Data);
 
-        foreach (var observer in Observers)
+        void Notify()
         {
-            try
+            foreach (var observer in Observers)
             {
-                observer.OnStep(envelope);
-            }
-            catch
-            {
-                // Un observer que falla no rompe la grabacion. Se ignora.
+                try { observer.OnStep(envelope); } catch { }
             }
         }
+        if (!AsyncObservers) Notify();
+        else lock (_observerGate)
+            _observerMailbox = _observerMailbox.ContinueWith(_ => Notify(), TaskScheduler.Default);
     }
 
     public long NextSequence() => Interlocked.Increment(ref _sequence);

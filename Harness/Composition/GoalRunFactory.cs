@@ -66,14 +66,14 @@ public static class GoalRunFactory
 
         var correlation = Correlation.Start();
 
-        var bus = new EventBus();
+        var bus = new EventBus { RunId = run.Id, DedupWindow = TimeSpan.Zero, AsyncObservers = true };
         var supervisor = new ProcessSupervisor(bus, scope.Policy);
         var ledger = new CardLedger(CardDeck.Transaccional);
         // La puerta de aceptación resuelve las rutas del objetivo contra este
         // directorio (el --cwd de la política).
         ledger.WorkingDirectory = scope.Policy.WorkingDirectory;
         ledger.AcceptanceObjective = run.Objective;
-        var tools = OperationTools.Build(ledger, supervisor, bus);
+        var tools = OperationTools.Build(ledger, supervisor, bus).Combine(BuiltInTools.DefaultRegistry()).Filter(scope.AllowsTool);
         var goalContext = new GoalContext
         {
             Goal = run.Goal,
@@ -82,7 +82,7 @@ public static class GoalRunFactory
             Supervisor = supervisor,
         };
 
-        var stepRecorder = new StepRecorder(run.Id, observers);
+        var stepRecorder = new StepRecorder(run.Id, observers) { AsyncObservers = true };
         var metrics = new MetricsCollector();
 
         var runContext = new RunContext
@@ -125,7 +125,7 @@ public static class GoalRunFactory
     {
         var setup = Build(run, scope, client, observers);
 
-        setup.Bus.OnPublished = item =>
+        setup.Bus.Subscribe(item =>
         {
             try
             {
@@ -142,7 +142,7 @@ public static class GoalRunFactory
             {
                 // Un step que falla no rompe el reactor.
             }
-        };
+        });
 
         return setup;
     }
@@ -185,17 +185,9 @@ public static class GoalRunFactory
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(store);
 
-        var policy = new ExecutionPolicy
+        var runner = new GoalRunner(client);
         {
-            WorkingDirectory = Path.GetFullPath(options.WorkingDirectory),
-            MaxConcurrent = options.MaxConcurrent,
-        };
-        var scope = Scope.Minimal(policy);
-        var setup = Build(run, scope, client, Array.Empty<IRunObserver>());
-
-        try
-        {
-            var (result, journey) = await setup.Runner.RunAsync(run, options, cancellationToken).ConfigureAwait(false);
+            var (result, journey) = await runner.RunAsync(run, options, cancellationToken).ConfigureAwait(false);
 
             var snapshot = new RunSnapshot(
                 RunSnapshot.CurrentVersion,
@@ -209,17 +201,13 @@ public static class GoalRunFactory
                 journey.Metrics,
                 journey.Evidence);
 
-            await store.SaveAsync(snapshot, cancellationToken).ConfigureAwait(false);
+            await store.SaveAsync(snapshot, CancellationToken.None).ConfigureAwait(false);
 
             var journalDir = (store as FileRunStore)?.Root ?? SecretStore.ResolveRepositoryRoot();
             var markdownPath = Path.Combine(journalDir, $"{run.Id:N}.md");
-            await File.WriteAllTextAsync(markdownPath, JourneyWriter.ToMarkdown(journey), cancellationToken).ConfigureAwait(false);
+            await File.WriteAllTextAsync(markdownPath, JourneyWriter.ToMarkdown(journey), CancellationToken.None).ConfigureAwait(false);
 
             return (result, journey);
-        }
-        finally
-        {
-            setup.Supervisor.Dispose();
         }
     }
 }

@@ -412,7 +412,7 @@ public sealed record JourneyDiagnosis(
             $"{{\"Sequence\":{seq},\"At\":\"{at}\",\"Name\":\"bus:{kind}\",\"Elapsed\":\"00:00:00\"," +
             $"\"Data\":{{\"event_sequence\":{seq},\"kind\":\"{kind}\",\"source\":\"test\",\"text\":\"{text}\",\"data\":\"\"}}}}";
 
-        string Snap(string status, string failure, string objective, params string[] steps) =>
+        string Snap(string status, string? failure, string objective, params string[] steps) =>
             $"{{\"runId\":\"00000000000000000000000000000001\",\"objective\":\"{objective}\"," +
             $"\"status\":{status},\"outcome\":\"x\",\"failureReason\":{(failure is null ? "null" : $"\"{failure}\"")}," +
             $"\"startedAt\":\"2026-09-11T03:00:00Z\",\"endedAt\":\"2026-09-11T03:05:00Z\"," +

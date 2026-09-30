@@ -80,7 +80,7 @@ public sealed class AsyncManualResetEvent
 public sealed class AsyncAutoResetEvent
 {
     private readonly object _gate = new();
-    private readonly Queue<TaskCompletionSource> _waiters = new();
+    private readonly LinkedList<TaskCompletionSource> _waiters = new();
     private bool _signaled;
 
     public AsyncAutoResetEvent(bool signaled = false) => _signaled = signaled;
@@ -115,7 +115,8 @@ public sealed class AsyncAutoResetEvent
             // se descartan hasta encontrar uno vivo, si no la senal se perderia con ellos.
             while (_waiters.Count > 0)
             {
-                var candidate = _waiters.Dequeue();
+                var candidate = _waiters.First!.Value;
+                _waiters.RemoveFirst();
                 if (candidate.TrySetResult())
                 {
                     return;
@@ -137,6 +138,7 @@ public sealed class AsyncAutoResetEvent
     {
         cancellationToken.ThrowIfCancellationRequested();
         TaskCompletionSource waiter;
+        LinkedListNode<TaskCompletionSource> registration;
 
         lock (_gate)
         {
@@ -147,7 +149,7 @@ public sealed class AsyncAutoResetEvent
             }
 
             waiter = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
-            _waiters.Enqueue(waiter);
+            registration = _waiters.AddLast(waiter);
         }
 
         try
@@ -170,6 +172,10 @@ public sealed class AsyncAutoResetEvent
             // Si no se deja cancelar es que alguien la senalo en la carrera: la senal ya
             // es nuestra y perderla dejaria un evento sin atender.
             return !waiter.TrySetCanceled();
+        }
+        finally
+        {
+            lock (_gate) if (registration.List is not null) _waiters.Remove(registration);
         }
     }
 }

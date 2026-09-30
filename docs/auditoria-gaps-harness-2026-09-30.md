@@ -2,6 +2,9 @@
 
 ## Resultado y alcance
 
+Estado historico previo al cambio. La implementacion y el estado actualizado de
+estos candidatos se documentan en [coordinador por eventos](implementacion-coordinador-eventos-2026-09-30.md).
+
 Se identificaron **18 candidatos: 2 criticos, 8 altos, 6 medios y 2 bajos**.
 La revision es estatica del codigo actual. Los escenarios descritos son rutas
 posibles sustentadas por la implementacion; no se ejecutaron nuevos escenarios

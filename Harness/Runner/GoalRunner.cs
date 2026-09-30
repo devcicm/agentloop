@@ -14,11 +14,11 @@ namespace AgentLoop.Harness.Runner;
 
 /// <summary>
 /// Implementacion de <see cref="IRunner"/> que delega el setup completo al
-/// <see cref="GoalRunFactory"/> y se centra en ejecutar el loop. Antes de este
+/// <see cref="GoalRunFactory"/> y ejecuta el coordinador de eventos. Antes de este
 /// commit GoalRunner.RunAsync construia su propio Scope, bus, supervisor,
 /// ledger, tools, GoalContext, StepRecorder y RunContext inline (~120 lineas);
 /// ahora son ~30: pide el setup al factory, configura el reactor con la
-/// instrumentacion propia y ejecuta el loop.
+/// instrumentacion propia y espera su resultado terminal.
 /// </summary>
 public sealed class GoalRunner : IRunner
 {
@@ -41,6 +41,12 @@ public sealed class GoalRunner : IRunner
         {
             WorkingDirectory = Path.GetFullPath(options.WorkingDirectory),
             MaxConcurrent = options.MaxConcurrent,
+            Mode = options.PolicyMode.ToLowerInvariant() switch
+            {
+                "auto" => PolicyMode.Auto, "simular" => PolicyMode.Simular,
+                "confirmar" => PolicyMode.Confirmar,
+                _ => throw new InvalidOperationException("Politica desconocida."),
+            },
         };
         var scope = Scope.Minimal(policy);
         var setup = GoalRunFactory.BuildWithBusRecording(run, scope, _client, []);
@@ -49,8 +55,9 @@ public sealed class GoalRunner : IRunner
         {
             setup.RunContext.Steps.OnRunStart(run.Id);
 
-            var machine = new EventDrivenAgent(_client, run.Model ?? TokenRouterOptions.FallbackModelId, setup.Tools)
+            var coordinator = new EventOperationCoordinator(_client, run.Model ?? TokenRouterOptions.FallbackModelId, setup.Tools, scope)
             {
+                MaxModelCalls = options.MaxIterations,
                 MaxTokens = options.MaxTokens,
                 Thinking = options.Thinking,
                 Trace = line => setup.RunContext.Steps.OnLog(new StructuredLog(
@@ -58,38 +65,24 @@ public sealed class GoalRunner : IRunner
                     LogLevel.Info,
                     "reactor",
                     line)),
-                OnModelCall = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
+                RecordModel = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
                     setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model ?? TokenRouterOptions.FallbackModelId,
                     completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,
                     completion.Thinking.Observed ? completion.Thinking.ToString() : null)),
-                OnToolCall = (tool, output, succeeded, elapsed) => setup.RunContext.Steps.Record(new ToolStep(
+                RecordTool = (tool, output, succeeded, elapsed) => setup.RunContext.Steps.Record(new ToolStep(
                     setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, tool,
                     string.Empty, output, succeeded, elapsed)),
             };
 
-            var loop = new Looping.AgentLoopRunner<ReactorState, GoalContext>(machine)
-            {
-                // options.MaxIterations son ciclos del reactor (llamadas al
-                // modelo), no iteraciones del loop: cada ciclo consume varias
-                // iteraciones (razonar, esperar, despachar). Se evalua el tope
-                // de ciclos en BreakWhen y MaxIterations es la red de seguridad.
-                MaxIterations = Math.Max(options.MaxIterations * 4, options.MaxIterations + 8),
-                BreakWhen = iteration =>
-                    iteration.Context.Ledger.GoalMet
-                    || iteration.Context.Ledger.Aborted
-                    || iteration.Context.Expired
-                    || (iteration.Context.Cycles >= options.MaxIterations && iteration.State != ReactorState.Despachando),
-            };
-
-            var loopResult = await loop.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
+            var operationResult = await coordinator.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
 
             setup.RunContext.EndedAt = DateTimeOffset.Now;
-            var succeeded = loopResult.Result.IsOk && setup.Ledger.GoalMet;
+            var succeeded = operationResult.IsSuccess && setup.Ledger.GoalMet;
             var result = succeeded
                 ? (RunResult)new RunResult.Success(setup.Ledger.Outcome ?? "objetivo cumplido")
-                : new RunResult.Failure(setup.GoalContext.FailureReason ?? setup.Ledger.PendingDebt() ?? "operacion no cerrada", loopResult.Error);
+                : new RunResult.Failure(operationResult.Reason, operationResult.Error);
 
-            setup.RunContext.Status = succeeded ? RunStatus.Succeeded : RunStatus.Failed;
+            setup.RunContext.Status = succeeded ? RunStatus.Succeeded : operationResult.Status == OperationStatus.Cancelled ? RunStatus.Cancelled : RunStatus.Failed;
             setup.RunContext.FailureReason = result.IsSuccess ? null : (result as RunResult.Failure)?.Reason;
 
             setup.RunContext.Steps.Record(new TransitionStep(

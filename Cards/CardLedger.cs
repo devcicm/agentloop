@@ -142,6 +142,7 @@ public sealed class CardLedger
     public string? Outcome { get; private set; }
 
     public bool Finished => GoalMet || Aborted;
+    public Func<CardKind, IReadOnlyDictionary<string, string>, string?>? ValidationGuard { get; set; }
 
     /// <summary>
     /// Toma el lock del ledger para que un read concurrente con Play no vea colecciones
@@ -248,6 +249,9 @@ public sealed class CardLedger
         {
             return Reject(name, card, fields, "la operacion ya esta cerrada; no admite mas tarjetas.");
         }
+
+        var guardRejection = ValidationGuard?.Invoke(card.Kind, fields);
+        if (guardRejection is not null) return Reject(name, card, fields, guardRejection);
 
         switch (card.Kind)
         {

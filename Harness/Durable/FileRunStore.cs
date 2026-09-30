@@ -48,8 +48,15 @@ public sealed class FileRunStore : IRunStore
     {
         ArgumentNullException.ThrowIfNull(snapshot);
         var path = PathFor(snapshot.RunId);
-        await using var stream = File.Create(path);
-        await JsonSerializer.SerializeAsync(stream, snapshot, _options, cancellationToken).ConfigureAwait(false);
+        var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+        try
+        {
+            await using (var stream = File.Create(temporary))
+                await JsonSerializer.SerializeAsync(stream, snapshot, _options, cancellationToken).ConfigureAwait(false);
+            cancellationToken.ThrowIfCancellationRequested();
+            File.Move(temporary, path, overwrite: true);
+        }
+        finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 
     public async Task<RunSnapshot?> LoadAsync(Guid runId, CancellationToken cancellationToken = default)

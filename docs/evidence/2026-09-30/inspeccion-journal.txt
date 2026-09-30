@@ -1,0 +1,7 @@
+{
+  "RunId": "e2b6d810-b003-4c92-b73f-d80d09cc6185",
+  "Terminal": true,
+  "UnresolvedActions": [],
+  "UnconfirmedEvents": 0
+}
+Inspeccion de evidencia: no se repiten efectos automaticamente.

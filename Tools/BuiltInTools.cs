@@ -71,24 +71,36 @@ public static class BuiltInTools
     public static DelegateTool WriteTextFile { get; } = new(
         "write_text_file", "Escribe texto UTF-8 en un archivo. Acepta rutas absolutas y rutas relativas al directorio actual.",
         """{"type":"object","properties":{"path":{"type":"string"},"content":{"type":"string"}},"required":["path","content"]}""",
-        (arguments, _) =>
+        async (arguments, token) =>
         {
             var path = ResolvePath(arguments, "path");
             var content = ReadRequiredString(arguments, "content");
+            if (content.Length > 1000000) throw new InvalidOperationException("tope de escritura: un millon de caracteres");
+            token.ThrowIfCancellationRequested();
             var parent = Path.GetDirectoryName(path);
             if (!string.IsNullOrEmpty(parent)) Directory.CreateDirectory(parent);
-            File.WriteAllText(path, content, new System.Text.UTF8Encoding(false));
-            return ValueTask.FromResult(JsonSerializer.Serialize(new { path, bytes = new FileInfo(path).Length, written = true }));
+            var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
+            try
+            {
+                await File.WriteAllTextAsync(temporary, content, new System.Text.UTF8Encoding(false), token);
+                token.ThrowIfCancellationRequested();
+                File.Move(temporary, path, overwrite: true);
+            }
+            finally { if (File.Exists(temporary)) File.Delete(temporary); }
+            return JsonSerializer.Serialize(new { path, bytes = new FileInfo(path).Length, written = true });
         });
 
     public static DelegateTool ReadTextFile { get; } = new(
         "read_text_file", "Lee un archivo UTF-8 y devuelve su contenido y número de líneas.",
         """{"type":"object","properties":{"path":{"type":"string"}},"required":["path"]}""",
-        (arguments, _) =>
+        async (arguments, token) =>
         {
             var path = ResolvePath(arguments, "path");
-            var content = File.ReadAllText(path);
-            return ValueTask.FromResult(JsonSerializer.Serialize(new { path, content, lines = content.Split('\n').Length }));
+            await using var stream = File.OpenRead(path);
+            if (stream.Length > 1000000) throw new InvalidOperationException("archivo demasiado grande; usa una lectura acotada por shell");
+            using var reader = new StreamReader(stream, System.Text.Encoding.UTF8);
+            var content = await reader.ReadToEndAsync(token);
+            return JsonSerializer.Serialize(new { path, content, lines = content.Split('\n').Length });
         });
 
     public static DelegateTool ListDirectory { get; } = new(

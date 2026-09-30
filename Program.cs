@@ -63,6 +63,7 @@ internal static class Program
         var maxIterations = IntOption(args, "--max-iterations", 24);
         string model;
         ThinkingPolicy policy;
+        ExecutionPolicy sessionPolicy;
 
         try
         {
@@ -70,9 +71,16 @@ internal static class Program
             ApplyPromptOptions(thread, args);
             model = ResolveModel(args);
             policy = ResolveThinkingPolicy(args);
+            sessionPolicy = new ExecutionPolicy
+            {
+                Mode = ParsePolicyMode(StringOption(args, "--politica")),
+                DefaultShell = ShellCommand.ParseShell(StringOption(args, "--shell")),
+                WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
+                MaxConcurrent = IntOption(args, "--max-procesos", 4),
+            };
             thread.Variables.WithDefaults(model, tools.Names);
         }
-        catch (Exception ex) when (ex is InvalidOperationException or IOException or JsonException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or JsonException or UnauthorizedAccessException or ArgumentException)
         {
             Console.Error.WriteLine($"ERROR: {ex.Message}");
             return 64;
@@ -83,6 +91,7 @@ internal static class Program
             Thinking = policy,
             Model = model,
             Stream = ResolveStreaming(args, fallback: true),
+            Policy = sessionPolicy,
         };
 
         PrintInteractiveBanner(tools, settings);
@@ -91,6 +100,22 @@ internal static class Program
         // sockets y se crea perezosamente para que 'ayuda' funcione sin key.
         TokenRouterClient? client = null;
         var lastExitCode = 0;
+        Task<int>? activeOperation = null;
+        EventOperationCoordinator? activeCoordinator = null;
+        settings.OnCoordinator = coordinator => Interlocked.Exchange(ref activeCoordinator, coordinator);
+
+        async Task<int> RunOperationAsync(string prompt)
+        {
+            var code = await GuardedAsync(async cancellationToken =>
+            {
+                if (client is null) client = BuildClient(out _, policy);
+                return await AgentOperationAsync(client, thread, prompt, settings,
+                    IntOption(args, "--max-ciclos", 80), IntOption(args, "--deadline", 300), cancellationToken);
+            });
+            lastExitCode = code;
+            Console.WriteLine($"\n[operacion terminada, codigo {code}]\n");
+            return code;
+        }
 
         try
         {
@@ -103,7 +128,7 @@ internal static class Program
                 {
                     // stdin cerrado: no queda nada que leer, salir es lo unico sensato.
                     Console.WriteLine();
-                    return lastExitCode;
+                    return activeOperation is null ? lastExitCode : await activeOperation;
                 }
 
                 line = line.Trim();
@@ -123,7 +148,26 @@ internal static class Program
 
                 if (verb is "salir" or "exit" or "quit" or "q")
                 {
-                    return lastExitCode;
+                    Volatile.Read(ref activeCoordinator)?.Control(AgentEventKind.Cancelacion);
+                    return activeOperation is null ? lastExitCode : await activeOperation;
+                }
+
+                if (verb is "pausa" or "reanudar" or "estado" or "cancelar" or "aprobar" or "rechazar")
+                {
+                    var coordinator = Volatile.Read(ref activeCoordinator);
+                    if (coordinator is null) Console.WriteLine("No hay operacion activa.");
+                    else if (verb is "aprobar" or "rechazar") coordinator.Approve(verb == "aprobar");
+                    else coordinator.Control(verb switch
+                    {
+                        "pausa" => AgentEventKind.Pausa, "reanudar" => AgentEventKind.Reanudacion,
+                        "estado" => AgentEventKind.ConsultaEstado, _ => AgentEventKind.Cancelacion,
+                    });
+                    continue;
+                }
+                if (activeOperation is { IsCompleted: false })
+                {
+                    Console.WriteLine("Operacion activa. Usa estado, pausa, reanudar, cancelar o aprobar/rechazar.");
+                    continue;
                 }
 
                 if (TryHandleSessionCommand(thread, settings, verb, rest))
@@ -134,7 +178,7 @@ internal static class Program
                 Console.WriteLine();
 
                 // Las utilidades sueltas no tocan el hilo; el agente si.
-                if (verb is "discover" or "selftest" or "selftest-events" or "goal" or "objetivo" or "journal" or "diario" or "lobos" or "diagnostico" or "help" or "--help" or "-h" or "ayuda")
+                if (verb is "discover" or "selftest" or "selftest-events" or "selftest-coordinator" or "recuperacion" or "goal" or "objetivo" or "journal" or "diario" or "lobos" or "diagnostico" or "help" or "--help" or "-h" or "ayuda")
                 {
                     lastExitCode = await ExecuteAsync(tokens);
                 }
@@ -144,6 +188,12 @@ internal static class Program
                     if (prompt.Length == 0)
                     {
                         Console.WriteLine("Escribe el texto despues de 'run'.");
+                        continue;
+                    }
+
+                    if (!UsesConversationLoop(verb))
+                    {
+                        activeOperation = RunOperationAsync(prompt);
                         continue;
                     }
 
@@ -187,6 +237,8 @@ internal static class Program
         public required string Model { get; set; }
 
         public bool Stream { get; set; }
+        public ExecutionPolicy Policy { get; init; } = new();
+        public Action<EventOperationCoordinator?>? OnCoordinator { get; set; }
     }
 
     /// <summary>La entrada principal del CLI publica un objetivo y ejecuta el reactor.</summary>
@@ -197,7 +249,7 @@ internal static class Program
         SessionSettings settings, int maxCycles, int deadline, CancellationToken cancellationToken)
     {
         if (maxCycles < 1 || deadline < 1) throw new InvalidOperationException("Los presupuestos deben ser positivos.");
-        var policy = new ExecutionPolicy { WorkingDirectory = Environment.CurrentDirectory, Confirm = ConfirmCommand };
+        var policy = settings.Policy;
         var run = Harness.Core.Run.FromObjective(objective, deadline, settings.Model);
         var renderer = settings.Stream ? new DeltaRenderer() : null;
         var consoleGate = new object();
@@ -208,7 +260,7 @@ internal static class Program
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
             run, Scope.Minimal(policy), client, [], item => Log($"  evento {item}"));
         using var supervisor = setup.Supervisor;
-        var tools = setup.Tools.Combine(BuiltInTools.DefaultRegistry());
+        var tools = setup.Tools;
         thread.Variables.WithDefaults(settings.Model, tools.Names);
         var context = new GoalContext
         {
@@ -217,31 +269,29 @@ internal static class Program
             SessionContext = thread.RenderSystemPrompt() + "\nAntecedentes del usuario y resultados anteriores:\n"
                 + JsonSerializer.Serialize(thread.Messages),
         };
-        var machine = new EventDrivenAgent(client, settings.Model, tools)
+        var coordinator = new EventOperationCoordinator(client, settings.Model, tools, Scope.Minimal(policy))
         {
+            MaxModelCalls = maxCycles,
             MaxTokens = 2048, Thinking = settings.Thinking, Stream = settings.Stream,
             OnDelta = renderer is null ? null : delta => { lock (consoleGate) renderer.Render(delta); },
             Trace = line => Log($"    {line}"),
         };
-        var loop = new AgentLoopRunner<ReactorState, GoalContext>(machine)
-        {
-            MaxIterations = Math.Max(maxCycles * 4, maxCycles + 8),
-            BreakWhen = step => context.Ledger.GoalMet || context.Ledger.Aborted || context.Expired
-                || (context.Cycles >= maxCycles && step.State != ReactorState.Despachando),
-        };
         Console.WriteLine($"motor: eventos | objetivo: {objective}");
         Console.WriteLine($"tools: {string.Join(", ", tools.Names)}");
-        var result = await loop.RunAsync(context, cancellationToken);
+        settings.OnCoordinator?.Invoke(coordinator);
+        EventOperationResult result;
+        try { result = await coordinator.RunAsync(context, cancellationToken); }
+        finally { settings.OnCoordinator?.Invoke(null); }
         renderer?.Close();
-        var succeeded = context.Ledger.GoalMet && result.Result.IsOk;
+        var succeeded = context.Ledger.GoalMet && result.IsSuccess;
         var summary = (succeeded ? "CUMPLIDO: " : "SIN CERRAR: ")
-            + (context.Ledger.Outcome ?? context.FailureReason ?? context.Ledger.PendingDebt() ?? result.BreakReason.ToString());
+            + (context.Ledger.Outcome ?? context.FailureReason ?? context.Ledger.PendingDebt() ?? result.Reason);
         var evidencePath = Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop", "operations",
             $"{DateTime.UtcNow:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}.json");
         ConversationMemory.AtomicWrite(evidencePath, JsonSerializer.Serialize(new
         {
             objective, model = settings.Model, succeeded, summary, context.Cycles, context.EventsSeen,
-            state = result.FinalState.ToString(), stop = result.BreakReason.ToString(),
+            state = result.Status.ToString(), stop = result.Reason, journal = coordinator.JournalPath,
             events = context.Bus.History,
             cards = context.Ledger.Plays.Select(p => new { p.Name, p.Fields, p.Accepted, p.Rejection, p.Depth, p.At }),
             messages = context.Messages,
@@ -544,6 +594,8 @@ internal static class Program
         Console.WriteLine("  plantilla <texto|archivo>   cambia la plantilla de sistema");
         Console.WriteLine("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
         Console.WriteLine("  stream on|off        pinta la respuesta segun llega o de golpe");
+        Console.WriteLine("  estado | pausa | reanudar | cancelar   controles de la operacion activa");
+        Console.WriteLine("  aprobar | rechazar   responde a una solicitud de autorizacion");
         Console.WriteLine("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
         Console.WriteLine("  discover | selftest | ayuda   utilidades sueltas");
         Console.WriteLine("  salir                cierra");
@@ -720,6 +772,8 @@ internal static class Program
         return command switch
         {
             "selftest-events" => await EventArchitectureSelfTest.RunAsync(cancellationToken) ? 0 : 1,
+            "selftest-coordinator" => await EventCoordinatorSelfTest.RunAsync(cancellationToken) ? 0 : 1,
+            "recuperacion" => InspectOperation(args),
             "chat" => await ChatAsync(args, cancellationToken),
             "discover" => await DiscoverAsync(args, cancellationToken),
             "run" => await GoalAsync(args, cancellationToken),
@@ -955,9 +1009,8 @@ internal static class Program
 
     /// <summary>
     /// Una operacion dirigida por eventos. No hay turnos: hay un objetivo, un mazo de
-    /// tarjetas de estado y un supervisor de procesos. El loop de la CAPA 4 sigue siendo
-    /// el mismo, pero lo que corta ya no es una respuesta final del modelo sino la tarjeta
-    /// de cierre del libro mayor.
+    /// tarjetas de estado y un supervisor de procesos. Los handlers aplican eventos y
+    /// admiten acciones independientes; el cierre comprobado termina la operacion.
     /// </summary>
     private static async Task<int> GoalAsync(string[] args, CancellationToken cancellationToken)
     {
@@ -1015,12 +1068,22 @@ internal static class Program
 
         // El setup completo lo construye la factory. Aqui solo inyectamos los
         // callbacks custom (Log para eventos y trazas, renderer para deltas) y
-        // ejecutamos el loop con el contexto que la factory devolvio.
+        // ejecutamos el coordinador con el contexto que la factory devolvio.
         var run = Harness.Core.Run.FromObjective(objective, deadline, model);
         var scope = new Scope(policy, [model], [], []);
+        EventOperationCoordinator? approvalTarget = null;
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
             run, scope, client, [],
-            item => Log($"  · {item}", EventColor(item.Kind)));
+            item =>
+            {
+                Log($"  · {item}", EventColor(item.Kind));
+                if (item.Kind == AgentEventKind.AprobacionSolicitada)
+                {
+                    Console.Write("Aprobar efecto [s/N]: ");
+                    var approved = !Console.IsInputRedirected && Console.ReadLine()?.Trim().ToLowerInvariant() is "s" or "si";
+                    approvalTarget?.Approve(approved);
+                }
+            });
         using var supervisor = setup.Supervisor;
 
         Console.WriteLine($"key      : {source}");
@@ -1033,8 +1096,12 @@ internal static class Program
         Console.WriteLine($"objetivo : {objective}");
         Console.WriteLine();
 
-        var machine = new EventDrivenAgent(client, model, setup.Tools)
+        var coordinator = new EventOperationCoordinator(client, model, setup.Tools, scope)
         {
+            Criteria = StringOption(args, "--artifact") is { } artifact
+                ? [new ArtifactCriterion(artifact, StringOption(args, "--contains"), args.Contains("--json"), !args.Contains("--allow-existing"))]
+                : null,
+            MaxModelCalls = maxCycles,
             MaxTokens = IntOption(args, "--max-tokens", 2048),
             Temperature = 0,
             Thinking = thinking,
@@ -1043,23 +1110,8 @@ internal static class Program
             Trace = line => Log($"    {line}"),
         };
 
-        var loop = new AgentLoopRunner<ReactorState, GoalContext>(machine)
-        {
-            // Cada ciclo del reactor consume varias iteraciones del loop
-            // (Arranque, Razonar, Esperar, Despachar...). El tope que pide el
-            // usuario (--max-ciclos) son llamadas al modelo, no iteraciones:
-            // se evalua en BreakWhen con context.Cycles y MaxIterations queda
-            // como red de seguridad por si una transicion se atasca.
-            MaxIterations = Math.Max(maxCycles * 4, maxCycles + 8),
-            BreakWhen = iteration =>
-                iteration.Context.Ledger.GoalMet
-                || iteration.Context.Ledger.Aborted
-                || iteration.Context.Expired
-                || (iteration.Context.Cycles >= maxCycles && iteration.State != ReactorState.Despachando),
-            OnIteration = iteration => Log($"[{iteration.Iteration,2}] {iteration.LastTransition}", ConsoleColor.DarkGray),
-        };
-
-        var loopResult = await loop.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
+        approvalTarget = coordinator;
+        var operationResult = await coordinator.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
         renderer?.Close();
 
         var ledger = setup.Ledger;
@@ -1067,15 +1119,16 @@ internal static class Program
 
         Console.WriteLine();
         Console.WriteLine("--- operacion ----------------------------------------");
-        Console.WriteLine($"IsBroken    : {loop.IsBroken}");
-        Console.WriteLine($"BreakReason : {loop.BreakReason}");
-        Console.WriteLine($"Estado final: {loopResult.FinalState}");
+        Console.WriteLine($"Coordinador : eventos y handlers");
+        Console.WriteLine($"Resultado   : {operationResult.Reason}");
+        Console.WriteLine($"Estado final: {operationResult.Status}");
+        Console.WriteLine($"Registro    : {coordinator.JournalPath}");
         Console.WriteLine($"Resumen     : {context.Summary()}");
         Console.WriteLine($"Thinking    : {(context.ThinkingObserved ? "observado" : "no observado")}");
 
-        if (loopResult.Error is not null && !ledger.GoalMet)
+        if (operationResult.Error is not null && !ledger.GoalMet)
         {
-            Console.WriteLine($"Error       : {loopResult.Error.Message}");
+            Console.WriteLine($"Error       : {operationResult.Error.Message}");
         }
 
         Console.WriteLine();
@@ -1087,7 +1140,7 @@ internal static class Program
         }
 
         Console.WriteLine();
-        if (ledger.GoalMet)
+        if (ledger.GoalMet && operationResult.IsSuccess)
         {
             Console.WriteLine($"CUMPLIDO: {ledger.Outcome}");
             return 0;
@@ -1484,7 +1537,7 @@ internal static class Program
 
             var entries = conArchivo.Evidence.Entries;
             results.Add(("el manifiesto registra la verificacion",
-                entries.Any(e => e.Path.EndsWith("n.md", StringComparison.OrdinalIgnoreCase) && e.Bytes > 0 && e.Hash.Length == 12)));
+                entries.Any(e => e.Path.EndsWith("n.md", StringComparison.OrdinalIgnoreCase) && e.Bytes > 0 && e.Hash.Length == 64)));
             results.Add(("el agregado es estable ante re-verificacion",
                 conArchivo.Evidence.Snapshot().AggregateHash == conArchivo.Evidence.Snapshot().AggregateHash
                 && conArchivo.Evidence.Snapshot().AggregateHash.Length == 16));
@@ -1693,8 +1746,9 @@ internal static class Program
         var truncationOk = TruncationRecoverySelfTest.Run();
 
         var eventsOk = await EventArchitectureSelfTest.RunAsync(cancellationToken);
+        var coordinatorOk = await EventCoordinatorSelfTest.RunAsync(cancellationToken);
 
-        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk;
+        var ok = loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk && coordinatorOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;
@@ -2403,6 +2457,15 @@ internal static class Program
         return 64;
     }
 
+    private static int InspectOperation(string[] args)
+    {
+        if (args.Length < 2) return Fail("Uso: recuperacion <ruta.jsonl>");
+        var inspection = Harness.Durable.OperationEventJournal.Inspect(Path.GetFullPath(args[1]));
+        Console.WriteLine(JsonSerializer.Serialize(inspection, new JsonSerializerOptions { WriteIndented = true }));
+        Console.WriteLine("Inspeccion de evidencia: no se repiten efectos automaticamente.");
+        return inspection.UnresolvedActions.Count == 0 && inspection.UnconfirmedEvents == 0 ? 0 : 1;
+    }
+
     private static int PrintHelp()
     {
         Console.WriteLine(
@@ -2420,7 +2483,9 @@ internal static class Program
               run-chat "<prompt>"   Utilidad anterior de tool calling por turnos.
               goal "<objetivo>"     Operacion dirigida por eventos: tarjetas de estado y terminales
                                     (bash, sh, powershell, pwsh, cmd). Ver la seccion Operaciones.
-              selftest              Prueba el corte del loop sin tocar la red.
+              selftest              Valida el harness completo sin tocar la red.
+              selftest-coordinator Verifica admision, evidencia y controles del actor.
+              recuperacion <jsonl>  Inspecciona eventos y acciones pendientes tras interrupcion.
               selftest-events       Verifica bus, senales, procesos y reactor sin proveedor remoto.
               diagnostico [runId]   Diagnostico post-mortem de un journey persistido (solo lee disco).
               interactive           CLI con reactor de eventos y memoria (lo que usa F5 en
@@ -2433,7 +2498,11 @@ internal static class Program
               --max-candidates <n>  discover: cuantos modelos sondear como maximo (30).
               --max-iterations <n>  run-chat: tope de iteraciones del loop (12).
               --deadline <s>        goal: presupuesto de la operacion en segundos (300).
-              --max-ciclos <n>      goal: tope de ciclos del reactor (80).
+              --max-ciclos <n>      goal: presupuesto de llamadas al modelo (80).
+              --artifact <ruta>    goal: fija el archivo que debe observarse y comprobarse.
+              --contains <texto>   goal: contenido obligatorio del artefacto.
+              --json               goal: exige JSON valido en el artefacto.
+              --allow-existing     goal: permite un artefacto sin cambios respecto al inicio.
               --max-procesos <n>    goal: procesos simultaneos permitidos (4).
               --shell <interprete>  goal: interprete por defecto (bash, sh, powershell, pwsh, cmd).
               --cwd <ruta>          goal: directorio de trabajo de los comandos.
@@ -2474,7 +2543,7 @@ internal static class Program
               y cada linea, patron o final publica un evento que lo despierta.
 
               Con --politica simular no se ejecuta nada y se responde que habria pasado; con
-              confirmar, cada comando pasa por un [s/N] en consola. Hay una lista de comandos
+              confirmar, los efectos requieren aprobacion: [s/N] con goal y aprobar/rechazar en interactive. Hay una lista de comandos
               irreversibles vetada siempre. No es un sandbox: evita el accidente, no contiene
               a nadie decidido.
 

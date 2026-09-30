@@ -46,7 +46,9 @@ public sealed record Scope(
         return AllowedPaths.Any(root =>
         {
             var candidate = Path.GetFullPath(root);
-            return full.StartsWith(candidate, StringComparison.OrdinalIgnoreCase);
+            var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+            return full.Equals(candidate, comparison)
+                || full.StartsWith(Path.TrimEndingDirectorySeparator(candidate) + Path.DirectorySeparatorChar, comparison);
         });
     }
 }

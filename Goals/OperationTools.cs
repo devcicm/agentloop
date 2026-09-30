@@ -40,7 +40,7 @@ public static class OperationTools
             LaunchTool(supervisor),
             WaitTool(supervisor, bus),
             ReadTool(supervisor),
-            new AgentLoop.Tools.IdempotentTool(ProcessesTool(supervisor), cache),
+            ProcessesTool(supervisor),
             new AgentLoop.Tools.IdempotentTool(KillTool(supervisor), cache),
             WatchTool(supervisor),
             FlowTool(supervisor),
@@ -63,6 +63,7 @@ public static class OperationTools
             "comprobacion": { "type": "string", "description": "Que has verificado (tarjeta de comprobacion)." },
             "resultado": { "type": "string", "description": "Resultado observado (comprobacion y cierre)." },
             "evidencia": { "type": "string", "description": "Dato real que lo respalda: codigo de salida, linea de salida, contenido." },
+            "evidencia_id": { "type": "string", "description": "receipt_id devuelto por una herramienta exitosa de esta transaccion. Obligatorio al comprobar en el coordinador por eventos." },
             "motivo": { "type": "string", "description": "Por que se aborta (tarjeta de aborto)." }
           },
           "required": ["nombre"]
@@ -80,7 +81,7 @@ public static class OperationTools
             handler: (arguments, _) =>
             {
                 var name = ReadString(arguments, "nombre");
-                var fields = deck.AllFields
+                var fields = deck.AllFields.Append("evidencia_id")
                     .Select(field => (field, value: ReadString(arguments, field)))
                     .Where(pair => pair.value.Length > 0)
                     .ToDictionary(pair => pair.field, pair => pair.value, StringComparer.Ordinal);
@@ -206,7 +207,9 @@ public static class OperationTools
                 if (pattern.Length > 0)
                 {
                     var watcher = supervisor.Watch(pattern, processId.Length > 0 ? processId : null);
-                    var hit = await watcher.Hit.WaitAsync(timeout, cancellationToken).ConfigureAwait(false);
+                    bool hit;
+                    try { hit = await watcher.Hit.WaitAsync(timeout, cancellationToken).ConfigureAwait(false); }
+                    finally { supervisor.RemoveWatcher(watcher.Id); }
 
                     return Json(new
                     {

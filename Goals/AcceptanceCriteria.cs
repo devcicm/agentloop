@@ -27,7 +27,7 @@ public static partial class AcceptanceCriteria
 
         return FileMentionRegex()
             .Matches(objectiveText)
-            .Select(m => m.Value)
+            .Select(m => m.Groups["quoted"].Success ? m.Groups["quoted"].Value : m.Value)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
     }
@@ -71,6 +71,6 @@ public static partial class AcceptanceCriteria
         return missing;
     }
 
-    [GeneratedRegex(@"[\w\-./\\:]+\.(md|txt|json|csv|log|xml|ya?ml)\b", RegexOptions.IgnoreCase)]
+    [GeneratedRegex("""["'](?<quoted>[^"'\r\n]+\.(?:md|txt|json|csv|log|xml|ya?ml))["']|[a-z]:[\\/][^"'\r\n<>|?*]+?\.(?:md|txt|json|csv|log|xml|ya?ml)\b|[\w\-./\\:]+\.(?:md|txt|json|csv|log|xml|ya?ml)\b""", RegexOptions.IgnoreCase)]
     private static partial Regex FileMentionRegex();
 }

@@ -41,12 +41,14 @@ public sealed class EvidenceManifest
             }
             else
             {
-                var bytes = File.ReadAllBytes(absolutePath);
+                using var stream = File.OpenRead(absolutePath);
+                var length = stream.Length;
+                var hash = length == 0 ? string.Empty : Convert.ToHexString(SHA256.HashData(stream));
                 entry = new EvidenceEntry(
                     absolutePath,
-                    bytes.LongLength,
-                    bytes.LongLength == 0 ? string.Empty : Sha12(bytes),
-                    bytes.LongLength > 0,
+                    length,
+                    hash,
+                    length > 0,
                     DateTimeOffset.Now);
             }
         }
@@ -92,6 +94,4 @@ public sealed class EvidenceManifest
         return new EvidenceSnapshot(files, aggregate);
     }
 
-    private static string Sha12(byte[] bytes)
-        => Convert.ToHexString(SHA256.HashData(bytes))[..12];
 }

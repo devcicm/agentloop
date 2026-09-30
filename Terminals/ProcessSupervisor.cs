@@ -18,7 +18,7 @@ public sealed class OutputWatcher
         Id = id;
         Pattern = pattern;
         ProcessId = processId;
-        Regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        Regex = new Regex(pattern, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
     }
 
     public string Id { get; }
@@ -45,7 +45,10 @@ public sealed class OutputWatcher
             return false;
         }
 
-        if (!Regex.IsMatch(line.Text))
+        bool matched;
+        try { matched = Regex.IsMatch(line.Text); }
+        catch (RegexMatchTimeoutException) { return false; }
+        if (!matched)
         {
             return false;
         }
@@ -116,11 +119,14 @@ public sealed class ProcessSupervisor : IDisposable
     private readonly object _watcherGate = new();
     private int _counter;
     private int _watcherCounter;
+    private readonly SemaphoreSlim _capacity;
 
     public ProcessSupervisor(EventBus bus, ExecutionPolicy? policy = null)
     {
         _bus = bus;
         Policy = policy ?? ExecutionPolicy.Default;
+        if (Policy.MaxConcurrent < 1) throw new ArgumentOutOfRangeException(nameof(policy));
+        _capacity = new SemaphoreSlim(Policy.MaxConcurrent, Policy.MaxConcurrent);
     }
 
     public ExecutionPolicy Policy { get; }
@@ -172,7 +178,7 @@ public sealed class ProcessSupervisor : IDisposable
     /// </summary>
     public async Task<ProcessHandle> LaunchAsync(ShellCommand command, CancellationToken cancellationToken = default)
     {
-        var decision = Policy.Evaluate(command);
+        var decision = await Policy.EvaluateAsync(command, cancellationToken).ConfigureAwait(false);
         if (!decision.Allowed)
         {
             _bus.Publish(AgentEventKind.Error, "politica", $"comando rechazado: {decision.Reason}", new { comando = command.Command });
@@ -184,18 +190,15 @@ public sealed class ProcessSupervisor : IDisposable
             throw new InvalidOperationException("modo simulacion: los procesos en segundo plano no se lanzan.");
         }
 
-        if (Running >= Policy.MaxConcurrent)
-        {
-            throw new InvalidOperationException(
-                $"ya hay {Running} procesos vivos (tope {Policy.MaxConcurrent}); espera o mata alguno antes de lanzar otro.");
-        }
-
         await Puerta.WaitAsync(cancellationToken).ConfigureAwait(false);
+        var startInfo = command.ToStartInfo(Policy.WorkingDirectory);
+        if (!await _capacity.WaitAsync(0, cancellationToken).ConfigureAwait(false))
+            throw new InvalidOperationException($"capacidad agotada (tope {Policy.MaxConcurrent} procesos)");
 
         var id = $"p{Interlocked.Increment(ref _counter)}";
         var process = new Process
         {
-            StartInfo = command.ToStartInfo(Policy.WorkingDirectory),
+            StartInfo = startInfo,
             EnableRaisingEvents = true,
         };
 
@@ -212,6 +215,7 @@ public sealed class ProcessSupervisor : IDisposable
         catch (Exception ex)
         {
             process.Dispose();
+            _capacity.Release();
             _bus.Publish(AgentEventKind.Error, "supervisor", $"no se pudo arrancar {command.Shell}: {ex.Message}");
             throw new InvalidOperationException($"no se pudo arrancar {command.Shell}: {ex.Message}", ex);
         }
@@ -239,9 +243,10 @@ public sealed class ProcessSupervisor : IDisposable
         TimeSpan timeout,
         CancellationToken cancellationToken = default)
     {
-        var decision = Policy.Evaluate(command);
-        if (decision.Simulated)
+        if (Policy.Mode == PolicyMode.Simular)
         {
+            var decision = await Policy.EvaluateAsync(command, cancellationToken).ConfigureAwait(false);
+            if (!decision.Allowed) throw new InvalidOperationException(decision.Reason);
             _bus.Publish(AgentEventKind.Aviso, "politica", $"simulado (no se ejecuta): {command}");
             return new ShellResult("(simulado)", command, null, false, true, TimeSpan.Zero, [], false);
         }
@@ -276,6 +281,7 @@ public sealed class ProcessSupervisor : IDisposable
 
         lock (_watcherGate)
         {
+            if (_watchers.Count >= 256) throw new InvalidOperationException("tope de 256 observadores; retira los anteriores");
             _watchers.Add(watcher);
         }
 
@@ -298,6 +304,11 @@ public sealed class ProcessSupervisor : IDisposable
         }
 
         return killed;
+    }
+
+    public bool RemoveWatcher(string id)
+    {
+        lock (_watcherGate) return _watchers.RemoveAll(w => w.Id == id) > 0;
     }
 
     public void Dispose()
@@ -332,6 +343,7 @@ public sealed class ProcessSupervisor : IDisposable
                         new { observador = watcher.Id, proceso = handle.Id, linea = line.Text });
                 }
             }
+            _watchers.RemoveAll(w => w.Fired);
         }
 
         NotifyOutput(handle);
@@ -378,6 +390,7 @@ public sealed class ProcessSupervisor : IDisposable
         }
 
         handle.RecordExit(code);
+        _capacity.Release();
 
         _bus.Publish(
             AgentEventKind.ProcesoFin,

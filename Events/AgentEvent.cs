@@ -38,6 +38,22 @@ public enum AgentEventKind
 
     /// <summary>Se pidio parar.</summary>
     Cancelacion,
+    ModeloSolicitado,
+    ModeloResultado,
+    HerramientaSolicitada,
+    HerramientaResultado,
+    RazonamientoRequerido,
+    DeadlineAlcanzado,
+    Pausa,
+    Reanudacion,
+    ConsultaEstado,
+    Estado,
+    ObjetivoCumplido,
+    ObjetivoFallido,
+    EventoConfirmado,
+    DetencionAgotada,
+    AprobacionSolicitada,
+    Aprobacion,
 }
 
 /// <summary>
@@ -54,6 +70,9 @@ public sealed record AgentEvent(
     string Text,
     string? Data = null)
 {
+    public Guid EventId { get; init; } = Guid.NewGuid();
+    public Guid RunId { get; init; }
+    public Guid? CausationId { get; init; }
     /// <summary>Linea corta para la traza de consola.</summary>
     public override string ToString()
         => $"#{Sequence} {At:HH:mm:ss} {Kind} [{Source}] {Text}";

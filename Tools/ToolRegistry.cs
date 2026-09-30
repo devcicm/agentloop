@@ -22,6 +22,7 @@ public sealed class ToolRegistry
     public int Count => _tools.Count;
 
     public ToolRegistry Combine(ToolRegistry other) => new(_tools.Values.Concat(other._tools.Values));
+    public ToolRegistry Filter(Func<string, bool> predicate) => new(_tools.Values.Where(t => predicate(t.Name)));
 
     public IReadOnlyCollection<string> Names => _tools.Keys;
 
@@ -71,7 +72,21 @@ public sealed class ToolRegistry
         try
         {
             var output = await tool.InvokeAsync(call.Arguments, cancellationToken).ConfigureAwait(false);
-            return new ToolExecution(call.Id, call.Name, output, Failed: false);
+            var failed = false;
+            try
+            {
+                using var response = JsonDocument.Parse(output);
+                if (response.RootElement.ValueKind == JsonValueKind.Object)
+                {
+                    var root = response.RootElement;
+                    failed = root.TryGetProperty("error", out _)
+                        || root.TryGetProperty("aceptada", out var accepted) && accepted.ValueKind == JsonValueKind.False
+                        || root.TryGetProperty("agotado_el_tiempo", out var timedOut) && timedOut.ValueKind == JsonValueKind.True
+                        || root.TryGetProperty("codigo", out var code) && code.ValueKind == JsonValueKind.Number && code.GetInt32() != 0;
+                }
+            }
+            catch (JsonException) { }
+            return new ToolExecution(call.Id, call.Name, output, Failed: failed);
         }
         catch (OperationCanceledException)
         {

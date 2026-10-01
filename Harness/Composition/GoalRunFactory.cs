@@ -60,7 +60,7 @@ public static class GoalRunFactory
         // directorio (el --cwd de la política).
         ledger.WorkingDirectory = scope.Policy.WorkingDirectory;
         ledger.AcceptanceObjective = run.Objective;
-        var tools = OperationTools.Build(ledger, supervisor, bus).Combine(BuiltInTools.DefaultRegistry()).Filter(scope.AllowsTool);
+        var tools = OperationTools.Build(ledger, supervisor, bus).Combine(BuiltInTools.DefaultRegistry()).Filter(scope.AllowsTool).WithScope(scope);
         var goalContext = new GoalContext
         {
             Goal = run.Goal,

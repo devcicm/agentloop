@@ -56,6 +56,12 @@ no crea archivos. Simular no produce evidencia de efectos reales.
 Los criterios comprueban observacion, frescura, hash y contenido configurado;
 la calidad literaria o correccion semantica requiere validadores adicionales.
 
+## Seguridad de datos
+
+[DTOs, sanitizacion y limites de confianza](docs/seguridad-datos-harness.md).
+Para archivos acotados: `interactive --no-shell --scope-root "C:\proyectos\demo"`.
+El modo auto con shell conserva los permisos del usuario; no es un sandbox.
+
 ## Mapa del codigo
 
 | Ruta | Responsabilidad |
@@ -63,6 +69,7 @@ la calidad literaria o correccion semantica requiere validadores adicionales.
 | `Program.cs` | CLI, sesion, controles y opciones |
 | `Goals/`, `Cards/`, `Events/` | Actor, admision, aceptacion, contratos, tarjetas y bus |
 | `Tools/`, `Terminals/`, `Concurrency/` | Tools, procesos, capacidad y reset events |
+| `Security/` | DTOs de datos, validacion, sanitizacion, secretos y recursos protegidos |
 | `Provider/`, `Parsing/`, `Discovery/`, `Configuration/` | HTTP NVIDIA, SSE, reasoning, modelos y credenciales |
 | `Harness/` | Composicion, Journey, journal, observacion y utilidades de soporte |
 | `StateMachines/`, `Looping/` | Conversacion y compatibilidad; no gobiernan operaciones principales |
@@ -76,9 +83,10 @@ El puerto activo es `ILLMClient`; los detalles NVIDIA viven en
 
 Arquitectura vigente y flujos ASCII: [harness por eventos](docs/harness-eventos.md).
 Incidente y correccion POS: [informe](docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md).
-Validacion actual: [evidencia del 1 de octubre](docs/evidence/2026-10-01/README.md).
+Validacion de recuperacion POS: [evidencia](docs/evidence/2026-10-01/README.md).
+Validacion vigente de seguridad: [evidencia](docs/evidence/2026-10-01-seguridad/README.md).
 
-Validacion local del 1 de octubre: 352 comprobaciones correctas, 38 del
+Validacion local vigente del 1 de octubre: 382 comprobaciones correctas, 68 del
 coordinador; compilacion con 0 errores y 0 advertencias. Sin nueva inferencia remota.
 
 Validacion anterior registrada el 30 de septiembre de 2026, commit `8b20a3f`:

@@ -1,14 +1,16 @@
+using AgentLoop.Security;
+
 namespace AgentLoop.Provider;
 
 /// <summary>Cualquier respuesta no-2xx del gateway o fallo de transporte.</summary>
 public sealed class LLMException : Exception
 {
     public LLMException(int statusCode, string message, string? rawPayload = null, Exception? inner = null)
-        : base($"[{statusCode}] {message}", inner)
+        : base(DataGuard.Display($"[{statusCode}] {message}"), inner)
     {
         StatusCode = statusCode;
-        ProviderMessage = message;
-        RawPayload = rawPayload;
+        ProviderMessage = DataGuard.Display(message);
+        RawPayload = rawPayload is null ? null : DataGuard.Redact(rawPayload);
     }
 
     /// <summary>Codigo HTTP, o 0 si el fallo fue de transporte.</summary>

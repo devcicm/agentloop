@@ -157,13 +157,16 @@ public sealed class ExecutionPolicy
     {
         DeniedPatterns = (deniedPatterns ?? DefaultDenied).ToArray();
         _denied = DeniedPatterns
-            .Select(p => new Regex(p, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant))
+            .Select(p => new Regex(p, RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100)))
             .ToArray();
     }
 
     public static ExecutionPolicy Default { get; } = new();
 
     public PolicyMode Mode { get; init; } = PolicyMode.Auto;
+
+    public bool AllowShell { get; init; } = true;
+    public IReadOnlyList<string> AllowedPaths { get; init; } = [];
 
     public string WorkingDirectory { get; init; } = Environment.CurrentDirectory;
 
@@ -187,6 +190,7 @@ public sealed class ExecutionPolicy
 
     public async ValueTask<PolicyDecision> EvaluateAsync(ShellCommand command, CancellationToken token)
     {
+        if (!AllowShell || AllowedPaths.Count > 0) return new(false, "shell arbitrario deshabilitado por politica/scope");
         if (Mode != PolicyMode.Confirmar || AsyncConfirm is null) return Evaluate(command);
         var offender = _denied.FirstOrDefault(r => r.IsMatch(command.Command));
         if (offender is not null) return new(false, "comando vetado por politica");
@@ -195,6 +199,7 @@ public sealed class ExecutionPolicy
 
     public PolicyDecision Evaluate(ShellCommand command)
     {
+        if (!AllowShell || AllowedPaths.Count > 0) return new(false, "shell arbitrario deshabilitado por politica/scope");
         var offender = _denied.FirstOrDefault(r => r.IsMatch(command.Command));
         if (offender is not null)
         {

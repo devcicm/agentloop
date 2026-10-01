@@ -9,6 +9,7 @@ el uso vigente. Los informes fechados conservan observaciones de su revision.
 
 | Documento | Alcance |
 | --- | --- |
+| [Seguridad, datos y DTOs](seguridad-datos-harness.md) | Sanitizacion, contratos, limites de confianza y uso acotado |
 | [Harness vigente y flujos ASCII](harness-eventos.md) | Arquitectura general, proveedores, contexto y recuperacion |
 | [Incidente POS](incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md) | Antes, causas, solucion y limites comprobados |
 | [Coordinador por eventos](implementacion-coordinador-eventos-2026-09-30.md) | Flujos, contratos, criterios, controles y gaps pendientes |

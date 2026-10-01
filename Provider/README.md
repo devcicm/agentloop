@@ -65,3 +65,7 @@ documentado en [la guia](../local-secrets/README.md). Nunca versionar la clave.
 Los nombres activos TokenRouter fueron sustituidos; sondas historicas congeladas
 requieren su commit de origen. El transporte comparte envio/retry; framing SSE,
 catalogo y errores del protocolo siguen en NvidiaClient.
+
+El transporte HTTP/SSE usa presupuesto de 2 MiB y JSON estricto; los cuerpos de
+request y errores redactan formatos reconocibles de claves. Ver
+[datos y DTOs](../docs/seguridad-datos-harness.md).

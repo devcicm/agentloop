@@ -67,7 +67,8 @@ public static class TextSanitizer
                 continue;
             }
 
-            if (char.IsLowSurrogate(ch) || char.IsControl(ch) || ch is '\uFFFE' or '\uFFFF')
+            if (char.IsLowSurrogate(ch) || char.IsControl(ch) || ch is '\uFFFE' or '\uFFFF' or '\u061C' or '\u200B' or '\u200E' or '\u200F' or '\uFEFF' or '\u2060'
+                || ch is >= '\u202A' and <= '\u202E' || ch is >= '\u2066' and <= '\u2069')
             {
                 continue;
             }
@@ -100,8 +101,8 @@ public static class TextSanitizer
 
     /// <summary>
     /// Escapa para que el valor no pueda cerrar ni abrir etiquetas del prompt.
-    /// Sin esto, un usuario que escribe &quot;&lt;/contexto&gt;&quot; se sale del bloque y el resto
-    /// de su texto pasa a leerse como instrucciones del sistema.
+    /// Evita romper el delimitador con &quot;&lt;/contexto&gt;&quot;. El escapado no garantiza
+    /// resistencia semantica a prompt injection: scope y politica se aplican en codigo.
     /// </summary>
     public static string Xml(string? value)
     {
@@ -194,15 +195,15 @@ public static class TextSanitizer
         {
             if (IsWellFormedJson(clean))
             {
-                return $"{{\"items\":{JsonLiteral(clean)}}}";
+                return $"{{\"items\":{clean}}}";
             }
 
             return $"{{\"text\":{JsonLiteral(clean)}}}";
         }
 
-        if (IsJsonPrimitive(trimmed))
+        if (IsJsonPrimitive(trimmed) && IsWellFormedJson(clean))
         {
-            return $"{{\"value\":{JsonLiteral(clean)}}}";
+            return $"{{\"value\":{clean}}}";
         }
 
         return $"{{\"text\":{JsonLiteral(clean)}}}";

@@ -6,6 +6,7 @@ using AgentLoop.Parsing;
 using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.Terminals;
+using AgentLoop.Security;
 
 namespace AgentLoop.Goals;
 
@@ -141,14 +142,14 @@ public sealed class GoalContext
 
         foreach (var item in events)
         {
-            builder.AppendLine(TextSanitizer.Plain(item.ToPrompt()));
+            builder.AppendLine(DataGuard.PromptData("event:" + item.Kind, item.ToPrompt(), 2048));
         }
 
         builder.AppendLine();
         builder.AppendLine("OBSERVACIONES RECIENTES (indice; resultados completos en journal)");
-        foreach (var observation in _observations) builder.AppendLine(observation);
+        foreach (var observation in _observations) builder.AppendLine(DataGuard.PromptData("tool_observation", observation, 800));
         builder.AppendLine("ESTADO DE LAS TARJETAS");
-        builder.AppendLine(Ledger.DescribeState());
+        builder.AppendLine(DataGuard.PromptData("ledger_snapshot", Ledger.DescribeState(), 6000));
 
         var allowed = Ledger.AllowedNow();
         builder.AppendLine(allowed.Count == 0
@@ -165,7 +166,7 @@ public sealed class GoalContext
         {
             foreach (var handle in Supervisor.Handles.TakeLast(6))
             {
-                builder.AppendLine($"  {TextSanitizer.Plain(handle.ToString())}");
+                builder.AppendLine(DataGuard.PromptData("process_snapshot", handle.ToString(), 1000));
             }
         }
 
@@ -175,7 +176,7 @@ public sealed class GoalContext
             builder.AppendLine("OBSERVADORES");
             foreach (var watcher in watchers.TakeLast(4))
             {
-                builder.AppendLine($"  {TextSanitizer.Plain(watcher.ToString())}");
+                builder.AppendLine(DataGuard.PromptData("watcher_snapshot", watcher.ToString(), 1000));
             }
         }
 

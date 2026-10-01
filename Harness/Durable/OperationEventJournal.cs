@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AgentLoop.Events;
+using AgentLoop.Security;
 
 namespace AgentLoop.Harness.Durable;
 
@@ -22,7 +23,7 @@ public sealed class OperationEventJournal : IDisposable
 
     public void Append(string phase, AgentEvent item, object? state = null)
     {
-        var bytes = System.Text.Encoding.UTF8.GetBytes(JsonSerializer.Serialize(new JournalEntry(phase, item, DateTimeOffset.UtcNow, state)) + "\n");
+        var bytes = System.Text.Encoding.UTF8.GetBytes(DataGuard.Redact(JsonSerializer.Serialize(new JournalEntry(phase, item, DateTimeOffset.UtcNow, state))) + "\n");
         _stream.Write(bytes);
         _stream.Flush(flushToDisk: true);
     }

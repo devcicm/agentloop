@@ -71,17 +71,17 @@ public static class SanitizationSelfTest
         }
 
         // --- EnsureJsonObject ---
-        results.Add(("EnsureJsonObject envuelve primitivo numero", TextSanitizer.EnsureJsonObject("42") == "{\"value\":\"42\"}"));
-        results.Add(("EnsureJsonObject envuelve primitivo true", TextSanitizer.EnsureJsonObject("true") == "{\"value\":\"true\"}"));
-        results.Add(("EnsureJsonObject envuelve primitivo null", TextSanitizer.EnsureJsonObject("null") == "{\"value\":\"null\"}"));
+        results.Add(("EnsureJsonObject envuelve primitivo numero", TextSanitizer.EnsureJsonObject("42") == "{\"value\":42}"));
+        results.Add(("EnsureJsonObject envuelve primitivo true", TextSanitizer.EnsureJsonObject("true") == "{\"value\":true}"));
+        results.Add(("EnsureJsonObject envuelve primitivo null", TextSanitizer.EnsureJsonObject("null") == "{\"value\":null}"));
         // Primitivo string JSON (con comillas): el resultado envuelve el valor tal cual, sin des-envolver.
         var primStringObj = TextSanitizer.EnsureJsonObject("\"hola\"");
         results.Add(("EnsureJsonObject primitivo string es JSON valido", TextSanitizer.IsWellFormedJson(primStringObj)));
         using (var doc = JsonDocument.Parse(primStringObj))
         {
-            results.Add(("EnsureJsonObject primitivo string conserva las comillas", doc.RootElement.TryGetProperty("value", out var val) && val.GetString() == "\"hola\""));
+            results.Add(("EnsureJsonObject primitivo string conserva su valor", doc.RootElement.TryGetProperty("value", out var val) && val.GetString() == "hola"));
         }
-        results.Add(("EnsureJsonObject envuelve array", TextSanitizer.EnsureJsonObject("[1,2,3]") == "{\"items\":\"[1,2,3]\"}"));
+        results.Add(("EnsureJsonObject envuelve array", TextSanitizer.EnsureJsonObject("[1,2,3]") == "{\"items\":[1,2,3]}"));
         results.Add(("EnsureJsonObject pasa objeto con contenido", TextSanitizer.EnsureJsonObject("{\"k\":\"v\"}") == "{\"k\":\"v\"}"));
         results.Add(("EnsureJsonObject reemplaza objeto vacio por texto", TextSanitizer.EnsureJsonObject("{}") == "{\"text\":\"\"}"));
         results.Add(("EnsureJsonObject envuelve texto suelto", TextSanitizer.EnsureJsonObject("boom: no es json") == "{\"text\":\"boom: no es json\"}"));

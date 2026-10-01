@@ -4,6 +4,7 @@ using System.Text;
 using System.Text.Encodings.Web;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using AgentLoop.Security;
 
 namespace AgentLoop.Provider;
 
@@ -144,7 +145,7 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
 
         using (response)
         {
-            var errorBody = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+            var errorBody = await ReadBodyAsync(response, cancellationToken).ConfigureAwait(false);
             throw BuildException((int)response.StatusCode, errorBody);
         }
     }
@@ -178,7 +179,8 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
         using var response = await OpenStreamAsync(request, cancellationToken).ConfigureAwait(false);
 
         await using var stream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
-        using var reader = new StreamReader(stream, Encoding.UTF8);
+        using var bounded = new BoundedReadStream(stream, DataLimits.ProviderBytes);
+        using var reader = new StreamReader(bounded, Encoding.UTF8);
 
         while (true)
         {
@@ -208,26 +210,33 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
             JsonElement chunk;
             try
             {
-                using var doc = JsonDocument.Parse(data);
-                chunk = doc.RootElement.Clone();
+                chunk = StrictJson.Parse(data, DataLimits.ProviderBytes);
             }
             catch (JsonException)
             {
-                continue; // chunk truncado o malformado: se ignora, igual que el cliente Python
+                throw new LLMException(422, "SSE invalido o ambiguo; respuesta rechazada.");
             }
 
             yield return chunk;
         }
     }
 
+    private static async Task<string> ReadBodyAsync(HttpResponseMessage response, CancellationToken cancellationToken)
+    {
+        await using var bodyStream = await response.Content.ReadAsStreamAsync(cancellationToken).ConfigureAwait(false);
+        using var boundedBody = new BoundedReadStream(bodyStream, DataLimits.ProviderBytes);
+        using var bodyReader = new StreamReader(boundedBody, Encoding.UTF8);
+        return await bodyReader.ReadToEndAsync(cancellationToken).ConfigureAwait(false);
+    }
+
     private async Task<JsonElement> SendJsonAsync(HttpMethod method, string path, string? body, CancellationToken cancellationToken)
     {
         using var response = await _transport.SendWithRetryAsync(
             () => BuildRequest(method, path, body),
-            HttpCompletionOption.ResponseContentRead,
+            HttpCompletionOption.ResponseHeadersRead,
             cancellationToken).ConfigureAwait(false);
 
-        var content = await response.Content.ReadAsStringAsync(cancellationToken).ConfigureAwait(false);
+        var content = await ReadBodyAsync(response, cancellationToken).ConfigureAwait(false);
 
         if (!response.IsSuccessStatusCode)
         {
@@ -236,8 +245,7 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
 
         try
         {
-            using var doc = JsonDocument.Parse(content);
-            return doc.RootElement.Clone();
+            return StrictJson.Parse(DataGuard.Redact(content), DataLimits.ProviderBytes);
         }
         catch (JsonException ex)
         {
@@ -258,7 +266,8 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
         var request = new HttpRequestMessage(method, $"{_options.BaseUrl.TrimEnd('/')}{path}");
         if (body is not null)
         {
-            request.Content = new StringContent(body, Encoding.UTF8, "application/json");
+            if (body.Length > DataLimits.ProviderBytes) throw new InvalidOperationException("Request body exceeds its size budget.");
+            request.Content = new StringContent(DataGuard.Redact(body), Encoding.UTF8, "application/json");
         }
 
         return request;

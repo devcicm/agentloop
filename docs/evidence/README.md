@@ -6,6 +6,9 @@ no describen necesariamente el codigo actual. No se regeneran sobre el original.
 
 ## Capturas y alcance
 
+- 2026-10-01, seguridad: sanitizacion, validacion de DTOs y scope;
+  382 comprobaciones correctas. Ver [evidencia](2026-10-01-seguridad/README.md).
+
 - 2026-10-01: incidente POS, proveedores reorganizados, contexto y recuperacion;
   352 comprobaciones locales correctas. Ver [evidencia actual](2026-10-01/README.md).
 
@@ -73,3 +76,7 @@ si se ejecuta. Para el actor vigente usar `selftest-coordinator`.
 | [2026-10-01/selftest-second-attempt.txt](2026-10-01/selftest-second-attempt.txt) | Intento de integracion fallido y conservado |
 | [2026-10-01/repository-audit.json](2026-10-01/repository-audit.json) | Inventario de la entrega anterior al commit |
 | [2026-10-01/README.md](2026-10-01/README.md) | Alcance de la validacion local |
+| [2026-10-01-seguridad/README.md](2026-10-01-seguridad/README.md) | Alcance de pruebas de datos y seguridad |
+| [2026-10-01-seguridad/build.txt](2026-10-01-seguridad/build.txt) | Compilacion sin errores ni advertencias |
+| [2026-10-01-seguridad/selftest.txt](2026-10-01-seguridad/selftest.txt) | 382 comprobaciones locales correctas |
+| [2026-10-01-seguridad/repository-audit.json](2026-10-01-seguridad/repository-audit.json) | Inventario documental de la entrega |

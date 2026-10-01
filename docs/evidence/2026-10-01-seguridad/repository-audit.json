@@ -1,0 +1,2643 @@
+{
+    "CapturedAt":  "2026-10-01T07:39:14.2063089+00:00",
+    "SourceCommit":  "a28ccfb0c8e7a8939fd1950247d583095e53e366",
+    "Scope":  "archivos-Git-y-nuevos-no-ignorados; datos-locales-solo-metadatos",
+    "InventoryExcludesItself":  "docs/evidence/2026-10-01-seguridad/repository-audit.json",
+    "FileCount":  190,
+    "Files":  [
+                  {
+                      "Path":  ".github/copilot-instructions.md",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  947,
+                      "SHA256":  "7ED06477B16855E821565F1459CAB159C8BE2CED5E1769538853F4203F46DB1C"
+                  },
+                  {
+                      "Path":  ".gitignore",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  8145,
+                      "SHA256":  "0C65294C955921DD1C20EEEDEEAB836C1D48F25B7D8E22543F5DBBE2876F8F59"
+                  },
+                  {
+                      "Path":  "AgentLoop.csproj",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  252,
+                      "SHA256":  "00BC28C540AD10AB2F879A949A6B98BE492845DEF617ADED10DCA4A8D52B2C84"
+                  },
+                  {
+                      "Path":  "AgentLoop.sln",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  1699,
+                      "SHA256":  "52B7FD9666AEA7BD80D5670AD4ED32B81DD11EA6C62D8400BABC3C07F0744FDD"
+                  },
+                  {
+                      "Path":  "Cards/CardLedger.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  15219,
+                      "SHA256":  "71653697F8A1F72DEE1BBF34E28D6ED3C605E36043CB2DD5437BF6AA5E258C06"
+                  },
+                  {
+                      "Path":  "Cards/StateCard.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4299,
+                      "SHA256":  "FE72AFD5DC7A830F3923A70979A0C338F3A14A5293FD33E090F8D135AF24A869"
+                  },
+                  {
+                      "Path":  "Concurrency/ResetEvents.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  5926,
+                      "SHA256":  "8C9D9B926DD8C93F1450D7EAE9D990231A8CE1539DEA66A3C0302325EBF0E8EF"
+                  },
+                  {
+                      "Path":  "Configuration/SecretStore.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4066,
+                      "SHA256":  "7C4FB3A1C38C670956F03FB20E5366FEA79889CD7B922D681D8E836098AB25FF"
+                  },
+                  {
+                      "Path":  "Discovery/AgenticModelSelector.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  17840,
+                      "SHA256":  "A58E5D8DE10F0E7ECEAABB6FD9938AF500AF7C0B6172E668759795EE8D054AA6"
+                  },
+                  {
+                      "Path":  "Discovery/ModelCapabilityReport.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2668,
+                      "SHA256":  "294E81FEB7528844F97332458B4108FAE8354C4878EA779679EF428DA1530CC8"
+                  },
+                  {
+                      "Path":  "docs/analisis-harness-poema-2026-09-27.md",
+                      "Category":  "informe-historico",
+                      "Bytes":  19297,
+                      "SHA256":  "DF687734F130812F0E36065854B44DFEDD43CD734F896D2383869648E5E0C412"
+                  },
+                  {
+                      "Path":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                      "Category":  "informe-historico",
+                      "Bytes":  23049,
+                      "SHA256":  "E32514D9E397CD54B5FDAE15937664ABCC61280C61665CB14C7FFB79D4675F75"
+                  },
+                  {
+                      "Path":  "docs/contexto-y-memoria.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  4320,
+                      "SHA256":  "1467AF70696D0DBEC27549B23CD244F3332A2315E71BF92E749C6C0766A0F36D"
+                  },
+                  {
+                      "Path":  "docs/contexto-y-recursos.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  3282,
+                      "SHA256":  "327C10B4B89071890BD1E548C162837AB697C3154B4B71EE3DA20E6C9B6FE902"
+                  },
+                  {
+                      "Path":  "docs/diagnostico-no-cierre.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  3420,
+                      "SHA256":  "47326E2D0E458644FC9126EB56E1B08E30B9E7F995C28AFDFC987EB986A2FA90"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/after-fix-build.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  2742,
+                      "SHA256":  "F0B672E981CBC6136675CA55AE073BB9F083DD9F0657D40494E734F08AB11867"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/after-fix-probe.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  2168,
+                      "SHA256":  "DB41D04B858D3D0BF5A94D38866D82B30860F7D2BCAB6D156ABC7DFE2CE76192"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/after-fix-probe-console.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  4976,
+                      "SHA256":  "E2F9B7D7BCEF4E33694B80E0109FB3451131FA3CEB1D8FEA998AE5D8CC0E7AD7"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/after-fix-selftest.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  27864,
+                      "SHA256":  "494D66D22271374CFD1A78E7CCE19907606A23AF8644ADBE476F7AD3664EB689"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/audit-summary.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1167,
+                      "SHA256":  "9DF97F5012BBC8AC723651DF47F8373AC078A76F191DDFCBFEDE8401D563DBCB"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/before-fix.patch",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  0,
+                      "SHA256":  "E3B0C44298FC1C149AFBF4C8996FB92427AE41E4649B934CA495991B7852B855"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/before-fix-commit.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  45,
+                      "SHA256":  "358E49FCD5C603A76FAF25F1A51C9DD925D992F68BA716507D360F47A9928F7F"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/before-fix-status.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  68,
+                      "SHA256":  "096399612BAEF1212E15F890BE0151CADBB8D555032F93E31251E7635385522B"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/build.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1375,
+                      "SHA256":  "8BE16F79E321D0BB2F24B1F8A2D11504B52B05CAAAB83E8DD4F6DD6F6ED8CF23"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/chat-nvidia-console.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  393,
+                      "SHA256":  "0E6DEFCED2E824034892A55F09089DB44249FBDCCEF002A185E79645E89334CF"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/evidence-manifest.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  3862,
+                      "SHA256":  "A88D1811DB2AC3A5523A452874FB54837689D6A89AE717798182DAFED579F7ED"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/HarnessProbe.cs.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  5879,
+                      "SHA256":  "1471635ADA78C562C2B87ADAAA47D0516B3E7A8707760959FB3EA7130ACEA963"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/harness-probe.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  2263,
+                      "SHA256":  "83E987DF1A611429816E30F01C0D23F797E141FC7CC6D64D7E755CE4846F392E"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/interactive-memo.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  816,
+                      "SHA256":  "17C0E612620D0552CCE0863F575CDADD068E8A1C8DEF5B43FD897AB9E4987CC5"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/nvidia-catalog-after-fix.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  326,
+                      "SHA256":  "887539C7FC905849A8C67A4D3386C96DE2D984B23078EDC5F402AD0F7FD64D2D"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/nvidia-ping-after-fix.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  132,
+                      "SHA256":  "84E56C3FD77F6B87F21737D33B60CCE07B4732F51B2EB0808E3CF519476C2714"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/nvidia-poem-evidence.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  294,
+                      "SHA256":  "7015A30E23828D7565C2741FA08C0EA68BC4D8BBEEE866A108DB4C88893E36E6"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/nvidia-poem-run.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  15094,
+                      "SHA256":  "4A906999E89441E0E14C4A493B4FBA0277AAC33EF399502E0ADB784526E36D2A"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/nvidia-poem-workspace/notes/poema-original.md",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  116,
+                      "SHA256":  "254A2E05B004D05B53C8F280DB81E6FE03980214ACD57E8E579983F79B81136B"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/provider-catalog.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  480,
+                      "SHA256":  "55CBC898B32C05BC8A88A712DAC3C9825CF3FB143C44079970FBD26E6F9AA7CE"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/remote-goal.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  4201,
+                      "SHA256":  "7CBA1310BC5AF4004743E153F408BF45BF28034E1F206C5BCA0D884F121C4EF0"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/run-probe.ps1",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1639,
+                      "SHA256":  "74EA3AF9320BBE2E11F5AD726D6C5B5313F24E5F2EC2358BBFA54E81C47D6882"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-27/selftest.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  13931,
+                      "SHA256":  "EAE19BD2CFD841CFFE76964A127C5D5C84ED4F3DDEEDDE079ACFB0A5BEA4E128"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-30/compilacion.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  209,
+                      "SHA256":  "AD2C8AEE61F5289D81CEECD271CD3C5AA99F926342A52CB660FA8DB8130DD948"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-30/inspeccion-journal.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  191,
+                      "SHA256":  "6DD0B9F5BF26D9EB6324562D858F0F8A87B66A9A8870D88A75B354C16C70906B"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-30/nvidia-poema-eventos.jsonl",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  68912,
+                      "SHA256":  "25EB0CC4F08D66BE28F266C7B6197850F05ECC99C949C93B493F2C4FFB35344E"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-30/nvidia-poema-traza.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  8629,
+                      "SHA256":  "31BCFD93DE2A985B37E800AFEF1FED798F48CBD558D34A250DD1BB4ECD571B40"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-30/poema.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  140,
+                      "SHA256":  "628E585A8FFB79F8F28CCF984CFBB7BA64BA74C12FDCCF0811156ED2219D8FD6"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-09-30/selftest-completo.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  20995,
+                      "SHA256":  "17B8D455D87439810116F73ABA00B1359D0DFBF34A80EAF28BC73855CDB375C5"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/build.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  295,
+                      "SHA256":  "9B76F13944B4C8756975D7D54FAA1DA528B7C83ED877E0077B07C419319F780C"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/pos-before.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1287,
+                      "SHA256":  "A9331CE672403FB4BA2E72F523617D9F1BBBE6AA3539A803C7ABBE823549B675"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/README.md",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1808,
+                      "SHA256":  "E7A4E9649FCFB5D2F1EFBE273499BD051A77243F3E004F4DA00B8704075BB53A"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/repository-audit.json",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  130974,
+                      "SHA256":  "186F694F79CA9A652A5450BD6A8C8873CF47258FCF013E67E34F2D29824807DE"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/selftest.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  22222,
+                      "SHA256":  "AE3ADBB199391908864A2B0CA5C13CE8F95016BEFE0AE3869D2AB95DC801DFB8"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/selftest-first-attempt.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  14192,
+                      "SHA256":  "842C35998CB349857A316C50DA3AF9077947B45D73CBC66C46F6935B4BEBD5E2"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01/selftest-second-attempt.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  21749,
+                      "SHA256":  "CA760388AC9220B84C9BEE96CCCC3976190F509E448D0DC07267A61D9D786FD8"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01-seguridad/build.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  295,
+                      "SHA256":  "64D5A41BD7F3A73C3AE3720B708C2577A4D0A67DDEFF06BE1F1D20A5A1159D4A"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01-seguridad/README.md",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1606,
+                      "SHA256":  "1F184ABA309A2033CAFD506E1BF048041B3D9080499F957F4735781865290FE6"
+                  },
+                  {
+                      "Path":  "docs/evidence/2026-10-01-seguridad/selftest.txt",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  23899,
+                      "SHA256":  "5D9CB7D58D1E9A35822A23FCC08F6BAB759ED4DBDC56642A0758F642F3A79EA0"
+                  },
+                  {
+                      "Path":  "docs/evidence/eventos-antes-2026-09-28.log",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  27838,
+                      "SHA256":  "58BA714E05CCA7F4721F334D8840103A15D0C5EBDA4568FAA1EA3F701410EE17"
+                  },
+                  {
+                      "Path":  "docs/evidence/eventos-despues-2026-09-28.log",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  34616,
+                      "SHA256":  "1FAA48A4047DCC13225CD69E64A39D3262919F0EFE88C39B7EDE5D337C837E16"
+                  },
+                  {
+                      "Path":  "docs/evidence/eventos-final-2026-09-30.log",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  34616,
+                      "SHA256":  "D317CDE934DD1BA317970F181466B5B28897C4DB5F8E5E037E86F5110BD1507A"
+                  },
+                  {
+                      "Path":  "docs/evidence/eventos-nvidia-2026-09-28.log",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  6276,
+                      "SHA256":  "39E76E8BDE734B89B1D9B8DDCE292A1FA62EAFE3EE97A2B705E28F9E7E521ACE"
+                  },
+                  {
+                      "Path":  "docs/evidence/eventos-regresion-antes-2026-09-28.log",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  1526,
+                      "SHA256":  "607C5201D35AED9B95246A464EA11B389C0515BCA50B3188426C374F137516D5"
+                  },
+                  {
+                      "Path":  "docs/evidence/eventos-regresion-despues-2026-09-28.log",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  6780,
+                      "SHA256":  "85702A7EB5C00A957262FD6770C2D105F525AA501DB9A87D4AC5780B37F92CD6"
+                  },
+                  {
+                      "Path":  "docs/evidence/README.md",
+                      "Category":  "evidencia-historica",
+                      "Bytes":  7375,
+                      "SHA256":  "0512DF46D0AAD32567B84FC87086F9C4D53CC99BDA1C9B8D1BA19EBA221F862D"
+                  },
+                  {
+                      "Path":  "docs/harness-eventos.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  8195,
+                      "SHA256":  "CB61F47AA3D2B280735812822FCA5C8EA6B6F4C87705C55E188866E0A3A2E4BE"
+                  },
+                  {
+                      "Path":  "docs/historico/diagnostico-no-cierre-previo-2026-09-30.md",
+                      "Category":  "informe-historico",
+                      "Bytes":  6329,
+                      "SHA256":  "5C4D5A1F8ED13199E9B7165B9C0EE34D4C9EF10DADD95316E38B558447B414F8"
+                  },
+                  {
+                      "Path":  "docs/implementacion-coordinador-eventos-2026-09-30.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  8591,
+                      "SHA256":  "711D73617BDEA32993EBD0E09852B85F4970A8CC7E1E2BEAF179B5BBB13EE221"
+                  },
+                  {
+                      "Path":  "docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  5486,
+                      "SHA256":  "0700F049A3FC3A4EDB5C16A28D7305ACC7506A65D8D621FBD6B9CFE044E64309"
+                  },
+                  {
+                      "Path":  "docs/limpieza-datos-repo-2026-09-30.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  5726,
+                      "SHA256":  "F0D08172F487F6BE9A220AA8FD425D0EF194AE88BF4C33E38109F09C9EB7AAE6"
+                  },
+                  {
+                      "Path":  "docs/limpieza-operaciones-2026-09-30.json",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  3014,
+                      "SHA256":  "59716A1B410E9666C41D0CF6668BADE5F43028D9BA0274556DC8B1AF1D18329D"
+                  },
+                  {
+                      "Path":  "docs/README.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  2407,
+                      "SHA256":  "AF69BA683ED3BC572B37F1ECF8ACEE7D54C3FE3890305A3C9832332223734E13"
+                  },
+                  {
+                      "Path":  "docs/repository-data-inventory.json",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  114264,
+                      "SHA256":  "0DC9CB140F9753759DD4497F18A4D67F9EBF83D1505666D89C9F21FC99D6B3BB"
+                  },
+                  {
+                      "Path":  "docs/seguridad-datos-harness.md",
+                      "Category":  "documentacion-vigente",
+                      "Bytes":  10385,
+                      "SHA256":  "C77D8A5ACAEEA76088EFE34EB5A4099405F190B74526DA0BF1C160C59140A313"
+                  },
+                  {
+                      "Path":  "docs/validacion-eventos-2026-09-28.md",
+                      "Category":  "informe-historico",
+                      "Bytes":  6943,
+                      "SHA256":  "0B95980480186651C3FA765086ECC2A5F093A8D25CCCE0F8B1BA25278C675CE4"
+                  },
+                  {
+                      "Path":  "Events/AgentEvent.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2799,
+                      "SHA256":  "5C67137065AA08637655A3E29328E347B4A39D9ADE8B6CF3E68EDE1766B9EE06"
+                  },
+                  {
+                      "Path":  "Events/EventArchitectureSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  12198,
+                      "SHA256":  "D8408A834649267B3347F618AFE83B71F9A2052597737B4EAD5BEB05AF1A5AD2"
+                  },
+                  {
+                      "Path":  "Events/EventBus.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  8248,
+                      "SHA256":  "F9B984AA8E878DD5A740D3BDFF2F6ABBFC1719CFAABEB2AD18EE8BF9460FAABA"
+                  },
+                  {
+                      "Path":  "Goals/AcceptanceCriteria.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2907,
+                      "SHA256":  "9302468743E7F71595A46136F6D49560E2D8B0684FB11A4D01FC90BBB6F85197"
+                  },
+                  {
+                      "Path":  "Goals/DispatcherPipelineProbe.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  5632,
+                      "SHA256":  "6E80B7BF9A19594AFF37C64B54A9DF7B7BFEB09D871CF61193394BB85D775A5E"
+                  },
+                  {
+                      "Path":  "Goals/DispatcherStressSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  10370,
+                      "SHA256":  "ECECE2A222DD137DECB7CE99D2056B59F016AAA389DF11E209EAA29A23D0C6ED"
+                  },
+                  {
+                      "Path":  "Goals/EventCoordinatorSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  24307,
+                      "SHA256":  "75F094DEF4E86D65FD9DE467160B52D4A8B2EC32986046D0B3FDB5C16EFDE057"
+                  },
+                  {
+                      "Path":  "Goals/EventDrivenAgent.cs",
+                      "Category":  "ejecutor-compatibilidad",
+                      "Bytes":  27530,
+                      "SHA256":  "563C299A2B9AB040661A43A1FCA6E822F699440D0C68D66D529DBE9C1DD58BF7"
+                  },
+                  {
+                      "Path":  "Goals/EventOperationCoordinator.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  26701,
+                      "SHA256":  "2F08EB31B90A49762A0424AEBBB9ECEFF0955E82394C2A37123D33FD05EB69F7"
+                  },
+                  {
+                      "Path":  "Goals/EvidenceManifest.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3301,
+                      "SHA256":  "4DCD08670ED14569096E57BFD2B27B99EEE39BCD548A163B30A180BCAD92A601"
+                  },
+                  {
+                      "Path":  "Goals/GoalContext.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  7911,
+                      "SHA256":  "9E284608D1714B1576FBCB77A1BDB1474B77528F05D45092955F7810A5464449"
+                  },
+                  {
+                      "Path":  "Goals/OperationAcceptance.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  5380,
+                      "SHA256":  "69849F929AC04335E3FFFBFAC43DDF9F7B4E105E2E153DAB4C1817657D524D78"
+                  },
+                  {
+                      "Path":  "Goals/OperationAdmission.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3465,
+                      "SHA256":  "71762C2E65F97B98A12A821CC197AA5646D1616932840AE7D3A8F7F6EB3017E8"
+                  },
+                  {
+                      "Path":  "Goals/OperationContextBuilder.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1701,
+                      "SHA256":  "BE3C329023F113BA3C8DD0D453A0DA3688018CC09213343EC71585667E958280"
+                  },
+                  {
+                      "Path":  "Goals/OperationContract.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  5202,
+                      "SHA256":  "D42D70B9349C2E825C084B6B77A1AAF678B7394617E3E8ED9CA6E9517A5AFD6A"
+                  },
+                  {
+                      "Path":  "Goals/OperationTools.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  20527,
+                      "SHA256":  "AA5B8F944B0145D410B0BD2B5798938F1F7D2B580D39FE100DDE7DF1828453C4"
+                  },
+                  {
+                      "Path":  "Goals/TruncationRecoverySelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  5473,
+                      "SHA256":  "397B6FC6A42FF2F584706FC2D854818179BE079E41BBD31ECC62C033A0F9F9E7"
+                  },
+                  {
+                      "Path":  "Goals/WatchdogSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  5212,
+                      "SHA256":  "EB6F0028007F8C5D4A68AFE2D98DB229F0DFC698EE034AE852C63119DAF9544E"
+                  },
+                  {
+                      "Path":  "Harness/Composition/CommandHeader.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  828,
+                      "SHA256":  "67D21B01DEA99741072460B436340F63B0D5A7500983F8C5A837002D53A4634D"
+                  },
+                  {
+                      "Path":  "Harness/Composition/CompositionSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  3588,
+                      "SHA256":  "FAB3CD88760048FEA69D12FD81ED1CCE7DC88434A57746CFEA99108A1535BA1A"
+                  },
+                  {
+                      "Path":  "Harness/Composition/GoalRunFactory.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  7316,
+                      "SHA256":  "B5D9660A4D8D093A08F9EE5A85662ADB0B7942BF1E1357B449A124CBC5DD94D3"
+                  },
+                  {
+                      "Path":  "Harness/Concurrency/AsyncLock.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2155,
+                      "SHA256":  "D8E010F99BAC3A12123DB060ADC6284B27545DAF77F956C6F65BF157C852109A"
+                  },
+                  {
+                      "Path":  "Harness/Concurrency/ConcurrencySelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  6403,
+                      "SHA256":  "2F2B92F2A4F5C49E0A5883914D70CAE2263BFBF13ECAB19BE4A716307E9785B7"
+                  },
+                  {
+                      "Path":  "Harness/Concurrency/IdempotencyCache.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  8212,
+                      "SHA256":  "755B005602AA7981D77B9FE3722E9FF3880B21F9805F62048D5865C1D1C4B8E7"
+                  },
+                  {
+                      "Path":  "Harness/Concurrency/IdempotencyKey.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  5176,
+                      "SHA256":  "6F3C7B1EEBCBF382C93EB9F7686ACB961108FC0D24025A70F5FA8F43E2C52E38"
+                  },
+                  {
+                      "Path":  "Harness/Core/Journey.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4169,
+                      "SHA256":  "86963EC9AAC734EE4D8A4F071201A91F2DAD38D8C024A2C4E907C4D473824400"
+                  },
+                  {
+                      "Path":  "Harness/Core/JourneyDiagnosis.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  21556,
+                      "SHA256":  "E0B549AB05A492815A078731F5D36A52D8A8289D9344084C0011E7D86E1CBBCF"
+                  },
+                  {
+                      "Path":  "Harness/Core/MachineState.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1019,
+                      "SHA256":  "ED523E20F3723B4686B03AB05123E4B96AFC4B2119D1CA695F406CC62D1868ED"
+                  },
+                  {
+                      "Path":  "Harness/Core/Run.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1036,
+                      "SHA256":  "CFFF8C6D624232853863BB962202DCDC54894B3A0EE583D16786A4E976C92131"
+                  },
+                  {
+                      "Path":  "Harness/Core/RunContext.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1211,
+                      "SHA256":  "B7502C61C2501599752FDEC840265F226C74A4ECCE16824401876D6D402749E5"
+                  },
+                  {
+                      "Path":  "Harness/Core/RunResult.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  570,
+                      "SHA256":  "99ABB89600AB7C6748053CAEE83B8A70D3975A28252FEE15DFAC1FA65E2FF2BC"
+                  },
+                  {
+                      "Path":  "Harness/Durable/FileRunStore.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3779,
+                      "SHA256":  "0C8652C8ABF644D466BBB77A40A8A64364B57F367C8B2391ECA7D1B649AEDACB"
+                  },
+                  {
+                      "Path":  "Harness/Durable/IRunStore.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  736,
+                      "SHA256":  "58A553A0E0F74CE5426ADD3DF3226694D3C0E80D5214AD1603BFF11F0875C088"
+                  },
+                  {
+                      "Path":  "Harness/Durable/OperationEventJournal.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2685,
+                      "SHA256":  "D51FA7BF50F0C7BF60738D61E494B6CB44699E6D59BE888D6DF7BC41D56C6A77"
+                  },
+                  {
+                      "Path":  "Harness/Durable/RunSnapshot.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1086,
+                      "SHA256":  "4E2BD2AC72BC5B0F3AC1956F2354EC045E70E6BA65E67C853B9C56B766C28C04"
+                  },
+                  {
+                      "Path":  "Harness/Functional/Composable.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1835,
+                      "SHA256":  "FA11E4588E795F4C7CB575F049335B2C144F5894D3EA782FC2496DCD0F83A73A"
+                  },
+                  {
+                      "Path":  "Harness/Functional/Composition.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1924,
+                      "SHA256":  "C24BC50A7707A8EE87A8A7D6C82482192A82D5705915C4288B08BC563F0688BB"
+                  },
+                  {
+                      "Path":  "Harness/Functional/Immutable.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1149,
+                      "SHA256":  "14010C752334C0393ED62C4C029495092CBEA2EE2FCB2694E2E362DEE94AB634"
+                  },
+                  {
+                      "Path":  "Harness/Functional/Lazy.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1450,
+                      "SHA256":  "8B35D53973248B882BF7E7D50DE5B13DC278A04AC2024D704165FC58AF692D4A"
+                  },
+                  {
+                      "Path":  "Harness/Functional/Pure.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1932,
+                      "SHA256":  "08783FAEEC3F5ED83C460EB207854C09CA22EC265D842F757410153312D98A7B"
+                  },
+                  {
+                      "Path":  "Harness/Functional/Result.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2331,
+                      "SHA256":  "65962DA5BE39A4F35876F2B09F52534B7F6D129FD181600FB672BD0A22BB4651"
+                  },
+                  {
+                      "Path":  "Harness/Lifecycle/LifecycleAndBusDedupSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  5998,
+                      "SHA256":  "A58662E4D302B612240DB583A14860FF1F0C7E5E3F70A24F57BBE28A3BF0C838"
+                  },
+                  {
+                      "Path":  "Harness/Lifecycle/LifecycleRecorder.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2504,
+                      "SHA256":  "2C95DCEC61D52694876525DEA141BB9057F875E7EC40A927C6A5289A1754201A"
+                  },
+                  {
+                      "Path":  "Harness/Lifecycle/RunLifecycle.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3274,
+                      "SHA256":  "8660E7991356A5FA0F97C8FB4C14A62613EBB5801A66B6005DC740EBCAAA4AD0"
+                  },
+                  {
+                      "Path":  "Harness/Lifecycle/RunLifecycleMutex.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1880,
+                      "SHA256":  "CCA0BFEEEFB8DE492EA3EDCFD72D7FA9F02F6B6F2BC4B4C92C15A7F28AD2097E"
+                  },
+                  {
+                      "Path":  "Harness/Observability/ConsoleObserver.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1976,
+                      "SHA256":  "12781452CB2B12A41F0CD83A7BAA3D873A91725DCAD73F3CE918D09699D4EF26"
+                  },
+                  {
+                      "Path":  "Harness/Observability/IRunObserver.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1492,
+                      "SHA256":  "E3B3CF18D0DBACBCBDB40664C237E566C9DFDB84EBB3A51F105406B350F5BEE4"
+                  },
+                  {
+                      "Path":  "Harness/Observability/MetricsCollector.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2087,
+                      "SHA256":  "E656DF207F5BDC8D48F9BECB15C0B53F5084ACB819AB49EF1182C6919874370B"
+                  },
+                  {
+                      "Path":  "Harness/Observability/StructuredLog.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  909,
+                      "SHA256":  "5984E3CB17EECF3D9BC75FFAB061B8E3918A1DECFE2645006D5790C3D98C5D6A"
+                  },
+                  {
+                      "Path":  "Harness/Patterns/CircuitBreakerPattern.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  942,
+                      "SHA256":  "CA65EAC779F700EE99C2DF5117F57F09701A01C4CF9A0C556D7DCA388DDFA335"
+                  },
+                  {
+                      "Path":  "Harness/Patterns/Composition.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1753,
+                      "SHA256":  "55491ED63E13A487C5AD162137B2248440A5C10E4C50BB3F8BA0B99665C42353"
+                  },
+                  {
+                      "Path":  "Harness/Patterns/IPattern.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1558,
+                      "SHA256":  "FF99EA0890E6FE3C98EBE8771E9394DAA8C27340108F6F2AFBD9534864215C95"
+                  },
+                  {
+                      "Path":  "Harness/Patterns/RetryPattern.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1808,
+                      "SHA256":  "F0F600022CB111D18BFA131A5F9722FBE21E3A9E64F1ECB37B4D6CF8DE882465"
+                  },
+                  {
+                      "Path":  "Harness/Patterns/TimeoutPattern.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  958,
+                      "SHA256":  "5F93B4428A27E5EE374745F1856BA7FA01C45A627E4CA5A207F735DF510C4F11"
+                  },
+                  {
+                      "Path":  "Harness/Runner/GoalRunner.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  6394,
+                      "SHA256":  "CDE63BDB40FF7DB4B0E2843A40A121EF8A273249437257F478517B3999CB044E"
+                  },
+                  {
+                      "Path":  "Harness/Runner/IRunner.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  565,
+                      "SHA256":  "6A08208F46FBFEEEF26F0777A4966CF6CFD89786A83961F5F7965C0576D5AC91"
+                  },
+                  {
+                      "Path":  "Harness/Runner/RunnerOptions.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1240,
+                      "SHA256":  "6C344FCF4471420C7B87F5C70F2DD3C90BC32C34CCDE9DAB3CA16BFC87894C7C"
+                  },
+                  {
+                      "Path":  "Harness/Scope.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2463,
+                      "SHA256":  "9D565CFA41786678D91557C3EFA86F6E186A22DF48F9EB2AC80BE797E11A2F4F"
+                  },
+                  {
+                      "Path":  "Harness/Steps/Step.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4796,
+                      "SHA256":  "7CDD97EC587410599560C0FDE67556AAEF5F863631D53EBD3311756CDD9C85E4"
+                  },
+                  {
+                      "Path":  "Harness/Steps/StepRecorder.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2764,
+                      "SHA256":  "3E44185D038689B7533FBD321365DD97FB159104A025E0B79F7C602350AA952A"
+                  },
+                  {
+                      "Path":  "Harness/Testing/FakeLLMClient.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1462,
+                      "SHA256":  "6108A2B8C1BE362EECA5F5424F0E297C27164E0D6FDC0F8FEFC2152D1BAB75C3"
+                  },
+                  {
+                      "Path":  "Harness/Traceability/Correlation.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1388,
+                      "SHA256":  "F37B6EE48D0B5BC8050F05B013FD062E5371ABE8004988CFBA5A4247672365E1"
+                  },
+                  {
+                      "Path":  "Harness/Traceability/CorrelationContext.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1268,
+                      "SHA256":  "21C33DADA84ADF200AA1313F98EA601D8E1B7A8ECD339B875B73837B68FB5A75"
+                  },
+                  {
+                      "Path":  "Harness/Traceability/CorrelationPropagator.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1914,
+                      "SHA256":  "CC02C71BA2B25E0E565F9289DD7B10E01768D697C179C75262C5A4E395183578"
+                  },
+                  {
+                      "Path":  "local-secrets/README.md",
+                      "Category":  "guia-credenciales",
+                      "Bytes":  977,
+                      "SHA256":  "A4C08D4AC53A134406F441C8EA5CA3ECFE61747B09331D44AA0B6B6999431FA4"
+                  },
+                  {
+                      "Path":  "Looping/AgentLoopRunner.cs",
+                      "Category":  "ejecutor-compatibilidad",
+                      "Bytes":  4501,
+                      "SHA256":  "67FD89A96DEFA44B63197840F9FC08EDF31CB2B5FB4A8A7A9B68FAABBB457371"
+                  },
+                  {
+                      "Path":  "Looping/LoopContext.cs",
+                      "Category":  "ejecutor-compatibilidad",
+                      "Bytes":  3020,
+                      "SHA256":  "035EA13F0951B726E06B93CDB79FA325CDB49BCBDB3796B4A8DC1F6DC4A7DC2D"
+                  },
+                  {
+                      "Path":  "Parsing/CompletionParser.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  15866,
+                      "SHA256":  "4C960625ADE3E3572E9AECA5D24A047D1AFA13ED86642115DED853F9E57803CF"
+                  },
+                  {
+                      "Path":  "Parsing/ParsedCompletion.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3820,
+                      "SHA256":  "13F8226A58A31677520884AB58DDF7A6C7348DD9C6A19D652594E480B9031AA6"
+                  },
+                  {
+                      "Path":  "Parsing/StreamAccumulator.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  7065,
+                      "SHA256":  "280BE08858335B4842A58471632DDB50F29224E15F62FC0437E85F16E9358B6F"
+                  },
+                  {
+                      "Path":  "Parsing/ThinkingTrace.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4158,
+                      "SHA256":  "CA3F5B41D08D99371A744C4E3CF83A40AA0AB127362F9759E9A69D2934463452"
+                  },
+                  {
+                      "Path":  "Program.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  125331,
+                      "SHA256":  "1A6920AE9C583285757702B84A8F9BFE9C91B5FA75D51AC22051C2CB202CAB8B"
+                  },
+                  {
+                      "Path":  "Prompting/PromptTemplate.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4063,
+                      "SHA256":  "C074862145C2A18CDB6182592C049AF0EDEA97F5D463C5648641E791C3FE15B2"
+                  },
+                  {
+                      "Path":  "Prompting/PromptVariables.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3552,
+                      "SHA256":  "8CBC6D5F3EA135A7D771C8E0E768F59C5F9709561136A5D89420AF503220486C"
+                  },
+                  {
+                      "Path":  "Prompting/SanitizationContract.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2155,
+                      "SHA256":  "92E77A30E84767D4AD4F196DBA77FAEBFE0166A75161F3C583557E4C6A39E4AE"
+                  },
+                  {
+                      "Path":  "Prompting/SanitizationSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  9324,
+                      "SHA256":  "29C19504798ED92F4A8C9653C8594EF7A151F99BC1B381309E53687CEBAB9C69"
+                  },
+                  {
+                      "Path":  "Prompting/SystemPrompt.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1550,
+                      "SHA256":  "7A6E8E6DA19E99C744DE20A65259DECA073FAA882F22703E09145358578217A1"
+                  },
+                  {
+                      "Path":  "Prompting/TextSanitizer.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  7800,
+                      "SHA256":  "D9903A80C12254F4FF693A61973D11C62CF2151B46A99692397E5FA5D9A4B2B2"
+                  },
+                  {
+                      "Path":  "Properties/launchSettings.json",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  1623,
+                      "SHA256":  "7AEA4C30CFDBABA211C5CC8E1500F8AB1B36A812D038E66FC46417A17C39206C"
+                  },
+                  {
+                      "Path":  "Provider/Contracts/ChatContracts.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  5859,
+                      "SHA256":  "DC2E305CF084DC07043E0239F46B0198C31891111264F706628D1BC858CFBC52"
+                  },
+                  {
+                      "Path":  "Provider/Contracts/ILLMClient.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  608,
+                      "SHA256":  "417825B245AC92593E97B729EDD24A7F7C02FC8EFF8462A502F7033F86D4CF9C"
+                  },
+                  {
+                      "Path":  "Provider/Contracts/LLMException.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1278,
+                      "SHA256":  "CFEC2086D07289A0D0129DD737A8760A0C5AB83DA24C2F59CCB4FBB439274058"
+                  },
+                  {
+                      "Path":  "Provider/Contracts/TransportOptions.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  993,
+                      "SHA256":  "C7FD5E7FC2C91814418C7E127C6F06A727F923453B8B79B114A8037778AD11D2"
+                  },
+                  {
+                      "Path":  "Provider/Helpers/ResponseBudgets.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  311,
+                      "SHA256":  "96B0C08DB80538D2217DF281A732BBA6C53C8D5EA984B68C4129332493371E05"
+                  },
+                  {
+                      "Path":  "Provider/Helpers/ThinkingPolicy.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  6595,
+                      "SHA256":  "9F7D8BAE189BFB3C244BEA10F52235ADB9C65F0E5774197B80D2CD6E1040275B"
+                  },
+                  {
+                      "Path":  "Provider/Helpers/TransientErrors.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  159,
+                      "SHA256":  "6F112630B1980E15B0C90A029D7C482CCD8CF1438647DA1808E2D87B5C530633"
+                  },
+                  {
+                      "Path":  "Provider/Nvidia/NvidiaClient.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  13604,
+                      "SHA256":  "1720AF5844E8775E75D56BF4F0D2E980650822B0ED411FF751163E67AB969D85"
+                  },
+                  {
+                      "Path":  "Provider/Nvidia/NvidiaModelCatalog.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  359,
+                      "SHA256":  "08571275A62AC3AE47897892C0B371D10E9D91BDAE78A6745324F22F922F6ECC"
+                  },
+                  {
+                      "Path":  "Provider/Nvidia/NvidiaOptions.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  795,
+                      "SHA256":  "72AD74DE83027027A8D16B0E4B8624932E918DC436C323FF0ADE02065F2617A5"
+                  },
+                  {
+                      "Path":  "Provider/Nvidia/NvidiaRequestAdapter.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1811,
+                      "SHA256":  "C5FB0D4030D1853710D27BB2135CA9EFE4153A6C0AF733A65D0732D6C56E3B1B"
+                  },
+                  {
+                      "Path":  "Provider/Nvidia/ProviderContractSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  3278,
+                      "SHA256":  "0298F82833AD01A7E5CBE159EC621F36FC4D31CD1072CC4825D72703AEEF74DC"
+                  },
+                  {
+                      "Path":  "Provider/README.md",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  3393,
+                      "SHA256":  "503305C0C3D61B5BB3175A9504E1DD919D4BF6534F8CA12A81BDE9EB9CF9117F"
+                  },
+                  {
+                      "Path":  "Provider/Transport/ChatCompletionsTransport.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2393,
+                      "SHA256":  "DD539173B07E80B7E5F32449842997B1C0F7B95F78F6AC3F0421701F61AD14CB"
+                  },
+                  {
+                      "Path":  "README.md",
+                      "Category":  "configuracion-o-indice",
+                      "Bytes":  5457,
+                      "SHA256":  "ACDA63F03E52A549631BE26A1D3C7E40F437145971E5B31AB5D514154713FB88"
+                  },
+                  {
+                      "Path":  "scripts/audit-repository.ps1",
+                      "Category":  "herramienta-mantenimiento",
+                      "Bytes":  6728,
+                      "SHA256":  "AB70C658BE445AEAC18E854291B991276603B7883C88DFC55FB26A9F1B97322E"
+                  },
+                  {
+                      "Path":  "Security/BoundedReadStream.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1370,
+                      "SHA256":  "58DBB9FD4C0E1711381D512CF385FB13F9099435F87C0593AF525535F391B50C"
+                  },
+                  {
+                      "Path":  "Security/Contracts/HarnessDataDtos.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1644,
+                      "SHA256":  "5B05C86F7B999C27C2B123801035A624E027D8F14B90DABA81D24FF3CAFA353D"
+                  },
+                  {
+                      "Path":  "Security/DataGuard.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4288,
+                      "SHA256":  "0D934D3F2372EAC98A6297810ED395C5DD98F2273344A29736FB33E25289BB99"
+                  },
+                  {
+                      "Path":  "Security/DataLimits.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  405,
+                      "SHA256":  "1EC2AB7752BE7B6A4524E20E117338AEB34BF6B7B068ED6069CF4A112FDF963B"
+                  },
+                  {
+                      "Path":  "Security/ProtectedResources.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1255,
+                      "SHA256":  "C250A27D3CA5A1DC67B1512F1A6AA3B56BA869754AB3E2D66903EA9D70BAB5ED"
+                  },
+                  {
+                      "Path":  "Security/SafeStreamingText.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1071,
+                      "SHA256":  "A3F75B0FEC399182A382CA9109A5B13A6316BA6CEF99520B72EA60354BF66B8C"
+                  },
+                  {
+                      "Path":  "Security/SecuritySelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  8671,
+                      "SHA256":  "DC7E0FBE9E14C1A0D6AF7CBDA18560359B7E386DE1275291FC87C0C135816055"
+                  },
+                  {
+                      "Path":  "Security/StrictJson.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1967,
+                      "SHA256":  "2E67BE69EEC7214BB0B0C99ADDB995DBCC338C0080CFF9CAA304C029DFCB887A"
+                  },
+                  {
+                      "Path":  "Security/ToolArgumentValidator.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  4105,
+                      "SHA256":  "003C7153B357F658A94258211687C265B7ACE14DD22744EF0F25F46EF226C1D1"
+                  },
+                  {
+                      "Path":  "StateMachines/AgentContext.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  2445,
+                      "SHA256":  "21549F0E41272E105B911D7748893C14508CD1FAE27819AAF9F472D21CAECD8F"
+                  },
+                  {
+                      "Path":  "StateMachines/AgentStateMachine.cs",
+                      "Category":  "ejecutor-compatibilidad",
+                      "Bytes":  10319,
+                      "SHA256":  "BF8AB8762B137578DBD41D41A29AE4172C5EE1F9DF051EE30861DB86F04A651F"
+                  },
+                  {
+                      "Path":  "StateMachines/ConversationMemory.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3274,
+                      "SHA256":  "E070809E168FAAA2082A5CEA3F47251D30948EF7E278A2941793AAA5D3524984"
+                  },
+                  {
+                      "Path":  "StateMachines/ConversationThread.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  6690,
+                      "SHA256":  "C3BCE4C39C55B207AFA2492963DD471DC2702B8643931541C0608C8C588143D0"
+                  },
+                  {
+                      "Path":  "StateMachines/StateMachine.cs",
+                      "Category":  "ejecutor-compatibilidad",
+                      "Bytes":  5425,
+                      "SHA256":  "D7FED9E43B054C9467F299796A436CE808E2F8E6F4BB5935C2A81E4CBCAEC145"
+                  },
+                  {
+                      "Path":  "StateMachines/StateTransition.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  822,
+                      "SHA256":  "E31232EC86633C44C46DFFB923AADE44E7A7B645908EB0753FCA95FDBCF09B57"
+                  },
+                  {
+                      "Path":  "StateMachines/TickStateMachine.cs",
+                      "Category":  "ejecutor-compatibilidad",
+                      "Bytes":  982,
+                      "SHA256":  "A2E5FD9DF44DC7ACC48709A2EA8963D9DB34350137C210D904AE9F6320B787D9"
+                  },
+                  {
+                      "Path":  "Terminals/ProcessHandle.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  6141,
+                      "SHA256":  "6B653D9D4F1CCC1227125448794DD3F3770140048B8301DCB2E492C371D7516D"
+                  },
+                  {
+                      "Path":  "Terminals/ProcessSupervisor.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  14797,
+                      "SHA256":  "9A0D65AE0D0CBE784F5EF08600F07A05272FCC73D4092BA27BA9C6459DE537BA"
+                  },
+                  {
+                      "Path":  "Terminals/ShellCommand.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  9363,
+                      "SHA256":  "7D40713DFA929F1E01D001963340C24BAC9F210BD2F873E09188A9B4D7714DB6"
+                  },
+                  {
+                      "Path":  "Tools/BuiltInTools.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  13089,
+                      "SHA256":  "59BCB5B74488769074F8612F19D9E4AD918DA7164EF6594A630B3DEA656D6F46"
+                  },
+                  {
+                      "Path":  "Tools/IdempotentTool.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  3911,
+                      "SHA256":  "30652869E2E615FD73B0EEA9009E71C7341D1AEF0ABC01E427DC8803E84B1034"
+                  },
+                  {
+                      "Path":  "Tools/IdempotentToolSelfTest.cs",
+                      "Category":  "comprobacion-local",
+                      "Bytes":  6710,
+                      "SHA256":  "A074131EBB077EE22565389022C18103E2B964E3EAD801AA34C0E94CE80B013C"
+                  },
+                  {
+                      "Path":  "Tools/ITool.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  1935,
+                      "SHA256":  "B5CA79D679E56DFF5555F04CB5F478217019E53F2BCFF5DA13685EA622C328BC"
+                  },
+                  {
+                      "Path":  "Tools/ToolRegistry.cs",
+                      "Category":  "codigo-compilado",
+                      "Bytes":  7002,
+                      "SHA256":  "7CAF05811017BF1070062FDFC18C1D584488C50F127ADA8AD8ABD9AEE0410B0F"
+                  }
+              ],
+    "LocalDirectories":  [
+                             {
+                                 "Directory":  "bin",
+                                 "Files":  5,
+                                 "Bytes":  1328155,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "salida-regenerable-no-versionada",
+                                 "FileMetadata":  [
+                                                      {
+                                                          "Path":  "bin/Debug/net9.0/AgentLoop.deps.json",
+                                                          "Bytes":  419
+                                                      },
+                                                      {
+                                                          "Path":  "bin/Debug/net9.0/AgentLoop.dll",
+                                                          "Bytes":  954880
+                                                      },
+                                                      {
+                                                          "Path":  "bin/Debug/net9.0/AgentLoop.exe",
+                                                          "Bytes":  156160
+                                                      },
+                                                      {
+                                                          "Path":  "bin/Debug/net9.0/AgentLoop.pdb",
+                                                          "Bytes":  216428
+                                                      },
+                                                      {
+                                                          "Path":  "bin/Debug/net9.0/AgentLoop.runtimeconfig.json",
+                                                          "Bytes":  268
+                                                      }
+                                                  ]
+                             },
+                             {
+                                 "Directory":  "obj",
+                                 "Files":  20,
+                                 "Bytes":  1710671,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "salida-regenerable-no-versionada",
+                                 "FileMetadata":  [
+                                                      {
+                                                          "Path":  "obj/AgentLoop.csproj.nuget.dgspec.json",
+                                                          "Bytes":  2481
+                                                      },
+                                                      {
+                                                          "Path":  "obj/AgentLoop.csproj.nuget.g.props",
+                                                          "Bytes":  1315
+                                                      },
+                                                      {
+                                                          "Path":  "obj/AgentLoop.csproj.nuget.g.targets",
+                                                          "Bytes":  150
+                                                      },
+                                                      {
+                                                          "Path":  "obj/project.assets.json",
+                                                          "Bytes":  2466
+                                                      },
+                                                      {
+                                                          "Path":  "obj/project.nuget.cache",
+                                                          "Bytes":  206
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs",
+                                                          "Bytes":  198
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.AssemblyInfo.cs",
+                                                          "Bytes":  1087
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.AssemblyInfoInputs.cache",
+                                                          "Bytes":  66
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.assets.cache",
+                                                          "Bytes":  234
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.csproj.BuildWithSkipAnalyzers",
+                                                          "Bytes":  0
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.csproj.CoreCompileInputs.cache",
+                                                          "Bytes":  66
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.csproj.FileListAbsolute.txt",
+                                                          "Bytes":  1157
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.dll",
+                                                          "Bytes":  954880
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.GeneratedMSBuildEditorConfig.editorconfig",
+                                                          "Bytes":  680
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.genruntimeconfig.cache",
+                                                          "Bytes":  66
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.GlobalUsings.g.cs",
+                                                          "Bytes":  295
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/AgentLoop.pdb",
+                                                          "Bytes":  216428
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/apphost.exe",
+                                                          "Bytes":  156160
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/ref/AgentLoop.dll",
+                                                          "Bytes":  186368
+                                                      },
+                                                      {
+                                                          "Path":  "obj/Debug/net9.0/refint/AgentLoop.dll",
+                                                          "Bytes":  186368
+                                                      }
+                                                  ]
+                             },
+                             {
+                                 "Directory":  ".vs",
+                                 "Files":  32,
+                                 "Bytes":  14630030,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "estado-IDE-conservado",
+                                 "FileMetadata":  [
+                                                      {
+                                                          "Path":  ".vs/ProjectSettings.json",
+                                                          "Bytes":  37
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/slnx.sqlite",
+                                                          "Bytes":  208896
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/VSWorkspaceState.json",
+                                                          "Bytes":  116
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/CopilotIndices/17.14.1696.13113/CodeChunks.db",
+                                                          "Bytes":  466944
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/CopilotIndices/17.14.1696.13113/SemanticSymbols.db",
+                                                          "Bytes":  233472
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/FileContentIndex/14e5ecdd-7dab-47f0-b08a-fd93b55d29aa.vsidx",
+                                                          "Bytes":  41415
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/FileContentIndex/347a1ea7-e6bf-4586-a292-31a8567b374a.vsidx",
+                                                          "Bytes":  42786
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/FileContentIndex/571618bc-a9d5-492d-94ce-90e68571f9b5.vsidx",
+                                                          "Bytes":  99077
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/FileContentIndex/5aa352b0-9da2-44ab-9358-a05bf29b34c9.vsidx",
+                                                          "Bytes":  49549
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/FileContentIndex/a004d813-f012-4f25-b54c-a5f94fc5b349.vsidx",
+                                                          "Bytes":  34476
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/v17/.wsuo",
+                                                          "Bytes":  21504
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/v17/DocumentLayout.backup.json",
+                                                          "Bytes":  254
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/agent loop/v17/DocumentLayout.json",
+                                                          "Bytes":  254
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/CopilotIndices/17.14.1696.13113/CodeChunks.db",
+                                                          "Bytes":  2613248
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/CopilotIndices/17.14.1696.13113/CodeChunks.db-shm",
+                                                          "Bytes":  32768
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/CopilotIndices/17.14.1696.13113/CodeChunks.db-wal",
+                                                          "Bytes":  4181832
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/CopilotIndices/17.14.1696.13113/SemanticSymbols.db",
+                                                          "Bytes":  823296
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/CopilotIndices/17.14.1696.13113/SemanticSymbols.db-shm",
+                                                          "Bytes":  32768
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/CopilotIndices/17.14.1696.13113/SemanticSymbols.db-wal",
+                                                          "Bytes":  4243632
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/DesignTimeBuild/.dtbcache.v2",
+                                                          "Bytes":  89082
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/FileContentIndex/3bc91a48-564c-470c-8acd-1c08922715f9.vsidx",
+                                                          "Bytes":  221997
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/FileContentIndex/5ed03bdb-2964-448e-a35e-753c0610629f.vsidx",
+                                                          "Bytes":  214931
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/FileContentIndex/bb2b0cb9-19a6-46a1-b9f9-4a20e819344f.vsidx",
+                                                          "Bytes":  248033
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/FileContentIndex/bf116155-d49f-4a05-86d4-dc6adfc1be4d.vsidx",
+                                                          "Bytes":  210315
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/FileContentIndex/e5629088-5f4f-4737-b5f5-99438a03e5a6.vsidx",
+                                                          "Bytes":  254394
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/v17/.futdcache.v2",
+                                                          "Bytes":  121
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/v17/.suo",
+                                                          "Bytes":  34816
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/v17/DocumentLayout.backup.json",
+                                                          "Bytes":  1626
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/AgentLoop/v17/DocumentLayout.json",
+                                                          "Bytes":  2749
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/ProjectEvaluation/agentloop.metadata.v9.bin",
+                                                          "Bytes":  1599
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/ProjectEvaluation/agentloop.projects.v9.bin",
+                                                          "Bytes":  84758
+                                                      },
+                                                      {
+                                                          "Path":  ".vs/ProjectEvaluation/agentloop.strings.v9.bin",
+                                                          "Bytes":  139285
+                                                      }
+                                                  ]
+                             },
+                             {
+                                 "Directory":  ".agentloop",
+                                 "Files":  47,
+                                 "Bytes":  1482931,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "estado-operativo-y-archivo-conservados",
+                                 "FileMetadata":  [
+                                                      {
+                                                          "Path":  ".agentloop/coordinator-contract-check.txt",
+                                                          "Bytes":  3002
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/coordinator-help-check.txt",
+                                                          "Bytes":  13258
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-coordinator-initial-check.txt",
+                                                          "Bytes":  11516
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/eventos-validacion-nvidia-2026-09-28.txt",
+                                                          "Bytes":  142
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/archive/2026-09-30/agentic-models-tokenrouter.json",
+                                                          "Bytes":  22450
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/0b2c72cd607d4c6a92930bb6997874cf.jsonl",
+                                                          "Bytes":  34246
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/1bc720a65409403787a52c23d20be57e.jsonl",
+                                                          "Bytes":  36882
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/1d7bdda3ff7340d99f837a911d0726bb.jsonl",
+                                                          "Bytes":  36876
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/2c179c010adb496a844ba87a936283f7.jsonl",
+                                                          "Bytes":  39553
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/2e1b9c6e6b564311b5eb57baf772d2a2.jsonl",
+                                                          "Bytes":  39130
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/38db3df181c94a7da37532da7e232ad2.jsonl",
+                                                          "Bytes":  39675
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/5d22f812f87547b3baf0d93fc682e31a.jsonl",
+                                                          "Bytes":  34373
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/6116501f96854f9880cd4473d03d23c2.jsonl",
+                                                          "Bytes":  34249
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/6121f3c05ab14f318dce170150c5add8.jsonl",
+                                                          "Bytes":  70500
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/721c6a0f325e4c0ca0bfd6761b06cc47.jsonl",
+                                                          "Bytes":  39667
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/8029e33cdcc342af8ba5261cb097f1d0.jsonl",
+                                                          "Bytes":  39678
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/845b42b4fa3f4905a858548bfb82ed8c.jsonl",
+                                                          "Bytes":  32754
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/8803d5efb2014e2a8de1095f7e3be7de.jsonl",
+                                                          "Bytes":  34260
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/8b4a768a8adc4ae68d78338d3f65bccb.jsonl",
+                                                          "Bytes":  34238
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/9181badfb73b4225a04a534288b1c249.jsonl",
+                                                          "Bytes":  34374
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/9c9bf506494a43e78fa45d4d77d8ab06.jsonl",
+                                                          "Bytes":  39555
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/9f128cddff3e46538b9253a3c9309d1e.jsonl",
+                                                          "Bytes":  34259
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/a430627da67a46568c77075a22897ceb.jsonl",
+                                                          "Bytes":  34379
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/b1a3feec7f68447b83fd9b1c278a3192.jsonl",
+                                                          "Bytes":  36883
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/bd76fdc605244f18a0c316257ac1873c.jsonl",
+                                                          "Bytes":  39682
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/c2b4652dac16401287b9c87cd3b1f3d3.jsonl",
+                                                          "Bytes":  34255
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/ce75a16839ab48c7a28e5e7619cf0435.jsonl",
+                                                          "Bytes":  36885
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/e2b6d810b0034c92b73fd80d09cc6185.jsonl",
+                                                          "Bytes":  68912
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/event-journal/ea698cd2b9fd4516ac917d4bf81f5da8.jsonl",
+                                                          "Bytes":  34373
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/evidence/poema-eventos-20260930.txt",
+                                                          "Bytes":  140
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260928-072356-3a273a59941a40038d45def542099e4c.json",
+                                                          "Bytes":  15243
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260928-072423-339b1f06a50b46f98d7565673b323c50.json",
+                                                          "Bytes":  15241
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260928-072450-4ec2c6ffa11d45629df17fd5844a4368.json",
+                                                          "Bytes":  15244
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260928-072733-491bafdddefb4d4588c9dff53c86f518.json",
+                                                          "Bytes":  32734
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260930-072204-32068fb57f28442198fdfa8ea80554b9.json",
+                                                          "Bytes":  15244
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260930-080618-74d36fcb7a4e45f9942722f15de40d56.json",
+                                                          "Bytes":  26851
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260930-081327-c668a9f6525649598c8b8aedf7668b0a.json",
+                                                          "Bytes":  26849
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260930-081736-73df5245b9b447eaa5e6f3cebb4d0127.json",
+                                                          "Bytes":  26815
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260930-082027-cf622716500541e3a4b7672740f1f8bf.json",
+                                                          "Bytes":  26818
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20260930-101436-124eb70c5bec497eae90a42d8b17838e.json",
+                                                          "Bytes":  57934
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-071641-851eb95cca2d4b5ab97c937c4313128b.json",
+                                                          "Bytes":  30462
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-071733-1abe57079b9b43b5bb2a2140156a3ff1.json",
+                                                          "Bytes":  31307
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-071938-c1f552b050bd4d798a806dc0c50eff08.json",
+                                                          "Bytes":  31306
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-073154-fa02b230f3cb42d3876b4d705594ede7.json",
+                                                          "Bytes":  35185
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-073337-4b93f0ec5af14bd1bf6b042fc1ceba9e.json",
+                                                          "Bytes":  35183
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-073611-2f27b3c300534334912be2685314a95a.json",
+                                                          "Bytes":  35184
+                                                      },
+                                                      {
+                                                          "Path":  ".agentloop/operations/20261001-073810-744cda7a56c346d18837e05fbedcdc48.json",
+                                                          "Bytes":  35185
+                                                      }
+                                                  ]
+                             },
+                             {
+                                 "Directory":  "artifacts",
+                                 "Files":  2,
+                                 "Bytes":  3582,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "catalogos-generados-y-journeys-persistidos",
+                                 "FileMetadata":  [
+                                                      {
+                                                          "Path":  "artifacts/journeys/c4c2db21393440cd9ef474ae794b131e-scripted.md",
+                                                          "Bytes":  1185
+                                                      },
+                                                      {
+                                                          "Path":  "artifacts/journeys/c4c2db21393440cd9ef474ae794b131e.json",
+                                                          "Bytes":  2397
+                                                      }
+                                                  ]
+                             },
+                             {
+                                 "Directory":  "notes",
+                                 "Files":  0,
+                                 "Bytes":  0,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "directorio-de-trabajo-local",
+                                 "FileMetadata":  [
+
+                                                  ]
+                             },
+                             {
+                                 "Directory":  "local-secrets",
+                                 "Files":  3,
+                                 "Bytes":  1099,
+                                 "ContentInspected":  false,
+                                 "Disposition":  "credenciales-conservadas-sin-inspeccionar-contenido",
+                                 "FileMetadata":  [
+
+                                                  ]
+                             }
+                         ],
+    "LocalLinks":  [
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/remote-goal.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/provider-catalog.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/harness-probe.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/before-fix-commit.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/before-fix-status.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/before-fix.patch",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/after-fix-build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/after-fix-selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/after-fix-probe.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/nvidia-poem-run.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/nvidia-poem-evidence.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/chat-nvidia-console.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/audit-summary.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/remote-goal.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/provider-catalog.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/harness-probe.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/HarnessProbe.cs.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/run-probe.ps1",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/evidence-manifest.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/after-fix-probe.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/nvidia-catalog-after-fix.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/nvidia-ping-after-fix.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/nvidia-poem-run.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/nvidia-poem-evidence.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/analisis-harness-poema-2026-09-27.md",
+                           "Target":  "evidence/2026-09-27/chat-nvidia-console.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EventDrivenAgent.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/OperationTools.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Cards/CardLedger.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Cards/CardLedger.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/AcceptanceCriteria.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EvidenceManifest.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Looping/AgentLoopRunner.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Runner/GoalRunner.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Program.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EventDrivenAgent.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/OperationTools.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Tools/BuiltInTools.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EventDrivenAgent.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Events/EventBus.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Terminals/ProcessSupervisor.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Scope.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Composition/GoalRunFactory.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Program.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Tools/BuiltInTools.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Events/EventBus.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EventDrivenAgent.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Durable/FileRunStore.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Program.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Terminals/ProcessSupervisor.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Program.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EventDrivenAgent.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Events/EventBus.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Steps/StepRecorder.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Events/EventBus.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Steps/StepRecorder.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Concurrency/ResetEvents.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/OperationTools.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Terminals/ProcessSupervisor.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/GoalContext.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Program.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EvidenceManifest.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Goals/EventDrivenAgent.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Patterns/RetryPattern.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Program.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Runner/GoalRunner.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/auditoria-gaps-harness-2026-09-30.md",
+                           "Target":  "../Harness/Composition/GoalRunFactory.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/contexto-y-memoria.md",
+                           "Target":  "harness-eventos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/contexto-y-memoria.md",
+                           "Target":  "validacion-eventos-2026-09-28.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/contexto-y-memoria.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/contexto-y-recursos.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/diagnostico-no-cierre.md",
+                           "Target":  "historico/diagnostico-no-cierre-previo-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/diagnostico-no-cierre.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/diagnostico-no-cierre.md",
+                           "Target":  "evidence/2026-09-30/nvidia-poema-traza.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "pos-before.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "selftest-first-attempt.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "selftest-second-attempt.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "repository-audit.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "../../incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01/README.md",
+                           "Target":  "../../harness-eventos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01-seguridad/README.md",
+                           "Target":  "build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01-seguridad/README.md",
+                           "Target":  "selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01-seguridad/README.md",
+                           "Target":  "repository-audit.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/2026-10-01-seguridad/README.md",
+                           "Target":  "../../seguridad-datos-harness.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01-seguridad/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "../analisis-harness-poema-2026-09-27.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "../validacion-eventos-2026-09-28.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "../implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/after-fix-probe-console.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "../../scripts/audit-repository.ps1",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/after-fix-probe-console.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/HarnessProbe.cs.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/after-fix-build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/after-fix-probe.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/after-fix-selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/audit-summary.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/before-fix-commit.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/before-fix-status.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/before-fix.patch",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/chat-nvidia-console.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/evidence-manifest.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/harness-probe.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/interactive-memo.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/nvidia-catalog-after-fix.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/nvidia-ping-after-fix.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/nvidia-poem-evidence.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/nvidia-poem-run.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/nvidia-poem-workspace/notes/poema-original.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/provider-catalog.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/remote-goal.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/run-probe.ps1",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-27/selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-30/compilacion.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-30/inspeccion-journal.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-30/nvidia-poema-eventos.jsonl",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-30/nvidia-poema-traza.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-30/poema.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-09-30/selftest-completo.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "eventos-antes-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "eventos-despues-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "eventos-final-2026-09-30.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "eventos-nvidia-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "eventos-regresion-antes-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "eventos-regresion-despues-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/pos-before.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/selftest-first-attempt.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/selftest-second-attempt.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/repository-audit.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01-seguridad/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01-seguridad/build.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01-seguridad/selftest.txt",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/evidence/README.md",
+                           "Target":  "2026-10-01-seguridad/repository-audit.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/harness-eventos.md",
+                           "Target":  "incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/harness-eventos.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/harness-eventos.md",
+                           "Target":  "seguridad-datos-harness.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/harness-eventos.md",
+                           "Target":  "evidence/2026-10-01/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/historico/diagnostico-no-cierre-previo-2026-09-30.md",
+                           "Target":  "../diagnostico-no-cierre.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/implementacion-coordinador-eventos-2026-09-30.md",
+                           "Target":  "harness-eventos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/implementacion-coordinador-eventos-2026-09-30.md",
+                           "Target":  "auditoria-gaps-harness-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/implementacion-coordinador-eventos-2026-09-30.md",
+                           "Target":  "evidence/2026-09-30/",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Target":  "../evidence/2026-10-01/pos-before.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Target":  "../harness-eventos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Target":  "../../Provider/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Target":  "../evidence/2026-10-01/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/limpieza-datos-repo-2026-09-30.md",
+                           "Target":  "limpieza-operaciones-2026-09-30.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/limpieza-datos-repo-2026-09-30.md",
+                           "Target":  "repository-data-inventory.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/limpieza-datos-repo-2026-09-30.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "../README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "seguridad-datos-harness.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "harness-eventos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "contexto-y-recursos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "contexto-y-memoria.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "diagnostico-no-cierre.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "limpieza-datos-repo-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "evidence/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "analisis-harness-poema-2026-09-27.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "validacion-eventos-2026-09-28.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "auditoria-gaps-harness-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "historico/diagnostico-no-cierre-previo-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/README.md",
+                           "Target":  "../scripts/audit-repository.ps1",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/seguridad-datos-harness.md",
+                           "Target":  "evidence/2026-10-01-seguridad/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "evidence/eventos-antes-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "evidence/eventos-regresion-antes-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "evidence/eventos-regresion-despues-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "evidence/eventos-despues-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "evidence/eventos-final-2026-09-30.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "docs/validacion-eventos-2026-09-28.md",
+                           "Target":  "evidence/eventos-nvidia-2026-09-28.log",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "local-secrets/README.md",
+                           "Target":  "../Configuration/SecretStore.cs",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "Provider/README.md",
+                           "Target":  "../local-secrets/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "Provider/README.md",
+                           "Target":  "../docs/seguridad-datos-harness.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "Properties/launchSettings.json",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "local-secrets/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/seguridad-datos-harness.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "Provider/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/harness-eventos.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/evidence/2026-10-01/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/evidence/2026-10-01-seguridad/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/README.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/implementacion-coordinador-eventos-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/limpieza-datos-repo-2026-09-30.md",
+                           "Exists":  true
+                       },
+                       {
+                           "Source":  "README.md",
+                           "Target":  "docs/evidence/README.md",
+                           "Exists":  true
+                       }
+                   ],
+    "ExactDuplicateGroups":  [
+
+                             ],
+    "HistoricalManifestDrift":  [
+                                    {
+                                        "Path":  "docs/analisis-harness-poema-2026-09-27.md",
+                                        "Reason":  "foto-historica-no-es-manifiesto-actual"
+                                    },
+                                    {
+                                        "Path":  "docs/evidence/2026-09-27/after-fix-probe.json",
+                                        "Reason":  "foto-historica-no-es-manifiesto-actual"
+                                    }
+                                ],
+    "Errors":  [
+
+               ]
+}

@@ -18,6 +18,9 @@ public sealed class RunnerOptions
     /// <summary>Modo del ExecutionPolicy subyacente (auto/confirmar/simular).</summary>
     public string PolicyMode { get; init; } = "auto";
 
+    public bool AllowShell { get; init; } = true;
+    public IReadOnlyList<string> AllowedPaths { get; init; } = [];
+
     /// <summary>Working directory del Scope. Por defecto el cwd.</summary>
     public string WorkingDirectory { get; init; } = Environment.CurrentDirectory;
 

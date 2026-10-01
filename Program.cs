@@ -17,6 +17,7 @@ using AgentLoop.Provider;
 using AgentLoop.StateMachines;
 using AgentLoop.Terminals;
 using AgentLoop.Tools;
+using AgentLoop.Security;
 
 namespace AgentLoop;
 
@@ -74,6 +75,8 @@ internal static class Program
             sessionPolicy = new ExecutionPolicy
             {
                 Mode = ParsePolicyMode(StringOption(args, "--politica")),
+                AllowShell = !HasFlag(args, "--no-shell"),
+                AllowedPaths = StringOption(args, "--scope-root") is { } scopeRoot ? [Path.GetFullPath(scopeRoot)] : [],
                 DefaultShell = ShellCommand.ParseShell(StringOption(args, "--shell")),
                 WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
                 MaxConcurrent = IntOption(args, "--max-procesos", 4),
@@ -256,7 +259,7 @@ internal static class Program
         var consoleGate = new object();
         void Log(string text)
         {
-            lock (consoleGate) { renderer?.Close(); Console.WriteLine(text); }
+            lock (consoleGate) { renderer?.Close(); Console.WriteLine(DataGuard.Display(text)); }
         }
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
             run, Scope.Minimal(policy), client, [], item => Log($"  evento {item}"));
@@ -321,6 +324,7 @@ internal static class Program
         CancellationToken cancellationToken)
     {
         var model = settings.Model;
+        tools = tools.WithScope(Scope.Minimal(settings.Policy));
 
         // Se refrescan aqui para que {{hora}} sea la del turno, no la del arranque.
         thread.Variables.WithDefaults(model, tools.Names);
@@ -371,7 +375,7 @@ internal static class Program
             Console.WriteLine("(turno no completado: se descarta del hilo para no corromperlo)");
         }
 
-        Console.WriteLine(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)");
+        Console.WriteLine(DataGuard.Display(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)"));
         Console.WriteLine();
 
         if (context.ThinkingObserved)
@@ -627,7 +631,7 @@ internal static class Program
     {
         foreach (var name in thread.Variables.Names)
         {
-            Console.WriteLine($"  {name,-14} = {Shorten(thread.Variables[name].Replace('\n', ' '), 80)}");
+            Console.WriteLine(DataGuard.Display($"  {name,-14} = {Shorten(thread.Variables[name].Replace('\n', ' '), 80)}"));
         }
 
         var missing = thread.SystemTemplate.MissingVariables(thread.Variables);
@@ -644,7 +648,7 @@ internal static class Program
             Console.WriteLine("  --- prompt de sistema ---");
             foreach (var line in thread.RenderSystemPrompt().Split('\n'))
             {
-                Console.WriteLine($"  {line}");
+                Console.WriteLine(DataGuard.Display($"  {line}"));
             }
         }
         catch (PromptTemplateException ex)
@@ -795,7 +799,7 @@ internal static class Program
     /// <summary>Una sola llamada: ejercita CAPA 1 (HTTP) y CAPA 2 (parseo) por separado.</summary>
     private static async Task<int> ChatAsync(string[] args, CancellationToken cancellationToken)
     {
-        var prompt = PositionalOrDefault(args, "Responde solo con la palabra OK.");
+        var prompt = DataGuard.Input(PositionalOrDefault(args, "Responde solo con la palabra OK."));
         var policy = ResolveThinkingPolicy(args);
         var stream = ResolveStreaming(args);
         using var client = BuildClient(out var source, policy);
@@ -809,7 +813,7 @@ internal static class Program
         Console.WriteLine($"modelo: {model}");
         Console.WriteLine($"thinking: {DescribeThinking(policy, model)}");
         Console.WriteLine($"modo: {(stream ? "stream" : "respuesta completa")}");
-        Console.WriteLine($"prompt: {prompt}");
+        Console.WriteLine(DataGuard.Display($"prompt: {prompt}"));
         Console.WriteLine();
 
         var request = new ChatRequest
@@ -861,13 +865,13 @@ internal static class Program
             parsed = CompletionParser.Parse(await client.CreateChatCompletionAsync(request, cancellationToken));
         }
 
-        Console.WriteLine($"finish_reason : {parsed.FinishReason}");
-        Console.WriteLine($"backend       : {parsed.Model}");
+        Console.WriteLine(DataGuard.Display($"finish_reason : {parsed.FinishReason}"));
+        Console.WriteLine(DataGuard.Display($"backend       : {parsed.Model}"));
         Console.WriteLine($"usage         : {parsed.Usage}");
         Console.WriteLine($"thinking      : {parsed.Thinking}");
         if (!stream && parsed.Thinking.Text is { Length: > 0 } thought)
         {
-            Console.WriteLine($"  {Shorten(thought, 200)}");
+            Console.WriteLine(DataGuard.Display($"  {Shorten(thought, 200)}"));
         }
 
         if (stream)
@@ -877,7 +881,7 @@ internal static class Program
         }
 
         Console.WriteLine();
-        Console.WriteLine(parsed.Content ?? "(content vacio)");
+        Console.WriteLine(DataGuard.Display(parsed.Content ?? "(content vacio)"));
         return 0;
     }
 
@@ -930,21 +934,26 @@ internal static class Program
     /// <summary>Corre el harness completo: maquina de estados + loop con bandera de corte.</summary>
     private static async Task<int> RunAsync(string[] args, CancellationToken cancellationToken)
     {
-        var prompt = PositionalOrDefault(args, "Suma 17 y 23 usando la herramienta y dime el resultado.");
+        var prompt = DataGuard.Input(PositionalOrDefault(args, "Suma 17 y 23 usando la herramienta y dime el resultado."));
         var maxIterations = IntOption(args, "--max-iterations", 12);
         var policy = ResolveThinkingPolicy(args);
         var stream = ResolveStreaming(args);
 
         using var client = BuildClient(out var source, policy);
         var model = ResolveModel(args);
-        var tools = BuiltInTools.DefaultRegistry();
+        var tools = BuiltInTools.DefaultRegistry().WithScope(Scope.Minimal(new ExecutionPolicy
+        {
+            AllowShell = !HasFlag(args, "--no-shell"),
+            AllowedPaths = StringOption(args, "--scope-root") is { } scopeRoot ? [Path.GetFullPath(scopeRoot)] : [],
+            WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
+        }));
 
         Console.WriteLine($"key      : {source}");
         Console.WriteLine($"modelo   : {model}");
         Console.WriteLine($"tools    : {string.Join(", ", tools.Names)}");
         Console.WriteLine($"thinking : {DescribeThinking(policy, model)}");
         Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
-        Console.WriteLine($"prompt   : {prompt}");
+        Console.WriteLine(DataGuard.Display($"prompt   : {prompt}"));
         Console.WriteLine();
 
         // Un solo renderer para todo el loop: cierra el bloque abierto antes de cada traza
@@ -1004,7 +1013,7 @@ internal static class Program
 
         Console.WriteLine();
         Console.WriteLine("--- respuesta ----------------------------------------");
-        Console.WriteLine(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)");
+        Console.WriteLine(DataGuard.Display(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)"));
         return result.Result.IsOk ? 0 : 1;
     }
 
@@ -1015,7 +1024,7 @@ internal static class Program
     /// </summary>
     private static async Task<int> GoalAsync(string[] args, CancellationToken cancellationToken)
     {
-        var objective = PositionalOrDefault(args, "Averigua que version de dotnet hay instalada y deja constancia.");
+        var objective = DataGuard.Input(PositionalOrDefault(args, "Averigua que version de dotnet hay instalada y deja constancia."));
         var deadline = IntOption(args, "--deadline", 300);
         var maxCycles = IntOption(args, "--max-ciclos", 80);
         var thinking = ResolveThinkingPolicy(args);
@@ -1027,6 +1036,8 @@ internal static class Program
             policy = new ExecutionPolicy
             {
                 Mode = ParsePolicyMode(StringOption(args, "--politica")),
+                AllowShell = !HasFlag(args, "--no-shell"),
+                AllowedPaths = StringOption(args, "--scope-root") is { } scopeRoot ? [Path.GetFullPath(scopeRoot)] : [],
                 DefaultShell = ShellCommand.ParseShell(StringOption(args, "--shell")),
                 WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
                 MaxConcurrent = IntOption(args, "--max-procesos", 4),
@@ -1062,7 +1073,7 @@ internal static class Program
                     Console.ForegroundColor = color.Value;
                 }
 
-                Console.WriteLine(line);
+                Console.WriteLine(DataGuard.Display(line));
                 Console.ForegroundColor = previous;
             }
         }
@@ -1071,7 +1082,7 @@ internal static class Program
         // callbacks custom (Log para eventos y trazas, renderer para deltas) y
         // ejecutamos el coordinador con el contexto que la factory devolvio.
         var run = Harness.Core.Run.FromObjective(objective, deadline, model);
-        var scope = new Scope(policy, [model], [], []);
+        var scope = new Scope(policy, [model], policy.AllowedPaths, []);
         EventOperationCoordinator? approvalTarget = null;
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
             run, scope, client, [],
@@ -1165,7 +1176,7 @@ internal static class Program
     /// </summary>
     private static async Task<int> JournalAsync(string[] args, CancellationToken cancellationToken)
     {
-        var objective = PositionalOrDefault(args, "averigua que version de dotnet hay instalada y dejala escrita en una nota");
+        var objective = DataGuard.Input(PositionalOrDefault(args, "averigua que version de dotnet hay instalada y dejala escrita en una nota"));
         var deadline = IntOption(args, "--deadline", 120);
         var maxCycles = IntOption(args, "--max-ciclos", 30);
         var stream = ResolveStreaming(args);
@@ -1186,6 +1197,9 @@ internal static class Program
             MaxIterations = maxCycles,
             MaxTokens = IntOption(args, "--max-tokens", 2048),
             Thinking = policy,
+            AllowShell = !HasFlag(args, "--no-shell"),
+            AllowedPaths = StringOption(args, "--scope-root") is { } scopeRoot ? [Path.GetFullPath(scopeRoot)] : [],
+            PolicyMode = StringOption(args, "--politica") ?? "auto",
             WorkingDirectory = StringOption(args, "--cwd") ?? Environment.CurrentDirectory,
         };
 
@@ -2138,6 +2152,8 @@ internal static class Program
     /// </summary>
     private sealed class DeltaRenderer
     {
+        private readonly SafeStreamingText _thinkingText = new();
+        private readonly SafeStreamingText _contentText = new();
         private bool _thinkingOpen;
         private bool _contentOpen;
 
@@ -2152,7 +2168,7 @@ internal static class Program
                     _thinkingOpen = true;
                 }
 
-                Write(delta.Thinking, ConsoleColor.DarkGray);
+                _thinkingText.Write(delta.Thinking, text => Write(text, ConsoleColor.DarkGray));
             }
 
             if (delta.Content.Length > 0)
@@ -2163,7 +2179,7 @@ internal static class Program
                     _contentOpen = true;
                 }
 
-                Console.Write(delta.Content);
+                _contentText.Write(delta.Content, Console.Write);
             }
 
             foreach (var toolDelta in delta.ToolCallDeltas)
@@ -2175,7 +2191,7 @@ internal static class Program
                 {
                     CloseThinking();
                     CloseContent();
-                    Write($"(llamando a {toolName})", ConsoleColor.DarkCyan);
+                    Write(DataGuard.Display($"(llamando a {toolName})"), ConsoleColor.DarkCyan);
 
                     // Deja la linea abierta a proposito: la cierra el siguiente bloque
                     // o Close(), y asi la traza del loop no se pega a este aviso.
@@ -2192,6 +2208,7 @@ internal static class Program
 
         private void CloseThinking()
         {
+            _thinkingText.Flush(text => Write(text, ConsoleColor.DarkGray));
             if (!_thinkingOpen)
             {
                 return;
@@ -2203,6 +2220,7 @@ internal static class Program
 
         private void CloseContent()
         {
+            _contentText.Flush(Console.Write);
             if (!_contentOpen)
             {
                 return;
@@ -2432,7 +2450,7 @@ internal static class Program
     }
 
     /// <summary>Opciones sin valor: hay que conocerlas para no comerse el prompt que va detras.</summary>
-    private static readonly string[] BooleanFlags = ["--stream", "--no-stream", "--sin-check", "--skip-model-check"];
+    private static readonly string[] BooleanFlags = ["--stream", "--no-stream", "--sin-check", "--skip-model-check", "--no-shell", "--json", "--allow-existing"];
 
     private static bool HasFlag(string[] args, string name)
         => args.Any(a => string.Equals(a, name, StringComparison.OrdinalIgnoreCase));
@@ -2510,6 +2528,8 @@ internal static class Program
               --max-procesos <n>    goal: procesos simultaneos permitidos (4).
               --shell <interprete>  goal: interprete por defecto (bash, sh, powershell, pwsh, cmd).
               --cwd <ruta>          goal: directorio de trabajo de los comandos.
+              --no-shell            Deshabilita comandos arbitrarios en operaciones.
+              --scope-root <ruta>   Acota archivos a una raiz; tambien bloquea shell arbitrario.
               --politica <modo>     goal: auto (por defecto), confirmar o simular.
               --system "<texto>"    Plantilla de prompt de sistema con huecos {{variable}}.
               --system-file <ruta>  La misma plantilla, leida de un archivo.

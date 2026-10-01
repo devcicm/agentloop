@@ -1,3 +1,6 @@
+using AgentLoop.Security;
+using AgentLoop.Prompting;
+
 namespace AgentLoop.Events;
 
 /// <summary>Que clase de suceso es. El agente reacciona a esto, no a turnos de conversacion.</summary>
@@ -75,7 +78,8 @@ public sealed record AgentEvent(
     public Guid? CausationId { get; init; }
     /// <summary>Linea corta para la traza de consola.</summary>
     public override string ToString()
-        => $"#{Sequence} {At:HH:mm:ss} {Kind} [{Source}] {Text}";
+        => TextSanitizer.Truncate(DataGuard.Display($"#{Sequence} {At:HH:mm:ss} {Kind} [{Source}] {Text}")
+            .Replace("\n", "\\n"), 4096);
 
     /// <summary>Como se le cuenta el suceso al modelo.</summary>
     public string ToPrompt()

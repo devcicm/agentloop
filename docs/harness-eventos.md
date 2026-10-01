@@ -151,6 +151,12 @@ acordado antes de ejecutar, validadores funcionales por dominio, reconciliacion
 manual de efectos no cooperativos y sondeo remoto del dialecto Kimi K3.
 No se garantiza un POS terminado en el deadline predeterminado de 300 segundos.
 
+## Seguridad de datos y DTOs
+
+Los resultados externos se etiquetan, normalizan y validan. Las acciones pasan
+por schema y recursos protegidos ademas de tarjetas/scope. La implementacion y
+los limites de --no-shell/--scope-root se explican en [seguridad de datos](seguridad-datos-harness.md).
+
 ## Validacion
 
 Compilacion y selftest sin red: ver [evidencia de esta entrega](evidence/2026-10-01/README.md).

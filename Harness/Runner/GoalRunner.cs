@@ -41,6 +41,7 @@ public sealed class GoalRunner : IRunner
         {
             WorkingDirectory = Path.GetFullPath(options.WorkingDirectory),
             MaxConcurrent = options.MaxConcurrent,
+            AllowShell = options.AllowShell, AllowedPaths = options.AllowedPaths,
             Mode = options.PolicyMode.ToLowerInvariant() switch
             {
                 "auto" => PolicyMode.Auto, "simular" => PolicyMode.Simular,

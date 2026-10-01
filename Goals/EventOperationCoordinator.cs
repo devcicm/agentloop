@@ -9,6 +9,8 @@ using AgentLoop.Parsing;
 using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.Tools;
+using AgentLoop.Security;
+using AgentLoop.Security.Contracts;
 
 namespace AgentLoop.Goals;
 
@@ -75,6 +77,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         if (MaxModelCalls < 1 || MaxNoProgress < 1 || MaxTransientFailures < 1 || MaxTokens < 64)
             throw new ArgumentOutOfRangeException(nameof(MaxModelCalls), "Presupuestos invalidos.");
         if (!scope.AllowsModel(model)) throw new InvalidOperationException("Modelo fuera del scope.");
+        _ = DataGuard.Input(context.Goal.Text);
         _started = true;
         _context = context;
         _admission = new(scope, context.Ledger);
@@ -151,7 +154,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         try
         {
             _currentEvent = item;
-            Observe(() => Trace?.Invoke($"evento #{item.Sequence} {item.Kind}: {item.Text}"));
+            Observe(() => Trace?.Invoke(DataGuard.Display($"evento #{item.Sequence} {item.Kind}: {item.Text}")));
             _journal.Append("received", item);
             // La cola del bus sirve a consumidores de espera; el actor recibe cada
             // evento por suscripcion y registra su propia confirmacion durable.
@@ -246,10 +249,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         _modelActive = true;
         Status = OperationStatus.Reasoning;
         var id = Guid.NewGuid();
-        var requested = Publish(AgentEventKind.ModeloSolicitado, "solicitud al modelo", new { action_id = id.ToString("N"), model, max_tokens = request.MaxTokens,
-            reasoning_effort = request.ReasoningEffort, recovery = _recovering, tool_choice = request.ToolChoice,
-            history_characters = JsonSerializer.Serialize(request.Messages).Length, messages = request.Messages.Count,
-            numeric_thinking_budget_is_provider_limit = false });
+        var requested = Publish(AgentEventKind.ModeloSolicitado, "solicitud al modelo", new ModelRequestDto(id.ToString("N"), model, request.MaxTokens, request.ReasoningEffort, _recovering,
+            request.ToolChoice, JsonSerializer.Serialize(request.Messages).Length, request.Messages.Count));
         _journal.Append("admitted", requested);
         _ = Task.Run(() => CollectModelAsync(id, request, requested.EventId));
     }
@@ -273,6 +274,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                 raw = accumulator.BuildRaw();
             }
             else raw = await client.CreateChatCompletionAsync(request, _lifetime.Token).ConfigureAwait(false);
+            raw = StrictJson.Parse(DataGuard.Redact(raw.GetRawText()), DataLimits.ProviderBytes);
             parsed = CompletionParser.Parse(raw);
         }
         catch (Exception ex) { error = ex; }
@@ -315,6 +317,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         _context.Messages.Add(ChatMessage.FromAssistant(TextSanitizer.Plain(parsed.Content), parsed.RawToolCalls));
         if (parsed.HasToolCalls)
         {
+            if (parsed.ToolCalls.Count > DataLimits.ToolCallsPerResponse)
+            { Stop(OperationStatus.Failed, "demasiadas herramientas en una respuesta"); return; }
             if (parsed.ToolCalls.Any(c => string.IsNullOrWhiteSpace(c.Id)) || parsed.ToolCalls.Select(c => c.Id).Distinct().Count() != parsed.ToolCalls.Count)
             { Stop(OperationStatus.Failed, "identificadores de herramientas invalidos"); return; }
             _textOnly = 0;
@@ -358,7 +362,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     {
         if (_scheduledCall is not { } call) return;
         _scheduledCall = null;
-        var admission = _admission.Admit(call);
+        var rejection = tools.ValidateArguments(call);
+        var admission = rejection is null ? _admission.Admit(call) : (Call: call, Rejection: rejection, Simulated: false);
         var transactionId = _context.Ledger.Current?.Id;
         var actionId = Guid.NewGuid();
         _actionActive = true;
@@ -404,10 +409,11 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             fields["receipt_id"] = JsonSerializer.SerializeToElement(receipt.Id);
             output = JsonSerializer.Serialize(fields);
         }
-        _context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
+        _context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName,
+            DataGuard.ForModel(output, execution.ToolName)));
         _context.ToolCalls++;
         _context.RememberObservation(execution.ToolName, output, execution.Failed);
-        _journal.Append("resolved", item, new { execution.ToolCallId, execution.ToolName, output, execution.Failed, receipt });
+        _journal.Append("resolved", item, new { execution.ToolCallId, execution.ToolName, output, execution.Failed, execution.EffectsMayHaveOccurred, receipt });
         Observe(() => OnToolCall?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed));
         RecordTool?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed);
         var fact = Publish(execution.Failed ? AgentEventKind.Error : AgentEventKind.HerramientaFinalizada,

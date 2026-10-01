@@ -1,5 +1,6 @@
 using System.Text.Json;
 using AgentLoop.Provider;
+using AgentLoop.Security;
 
 namespace AgentLoop.Tools;
 
@@ -33,8 +34,10 @@ public sealed class DelegateTool : ITool
         Description = description;
         _handler = handler;
 
-        using var doc = JsonDocument.Parse(parametersJsonSchema);
-        _parameters = doc.RootElement.Clone();
+        var schema = StrictJson.Parse(parametersJsonSchema);
+        var fields = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(schema.GetRawText())!;
+        fields.TryAdd("additionalProperties", JsonSerializer.SerializeToElement(false));
+        _parameters = JsonSerializer.SerializeToElement(fields);
     }
 
     public string Name { get; }

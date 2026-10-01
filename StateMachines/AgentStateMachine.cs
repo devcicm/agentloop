@@ -3,6 +3,7 @@ using AgentLoop.Parsing;
 using AgentLoop.Prompting;
 using AgentLoop.Provider;
 using AgentLoop.Tools;
+using AgentLoop.Security;
 
 namespace AgentLoop.StateMachines;
 
@@ -216,7 +217,7 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
             context.ToolExecutions.Add(execution);
             // Una tool que devuelve texto suelto o un stack trace descoloca a los modelos
             // que asumen JSON en role=tool; se envuelve en vez de mandarlo crudo.
-            var output = TextSanitizer.EnsureJsonObject(execution.Output);
+            var output = DataGuard.ForModel(execution.Output, execution.ToolName);
             context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
             Trace?.Invoke($"  tool {call.Name}({call.RawArguments}) -> {Shorten(execution.Output)}");
         }

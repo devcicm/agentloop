@@ -261,6 +261,7 @@ public static class EventCoordinatorSelfTest
             Check("recuperacion POS crea, comprueba y cierra artefacto real", result.IsSuccess && File.ReadAllText(path) == "40");
         }
         await ProviderContractSelfTest.RunAsync(Check, token);
+        await AgentLoop.Security.SecuritySelfTest.RunAsync(Check, root, token);
 
         var scope = new Scope(new(), [], [Path.Combine(root, "permitido")], []);
         Check("scope no acepta directorio vecino por prefijo", !scope.AllowsPath(Path.Combine(root, "permitido-ajeno", "a.txt")));

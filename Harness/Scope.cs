@@ -21,7 +21,7 @@ public sealed record Scope(
 {
     /// <summary>Scope minimo: la policy sola, sin whitelists adicionales.</summary>
     public static Scope Minimal(ExecutionPolicy policy)
-        => new(policy, [], [], []);
+        => new(policy, [], policy.AllowedPaths, []);
 
     /// <summary>Devuelve true si <paramref name="model"/> esta permitido (o si no hay whitelist).</summary>
     public bool AllowsModel(string model)
@@ -29,7 +29,8 @@ public sealed record Scope(
 
     /// <summary>Devuelve true si <paramref name="tool"/> esta permitida (o si no hay whitelist).</summary>
     public bool AllowsTool(string tool)
-        => AllowedTools.Count == 0 || AllowedTools.Any(t => string.Equals(t, tool, StringComparison.OrdinalIgnoreCase));
+        => !((!Policy.AllowShell || AllowedPaths.Count > 0) && tool is "ejecutar" or "lanzar")
+            && (AllowedTools.Count == 0 || AllowedTools.Any(t => string.Equals(t, tool, StringComparison.OrdinalIgnoreCase)));
 
     /// <summary>
     /// Devuelve true si <paramref name="path"/> cae dentro de alguno de los

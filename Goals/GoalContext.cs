@@ -78,6 +78,17 @@ public sealed class GoalContext
     /// <summary>Preferencias y antecedentes de sesion, separados del estado de esta operacion.</summary>
     public string? SessionContext { get; set; }
 
+    private readonly Queue<string> _observations = new();
+    public void RememberObservation(string tool, string output, bool failed)
+    {
+        // A bounded index, not a substitute for full journal evidence or a usable receipt.
+        var excerpt = output.Length <= 500 ? output : output[..500] + " [ver journal para resultado completo]";
+        using var document = JsonDocument.Parse(output);
+        var receipt = document.RootElement.TryGetProperty("receipt_id", out var id) ? id.GetString() : null;
+        _observations.Enqueue($"{tool}: {(failed ? "FALLO" : "OK")} receipt_id={receipt ?? "ninguno"} {excerpt}");
+        while (_observations.Count > 6) _observations.Dequeue();
+    }
+
     public TimeSpan Elapsed => DateTimeOffset.Now - StartedAt;
 
     public TimeSpan Remaining => Goal.Budget - Elapsed;
@@ -134,6 +145,8 @@ public sealed class GoalContext
         }
 
         builder.AppendLine();
+        builder.AppendLine("OBSERVACIONES RECIENTES (indice; resultados completos en journal)");
+        foreach (var observation in _observations) builder.AppendLine(observation);
         builder.AppendLine("ESTADO DE LAS TARJETAS");
         builder.AppendLine(Ledger.DescribeState());
 

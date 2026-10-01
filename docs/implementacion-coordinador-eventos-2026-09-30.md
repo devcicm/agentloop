@@ -1,3 +1,6 @@
+> Revision del 30 de septiembre. La evolucion de proveedores, contexto y
+> recuperacion del 1 de octubre se documenta en [harness vigente](harness-eventos.md).
+
 # Implementacion del coordinador por eventos
 
 ## Antes y despues

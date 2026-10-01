@@ -22,7 +22,7 @@ public sealed record EventOperationResult(OperationStatus Status, string Reason,
 /// Un actor de operacion. Cada publicacion agenda su handler; no itera estados
 /// ni llama StepAsync. Modelo y herramientas publican resultados desde tareas independientes.
 /// </summary>
-public sealed class EventOperationCoordinator(ITokenRouterClient client, string model, ToolRegistry tools, Scope scope)
+public sealed class EventOperationCoordinator(ILLMClient client, string model, ToolRegistry tools, Scope scope)
 {
     private readonly object _mailboxGate = new();
     private readonly object _observerGate = new();
@@ -46,6 +46,7 @@ public sealed class EventOperationCoordinator(ITokenRouterClient client, string 
     private string? _stopReason;
     private OperationStatus _stopStatus;
     private int _textOnly, _failures, _adaptiveTokens;
+    private bool _recovering;
     private ParsedToolCall? _scheduledCall;
     private AgentEvent? _currentEvent;
 
@@ -234,16 +235,21 @@ public sealed class EventOperationCoordinator(ITokenRouterClient client, string 
         var request = new ChatRequest
         {
             Model = model, Messages = _context.Messages.ToArray(), Tools = filtered,
-            ToolChoice = filtered is null ? null : "auto", ParallelToolCalls = false, Temperature = Temperature,
-            MaxTokens = Math.Max(_adaptiveTokens, Thinking?.EnsureHeadroom(MaxTokens, model) ?? MaxTokens),
-            Thinking = Thinking?.For(model), StreamOptions = Stream ? StreamOptions.WithUsage : null,
+            ToolChoice = filtered is null ? null : _recovering ? "required" : "auto", ParallelToolCalls = false, Temperature = Temperature,
+            MaxTokens = _recovering ? ResponseBudgets.DuringRecovery(MaxTokens, _adaptiveTokens)
+                : Thinking?.EnsureHeadroom(MaxTokens, model) ?? MaxTokens,
+            Thinking = _recovering ? ThinkingOptions.Off : Thinking?.For(model),
+            ReasoningEffort = NvidiaModelCatalog.IsGlm53(model) ? "low" : null, StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
         if (JsonSerializer.Serialize(request).Length > 600000) { Stop(OperationStatus.Failed, "contexto excesivo; reduce resultados o antecedentes"); return; }
         _context.Cycles++;
         _modelActive = true;
         Status = OperationStatus.Reasoning;
         var id = Guid.NewGuid();
-        var requested = Publish(AgentEventKind.ModeloSolicitado, "solicitud al modelo", new { action_id = id.ToString("N"), model });
+        var requested = Publish(AgentEventKind.ModeloSolicitado, "solicitud al modelo", new { action_id = id.ToString("N"), model, max_tokens = request.MaxTokens,
+            reasoning_effort = request.ReasoningEffort, recovery = _recovering, tool_choice = request.ToolChoice,
+            history_characters = JsonSerializer.Serialize(request.Messages).Length, messages = request.Messages.Count,
+            numeric_thinking_budget_is_provider_limit = false });
         _journal.Append("admitted", requested);
         _ = Task.Run(() => CollectModelAsync(id, request, requested.EventId));
     }
@@ -288,8 +294,8 @@ public sealed class EventOperationCoordinator(ITokenRouterClient client, string 
         if (_stopReason is not null) { TryFinishStop(); return; }
         if (delivery.Error is { } error)
         {
-            var transient = error is HttpRequestException or TimeoutException || error is TokenRouterException provider
-                && ((int)provider.StatusCode == 0 || (int)provider.StatusCode == 429 || (int)provider.StatusCode >= 500);
+            var transient = error is HttpRequestException or TimeoutException || error is LLMException provider
+                && ((int)provider.StatusCode == 0 || TransientErrors.IsRetryableStatus((int)provider.StatusCode));
             if (transient && ++_failures < MaxTransientFailures)
             {
                 _ = RecoveryAsync(TimeSpan.FromSeconds(Math.Min(15, 3 * Math.Pow(2, _failures - 1))), "reintento por fallo transitorio");
@@ -306,21 +312,25 @@ public sealed class EventOperationCoordinator(ITokenRouterClient client, string 
         if (parsed.Thinking.Observed) Thinking?.MarkSupported(model);
         Observe(() => OnModelCall?.Invoke(parsed, delivery.Elapsed));
         RecordModel?.Invoke(parsed, delivery.Elapsed);
-        _context.Messages.Add(ChatMessage.FromAssistant(TextSanitizer.Plain(parsed.Content), parsed.RawToolCalls, parsed.Thinking.Text));
+        _context.Messages.Add(ChatMessage.FromAssistant(TextSanitizer.Plain(parsed.Content), parsed.RawToolCalls));
         if (parsed.HasToolCalls)
         {
             if (parsed.ToolCalls.Any(c => string.IsNullOrWhiteSpace(c.Id)) || parsed.ToolCalls.Select(c => c.Id).Distinct().Count() != parsed.ToolCalls.Count)
             { Stop(OperationStatus.Failed, "identificadores de herramientas invalidos"); return; }
             _textOnly = 0;
             _adaptiveTokens = 0;
+            _recovering = false;
             foreach (var call in parsed.ToolCalls) _calls.Enqueue(call);
             Advance();
         }
         else if (_context.Supervisor.Running == 0)
         {
             if (++_textOnly >= MaxNoProgress) { Stop(OperationStatus.Failed, "sin progreso: el modelo no propone acciones ni tarjetas"); return; }
-            if (parsed.FinishReason == "length") _adaptiveTokens = Math.Min(8192, Math.Max(MaxTokens * 2, _adaptiveTokens * 2));
-            _ = RecoveryAsync(TimeSpan.FromMilliseconds(100), "recuperacion acotada: usa herramientas y tarjetas; comprobar exige evidencia_id del resultado");
+            _recovering = true;
+            if (parsed.FinishReason == "length") _adaptiveTokens = ResponseBudgets.Recovery(MaxTokens);
+            _ = RecoveryAsync(TimeSpan.FromMilliseconds(100),
+                "recuperacion acotada: la respuesta anterior no ejecuto acciones. Emite una herramienta concreta y pequena; "
+                + "crea un archivo por llamada, no escribas el proyecto entero en razonamiento. Usa tarjetas; comprobar exige evidencia_id del resultado.");
         }
         else RequestReason(); // Sin hechos nuevos permanece esperando eventos reales del proceso.
     }
@@ -396,6 +406,7 @@ public sealed class EventOperationCoordinator(ITokenRouterClient client, string 
         }
         _context.Messages.Add(ChatMessage.FromToolResult(execution.ToolCallId, execution.ToolName, output));
         _context.ToolCalls++;
+        _context.RememberObservation(execution.ToolName, output, execution.Failed);
         _journal.Append("resolved", item, new { execution.ToolCallId, execution.ToolName, output, execution.Failed, receipt });
         Observe(() => OnToolCall?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed));
         RecordTool?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed);

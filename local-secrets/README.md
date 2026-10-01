@@ -14,6 +14,6 @@ subiendo por sus ancestros. El fallback legado conserva compatibilidad;
 una clave de otro proveedor no acredita acceso a NVIDIA. Si el archivo NVIDIA
 existe pero esta vacio, no se utiliza el archivo legado como reemplazo.
 
-El endpoint esta en `Provider/TokenRouterOptions.cs`. La consola enmascara la
+El endpoint esta en `Provider/Nvidia/NvidiaOptions.cs`. La consola enmascara la
 clave al informar su procedencia. No crear una segunda copia del secreto ni
 incluir una clave real en documentacion, prompts o evidencia versionada.

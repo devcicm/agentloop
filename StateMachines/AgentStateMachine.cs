@@ -34,10 +34,10 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
         [AgentState.Failed] = [],
     };
 
-    private readonly ITokenRouterClient _client;
+    private readonly ILLMClient _client;
     private readonly ToolRegistry _tools;
 
-    public AgentStateMachine(ITokenRouterClient client, string model, ToolRegistry? tools = null)
+    public AgentStateMachine(ILLMClient client, string model, ToolRegistry? tools = null)
         : base(AgentState.Idle)
     {
         _client = client;
@@ -97,7 +97,7 @@ public class AgentStateMachine : StateMachine<AgentState, AgentContext>
 
     protected override ValueTask<AgentState> OnErrorAsync(Exception error, AgentContext context, CancellationToken cancellationToken)
     {
-        context.FailureReason = error is TokenRouterException provider
+        context.FailureReason = error is LLMException provider
             ? $"[{provider.StatusCode}] {provider.ProviderMessage}"
             : $"{error.GetType().Name}: {error.Message}";
 

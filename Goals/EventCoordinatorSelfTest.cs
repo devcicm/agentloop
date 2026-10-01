@@ -215,6 +215,53 @@ public static class EventCoordinatorSelfTest
             Check("contrato JSON rechaza contenido que solo es texto", !result.IsSuccess && fixture.Context.Ledger.Rejected >= 2);
         }
 
+        var task = OperationContextBuilder.Build("ok, apruebo el plan, procede en modo de ejecucion",
+            "sistema", [ChatMessage.FromUser("Crea un POS en pos_system con HTML JS y SQLite"),
+                ChatMessage.FromAssistant("plan", reasoning: new string('x', 30000))]);
+        Check("aprobacion hereda requisitos sin copiar razonamiento", task.Inherited && task.Objective.Contains("pos_system") && task.SessionContext == "sistema");
+        var independent = OperationContextBuilder.Build("crea un poema nuevo", "sistema", [ChatMessage.FromUser("POS anterior")]);
+        Check("objetivo independiente no hereda el proyecto anterior", !independent.Inherited && !independent.Objective.Contains("POS"));
+        var bounded = OperationContextBuilder.Build("continua", new string('s', 20000),
+            Enumerable.Range(0, 20).Select(_ => ChatMessage.FromUser(new string('u', 20000))).ToArray());
+        Check("continuacion simple y acentuada hereda requisitos",
+            bounded.Inherited && OperationContextBuilder.Build("contin\u00faa", "", [ChatMessage.FromUser("POS")]).Inherited);
+        Check("contexto previo tiene limite independiente", bounded.Objective.Length < 7000 && bounded.SessionContext.Length < 6100);
+        using (var fixture = new Fixture(root, "recuperacion POS"))
+        {
+            var path = Path.Combine(root, "pos.txt");
+            var recoveryRequired = false;
+            var observedAfterTrim = false;
+            var fake = new ScriptClient((request, number, ct) =>
+            {
+                if (number == 1) return Task.FromResult(Response(Open()));
+                if (number == 2) return Task.FromResult(JsonSerializer.SerializeToElement(new
+                {
+                    choices = new[] { new { finish_reason = "length", message = new { content = (string?)null, reasoning_content = new string('r', 2048) } } },
+                    usage = new { completion_tokens = 2048, completion_tokens_details = new { reasoning_tokens = 2048 } },
+                }));
+                if (number == 3)
+                {
+                    recoveryRequired = request.ToolChoice == "required" && request.MaxTokens == 4096
+                        && request.Thinking?.Mode == ThinkingMode.Disabled && request.Messages.All(m => m.ReasoningContent is null);
+                    return Task.FromResult(Response(Call("write_text_file", new { path, content = "40" }, "write")));
+                }
+                if (number == 4)
+                {
+                    var receipt = Receipt(request, "write_text_file");
+                    fixture.Context.Messages.Clear();
+                    observedAfterTrim = fixture.Context.Brief([]).Contains(receipt);
+                    return Task.FromResult(Response(CheckCard(receipt), Close()));
+                }
+                return Task.FromResult(Response(Abort()));
+            });
+            var result = await fixture.Coordinator(fake, criteria: [new(path, "40")]).RunAsync(fixture.Context, token);
+            Check("razonamiento truncado recupera con accion pequena y presupuesto acotado", recoveryRequired
+                && ResponseBudgets.DuringRecovery(50000, 4096) == 8192);
+            Check("observacion y receipt sobreviven fuera del historial", observedAfterTrim);
+            Check("recuperacion POS crea, comprueba y cierra artefacto real", result.IsSuccess && File.ReadAllText(path) == "40");
+        }
+        await ProviderContractSelfTest.RunAsync(Check, token);
+
         var scope = new Scope(new(), [], [Path.Combine(root, "permitido")], []);
         Check("scope no acepta directorio vecino por prefijo", !scope.AllowsPath(Path.Combine(root, "permitido-ajeno", "a.txt")));
         using (var fixture = new Fixture(root, "concurrencia", maxConcurrent: 1))
@@ -265,7 +312,7 @@ public static class EventCoordinatorSelfTest
             ? JsonSerializer.SerializeToElement(new { choices = new[] { new { finish_reason = "stop", message = new { role = "assistant", content = "texto sin accion" } } } })
             : JsonSerializer.SerializeToElement(new { choices = new[] { new { finish_reason = "tool_calls", message = new { role = "assistant", tool_calls = calls } } } });
 
-    private sealed class ScriptClient(Func<ChatRequest, int, CancellationToken, Task<JsonElement>> response) : ITokenRouterClient
+    private sealed class ScriptClient(Func<ChatRequest, int, CancellationToken, Task<JsonElement>> response) : ILLMClient
     {
         private int _requests;
         public Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ModelInfo>>([]);
@@ -293,7 +340,7 @@ public static class EventCoordinatorSelfTest
             Context = new() { Goal = Goal.Of(objective, seconds), Bus = Bus, Supervisor = Supervisor,
                 Ledger = new(CardDeck.Transaccional) { WorkingDirectory = root, AcceptanceObjective = objective } };
         }
-        public EventOperationCoordinator Coordinator(ITokenRouterClient client, int maxNoProgress = 3,
+        public EventOperationCoordinator Coordinator(ILLMClient client, int maxNoProgress = 3,
             IReadOnlyList<ArtifactCriterion>? criteria = null, ToolRegistry? extra = null,
             Action<string, string, bool, TimeSpan>? onTool = null)
         {

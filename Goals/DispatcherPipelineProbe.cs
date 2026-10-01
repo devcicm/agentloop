@@ -110,7 +110,7 @@ public static class DispatcherPipelineProbe
         return results.All(r => r.Ok);
     }
 
-    private sealed class ProbeClient : ITokenRouterClient
+    private sealed class ProbeClient : ILLMClient
     {
         public Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default)
             => Task.FromResult<IReadOnlyList<ModelInfo>>([]);

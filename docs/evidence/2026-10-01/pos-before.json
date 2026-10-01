@@ -1,0 +1,45 @@
+{
+  "capture_date": "2026-10-01",
+  "baseline_commit": "6d0e954",
+  "operation_source": ".agentloop/operations/20260930-101436-124eb70c5bec497eae90a42d8b17838e.json",
+  "operation_sha256": "d34b4fa90ef4b99ba74ef76920ab60f0b94145c6bf05be48f8acc14bf8eb417c",
+  "journal_source": ".agentloop/event-journal/6121f3c05ab14f318dce170150c5add8.jsonl",
+  "journal_sha256": "f51d4797db2832b40990cb5252705f6af36869fa262704caecc135a63b9049c1",
+  "state": "Failed",
+  "stop": "deadline del objetivo agotado",
+  "model": "z-ai/glm-5.3",
+  "usage": {
+    "PromptTokens": 54720,
+    "CompletionTokens": 6828,
+    "TotalTokens": 61548,
+    "ThinkingTokens": 6563
+  },
+  "actual_tools": [
+    "tarjeta: abrir",
+    "ejecutar: node --version"
+  ],
+  "file_writes": 0,
+  "service_launches": 0,
+  "truncated_responses": [
+    {
+      "completion_tokens": 2048,
+      "reasoning_tokens": 2048,
+      "tool_calls": 0
+    },
+    {
+      "completion_tokens": 4096,
+      "reasoning_tokens": 4096,
+      "tool_calls": 0
+    }
+  ],
+  "system_characters": 34235,
+  "target_existed_at_inspection": false,
+  "scope": "Extracto de datos comprobados; no contiene chat ni razonamiento completo.",
+  "journal_phases": {
+    "received": 31,
+    "applied": 31,
+    "admitted": 7,
+    "resolved": 7,
+    "terminal": 1
+  }
+}

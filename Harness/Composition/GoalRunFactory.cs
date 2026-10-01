@@ -18,7 +18,7 @@ namespace AgentLoop.Harness.Composition;
 /// Composicion compartida del harness de operaciones: monta bus con identidad
 /// causal, supervisor, tarjetas, registro canonical de tools filtrado por Scope,
 /// contexto y captura local de evidencia. GoalRunner usa el actor por eventos;
-/// los tipos TokenRouter* conservan nombres historicos por compatibilidad.
+/// el puerto ILLMClient separa al proveedor del motor.
 /// </summary>
 public static class GoalRunFactory
 {
@@ -43,7 +43,7 @@ public static class GoalRunFactory
     public static GoalRunSetup Build(
         Core.Run run,
         Scope scope,
-        ITokenRouterClient client,
+        ILLMClient client,
         IReadOnlyList<IRunObserver> observers)
     {
         ArgumentNullException.ThrowIfNull(run);
@@ -107,7 +107,7 @@ public static class GoalRunFactory
     public static GoalRunSetup BuildWithBusRecording(
         Core.Run run,
         Scope scope,
-        ITokenRouterClient client,
+        ILLMClient client,
         IReadOnlyList<IRunObserver> observers)
     {
         var setup = Build(run, scope, client, observers);
@@ -142,7 +142,7 @@ public static class GoalRunFactory
     public static GoalRunSetup BuildWithBusHook(
         Core.Run run,
         Scope scope,
-        ITokenRouterClient client,
+        ILLMClient client,
         IReadOnlyList<IRunObserver> observers,
         Action<AgentEvent> onPublished)
     {
@@ -163,7 +163,7 @@ public static class GoalRunFactory
     public static async Task<(RunResult Result, Journey Journey)> RunWithRunnerAsync(
         Core.Run run,
         RunnerOptions options,
-        ITokenRouterClient client,
+        ILLMClient client,
         IRunStore store,
         CancellationToken cancellationToken = default)
     {

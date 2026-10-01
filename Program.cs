@@ -98,7 +98,7 @@ internal static class Program
 
         // Un solo cliente para toda la sesion: reusar el HttpClient evita agotar
         // sockets y se crea perezosamente para que 'ayuda' funcione sin key.
-        TokenRouterClient? client = null;
+        NvidiaClient? client = null;
         var lastExitCode = 0;
         Task<int>? activeOperation = null;
         EventOperationCoordinator? activeCoordinator = null;
@@ -245,12 +245,13 @@ internal static class Program
     internal static bool UsesConversationLoop(string verb) => verb == "chat";
 
     internal static async Task<int> AgentOperationAsync(
-        ITokenRouterClient client, ConversationThread thread, string objective,
+        ILLMClient client, ConversationThread thread, string objective,
         SessionSettings settings, int maxCycles, int deadline, CancellationToken cancellationToken)
     {
         if (maxCycles < 1 || deadline < 1) throw new InvalidOperationException("Los presupuestos deben ser positivos.");
         var policy = settings.Policy;
-        var run = Harness.Core.Run.FromObjective(objective, deadline, settings.Model);
+        var taskContext = OperationContextBuilder.Build(objective, "", thread.Messages);
+        var run = Harness.Core.Run.FromObjective(taskContext.Objective, deadline, settings.Model);
         var renderer = settings.Stream ? new DeltaRenderer() : null;
         var consoleGate = new object();
         void Log(string text)
@@ -262,12 +263,12 @@ internal static class Program
         using var supervisor = setup.Supervisor;
         var tools = setup.Tools;
         thread.Variables.WithDefaults(settings.Model, tools.Names);
+        taskContext = taskContext with { SessionContext = OperationContextBuilder.LimitSessionContext(thread.RenderSystemPrompt()) };
         var context = new GoalContext
         {
             Goal = setup.GoalContext.Goal, Bus = setup.Bus, Ledger = setup.Ledger, Supervisor = supervisor,
             MaxHistoryCharacters = thread.MaxHistoryCharacters,
-            SessionContext = thread.RenderSystemPrompt() + "\nAntecedentes del usuario y resultados anteriores:\n"
-                + JsonSerializer.Serialize(thread.Messages),
+            SessionContext = taskContext.SessionContext,
         };
         var coordinator = new EventOperationCoordinator(client, settings.Model, tools, Scope.Minimal(policy))
         {
@@ -290,7 +291,7 @@ internal static class Program
             $"{DateTime.UtcNow:yyyyMMdd-HHmmss}-{Guid.NewGuid():N}.json");
         ConversationMemory.AtomicWrite(evidencePath, JsonSerializer.Serialize(new
         {
-            objective, model = settings.Model, succeeded, summary, context.Cycles, context.EventsSeen,
+            objective, taskContext, model = settings.Model, succeeded, summary, context.Cycles, context.EventsSeen,
             state = result.Status.ToString(), stop = result.Reason, journal = coordinator.JournalPath,
             events = context.Bus.History,
             cards = context.Ledger.Plays.Select(p => new { p.Name, p.Fields, p.Accepted, p.Rejection, p.Depth, p.At }),
@@ -311,7 +312,7 @@ internal static class Program
 
     /// <summary>Un intercambio del usuario, con el hilo y los parametros de la sesion puestos.</summary>
     private static async Task<int> AgentTurnAsync(
-        ITokenRouterClient client,
+        ILLMClient client,
         ConversationThread thread,
         string prompt,
         ToolRegistry tools,
@@ -437,7 +438,7 @@ internal static class Program
 
             case "modelos" or "models":
                 Console.WriteLine("  modelos NVIDIA disponibles:");
-                foreach (var available in TokenRouterOptions.SupportedModels)
+                foreach (var available in NvidiaOptions.SupportedModels)
                 {
                     Console.WriteLine($"    {(string.Equals(available, settings.Model, StringComparison.OrdinalIgnoreCase) ? "*" : " ")} {available}");
                 }
@@ -453,10 +454,10 @@ internal static class Program
                         return;
                     }
 
-                    var selected = TokenRouterOptions.SupportedModels.FirstOrDefault(m =>
+                    var selected = NvidiaOptions.SupportedModels.FirstOrDefault(m =>
                         string.Equals(m, requested, StringComparison.OrdinalIgnoreCase)
-                        || (requested.Equals("glm", StringComparison.OrdinalIgnoreCase) && m == TokenRouterOptions.FallbackModelId)
-                        || (requested.Equals("kimi", StringComparison.OrdinalIgnoreCase) && m == TokenRouterOptions.KimiK3ModelId));
+                        || (requested.Equals("glm", StringComparison.OrdinalIgnoreCase) && m == NvidiaOptions.FallbackModelId)
+                        || (requested.Equals("kimi", StringComparison.OrdinalIgnoreCase) && m == NvidiaOptions.KimiK3ModelId));
 
                     if (selected is null)
                     {
@@ -573,7 +574,7 @@ internal static class Program
         Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
         Console.WriteLine($"modelo: {settings.Model} | recursos: {string.Join(", ", tools.Names)}");
         Console.WriteLine("operaciones: tarjeta, ejecutar, lanzar, esperar, leer, procesos, matar, observar, flujo");
-        Console.WriteLine($"modelos NVIDIA: {string.Join(", ", TokenRouterOptions.SupportedModels)}");
+        Console.WriteLine($"modelos NVIDIA: {string.Join(", ", NvidiaOptions.SupportedModels)}");
         Console.WriteLine($"thinking: {DescribeThinking(settings.Thinking, settings.Model)}");
         Console.WriteLine($"stream: {(settings.Stream ? "activo" : "apagado")}");
         Console.WriteLine();
@@ -744,7 +745,7 @@ internal static class Program
             Console.WriteLine("Interrumpido por el usuario.");
             return 130;
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             Console.Error.WriteLine($"ERROR del proveedor: {ex.Message}");
             if (ex.IsQuotaOrAccess)
@@ -1245,7 +1246,7 @@ internal static class Program
         var thinking = ResolveThinkingPolicy(lobosArgs);
         var stream = ResolveStreaming(lobosArgs);
 
-        SecretStore.TryGetTokenRouterApiKey(out var lobosKey, out _);
+        SecretStore.TryGetLLMApiKey(out var lobosKey, out _);
         Console.WriteLine($"key       : {SecretStore.Mask(lobosKey ?? string.Empty)}");
         Console.WriteLine($"modelo    : {model}");
         Console.WriteLine($"deadline  : {deadline}s");
@@ -2220,18 +2221,18 @@ internal static class Program
         }
     }
 
-    private static TokenRouterClient BuildClient(out string keySource, ThinkingPolicy? thinking = null)
+    private static NvidiaClient BuildClient(out string keySource, ThinkingPolicy? thinking = null)
     {
-        if (!SecretStore.TryGetTokenRouterApiKey(out var apiKey, out var reason))
+        if (!SecretStore.TryGetLLMApiKey(out var apiKey, out var reason))
         {
             throw new InvalidOperationException(reason);
         }
 
         keySource = $"{SecretStore.Mask(apiKey!)} (desde {reason})";
-        return new TokenRouterClient(new TokenRouterOptions
+        return new NvidiaClient(new NvidiaOptions
         {
             ApiKey = apiKey!,
-            BaseUrl = Environment.GetEnvironmentVariable("NVIDIA_BASE_URL") ?? TokenRouterOptions.DefaultBaseUrl,
+            BaseUrl = Environment.GetEnvironmentVariable("NVIDIA_BASE_URL") ?? NvidiaOptions.DefaultBaseUrl,
         })
         {
             ThinkingPolicy = thinking,
@@ -2250,7 +2251,7 @@ internal static class Program
     /// No lanza: devuelve el veredicto para que el caller decida.
     /// </summary>
     private static async Task<(bool Available, string Reason)> ProbeModelAvailabilityAsync(
-        ITokenRouterClient client, string model, CancellationToken cancellationToken)
+        ILLMClient client, string model, CancellationToken cancellationToken)
     {
         try
         {
@@ -2266,18 +2267,18 @@ internal static class Program
             await client.CreateChatCompletionAsync(request, cancellationToken).ConfigureAwait(false);
             return (true, "el modelo respondio a un ping minimo");
         }
-        catch (TokenRouterException ex) when (ex.IsQuotaOrAccess)
+        catch (LLMException ex) when (ex.IsQuotaOrAccess)
         {
             return (false, $"sin acceso o saldo para '{model}': {ex.ProviderMessage}");
         }
-        catch (TokenRouterException ex) when (
+        catch (LLMException ex) when (
             ex.StatusCode == 404 ||
             ex.ProviderMessage.Contains("model_not_found", StringComparison.OrdinalIgnoreCase) ||
             ex.ProviderMessage.Contains("No available channel", StringComparison.OrdinalIgnoreCase))
         {
             return (false, $"'{model}' no esta disponible en el gateway: {ex.ProviderMessage}");
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             return (false, $"el gateway devolvio [{ex.StatusCode}] {ex.ProviderMessage}");
         }
@@ -2309,9 +2310,12 @@ internal static class Program
     }
 
     /// <summary>Una linea legible con el estado del thinking para el modelo en uso.</summary>
-    private static string DescribeThinking(ThinkingPolicy policy, string model) => policy.Preference switch
+    private static string DescribeThinking(ThinkingPolicy policy, string model)
+        => NvidiaModelCatalog.IsGlm53(model)
+            ? $"{policy.Preference.ToString().ToLowerInvariant()} -> reasoning_effort=low; clear_thinking=true (GLM 5.3 no garantiza budget numerico ni apagado)"
+            : policy.Preference switch
     {
-        ThinkingPreference.Never => "off (no se manda el parametro)",
+        ThinkingPreference.Never => "off (se omite thinking; el comportamiento depende del modelo)",
         ThinkingPreference.Always => $"on siempre, budget={policy.BudgetTokens}",
         _ when policy.IsSupported(model) => $"auto -> activo, budget={policy.BudgetTokens} (soporte confirmado)",
         _ when policy.IsUnsupported(model) => "auto -> inactivo (este modelo no lo soporta)",
@@ -2350,7 +2354,7 @@ internal static class Program
             }
         }
 
-        return TokenRouterOptions.FallbackModelId;
+        return NvidiaOptions.FallbackModelId;
     }
 
     /// <summary>

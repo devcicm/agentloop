@@ -108,14 +108,14 @@ public static class EventArchitectureSelfTest
         Check("CLI: texto libre y run usan reactor; solo chat usa conversacion",
             !Program.UsesConversationLoop("run") && !Program.UsesConversationLoop("crea") && Program.UsesConversationLoop("chat"));
         var thread = new ConversationThread();
-        var previous = new AgentContext("antecedente", "");
-        previous.Messages.Add(ChatMessage.FromAssistant("marca_contexto_eventos"));
+        var previous = new AgentContext("Suma 17 y 23 con herramienta y comprueba el resultado; marca_contexto_eventos", "");
+        previous.Messages.Add(ChatMessage.FromAssistant("plan_privado_no_heredar"));
         thread.CommitTurn(previous);
         var closing = new ClosingClient();
-        var code = await Program.AgentOperationAsync(closing, thread, "Suma 17 y 23 con herramienta y comprueba el resultado",
+        var code = await Program.AgentOperationAsync(closing, thread, "ok, apruebo el plan, procede en modo de ejecucion",
             new Program.SessionSettings { Model = "fixture/eventos", Thinking = new ThinkingPolicy(ThinkingPreference.Never), Stream = false }, 6, 20, token);
         Check("entrada principal CLI completa objetivo por tarjetas", code == 0 && closing.Requests == 3);
-        Check("CLI transmite antecedentes y herramientas operativas", closing.ContextReceived && closing.ToolsReceived);
+        Check("CLI transmite requisitos del usuario y herramientas operativas", closing.ContextReceived && closing.ToolsReceived);
         Check("CLI conserva resultado y ruta de evidencia local", thread.Exchanges == 2 && thread.Messages.Last().Content!.Contains("Evidencia local:"));
 
         Console.WriteLine("Self-test de arquitectura por eventos:");
@@ -123,7 +123,7 @@ public static class EventArchitectureSelfTest
         return results.All(r => r.Ok);
     }
 
-    private sealed class RecordingClient : ITokenRouterClient
+    private sealed class RecordingClient : ILLMClient
     {
         public int Requests { get; private set; }
         public bool Tool { get; set; }
@@ -145,7 +145,7 @@ public static class EventArchitectureSelfTest
         { await Task.Yield(); yield break; }
     }
 
-    private sealed class ClosingClient : ITokenRouterClient
+    private sealed class ClosingClient : ILLMClient
     {
         public int Requests { get; private set; }
         public bool ContextReceived { get; private set; }
@@ -155,7 +155,8 @@ public static class EventArchitectureSelfTest
         public Task<JsonElement> CreateChatCompletionAsync(ChatRequest request, CancellationToken cancellationToken = default)
         {
             Requests++;
-            ContextReceived |= request.Messages[0].Content!.Contains("marca_contexto_eventos");
+            ContextReceived |= request.Messages[0].Content!.Contains("marca_contexto_eventos")
+                && !request.Messages[0].Content!.Contains("plan_privado_no_heredar");
             ToolsReceived |= new[] { "tarjeta", "ejecutar", "lanzar", "where_command", "find_files", "add_numbers" }
                 .All(name => request.Tools!.Any(t => t.Function.Name == name));
             if (request.Messages.Last().Content?.Contains("NOVEDADES (") != true)

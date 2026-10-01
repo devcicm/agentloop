@@ -70,7 +70,7 @@ public static class TruncationRecoverySelfTest
     /// Segunda: tool_calls con tarjeta abrir.
     /// Tercera en adelante: stop sin tool calls (fin).
     /// </summary>
-    private sealed class TruncationFakeClient : ITokenRouterClient
+    private sealed class TruncationFakeClient : ILLMClient
     {
         private int _calls;
 

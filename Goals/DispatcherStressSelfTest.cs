@@ -24,7 +24,7 @@ namespace AgentLoop.Goals;
 ///   - El bus no pierde eventos (History.Count == Published).
 ///   - El ledger avanzo: el modelo jugo "abrir" en algun momento.
 ///
-/// Sin red ni disco (el FakeTokenRouterClient no toca nada). El MultiToolFakeClient
+/// Sin red ni disco (el FakeLLMClient no toca nada). El MultiToolFakeClient
 /// devuelve una respuesta con N tool_calls por llamada: alterna "tarjeta"
 /// (abrir en el primer batch, avanzar despues) y "ejecutar" (comando trivial
 /// que retorna 0). Asi se ejercitan los dos caminos del dispatcher.
@@ -167,7 +167,7 @@ public static class DispatcherStressSelfTest
     /// las siguientes son "avanzar"). Esto ejercita el dispatcher con un
     /// batch realista de tool_calls heterogeneas.
     /// </summary>
-    private sealed class MultiToolFakeClient : ITokenRouterClient
+    private sealed class MultiToolFakeClient : ILLMClient
     {
         private readonly int _toolCallsPerResponse;
         private long _totalRequests;

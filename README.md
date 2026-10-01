@@ -69,12 +69,19 @@ la calidad literaria o correccion semantica requiere validadores adicionales.
 | `Prompting/` | Plantillas, variables y sanitizacion |
 | `docs/`, `scripts/` | Guias, informes, evidencia e inventario |
 
-Los nombres `TokenRouter*` se mantienen por compatibilidad interna;
-el endpoint y los modelos predeterminados corresponden a NVIDIA.
+El puerto activo es `ILLMClient`; los detalles NVIDIA viven en
+[Provider/Nvidia](Provider/README.md). Sondas historicas requieren su revision de origen.
 
 ## Estado comprobado y documentacion
 
-Validacion registrada el 30 de septiembre de 2026, commit `8b20a3f`:
+Arquitectura vigente y flujos ASCII: [harness por eventos](docs/harness-eventos.md).
+Incidente y correccion POS: [informe](docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md).
+Validacion actual: [evidencia del 1 de octubre](docs/evidence/2026-10-01/README.md).
+
+Validacion local del 1 de octubre: 352 comprobaciones correctas, 38 del
+coordinador; compilacion con 0 errores y 0 advertencias. Sin nueva inferencia remota.
+
+Validacion anterior registrada el 30 de septiembre de 2026, commit `8b20a3f`:
 compilacion sin errores ni advertencias, 340 comprobaciones correctas y
 prueba NVIDIA de poema con escritura, lectura, comprobacion y cierre.
 No equivale a una comprobacion nueva de disponibilidad remota.

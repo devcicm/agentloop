@@ -22,9 +22,9 @@ namespace AgentLoop.Harness.Runner;
 /// </summary>
 public sealed class GoalRunner : IRunner
 {
-    private readonly ITokenRouterClient _client;
+    private readonly ILLMClient _client;
 
-    public GoalRunner(ITokenRouterClient client)
+    public GoalRunner(ILLMClient client)
     {
         _client = client ?? throw new ArgumentNullException(nameof(client));
     }
@@ -55,7 +55,7 @@ public sealed class GoalRunner : IRunner
         {
             setup.RunContext.Steps.OnRunStart(run.Id);
 
-            var coordinator = new EventOperationCoordinator(_client, run.Model ?? TokenRouterOptions.FallbackModelId, setup.Tools, scope)
+            var coordinator = new EventOperationCoordinator(_client, run.Model ?? NvidiaOptions.FallbackModelId, setup.Tools, scope)
             {
                 MaxModelCalls = options.MaxIterations,
                 MaxTokens = options.MaxTokens,
@@ -66,7 +66,7 @@ public sealed class GoalRunner : IRunner
                     "reactor",
                     line)),
                 RecordModel = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
-                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model ?? TokenRouterOptions.FallbackModelId,
+                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model ?? NvidiaOptions.FallbackModelId,
                     completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,
                     completion.Thinking.Observed ? completion.Thinking.ToString() : null)),
                 RecordTool = (tool, output, succeeded, elapsed) => setup.RunContext.Steps.Record(new ToolStep(

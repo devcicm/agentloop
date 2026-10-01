@@ -6,6 +6,9 @@ no describen necesariamente el codigo actual. No se regeneran sobre el original.
 
 ## Capturas y alcance
 
+- 2026-10-01: incidente POS, proveedores reorganizados, contexto y recuperacion;
+  352 comprobaciones locales correctas. Ver [evidencia actual](2026-10-01/README.md).
+
 - 2026-09-27: fallo TokenRouter, sondas deterministas, correcciones iniciales,
   catalogos, migracion NVIDIA, chat y poema posterior. Ver el [informe](../analisis-harness-poema-2026-09-27.md).
 - 2026-09-28 y `eventos-final-2026-09-30.log`: entradas del CLI sobre el reactor
@@ -63,3 +66,10 @@ si se ejecuta. Para el actor vigente usar `selftest-coordinator`.
 | [eventos-nvidia-2026-09-28.log](eventos-nvidia-2026-09-28.log) | Registro del proveedor NVIDIA en esa fecha |
 | [eventos-regresion-antes-2026-09-28.log](eventos-regresion-antes-2026-09-28.log) | Registro fechado de compilacion, prueba o estado |
 | [eventos-regresion-despues-2026-09-28.log](eventos-regresion-despues-2026-09-28.log) | Registro fechado de compilacion, prueba o estado |
+| [2026-10-01/pos-before.json](2026-10-01/pos-before.json) | Extracto del incidente y hashes de fuentes locales |
+| [2026-10-01/build.txt](2026-10-01/build.txt) | Compilacion final sin errores ni advertencias |
+| [2026-10-01/selftest.txt](2026-10-01/selftest.txt) | Suite final: 352 comprobaciones correctas |
+| [2026-10-01/selftest-first-attempt.txt](2026-10-01/selftest-first-attempt.txt) | Intento inicial fallido y conservado |
+| [2026-10-01/selftest-second-attempt.txt](2026-10-01/selftest-second-attempt.txt) | Intento de integracion fallido y conservado |
+| [2026-10-01/repository-audit.json](2026-10-01/repository-audit.json) | Inventario de la entrega anterior al commit |
+| [2026-10-01/README.md](2026-10-01/README.md) | Alcance de la validacion local |

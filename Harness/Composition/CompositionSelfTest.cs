@@ -30,7 +30,7 @@ public static class CompositionSelfTest
         };
         var scope = Scope.Minimal(policy);
         var observers = new List<IRunObserver>();
-        var fakeClient = new FakeTokenRouterClient();
+        var fakeClient = new FakeLLMClient();
 
         var setup = GoalRunFactory.BuildWithBusRecording(run, scope, fakeClient, observers);
 

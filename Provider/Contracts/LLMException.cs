@@ -1,9 +1,9 @@
 namespace AgentLoop.Provider;
 
 /// <summary>Cualquier respuesta no-2xx del gateway o fallo de transporte.</summary>
-public sealed class TokenRouterException : Exception
+public sealed class LLMException : Exception
 {
-    public TokenRouterException(int statusCode, string message, string? rawPayload = null, Exception? inner = null)
+    public LLMException(int statusCode, string message, string? rawPayload = null, Exception? inner = null)
         : base($"[{statusCode}] {message}", inner)
     {
         StatusCode = statusCode;

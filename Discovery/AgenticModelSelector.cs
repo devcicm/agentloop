@@ -30,10 +30,10 @@ public sealed class AgenticModelSelector
     /// <summary>Presupuesto de la sonda de thinking; el mismo que usa probe.py.</summary>
     private const int ThinkingProbeBudget = 200;
 
-    private readonly ITokenRouterClient _client;
+    private readonly ILLMClient _client;
     private readonly Action<string> _log;
 
-    public AgenticModelSelector(ITokenRouterClient client, Action<string>? log = null)
+    public AgenticModelSelector(ILLMClient client, Action<string>? log = null)
     {
         _client = client;
         _log = log ?? (_ => { });
@@ -139,7 +139,7 @@ public sealed class AgenticModelSelector
                 CapabilityNames.Accessible, true, $"id={parsed.Id} backend={parsed.Model}", stopwatch.Elapsed.TotalMilliseconds, null));
             return true;
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             // 403 insufficient_user_quota es lo esperado sin saldo: se descarta el modelo, no la corrida.
             report.Record(new CapabilityProbe(
@@ -176,7 +176,7 @@ public sealed class AgenticModelSelector
 
             report.Record(new CapabilityProbe(CapabilityNames.Chat, supported, evidence, stopwatch.Elapsed.TotalMilliseconds, null));
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             report.Record(new CapabilityProbe(
                 CapabilityNames.Chat, false, string.Empty, stopwatch.Elapsed.TotalMilliseconds, $"[{ex.StatusCode}] {Shorten(ex.ProviderMessage)}"));
@@ -208,7 +208,7 @@ public sealed class AgenticModelSelector
             report.Record(new CapabilityProbe(
                 CapabilityNames.ToolCalling, parsed.HasToolCalls, evidence, stopwatch.Elapsed.TotalMilliseconds, null));
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             report.Record(new CapabilityProbe(
                 CapabilityNames.ToolCalling, false, string.Empty, stopwatch.Elapsed.TotalMilliseconds, $"[{ex.StatusCode}] {Shorten(ex.ProviderMessage)}"));
@@ -237,7 +237,7 @@ public sealed class AgenticModelSelector
                 CapabilityNames.JsonMode, valid, valid ? Shorten(content, 80) : $"no parsea: {Shorten(content, 60)}",
                 stopwatch.Elapsed.TotalMilliseconds, null));
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             report.Record(new CapabilityProbe(
                 CapabilityNames.JsonMode, false, string.Empty, stopwatch.Elapsed.TotalMilliseconds, $"[{ex.StatusCode}] {Shorten(ex.ProviderMessage)}"));
@@ -268,7 +268,7 @@ public sealed class AgenticModelSelector
             report.Record(new CapabilityProbe(
                 CapabilityNames.SystemMessage, obeyed, Shorten(content, 60), stopwatch.Elapsed.TotalMilliseconds, null));
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             report.Record(new CapabilityProbe(
                 CapabilityNames.SystemMessage, false, string.Empty, stopwatch.Elapsed.TotalMilliseconds, $"[{ex.StatusCode}] {Shorten(ex.ProviderMessage)}"));
@@ -305,7 +305,7 @@ public sealed class AgenticModelSelector
             report.Record(new CapabilityProbe(
                 CapabilityNames.Thinking, thinking.Observed, evidence, stopwatch.Elapsed.TotalMilliseconds, null));
         }
-        catch (TokenRouterException ex)
+        catch (LLMException ex)
         {
             // El cliente ya reintenta sin thinking cuando el backend rechaza el campo, asi
             // que llegar aqui significa que fallo por otra cosa.

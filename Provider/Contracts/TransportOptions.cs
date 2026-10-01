@@ -1,25 +1,10 @@
 namespace AgentLoop.Provider;
 
-/// <summary>Configuracion del cliente HTTP contra el gateway.</summary>
-public sealed class TokenRouterOptions
+public class TransportOptions
 {
-    public const string DefaultBaseUrl = "https://integrate.api.nvidia.com/v1";
-
-    /// <summary>
-    /// Modelo NVIDIA predeterminado; el nombre del tipo se conserva por compatibilidad.
-    /// La configuracion no garantiza acceso ni disponibilidad remota.
-    /// discover puede producir un cache local de capacidades.
-    /// </summary>
-    public const string FallbackModelId = "z-ai/glm-5.3";
-
-    public const string KimiK3ModelId = "moonshotai/kimi-k3";
-
-    public static IReadOnlyList<string> SupportedModels { get; } =
-        [FallbackModelId, KimiK3ModelId];
-
     public required string ApiKey { get; init; }
 
-    public string BaseUrl { get; init; } = DefaultBaseUrl;
+    public string BaseUrl { get; init; } = "";
 
     public TimeSpan Timeout { get; init; } = TimeSpan.FromMinutes(5);
 

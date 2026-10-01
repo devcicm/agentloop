@@ -1,4 +1,4 @@
-﻿using System.Text.Json;
+using System.Text.Json;
 using System.Text.Json.Serialization;
 
 namespace AgentLoop.Provider;
@@ -137,6 +137,9 @@ public sealed record ChatRequest
     /// modelo devuelve lo que penso en <c>message.reasoning_content</c>. Null = no se manda
     /// el campo, que es lo que esperan los modelos que no lo entienden.
     /// </summary>
+    [JsonPropertyName("reasoning_effort")]
+    public string? ReasoningEffort { get; init; }
+
     [JsonPropertyName("thinking")]
     public ThinkingOptions? Thinking { get; init; }
 

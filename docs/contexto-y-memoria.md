@@ -1,3 +1,7 @@
+> Actualizacion del 1 de octubre: las operaciones interactivas usan
+> OperationContextBuilder y un indice de observaciones; ver [flujo vigente](harness-eventos.md).
+> El hilo completo ya no se copia como JSON al system de la operacion.
+
 # Contexto y memoria del CLI interactivo
 
 ## Antes

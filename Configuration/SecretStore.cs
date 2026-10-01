@@ -11,13 +11,13 @@ public static class SecretStore
     private const string LegacyApiKeyEnvVar = "TOKENROUTER_API_KEY";
     private const string SecretsDirName = "local-secrets";
 
-    /// <summary>Devuelve la credencial del proveedor NVIDIA, con fallback legado. Nombre conservado por compatibilidad.</summary>
-    public static string GetTokenRouterApiKey()
-        => TryGetTokenRouterApiKey(out var key, out var reason)
+    /// <summary>Devuelve la credencial del proveedor NVIDIA, con fallback legado. </summary>
+    public static string GetLLMApiKey()
+        => TryGetLLMApiKey(out var key, out var reason)
             ? key!
             : throw new InvalidOperationException(reason);
 
-    public static bool TryGetTokenRouterApiKey(out string? apiKey, out string reason)
+    public static bool TryGetLLMApiKey(out string? apiKey, out string reason)
     {
         var fromEnv = Environment.GetEnvironmentVariable(ApiKeyEnvVar)?.Trim();
         if (!string.IsNullOrEmpty(fromEnv))

@@ -48,7 +48,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
         [ReactorState.Fallido] = [],
     };
 
-    private readonly ITokenRouterClient _client;
+    private readonly ILLMClient _client;
     private readonly ToolRegistry _tools;
     private readonly AgentLoop.Harness.Patterns.RetryPattern _retryPattern;
     private int _transitorios;
@@ -63,7 +63,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     /// </summary>
     private int? _adaptiveMaxTokens;
 
-    public EventDrivenAgent(ITokenRouterClient client, string model, ToolRegistry tools)
+    public EventDrivenAgent(ILLMClient client, string model, ToolRegistry tools)
         : base(ReactorState.Arranque)
     {
         _client = client;
@@ -186,7 +186,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     /// </summary>
     protected override ValueTask<ReactorState> OnErrorAsync(Exception error, GoalContext context, CancellationToken cancellationToken)
     {
-        var reason = error is TokenRouterException provider
+        var reason = error is LLMException provider
             ? $"[{provider.StatusCode}] {provider.ProviderMessage}"
             : $"{error.GetType().Name}: {error.Message}";
 
@@ -224,7 +224,7 @@ public sealed class EventDrivenAgent : StateMachine<ReactorState, GoalContext>
     {
         // Status 0 = sin respuesta HTTP (timeout de transporte, DNS, conexion).
         // Es transitorio por definicion: el servidor nunca dijo que no.
-        TokenRouterException provider => (int)provider.StatusCode >= 500 || (int)provider.StatusCode == 429 || (int)provider.StatusCode == 0,
+        LLMException provider => (int)provider.StatusCode >= 500 || (int)provider.StatusCode == 429 || (int)provider.StatusCode == 0,
         HttpRequestException or TaskCanceledException or TimeoutException => true,
         _ => false,
     };

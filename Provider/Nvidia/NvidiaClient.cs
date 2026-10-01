@@ -1,4 +1,4 @@
-﻿using System.Net.Http.Headers;
+using System.Net.Http.Headers;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Text.Encodings.Web;
@@ -9,9 +9,9 @@ namespace AgentLoop.Provider;
 
 /// <summary>
 /// CAPA 1 - cliente asincrono OpenAI-compatible para NVIDIA NIM.
-/// Puerto de tokenrouter-client/tokenrouter/client.py.
+/// Adaptacion y parseo del protocolo NVIDIA NIM.
 /// </summary>
-public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
+public sealed class NvidiaClient : ILLMClient, IDisposable
 {
     private static readonly JsonSerializerOptions PayloadOptions = new()
     {
@@ -19,21 +19,23 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping,
     };
 
-    private readonly TokenRouterOptions _options;
+    private readonly NvidiaOptions _options;
     private readonly HttpClient _http;
     private readonly bool _ownsHttpClient;
+    private readonly ChatCompletionsTransport _transport;
 
-    public TokenRouterClient(TokenRouterOptions options, HttpClient? httpClient = null)
+    public NvidiaClient(NvidiaOptions options, HttpClient? httpClient = null)
     {
         _options = options;
         if (string.IsNullOrWhiteSpace(options.ApiKey))
         {
-            throw new TokenRouterException(401, "Falta la API key. Ver local-secrets/README.md");
+            throw new LLMException(401, "Falta la API key. Ver local-secrets/README.md");
         }
 
         _ownsHttpClient = httpClient is null;
         _http = httpClient ?? new HttpClient();
         _http.Timeout = options.Timeout;
+        _transport = new(_http, options);
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);
         _http.DefaultRequestHeaders.UserAgent.ParseAdd(options.UserAgent);
     }
@@ -89,7 +91,7 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         {
             return await SendJsonAsync(HttpMethod.Post, "/chat/completions", payload, cancellationToken).ConfigureAwait(false);
         }
-        catch (TokenRouterException ex) when (request.Thinking is not null && RejectsThinking(ex))
+        catch (LLMException ex) when (!NvidiaModelCatalog.IsGlm53(request.Model) && request.Thinking is not null && RejectsThinking(ex))
         {
             // El backend no entiende el parametro. Perder el turno entero por un campo
             // opcional seria absurdo: se reintenta una vez sin el y se apunta el modelo
@@ -114,7 +116,7 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         {
             return await SendStreamRequestAsync(request, cancellationToken).ConfigureAwait(false);
         }
-        catch (TokenRouterException ex) when (request.Thinking is not null && RejectsThinking(ex))
+        catch (LLMException ex) when (!NvidiaModelCatalog.IsGlm53(request.Model) && request.Thinking is not null && RejectsThinking(ex))
         {
             var first = ThinkingPolicy?.MarkUnsupported(request.Model) ?? true;
             if (first)
@@ -130,7 +132,7 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
     {
         var payload = JsonSerializer.Serialize(WithStream(request, stream: true), PayloadOptions);
 
-        var response = await SendWithRetryAsync(
+        var response = await _transport.SendWithRetryAsync(
             () => BuildRequest(HttpMethod.Post, "/chat/completions", payload),
             HttpCompletionOption.ResponseHeadersRead,
             cancellationToken).ConfigureAwait(false);
@@ -151,7 +153,7 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
     /// Distingue "no conozco este campo" de un 400 de verdad. Solo se degrada cuando el
     /// error nombra el parametro: si no, reintentar sin thinking taparia el error real.
     /// </summary>
-    private static bool RejectsThinking(TokenRouterException ex)
+    private static bool RejectsThinking(LLMException ex)
     {
         if (ex.StatusCode is not (400 or 404 or 422))
         {
@@ -220,7 +222,7 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
 
     private async Task<JsonElement> SendJsonAsync(HttpMethod method, string path, string? body, CancellationToken cancellationToken)
     {
-        using var response = await SendWithRetryAsync(
+        using var response = await _transport.SendWithRetryAsync(
             () => BuildRequest(method, path, body),
             HttpCompletionOption.ResponseContentRead,
             cancellationToken).ConfigureAwait(false);
@@ -239,7 +241,7 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
         }
         catch (JsonException ex)
         {
-            throw new TokenRouterException(
+            throw new LLMException(
                 (int)response.StatusCode,
                 $"La respuesta no es JSON valido: {ex.Message}",
                 Truncate(content),
@@ -251,66 +253,6 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
     /// Reintenta ante 5xx, 429 y fallos de transporte con backoff exponencial acotado.
     /// Cada intento construye un HttpRequestMessage nuevo porque no son reutilizables.
     /// </summary>
-    private async Task<HttpResponseMessage> SendWithRetryAsync(
-        Func<HttpRequestMessage> requestFactory,
-        HttpCompletionOption completionOption,
-        CancellationToken cancellationToken)
-    {
-        Exception? lastTransportError = null;
-
-        for (var attempt = 0; attempt <= _options.MaxRetries; attempt++)
-        {
-            if (attempt > 0)
-            {
-                await Task.Delay(BackoffFor(attempt), cancellationToken).ConfigureAwait(false);
-            }
-
-            HttpResponseMessage response;
-            try
-            {
-                using var request = requestFactory();
-                response = await _http.SendAsync(request, completionOption, cancellationToken).ConfigureAwait(false);
-            }
-            catch (HttpRequestException ex)
-            {
-                lastTransportError = ex;
-                if (attempt < _options.MaxRetries)
-                {
-                    continue;
-                }
-
-                throw new TokenRouterException(0, $"Error de transporte: {ex.Message}", inner: ex);
-            }
-            catch (TaskCanceledException ex) when (!cancellationToken.IsCancellationRequested)
-            {
-                lastTransportError = ex;
-                if (attempt < _options.MaxRetries)
-                {
-                    continue;
-                }
-
-                throw new TokenRouterException(0, $"Timeout tras {_options.Timeout.TotalSeconds:0}s", inner: ex);
-            }
-
-            var status = (int)response.StatusCode;
-            if ((status >= 500 || status == 429) && attempt < _options.MaxRetries)
-            {
-                response.Dispose();
-                continue;
-            }
-
-            return response;
-        }
-
-        throw new TokenRouterException(0, $"Agotados {_options.MaxRetries} reintentos", inner: lastTransportError);
-    }
-
-    private TimeSpan BackoffFor(int attempt)
-    {
-        var seconds = Math.Min(Math.Pow(_options.BackoffBaseSeconds, attempt - 1), _options.MaxBackoffSeconds);
-        return TimeSpan.FromSeconds(seconds);
-    }
-
     private HttpRequestMessage BuildRequest(HttpMethod method, string path, string? body)
     {
         var request = new HttpRequestMessage(method, $"{_options.BaseUrl.TrimEnd('/')}{path}");
@@ -324,25 +266,14 @@ public sealed class TokenRouterClient : ITokenRouterClient, IDisposable
 
     /// <summary>stream_options solo tiene sentido con stream=true; fuera de ahi se omite.</summary>
     private static ChatRequest WithStream(ChatRequest request, bool stream)
-        => request with
-        {
-            Stream = stream ? true : null,
-            StreamOptions = stream ? request.StreamOptions : null,
-            ChatTemplateKwargs = request.Thinking is not null
-                ? new Dictionary<string, object?>
-                {
-                    ["enable_thinking"] = request.Thinking.Mode == ThinkingMode.Enabled,
-                    ["clear_thinking"] = false,
-                }
-                : null,
-        };
+        => NvidiaRequestAdapter.Adapt(request, stream);
 
     private static string ReadString(JsonElement element, string property)
         => element.TryGetProperty(property, out var value) && value.ValueKind == JsonValueKind.String
             ? value.GetString() ?? string.Empty
             : string.Empty;
 
-    private static TokenRouterException BuildException(int status, string body)
+    private static LLMException BuildException(int status, string body)
         => new(status, ExtractErrorMessage(body), Truncate(body));
 
     /// <summary>Saca error.message del cuerpo; si no hay forma, devuelve el cuerpo recortado.</summary>

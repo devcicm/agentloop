@@ -4,7 +4,7 @@ using AgentLoop.Provider;
 namespace AgentLoop.Harness.Testing;
 
 /// <summary>
-/// Cliente fake de TokenRouter que no hace red: devuelve una respuesta
+/// Cliente fake del puerto LLM que no hace red: devuelve una respuesta
 /// JSON vacia (sin tool_calls, sin contenido) para que el self-test del
 /// Composition Root pueda ejercitar el cableado sin depender del
 /// proveedor.
@@ -14,7 +14,7 @@ namespace AgentLoop.Harness.Testing;
 /// codigo de produccion lo importa, ya esta senializando que esta
 /// usando un mock.
 /// </summary>
-public sealed class FakeTokenRouterClient : ITokenRouterClient
+public sealed class FakeLLMClient : ILLMClient
 {
     public Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default)
         => Task.FromResult<IReadOnlyList<ModelInfo>>([]);

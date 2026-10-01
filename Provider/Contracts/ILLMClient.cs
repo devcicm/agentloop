@@ -6,7 +6,7 @@ namespace AgentLoop.Provider;
 /// CAPA 1 - comunicacion directa con el proveedor. Habla HTTP y nada mas:
 /// devuelve el JSON crudo para que la capa de parseo lo interprete.
 /// </summary>
-public interface ITokenRouterClient
+public interface ILLMClient
 {
     Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default);
 

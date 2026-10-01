@@ -98,7 +98,7 @@ public static class WatchdogSelfTest
     }
 
     /// <summary>Cliente fake que cuelga <paramref name="delay"/> segundos antes de responder.</summary>
-    private sealed class HangingClient : ITokenRouterClient
+    private sealed class HangingClient : ILLMClient
     {
         private readonly TimeSpan _delay;
 

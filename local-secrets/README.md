@@ -1,23 +1,19 @@
-# local-secrets
+# Credenciales locales
 
-Esta carpeta guarda credenciales en texto plano **fuera del control de versiones**.
-El `.gitignore` de la raíz ignora `local-secrets/` completo, salvo este README.
+`local-secrets/` esta excluido de Git, salvo este README. El archivo dedicado
+es `nvidia-api-key.txt`: una sola linea con la clave NVIDIA, sin comillas.
 
-## nvidia-api-key.txt
+La resolucion efectiva en [SecretStore.cs](../Configuration/SecretStore.cs) es:
 
-Una sola línea con la API key de NVIDIA NIM, sin comillas ni prefijo:
+1. Variable `NVIDIA_API_KEY`, si contiene un valor.
+2. Archivo `nvidia-api-key.txt`; si no existe, archivo legado `tokenrouter-api-key.txt`.
+3. Variable legada `TOKENROUTER_API_KEY`.
 
-```
-sk-xxxxxxxxxxxxxxxxxxxxxxxx
-```
+Se busca `local-secrets/` desde el directorio del binario y el directorio actual,
+subiendo por sus ancestros. El fallback legado conserva compatibilidad;
+una clave de otro proveedor no acredita acceso a NVIDIA. Si el archivo NVIDIA
+existe pero esta vacio, no se utiliza el archivo legado como reemplazo.
 
-Se obtiene en https://build.nvidia.com/
-
-`AgentLoop/Configuration/SecretStore.cs` lee este archivo. Si no existe o está
-vacío, cae a la variable de entorno `NVIDIA_API_KEY`. El archivo legado
-`tokenrouter-api-key.txt` y `TOKENROUTER_API_KEY` solo se aceptan durante la
-migración.
-
-> Aviso: texto plano en el árbol del repo. `git add -f`, un backup de la carpeta
-> o compartir el proyecto comprimido exponen la key. Para endurecerlo, usa
-> `dotnet user-secrets` o un gestor de secretos.
+El endpoint esta en `Provider/TokenRouterOptions.cs`. La consola enmascara la
+clave al informar su procedencia. No crear una segunda copia del secreto ni
+incluir una clave real en documentacion, prompts o evidencia versionada.

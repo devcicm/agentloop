@@ -1,5 +1,7 @@
 # Validacion de la arquitectura por eventos — 2026-09-28
 
+> Informe historico de la revision indicada en el documento. El comportamiento vigente esta en el [coordinador por eventos](implementacion-coordinador-eventos-2026-09-30.md) y el [indice documental](README.md). Los resultados originales se conservan como evidencia.
+
 ## Hallazgo inicial
 
 El proyecto tenia dos motores, y F5 entraba al conversacional:
@@ -19,7 +21,7 @@ La suite anterior pasaba: [registro antes](evidence/eventos-antes-2026-09-28.log
 Se agregaron casos que reprodujeron defectos reales:
 [regresion antes de corregir](evidence/eventos-regresion-antes-2026-09-28.log).
 
-## Flujo principal actual
+## Flujo principal validado el 28 de septiembre
 
 ```mermaid
 flowchart TD

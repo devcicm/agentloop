@@ -23,7 +23,7 @@ olvidar proyecto
 ```
 
 - `recordar clave=valor`: guarda o actualiza un recuerdo del proyecto; claves
-  sin distincion de mayusculas. Se incorpora al mensaje de sistema cada turno.
+  sin distincion de mayusculas. Se incorpora al contrato de cada nueva operacion y al sistema de la utilidad de chat.
 - `memoria`: muestra los recuerdos. `olvidar clave`: elimina uno del almacenamiento.
 - `contexto`: informa mensajes, caracteres JSON, limites y mensajes descartados.
 - `contexto limite N`: cambia el limite y recorta inmediatamente si hace falta;
@@ -75,4 +75,4 @@ Este control no resume resultados ni recupera automaticamente un turno excesivo.
 Los caracteres no equivalen a tokens: estos limites no garantizan que una
 peticion quepa en la ventana de cada modelo. No se implementa tokenizacion exacta,
 busqueda vectorial ni resumen semantico. Los recuerdos se envian al proveedor
-como parte del contexto cuando se realiza un turno.
+como parte del contexto cuando se inicia una operacion o un intercambio de chat.

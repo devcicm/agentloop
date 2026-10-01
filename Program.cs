@@ -749,7 +749,7 @@ internal static class Program
             Console.Error.WriteLine($"ERROR del proveedor: {ex.Message}");
             if (ex.IsQuotaOrAccess)
             {
-                Console.Error.WriteLine("La key no tiene acceso/saldo para ese modelo. Revisa https://tokenrouter.com/console/token");
+                Console.Error.WriteLine("La clave no tiene acceso a ese modelo en NVIDIA. Revisa la credencial y los permisos del proveedor.");
             }
 
             return 1;

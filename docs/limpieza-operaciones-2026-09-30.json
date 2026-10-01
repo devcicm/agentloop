@@ -1,0 +1,74 @@
+{
+  "CapturedAt": "2026-09-30T08:54:19.1470468+00:00",
+  "SourceCommit": "8b20a3f",
+  "Actions": [
+    {
+      "Action": "archive",
+      "Path": "artifacts/agentic-models.json",
+      "Destination": ".agentloop/archive/2026-09-30/agentic-models-tokenrouter.json",
+      "Bytes": 22450,
+      "SHA256": "66305EA4BE032F8054BC132C82E2F0E9AB418D6B86B2B98967421FD063EC311E",
+      "Reason": "cache TokenRouter 2026-09-11, modelo z-ai/glm-5.3-free, fuera de configuracion NVIDIA vigente"
+    },
+    {
+      "Action": "remove-equivalent",
+      "Path": ".agentloop/coordinator-full-check.txt",
+      "Retained": "docs/evidence/2026-09-30/selftest-completo.txt",
+      "Bytes": 42900,
+      "SHA256": "5DCDEEC1A9194ED95C1BC82EDDC94BA9650C9709F68512DD40D237B6B41DF5AC",
+      "Reason": "texto equivalente tras normalizar EOL y omitir linea de clave en traza NVIDIA"
+    },
+    {
+      "Action": "remove-equivalent",
+      "Path": ".agentloop/coordinator-build-check.txt",
+      "Retained": "docs/evidence/2026-09-30/compilacion.txt",
+      "Bytes": 430,
+      "SHA256": "89554141C9BD1CCEDBD348369BEE87C26C11969608198FDFE9691DD14C8C1211",
+      "Reason": "texto equivalente tras normalizar EOL y omitir linea de clave en traza NVIDIA"
+    },
+    {
+      "Action": "remove-equivalent",
+      "Path": ".agentloop/coordinator-nvidia-check.txt",
+      "Retained": "docs/evidence/2026-09-30/nvidia-poema-traza.txt",
+      "Bytes": null,
+      "SHA256": "2B540D138B77159D8863E369BE5DD0A6C43E788E48A2D7F4557FD236578E6564",
+      "Reason": "texto equivalente tras normalizar EOL y omitir linea de clave en traza NVIDIA",
+      "ByteCountStatus": "longitud original no capturada antes de retirar; hash original y copia equivalente conservados"
+    },
+    {
+      "Action": "remove-generated",
+      "Path": "bin",
+      "Files": 5,
+      "Bytes": 1207627,
+      "Reason": "salidas regenerables de dotnet build; archivos operativos y evidencia separados"
+    },
+    {
+      "Action": "remove-generated",
+      "Path": "obj",
+      "Files": 25,
+      "Bytes": 1568919,
+      "Reason": "salidas regenerables de dotnet build; archivos operativos y evidencia separados"
+    },
+    {
+      "Action": "process-mislabeled-json",
+      "Path": "docs/evidence/2026-09-27/after-fix-probe.json",
+      "OriginalRetained": "docs/evidence/2026-09-27/after-fix-probe-console.txt",
+      "OriginalBytes": 4976,
+      "OriginalSHA256": "E2F9B7D7BCEF4E33694B80E0109FB3451131FA3CEB1D8FEA998AE5D8CC0E7AD7",
+      "ProcessedSHA256": "DB41D04B858D3D0BF5A94D38866D82B30860F7D2BCAB6D156ABC7DFE2CE76192",
+      "Reason": "captura de consola UTF-16 con compilacion, JSON y exit_code; original preservado byte por byte, JSON extraido sin repetir sonda"
+    }
+  ],
+  "NoSecretContentRead": true,
+  "Preserved": [
+    "local-secrets/",
+    ".agentloop/event-journal/",
+    ".agentloop/operations/",
+    "artifacts/journeys/",
+    ".vs/"
+  ],
+  "RemovedBytesKnown": 2819876,
+  "RemovedBytesUnmeasuredPaths": [
+    ".agentloop/coordinator-nvidia-check.txt"
+  ]
+}

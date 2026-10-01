@@ -1,7 +1,7 @@
 namespace AgentLoop.Configuration;
 
 /// <summary>
-/// Resuelve secretos locales. Prioridad: archivo en local-secrets/ &gt; variable de entorno.
+/// Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada.
 /// </summary>
 public static class SecretStore
 {
@@ -11,7 +11,7 @@ public static class SecretStore
     private const string LegacyApiKeyEnvVar = "TOKENROUTER_API_KEY";
     private const string SecretsDirName = "local-secrets";
 
-    /// <summary>Devuelve la API key de TokenRouter o lanza con un mensaje accionable.</summary>
+    /// <summary>Devuelve la credencial del proveedor NVIDIA, con fallback legado. Nombre conservado por compatibilidad.</summary>
     public static string GetTokenRouterApiKey()
         => TryGetTokenRouterApiKey(out var key, out var reason)
             ? key!
@@ -43,13 +43,13 @@ public static class SecretStore
         if (!string.IsNullOrEmpty(fromEnv))
         {
             apiKey = fromEnv;
-            reason = $"variable de entorno {ApiKeyEnvVar}";
+            reason = $"variable de entorno {LegacyApiKeyEnvVar}";
             return true;
         }
 
         apiKey = null;
         reason =
-            $"No se encontro la API key de TokenRouter.{Environment.NewLine}" +
+            $"No se encontro la API key de NVIDIA.{Environment.NewLine}" +
             $"  1) Pegala en una sola linea en {SecretsDirName}/{ApiKeyFileName}" +
             (path is not null ? $" (el archivo existe pero esta vacio: {path})" : " (el archivo no existe)") +
             $"{Environment.NewLine}  2) O define la variable de entorno {ApiKeyEnvVar}";
@@ -70,8 +70,8 @@ public static class SecretStore
     }
 
     /// <summary>
-    /// Sube desde el directorio del binario buscando local-secrets/. Es necesario porque
-    /// en ejecucion el CWD es bin/Debug/net9.0/, no la raiz del repo.
+    /// Sube desde el directorio del binario buscando local-secrets/. Permite encontrar secretos aunque
+    /// el directorio actual sea distinto de la raiz del repo.
     /// </summary>
     public static string? FindSecretsDirectory()
     {

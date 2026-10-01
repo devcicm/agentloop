@@ -1,8 +1,10 @@
 # Análisis del proyecto y del fallo al crear un poema
 
+> Informe historico de la revision indicada en el documento. El comportamiento vigente esta en el [coordinador por eventos](implementacion-coordinador-eventos-2026-09-30.md) y el [indice documental](README.md). Los resultados originales se conservan como evidencia.
+
 Revisión del 27 de septiembre de 2026 sobre el commit `b977a8293227be9f8029b8ce41c06ce94a37dd0e`, en Windows y con .NET SDK 9.0.316. Se revisó el código, se compiló, se ejecutó la suite existente, se hizo una ejecución real con el modelo configurado y se reprodujeron defectos del harness mediante una sonda sin red.
 
-**El bloqueo actual confirmado está en el proveedor:** TokenRouter responde HTTP 503, `model_not_found`, con “No available channel for model z-ai/glm-5.3-free under group default (distributor)”. El modelo tampoco figura en el catálogo consultado durante esta revisión. La ejecución falla antes de recibir herramientas o producir un archivo. Además, existen defectos del harness que afectan el cierre y la evidencia aunque el proveedor vuelva a responder.
+**El bloqueo inicial confirmado el 27 estaba en el proveedor:** TokenRouter responde HTTP 503, `model_not_found`, con “No available channel for model z-ai/glm-5.3-free under group default (distributor)”. El modelo tampoco figura en el catálogo consultado durante esta revisión. La ejecución falla antes de recibir herramientas o producir un archivo. Además, existen defectos del harness que afectan el cierre y la evidencia aunque el proveedor vuelva a responder.
 
 ## Qué es el proyecto
 
@@ -145,7 +147,7 @@ El catálogo de modelos NVIDIA del host ahora contiene `z-ai/glm-5.3` y `moonsho
 | [nvidia-poem-evidence.json](evidence/2026-09-27/nvidia-poem-evidence.json) | Existencia, tamaño, cuatro líneas y SHA-256 del poema. |
 | [chat-nvidia-console.txt](evidence/2026-09-27/chat-nvidia-console.txt) | Prueba del chat LLM desde consola con clave en su ruta dedicada. |
 
-Para reproducir la comprobación local:
+Reproduccion historica: los comandos y la sonda siguientes requieren el checkout de la revision documentada. Para el actor vigente usar `selftest-coordinator`; la sonda antigua puede sobrescribir sus resultados versionados.
 
 ```powershell
 dotnet build ./AgentLoop.csproj --nologo
@@ -153,9 +155,9 @@ dotnet ./bin/Debug/net9.0/AgentLoop.dll selftest
 ./docs/evidence/2026-09-27/run-probe.ps1
 ```
 
-No existe `notes/wolf-rain-poem.md` en esta copia, ni el poema del ensayo remoto. El único Journey que ya existía corresponde a una simulación del 11 de septiembre. Las pruebas locales que pasan no cubren las fronteras reproducidas aquí y no verifican disponibilidad remota. Los archivos de esta entrega documentan el diagnóstico; no constituyen evidencia de un poema completado.
+En el estado inicial revisado no existia `notes/wolf-rain-poem.md` en esta copia, ni el poema del ensayo remoto. El único Journey que ya existía corresponde a una simulación del 11 de septiembre. Las pruebas locales que pasan no cubren las fronteras reproducidas aquí y no verifican disponibilidad remota. Los registros iniciales documentan el fallo; la subseccion posterior NVIDIA y sus archivos vinculados si acreditan el poema creado tras las correcciones.
 
-## Orden propuesto de corrección
+## Orden propuesto en la revision inicial (historico)
 
 1. Resolver un modelo con acceso y canal operativo para esta cuenta; validar disponibilidad reciente y clasificar `model_not_found` antes de reintentar como un 503 genérico.
 2. Corregir el corte de ciclos para despachar las herramientas ya recibidas, incluyendo un cierre solicitado en el último ciclo permitido.

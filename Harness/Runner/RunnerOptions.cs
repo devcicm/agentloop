@@ -6,7 +6,7 @@ namespace AgentLoop.Harness.Runner;
 /// <summary>Opciones que afinan como se ejecuta un Run.</summary>
 public sealed class RunnerOptions
 {
-    /// <summary>Tope duro de iteraciones del loop. Evita que un modelo que insiste gaste todo el budget.</summary>
+    /// <summary>Presupuesto de solicitudes al LLM; nombre heredado, no iteraciones de estados.</summary>
     public int MaxIterations { get; init; } = 80;
 
     /// <summary>Deadline en segundos. Por defecto 300 (5 minutos).</summary>
@@ -15,7 +15,7 @@ public sealed class RunnerOptions
     /// <summary>Maximo de procesos vivos simultaneos.</summary>
     public int MaxConcurrent { get; init; } = 4;
 
-    /// <summary>Politica de politica del ExecutionPolicy subyacente (auto/confirmar/simular).</summary>
+    /// <summary>Modo del ExecutionPolicy subyacente (auto/confirmar/simular).</summary>
     public string PolicyMode { get; init; } = "auto";
 
     /// <summary>Working directory del Scope. Por defecto el cwd.</summary>

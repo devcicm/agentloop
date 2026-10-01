@@ -6,9 +6,9 @@ public sealed class TokenRouterOptions
     public const string DefaultBaseUrl = "https://integrate.api.nvidia.com/v1";
 
     /// <summary>
-    /// Unico modelo agentico accesible con la cuenta y cuota actuales
-    /// (saldo $0.00 devuelve 403 en todos los demas). Verificado contra
-    /// artifacts/agentic-models.json (refresh tras cada discover).
+    /// Modelo NVIDIA predeterminado; el nombre del tipo se conserva por compatibilidad.
+    /// La configuracion no garantiza acceso ni disponibilidad remota.
+    /// discover puede producir un cache local de capacidades.
     /// </summary>
     public const string FallbackModelId = "z-ai/glm-5.3";
 

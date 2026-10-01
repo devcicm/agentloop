@@ -15,23 +15,10 @@ using AgentLoop.Tools;
 namespace AgentLoop.Harness.Composition;
 
 /// <summary>
-/// Composition Root del harness de goal: el unico sitio que sabe montar
-/// todos los componentes y cablearlos entre si. Dado un Run + un Scope
-/// + un cliente TokenRouter + unos observers, devuelve un GoalRunSetup
-/// con EventBus, ProcessSupervisor, CardLedger, OperationTools,
-/// GoalContext, StepRecorder, MetricsCollector, RunContext y
-/// GoalRunner, listos para ejecutar.
-///
-/// Antes de este commit, GoalAsync (Program.cs), JournalAsync (Program.cs)
-/// y GoalRunner.RunAsync (Harness/Runner) construian cada uno su propio
-/// Scope, Bus, Supervisor, Ledger, Tools, GoalContext y Machine. Tres
-/// copias del mismo setup con pequenas variaciones. Ahora cualquier
-/// consumidor llama a Build() y obtiene un setup consistente.
-///
-/// Responsabilidad centralizada: si manana cambia la forma de cablear
-/// el bus con el supervisor (por ejemplo, meter la deduplicacion que
-/// se aplico en commit M), solo se toca aqui y todos los consumidores
-/// se benefician.
+/// Composicion compartida del harness de operaciones: monta bus con identidad
+/// causal, supervisor, tarjetas, registro canonical de tools filtrado por Scope,
+/// contexto y captura local de evidencia. GoalRunner usa el actor por eventos;
+/// los tipos TokenRouter* conservan nombres historicos por compatibilidad.
 /// </summary>
 public static class GoalRunFactory
 {

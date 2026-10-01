@@ -1,6 +1,6 @@
 # Contexto y descubrimiento de recursos desde consola
 
-El chat interactivo y `run` reciben el directorio actual, sistema operativo y catálogo de herramientas en el prompt de cada turno. Las rutas relativas se resuelven desde el directorio actual del proceso; los resultados de descubrimiento incluyen rutas absolutas con espacios intactos.
+Texto libre y `run` en `interactive` ejecutan el actor por eventos con tools de descubrimiento. El prompt incluye el entorno y la politica de trabajo. En operaciones, la admision normaliza `path` y `root` contra `--cwd`; los resultados incluyen rutas absolutas con espacios intactos. `get_system_context` informa el cwd del proceso, que puede ser distinto de `--cwd`. El `chat` independiente no tiene tools; el `chat` interactivo es una utilidad conversacional anterior.
 
 | Herramienta | Uso |
 |---|---|
@@ -9,13 +9,13 @@ El chat interactivo y `run` reciben el directorio actual, sistema operativo y ca
 | `list_directory` | Lista hasta 200 entradas con rutas absolutas e indica truncamiento. |
 | `find_files` | Busca nombres con comodines bajo una raíz, con profundidad y cantidad limitadas. |
 
-Ejemplos dentro de `interactive`:
+Ejemplos dentro de `interactive` (para cumplir la operacion, abrir tarjeta, observar un resultado exitoso y comprobar su recibo antes de cerrar):
 
 ```text
-chat dime el directorio actual y la carpeta de documentos usando el contexto del sistema
-chat localiza dotnet con where_command y dime su ruta absoluta
-chat busca archivos memo*.txt debajo del directorio actual y devuelve sus rutas
-chat busca AgentLoop.csproj en el directorio actual, sin entrar en subdirectorios
+run dime el directorio actual y la carpeta de documentos usando el contexto del sistema
+run localiza dotnet con where_command y dime su ruta absoluta
+run busca archivos memo*.txt debajo del directorio actual y devuelve sus rutas
+run busca AgentLoop.csproj en el directorio actual, sin entrar en subdirectorios
 ```
 
 `find_files` acepta `root`, `pattern`, `max_results` (100 por defecto, máximo 1000) y `max_depth` (12 por defecto, máximo 64; cero busca solo en la raíz). Omite directorios inaccesibles y enlaces. Interrumpe el recorrido al alcanzar 20.000 entradas o cinco segundos entre entradas, y señala `truncated`/`stop_reason`. Estos límites se comprueban durante la enumeración: una operación de disco bloqueada puede demorar más. Una búsqueda vacía solo corresponde al alcance y permisos indicados.
@@ -30,3 +30,5 @@ Validación realizada en Windows, 27 de septiembre de 2026:
 - Prueba real del contexto y búsqueda: GLM 5.3 invocó `get_system_context`, después `find_files` con `pattern=AgentLoop.csproj` y `max_depth=0`. Encontró `C:\Users\Carlos Ivan\Desktop\agent loop\AgentLoop.csproj` y terminó en `Completed`, salida 0, tres llamadas al modelo y dos herramientas.
 
 El comportamiento Unix del resolvedor está implementado, pero estas verificaciones se ejecutaron en Windows.
+
+Estado actual: [coordinador por eventos](implementacion-coordinador-eventos-2026-09-30.md). Las cifras anteriores pertenecen a la revision del 27; la validacion registrada del 30 compilo sin advertencias.

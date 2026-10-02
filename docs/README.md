@@ -1,7 +1,7 @@
 # Indice de documentacion
 
-Documentacion actualizada al 2 de octubre de 2026; la ultima validacion local
-corresponde al 1 de octubre; la ultima inferencia remota registrada es del 30 de septiembre. El codigo determina el comportamiento;
+Documentacion actualizada al 2 de octubre de 2026; compilacion P0 del 2 de octubre.
+La ultima suite local completa corresponde al 1 de octubre; la ultima inferencia remota registrada es del 30 de septiembre. El codigo determina el comportamiento;
 el [README del proyecto](../README.md) resume las entradas. Las guias describen
 el uso vigente. Los informes fechados conservan observaciones de su revision.
 
@@ -9,6 +9,7 @@ el uso vigente. Los informes fechados conservan observaciones de su revision.
 
 | Documento | Alcance |
 | --- | --- |
+| [Goals de proyectos: admision P0](goals-proyectos.md) | Contratos estrictos y ejemplo POS; ejecucion por entregables pendiente |
 | [Seguridad, datos y DTOs](seguridad-datos-harness.md) | Sanitizacion, contratos, limites de confianza y uso acotado |
 | [Harness vigente y flujos ASCII](harness-eventos.md) | Arquitectura general, proveedores, contexto y recuperacion |
 | [Incidente POS](incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md) | Antes, causas, solucion y limites comprobados |
@@ -23,7 +24,7 @@ el uso vigente. Los informes fechados conservan observaciones de su revision.
 
 | Documento | Estado |
 | --- | --- |
-| [Goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md) | Plan por fases; contratos, eventos, validadores, contexto, aislamiento y recuperacion pendientes de implementar |
+| [Goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md) | P0 implementada; eventos de proyecto, validadores, contexto, aislamiento y recuperacion pendientes |
 
 ## Informes historicos
 

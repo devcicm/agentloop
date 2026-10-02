@@ -51,6 +51,8 @@ public static class GoalRunFactory
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(observers);
 
+        AgentLoop.Goals.Projects.ProjectContractAdmission.RequireExecutionSupport(run.ProjectContract);
+
         var correlation = Correlation.Start();
 
         var bus = new EventBus { RunId = run.Id, DedupWindow = TimeSpan.Zero, AsyncObservers = true };

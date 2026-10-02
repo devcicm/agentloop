@@ -37,6 +37,15 @@ public sealed class GoalRunner : IRunner
         ArgumentNullException.ThrowIfNull(run);
         ArgumentNullException.ThrowIfNull(options);
 
+        if (options.ProjectContractPath is not null)
+        {
+            var admitted = AgentLoop.Goals.Projects.ProjectContractAdmission.Load(options.ProjectContractPath, options.WorkingDirectory);
+            if (run.ProjectContract is not null && run.ProjectContract.ContractHash != admitted.ContractHash)
+                throw new InvalidOperationException("El contrato del Run difiere del indicado en RunnerOptions.");
+            run = run with { ProjectContract = admitted };
+        }
+        AgentLoop.Goals.Projects.ProjectContractAdmission.RequireExecutionSupport(run.ProjectContract);
+
         var policy = new ExecutionPolicy
         {
             WorkingDirectory = Path.GetFullPath(options.WorkingDirectory),

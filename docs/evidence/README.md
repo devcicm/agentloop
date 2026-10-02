@@ -6,6 +6,9 @@ no describen necesariamente el codigo actual. No se regeneran sobre el original.
 
 ## Capturas y alcance
 
+- 2026-10-02, proyectos P0: contratos y admision; compilacion sin errores ni
+  advertencias, sin tests nuevos. Ver [evidencia](2026-10-02-proyectos-p0/README.md).
+
 - 2026-10-01, seguridad: sanitizacion, validacion de DTOs y scope;
   382 comprobaciones correctas. Ver [evidencia](2026-10-01-seguridad/README.md).
 
@@ -80,3 +83,5 @@ si se ejecuta. Para el actor vigente usar `selftest-coordinator`.
 | [2026-10-01-seguridad/build.txt](2026-10-01-seguridad/build.txt) | Compilacion sin errores ni advertencias |
 | [2026-10-01-seguridad/selftest.txt](2026-10-01-seguridad/selftest.txt) | 382 comprobaciones locales correctas |
 | [2026-10-01-seguridad/repository-audit.json](2026-10-01-seguridad/repository-audit.json) | Inventario documental de la entrega |
+| [2026-10-02-proyectos-p0/README.md](2026-10-02-proyectos-p0/README.md) | Alcance de compilacion P0; sin comprobacion funcional |
+| [2026-10-02-proyectos-p0/build.txt](2026-10-02-proyectos-p0/build.txt) | Compilacion sin errores ni advertencias |

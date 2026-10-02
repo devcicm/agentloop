@@ -18,6 +18,7 @@ using AgentLoop.StateMachines;
 using AgentLoop.Terminals;
 using AgentLoop.Tools;
 using AgentLoop.Security;
+using AgentLoop.Goals.Projects;
 
 namespace AgentLoop;
 
@@ -59,6 +60,7 @@ internal static class Program
     /// </summary>
     private static async Task<int> InteractiveAsync(string[] args)
     {
+        if (HasFlag(args, "--project-contract")) return ProjectAdmissionCommand(args, executionRequested: true);
         var thread = new ConversationThread();
         var tools = BuiltInTools.DefaultRegistry();
         var maxIterations = IntOption(args, "--max-iterations", 24);
@@ -181,7 +183,7 @@ internal static class Program
                 Console.WriteLine();
 
                 // Las utilidades sueltas no tocan el hilo; el agente si.
-                if (verb is "discover" or "selftest" or "selftest-events" or "selftest-coordinator" or "recuperacion" or "goal" or "objetivo" or "journal" or "diario" or "lobos" or "diagnostico" or "help" or "--help" or "-h" or "ayuda")
+                if (verb is "project-admit" or "discover" or "selftest" or "selftest-events" or "selftest-coordinator" or "recuperacion" or "goal" or "objetivo" or "journal" or "diario" or "lobos" or "diagnostico" or "help" or "--help" or "-h" or "ayuda")
                 {
                     lastExitCode = await ExecuteAsync(tokens);
                 }
@@ -774,8 +776,12 @@ internal static class Program
     {
         var command = args.Length > 0 ? args[0].ToLowerInvariant() : "help";
 
+        if (HasFlag(args, "--project-contract"))
+            return ProjectAdmissionCommand(args, executionRequested: command != "project-admit");
+
         return command switch
         {
+            "project-admit" => ProjectAdmissionCommand(args, executionRequested: false),
             "selftest-events" => await EventArchitectureSelfTest.RunAsync(cancellationToken) ? 0 : 1,
             "selftest-coordinator" => await EventCoordinatorSelfTest.RunAsync(cancellationToken) ? 0 : 1,
             "recuperacion" => InspectOperation(args),
@@ -2479,6 +2485,31 @@ internal static class Program
         return 64;
     }
 
+    private static int ProjectAdmissionCommand(string[] args, bool executionRequested)
+    {
+        try
+        {
+            var file = StringOption(args, "--project-contract");
+            if (string.IsNullOrWhiteSpace(file) || file.StartsWith("--", StringComparison.Ordinal))
+                throw new InvalidOperationException("Uso: project-admit --project-contract <archivo.json> [--cwd <directorio>].");
+            var admitted = ProjectContractAdmission.Load(file, StringOption(args, "--cwd") ?? Environment.CurrentDirectory);
+            if (executionRequested) ProjectContractAdmission.RequireExecutionSupport(admitted);
+            var contract = admitted.Contract;
+            Console.WriteLine(JsonSerializer.Serialize(new
+            {
+                status = "admitted", executionAvailable = false,
+                contractHash = admitted.ContractHash, contract,
+            }, new JsonSerializerOptions(AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) { WriteIndented = true }));
+            return 0;
+        }
+        catch (Exception ex) when (ex is IOException or JsonException or InvalidOperationException
+            or UnauthorizedAccessException or ArgumentException or NotSupportedException)
+        {
+            Console.Error.WriteLine(DataGuard.Display("ERROR: " + ex.Message));
+            return 64;
+        }
+    }
+
     private static int InspectOperation(string[] args)
     {
         if (args.Length < 2) return Fail("Uso: recuperacion <ruta.jsonl>");
@@ -2507,6 +2538,7 @@ internal static class Program
                                     (bash, sh, powershell, pwsh, cmd). Ver la seccion Operaciones.
               selftest              Valida el harness completo sin tocar la red.
               selftest-coordinator Verifica admision, evidencia y controles del actor.
+              project-admit         Admite un contrato de proyecto sin LLM ni ejecucion (fase P0).
               recuperacion <jsonl>  Inspecciona eventos y acciones pendientes tras interrupcion.
               selftest-events       Verifica bus, senales, procesos y reactor sin proveedor remoto.
               diagnostico [runId]   Diagnostico post-mortem de un journey persistido (solo lee disco).
@@ -2521,6 +2553,7 @@ internal static class Program
               --max-iterations <n>  run-chat: tope de iteraciones del loop (12).
               --deadline <s>        goal: presupuesto de la operacion en segundos (300).
               --max-ciclos <n>      goal: presupuesto de llamadas al modelo (80).
+              --project-contract <json> Contrato versionado; ejecucion bloqueada hasta fases posteriores.
               --artifact <ruta>    goal: fija el archivo que debe observarse y comprobarse.
               --contains <texto>   goal: contenido obligatorio del artefacto.
               --json               goal: exige JSON valido en el artefacto.

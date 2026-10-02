@@ -1,8 +1,10 @@
 # Plan de implementacion: goals verificables para proyectos y POS
 
-Fecha: 2 de octubre de 2026. Estado: **plan documentado; componentes propuestos pendientes de implementar**.
+Fecha: 2 de octubre de 2026. Estado: **P0 implementada; P1-P6 pendientes**.
+Uso y limites actuales: [contratos y admision P0](goals-proyectos.md).
 Base revisada: commit `a15b5a2`, rama `feat/harness-eventos-tarjetas`.
-Esta entrega prepara el trabajo del harness. No construye el POS ni acredita una nueva ejecucion remota.
+Este documento conserva el diseno por fases. P0 admite contratos; no construye
+el POS ni acredita una nueva ejecucion remota.
 
 ## 1. Resultado esperado
 
@@ -339,9 +341,9 @@ a la entrega anterior; no acredita funcionalidades propuestas aqui.
 
 ## 12. Primera unidad de trabajo
 
-Comenzar con P0: DTOs y validacion del contrato, fixture POS declarativo y entrada
+P0 implementa DTOs y validacion del contrato, fixture POS declarativo y entrada
 explicita en CLI/runner. Todavia no ejecutar instaladores ni generar un POS durante
-esta fase. P0 debe dejar un contrato admitido que P1 pueda consumir, con criterios
+esta fase. P0 deja un snapshot admitido para P1, con criterios
 obligatorios y errores legibles. Registrar las decisiones definitivas de stack,
 backend y presupuestos al implementar sus fases y medir sus resultados.
 

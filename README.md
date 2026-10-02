@@ -94,6 +94,10 @@ compilacion sin errores ni advertencias, 340 comprobaciones correctas y
 prueba NVIDIA de poema con escritura, lectura, comprobacion y cierre.
 No equivale a una comprobacion nueva de disponibilidad remota.
 
+[Contratos de proyectos y admision P0](docs/goals-proyectos.md):
+`dotnet run -- project-admit --project-contract "examples/project-goals/pos-minimo.example.json"`.
+La ejecucion del contrato sigue bloqueada; admitirlo no construye el POS.
+
 [Plan de implementacion de goals para proyectos y POS](docs/plan-goals-proyectos-pos-2026-10-02.md).
 
 [Indice documental](docs/README.md) ·

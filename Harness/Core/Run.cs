@@ -16,6 +16,8 @@ public sealed record Run(
     DateTimeOffset CreatedAt,
     string? Model = null)
 {
+    public AgentLoop.Goals.Projects.AdmittedProjectContract? ProjectContract { get; init; }
+
     public static Run FromObjective(string objective, int deadlineSeconds, string? model = null)
     {
         var goal = Goal.Of(objective, deadlineSeconds);

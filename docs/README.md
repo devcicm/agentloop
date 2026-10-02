@@ -1,6 +1,6 @@
 # Indice de documentacion
 
-Documentacion actualizada al 1 de octubre de 2026; la nueva validacion local
+Documentacion actualizada al 2 de octubre de 2026; la ultima validacion local
 corresponde al 1 de octubre; la ultima inferencia remota registrada es del 30 de septiembre. El codigo determina el comportamiento;
 el [README del proyecto](../README.md) resume las entradas. Las guias describen
 el uso vigente. Los informes fechados conservan observaciones de su revision.
@@ -18,6 +18,12 @@ el uso vigente. Los informes fechados conservan observaciones de su revision.
 | [Diagnostico de no cierre](diagnostico-no-cierre.md) | Procedimiento actual para tarjetas, errores y acciones inciertas |
 | [Inventario y limpieza](limpieza-datos-repo-2026-09-30.md) | Clasificacion, datos retirados y retencion |
 | [Evidencias](evidence/README.md) | Procedencia y uso de registros versionados |
+
+## Planes de implementacion
+
+| Documento | Estado |
+| --- | --- |
+| [Goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md) | Plan por fases; contratos, eventos, validadores, contexto, aislamiento y recuperacion pendientes de implementar |
 
 ## Informes historicos
 

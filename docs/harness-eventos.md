@@ -150,6 +150,9 @@ Pendientes: presupuesto por tokens reales de entrada, manifiesto de proyecto
 acordado antes de ejecutar, validadores funcionales por dominio, reconciliacion
 manual de efectos no cooperativos y sondeo remoto del dialecto Kimi K3.
 No se garantiza un POS terminado en el deadline predeterminado de 300 segundos.
+El [plan de goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md)
+ordena estos pendientes en fases y define los contratos y criterios de salida.
+Es una propuesta de implementacion; no modifica el comportamiento vigente.
 
 ## Seguridad de datos y DTOs
 

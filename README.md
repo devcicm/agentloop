@@ -94,6 +94,8 @@ compilacion sin errores ni advertencias, 340 comprobaciones correctas y
 prueba NVIDIA de poema con escritura, lectura, comprobacion y cierre.
 No equivale a una comprobacion nueva de disponibilidad remota.
 
+[Plan de implementacion de goals para proyectos y POS](docs/plan-goals-proyectos-pos-2026-10-02.md).
+
 [Indice documental](docs/README.md) ·
 [Arquitectura y pendientes](docs/implementacion-coordinador-eventos-2026-09-30.md) ·
 [Inventario y limpieza](docs/limpieza-datos-repo-2026-09-30.md) ·

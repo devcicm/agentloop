@@ -64,7 +64,9 @@ public static class OperationTools
             "resultado": { "type": "string", "description": "Resultado observado (comprobacion y cierre)." },
             "evidencia": { "type": "string", "description": "Dato real que lo respalda: codigo de salida, linea de salida, contenido." },
             "evidencia_id": { "type": "string", "description": "receipt_id devuelto por una herramienta exitosa de esta transaccion. Obligatorio al comprobar en el coordinador por eventos." },
-            "motivo": { "type": "string", "description": "Por que se aborta (tarjeta de aborto)." }
+            "motivo": { "type": "string", "description": "Por que se aborta (tarjeta de aborto)." },
+            "work_item_id": { "type": "string", "description": "Proyecto: tarea vigente del host." },
+            "attempt_id": { "type": "string", "description": "Proyecto: intento vigente del host." }
           },
           "required": ["nombre"]
         }
@@ -81,7 +83,7 @@ public static class OperationTools
             handler: (arguments, _) =>
             {
                 var name = ReadString(arguments, "nombre");
-                var fields = deck.AllFields.Append("evidencia_id")
+                var fields = deck.AllFields.Concat(["evidencia_id", "work_item_id", "attempt_id"])
                     .Select(field => (field, value: ReadString(arguments, field)))
                     .Where(pair => pair.value.Length > 0)
                     .ToDictionary(pair => pair.field, pair => pair.value, StringComparer.Ordinal);

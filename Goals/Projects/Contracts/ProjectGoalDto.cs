@@ -69,5 +69,6 @@ public static class ProjectJson
         PropertyNameCaseInsensitive = false,
         UnmappedMemberHandling = JsonUnmappedMemberHandling.Disallow,
         MaxDepth = 32,
+        RespectRequiredConstructorParameters = true,
     };
 }

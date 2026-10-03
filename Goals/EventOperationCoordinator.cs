@@ -11,6 +11,8 @@ using AgentLoop.Provider;
 using AgentLoop.Tools;
 using AgentLoop.Security;
 using AgentLoop.Security.Contracts;
+using AgentLoop.Goals.Projects;
+using AgentLoop.Harness.Context;
 
 namespace AgentLoop.Goals;
 
@@ -41,6 +43,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     private OperationEventJournal _journal = null!;
     private OperationAdmission _admission = null!;
     private OperationAcceptance _acceptance = null!;
+    private ProjectRuntime? _project;
+    private readonly HashSet<Guid> _appliedEvents = [];
     private bool _started, _terminal, _paused, _modelActive, _reasonQueued, _actionActive;
     private bool _stopGraceScheduled;
     private readonly ConcurrentDictionary<Guid, TaskCompletionSource<bool>> _approvals = new();
@@ -80,23 +84,34 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         _ = DataGuard.Input(context.Goal.Text);
         _started = true;
         _context = context;
+        _project = context.Project;
         _admission = new(scope, context.Ledger);
-        _acceptance = new(context.Ledger, Criteria);
-        using var journal = _journal = new(JournalDirectory, context.Bus.RunId == Guid.Empty ? Guid.NewGuid() : context.Bus.RunId);
-        context.Ledger.ValidationGuard = CheckCard;
+        _acceptance = new(context.Ledger, _project is null ? Criteria : []);
+        using var journal = _journal = new(JournalDirectory, context.Bus.RunId == Guid.Empty ? Guid.NewGuid() : context.Bus.RunId,
+            _project is null ? long.MaxValue : 256L * 1024 * 1024, _project is null ? int.MaxValue : 4 * 1024 * 1024);
+        context.Ledger.ValidationGuard = null;
         var previousConfirmation = scope.Policy.AsyncConfirm;
         scope.Policy.AsyncConfirm = RequestApprovalAsync;
         using var subscription = context.Bus.Subscribe(Post);
         using var cancellation = token.Register(() => Publish(AgentEventKind.Cancelacion, "cancelado por el operador"));
         try
         {
+            if (_project is not null)
+            {
+                await _project.StartAsync(token);
+                context.Cycles = _project.ModelCalls;
+            }
+            context.Ledger.ValidationGuard = CheckCard;
             context.Messages.Add(ChatMessage.FromSystem(OperationContract.BuildSystemPrompt(context)
                 + "\nCOORDINACION POR EVENTOS: usa abrir antes de efectos. Cada resultado exitoso incluye receipt_id."
                 + "\nPara comprobar usa evidencia_id=receipt_id de esta transaccion. Cerrar exige comprobacion vigente y procesos finalizados."
                 + "\nLas herramientas ejecutadas despues de cerrar se rechazan. No inventes receipt_id. No hace falta producir texto para terminar."
+                + (_project is null ? "" : "\nPROTOCOLO FUNCIONAL DEL HOST:\n" + File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ProjectAssets", "POS-PROTOCOL.md")))
+                + (_project is null ? "" : "\nPROYECTO: la raiz ya esta abierta por el host. Abre una tarea anidada con work_item_id/attempt_id vigentes; escribe archivos declarados, usa project_command para build y project_validate. Comprobar requiere validaciones host vigentes y evidencia_id; despues cerrar tarea. Cuando work_item_id=__goal__, valida integracion, comprobar y cerrar raiz sin abrir otra. El contenido del modelo no acredita criterios funcionales.")
                 + (Criteria is null ? "" : "\nContrato de artefactos: " + JsonSerializer.Serialize(Criteria))));
+            _project?.PublishStart();
             Publish(AgentEventKind.Objetivo, context.Goal.Text);
-            _ = DeadlineAsync(context.Remaining);
+            _ = DeadlineAsync(_project is null ? context.Remaining : _project.Remaining);
             return await _completion.Task.ConfigureAwait(false);
         }
         finally
@@ -135,7 +150,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     {
         if (kind == CardKind.Cierre && _context.Supervisor.Running > 0)
             return "hay procesos pendientes; espera sus resultados antes de cerrar";
-        return _acceptance.ValidateCard(kind, fields);
+        return _project?.CheckCard(kind, fields) ?? _acceptance.ValidateCard(kind, fields);
     }
 
     private AgentEvent Publish(AgentEventKind kind, string text, object? data = null)
@@ -150,7 +165,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
 
     private Task HandleAsync(AgentEvent item)
     {
-        if (_terminal) return Task.CompletedTask;
+        if (_terminal || !_appliedEvents.Add(item.EventId)) return Task.CompletedTask;
         try
         {
             _currentEvent = item;
@@ -188,6 +203,11 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                     if (!_paused && _stopReason is null && !_actionActive) StartAction(item);
                     break;
                 case AgentEventKind.HerramientaResultado: ActionFinished(item); break;
+                case AgentEventKind.ProyectoAdmitido:
+                case AgentEventKind.TrabajoHabilitado:
+                case AgentEventKind.ValidacionFinalizada:
+                case AgentEventKind.ValidacionFallida:
+                case AgentEventKind.TrabajoAceptado:
                 case AgentEventKind.Objetivo:
                 case AgentEventKind.ProcesoIniciado:
                 case AgentEventKind.ProcesoSalida:
@@ -198,7 +218,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                     if (_stopReason is not null) TryFinishStop(); else RequestReason();
                     break;
             }
-            _journal.Append("applied", item, new { status = Status.ToString(), _context.Cycles, _context.EventsSeen });
+            _journal.Append("applied", item, new { status = Status.ToString(), _context.Cycles, _context.EventsSeen, projectSnapshot = _project is null ? (JsonElement?)null : JsonSerializer.SerializeToElement(_project.Snapshot(), AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) });
+            if (_project is not null) ProjectRecovery.SaveCheckpoint(JournalPath, _project.Snapshot());
         }
         catch (Exception error)
         {
@@ -230,7 +251,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         var facts = _facts.ToArray();
         if (facts.Length == 0) return;
         _facts.Clear();
-        _context.Messages.Add(ChatMessage.FromUser(_context.Brief(facts)));
+        _context.Messages.Add(ChatMessage.FromUser(_context.Brief(facts) + (_project is null ? "" : "\nESTADO AUTORITATIVO DEL PROYECTO:\n" + _project.Brief())));
         _context.Trim();
         if (JsonSerializer.Serialize(_context.Messages).Length > _context.MaxHistoryCharacters)
         { Stop(OperationStatus.Failed, "contrato o parte actual excede el presupuesto de contexto; consulta evidencia fuera del prompt"); return; }
@@ -244,14 +265,16 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             Thinking = _recovering ? ThinkingOptions.Off : Thinking?.For(model),
             ReasoningEffort = NvidiaModelCatalog.IsGlm53(model) ? "low" : null, StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
+        if (_project is not null) request = ProjectContextBudget.Fit(request with { MaxTokens = Math.Min(request.MaxTokens ?? MaxTokens, _project.Contract.Budgets.MaxOutputTokens) }, _project.Contract.Budgets.MaxInputTokens);
         if (JsonSerializer.Serialize(request).Length > 600000) { Stop(OperationStatus.Failed, "contexto excesivo; reduce resultados o antecedentes"); return; }
         _context.Cycles++;
+        if (_project is not null) _project.ModelCalls = _context.Cycles;
         _modelActive = true;
         Status = OperationStatus.Reasoning;
         var id = Guid.NewGuid();
         var requested = Publish(AgentEventKind.ModeloSolicitado, "solicitud al modelo", new ModelRequestDto(id.ToString("N"), model, request.MaxTokens, request.ReasoningEffort, _recovering,
             request.ToolChoice, JsonSerializer.Serialize(request.Messages).Length, request.Messages.Count));
-        _journal.Append("admitted", requested);
+        _journal.Append("admitted", requested, new { projectSnapshot = _project is null ? (JsonElement?)null : JsonSerializer.SerializeToElement(_project.Snapshot(), AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) });
         _ = Task.Run(() => CollectModelAsync(id, request, requested.EventId));
     }
 
@@ -362,7 +385,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     {
         if (_scheduledCall is not { } call) return;
         _scheduledCall = null;
-        var rejection = tools.ValidateArguments(call);
+        var rejection = tools.ValidateArguments(call) ?? _project?.Admit(call);
         var admission = rejection is null ? _admission.Admit(call) : (Call: call, Rejection: rejection, Simulated: false);
         var transactionId = _context.Ledger.Current?.Id;
         var actionId = Guid.NewGuid();
@@ -389,8 +412,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                     execution = await tools.ExecuteAsync(admission.Call, _lifetime.Token).ConfigureAwait(false);
                 }
             }
-            catch (Exception error) { execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = error.Message }), true); }
-            _actions[actionId] = new(execution, transactionId, clock.Elapsed);
+            catch (Exception error) { execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = error.Message }), true) { EffectsMayHaveOccurred = _project is not null && admission.Rejection is null && call.Name != "tarjeta" && !OperationAdmission.IsReadOnly(call.Name) }; }
+            _actions[actionId] = new(execution, transactionId, clock.Elapsed, call);
             _context.Bus.Publish(AgentEventKind.HerramientaResultado, "tool", call.Name,
                 new { action_id = actionId.ToString("N"), call_id = call.Id, tool = call.Name }, admitted.EventId);
         });
@@ -413,7 +436,12 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             DataGuard.ForModel(output, execution.ToolName)));
         _context.ToolCalls++;
         _context.RememberObservation(execution.ToolName, output, execution.Failed);
-        _journal.Append("resolved", item, new { execution.ToolCallId, execution.ToolName, output, execution.Failed, execution.EffectsMayHaveOccurred, receipt });
+        string? projectError = null;
+        try { if (_project is not null) _project.Observe(execution, delivery.Call); }
+        catch (Exception error) { projectError = error.Message; }
+        _journal.Append("resolved", item, new { execution.ToolCallId, execution.ToolName, output, execution.Failed, execution.EffectsMayHaveOccurred, receipt,
+            projectSnapshot = _project is null ? (JsonElement?)null : JsonSerializer.SerializeToElement(_project.Snapshot(), AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) });
+        if (projectError is not null) { Stop(OperationStatus.Failed, projectError); return; }
         Observe(() => OnToolCall?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed));
         RecordTool?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed);
         var fact = Publish(execution.Failed ? AgentEventKind.Error : AgentEventKind.HerramientaFinalizada,
@@ -458,7 +486,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(5), _stopGrace.Token);
+                    await Task.Delay(TimeSpan.FromSeconds(_project is null ? 5 : 30), _stopGrace.Token);
                     Publish(AgentEventKind.DetencionAgotada, "plazo de drenado agotado");
                 }
                 catch (OperationCanceledException) { }
@@ -500,5 +528,5 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     }
 
     private sealed record ModelDelivery(ParsedCompletion? Completion, Exception? Error, TimeSpan Elapsed);
-    private sealed record ActionDelivery(ToolExecution Execution, string? TransactionId, TimeSpan Elapsed);
+    private sealed record ActionDelivery(ToolExecution Execution, string? TransactionId, TimeSpan Elapsed, ParsedToolCall Call);
 }

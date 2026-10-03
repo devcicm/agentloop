@@ -1,0 +1,1479 @@
+{
+  "schemaVersion": 1,
+  "baseCommit": "81455f5",
+  "runs": [
+    {
+      "runId": "b31f53f213c748fd8d8e12fa9270261f",
+      "clientKind": "deterministic-fixture",
+      "sourceJournalSha256": "69430837FA6948987551C28BDE64E10E786C328EDB9E7FE292BBF0682E771BFB",
+      "snapshot": {
+        "version": 1,
+        "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+        "startedAt": "2026-10-03T08:46:46.321935+00:00",
+        "modelCalls": 29,
+        "work": [
+          {
+            "id": "estructura",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "76f361d40c404a41abd8bf478a3556c4",
+            "corrections": 0
+          },
+          {
+            "id": "catalogo",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "7295d30d7f3f4bffbe928d500e7a7484",
+            "corrections": 0
+          },
+          {
+            "id": "ventas",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "d0a21163668541beb636811d0e21eb1b",
+            "corrections": 0
+          },
+          {
+            "id": "entrega",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "0bd5d498acec43e1aec933b76df6c8b4",
+            "corrections": 0
+          }
+        ],
+        "results": [
+          {
+            "validationId": "estructura-valida",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+              "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "fa5a6ac59f064c16a36c875d327c6679",
+            "startedAt": "2026-10-03T08:47:25.8336223+00:00",
+            "endedAt": "2026-10-03T08:47:25.8421599+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "catalogo-escrito",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+              "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "02a27906c7744d519cc5ce2683cc3abe",
+            "startedAt": "2026-10-03T08:47:25.8472009+00:00",
+            "endedAt": "2026-10-03T08:47:25.854857+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "ventas-escritas",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "9e2a6d5e278a4bdc9ccb4bdbd7ce7e70",
+            "startedAt": "2026-10-03T08:47:25.8577756+00:00",
+            "endedAt": "2026-10-03T08:47:25.8617582+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "documentacion",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "readme": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "8cebeb65cbaf40af9433218744f3eabb",
+            "startedAt": "2026-10-03T08:47:25.8648805+00:00",
+            "endedAt": "2026-10-03T08:47:25.8667124+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "compilacion",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+              "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+              "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+              "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+              "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+            },
+            "passed": true,
+            "observations": "{\"passed\":true,\"checks\":[\"offline-install\",\"build\"]}\n",
+            "evidenceId": "5e5fbd2b86d54043a2985a9329be2121",
+            "startedAt": "2026-10-03T08:47:25.8682959+00:00",
+            "endedAt": "2026-10-03T08:47:37.3572579+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "disponibilidad",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+            },
+            "passed": true,
+            "observations": "{\"passed\":true,\"checks\":[\"health\"]}\n",
+            "evidenceId": "1c33d99599da47ebb9f33212097a3871",
+            "startedAt": "2026-10-03T08:47:37.3596909+00:00",
+            "endedAt": "2026-10-03T08:47:49.062705+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "pos-funcional",
+            "attemptId": "integration",
+            "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+              "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+              "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+              "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+              "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+            },
+            "passed": true,
+            "observations": "{\"passed\":true,\"checks\":[\"health\",\"catalog\",\"atomic-rejection\",\"insufficient-stock\",\"sale-ticket-change-stock\",\"idempotency\",\"restart-persistence\",\"browser-sale\",\"delivery-instructions\"],\"browserVerified\":true}\n",
+            "evidenceId": "f55691edff8f4835b3ddca784f4fbc83",
+            "startedAt": "2026-10-03T08:47:49.0660871+00:00",
+            "endedAt": "2026-10-03T08:48:01.1675609+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          }
+        ],
+        "baseline": {
+          "package": "missing",
+          "lock": "missing",
+          "config": "missing",
+          "catalogo": "missing",
+          "persistencia": "missing",
+          "ventas": "missing",
+          "servidor": "missing",
+          "interfaz": "missing",
+          "readme": "missing",
+          "types": "missing"
+        }
+      },
+      "validations": [
+        {
+          "validationId": "estructura-valida",
+          "attemptId": "76f361d40c404a41abd8bf478a3556c4",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "72e57f98a363497c9db12ce990cc7b5b",
+          "startedAt": "2026-10-03T08:46:48.1762703+00:00",
+          "endedAt": "2026-10-03T08:46:48.2049731+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "FE978CDE0491A11AE555689F9F5C0ACD94D87FB9C871E82F4D5A93B6B6684905"
+        },
+        {
+          "validationId": "catalogo-escrito",
+          "attemptId": "7295d30d7f3f4bffbe928d500e7a7484",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "7e333d34941f4deda834a849bdcca949",
+          "startedAt": "2026-10-03T08:46:49.1046669+00:00",
+          "endedAt": "2026-10-03T08:46:49.1084027+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "3081C201450CBE2B5B4F43A5101084F6E01A21CD7076BCB87DDD879779010C6F"
+        },
+        {
+          "validationId": "ventas-escritas",
+          "attemptId": "d0a21163668541beb636811d0e21eb1b",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "fdad5eb777c746df8693926297a6784f",
+          "startedAt": "2026-10-03T08:46:49.8051523+00:00",
+          "endedAt": "2026-10-03T08:46:49.8102033+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "50F2E1D087A4447626383E506AF2CAAE2131440D984F4CC53F226ADCC226FCA7"
+        },
+        {
+          "validationId": "documentacion",
+          "attemptId": "0bd5d498acec43e1aec933b76df6c8b4",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "readme": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "c17e371b6f1e4530a90c870318bb56c4",
+          "startedAt": "2026-10-03T08:46:50.4078232+00:00",
+          "endedAt": "2026-10-03T08:46:50.4089225+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "8A28B8B7D32B953FD5BC0FD516D8D94B78291DCF533FADD9F6FBC8698E49DB58"
+        },
+        {
+          "validationId": "compilacion",
+          "attemptId": "0bd5d498acec43e1aec933b76df6c8b4",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"offline-install\",\"build\"]}\n",
+          "evidenceId": "2e4ccab78dcc4249a87a345b6eaf6ff4",
+          "startedAt": "2026-10-03T08:46:50.4099263+00:00",
+          "endedAt": "2026-10-03T08:47:01.8417265+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "0B7454183DE731262C47A81E93586154FEE1FDD1D1556929CC84B6C82E7FB587"
+        },
+        {
+          "validationId": "disponibilidad",
+          "attemptId": "0bd5d498acec43e1aec933b76df6c8b4",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\"]}\n",
+          "evidenceId": "d5415c024c1c45948ac02b83a011c8b9",
+          "startedAt": "2026-10-03T08:47:01.8702432+00:00",
+          "endedAt": "2026-10-03T08:47:13.3039494+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "EEE89B024FF5ECBA53646F06B45195B64079642660A37CC78D07AE6C1F5747F3"
+        },
+        {
+          "validationId": "pos-funcional",
+          "attemptId": "0bd5d498acec43e1aec933b76df6c8b4",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\",\"catalog\",\"atomic-rejection\",\"insufficient-stock\",\"sale-ticket-change-stock\",\"idempotency\",\"restart-persistence\",\"browser-sale\",\"delivery-instructions\"],\"browserVerified\":true}\n",
+          "evidenceId": "45247859326d48bfb6185cdcf35fc845",
+          "startedAt": "2026-10-03T08:47:13.3066733+00:00",
+          "endedAt": "2026-10-03T08:47:25.5389426+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "3233F58FAD4349A832A56D0B4007E311F3D927455A214DE90AD044550A95830B"
+        },
+        {
+          "validationId": "estructura-valida",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "fa5a6ac59f064c16a36c875d327c6679",
+          "startedAt": "2026-10-03T08:47:25.8336223+00:00",
+          "endedAt": "2026-10-03T08:47:25.8421599+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "A001EF4F6EF882FDA266F907D584F4947B60A9567DFE775BDADCC8E28CA06B79"
+        },
+        {
+          "validationId": "catalogo-escrito",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "02a27906c7744d519cc5ce2683cc3abe",
+          "startedAt": "2026-10-03T08:47:25.8472009+00:00",
+          "endedAt": "2026-10-03T08:47:25.854857+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "58F05213797F112E449912CF923828250192418AEC71015625B7679A90EFC331"
+        },
+        {
+          "validationId": "ventas-escritas",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "9e2a6d5e278a4bdc9ccb4bdbd7ce7e70",
+          "startedAt": "2026-10-03T08:47:25.8577756+00:00",
+          "endedAt": "2026-10-03T08:47:25.8617582+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "D261458A7C9174AF6DA6709913713EE2F658C54CE170D725B77FA66B8C78098B"
+        },
+        {
+          "validationId": "documentacion",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "readme": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "8cebeb65cbaf40af9433218744f3eabb",
+          "startedAt": "2026-10-03T08:47:25.8648805+00:00",
+          "endedAt": "2026-10-03T08:47:25.8667124+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "036840672F64B64ED0323926703FD32236E5B9CF3013A4067B01FE3119843A43"
+        },
+        {
+          "validationId": "compilacion",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"offline-install\",\"build\"]}\n",
+          "evidenceId": "5e5fbd2b86d54043a2985a9329be2121",
+          "startedAt": "2026-10-03T08:47:25.8682959+00:00",
+          "endedAt": "2026-10-03T08:47:37.3572579+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "2905B6E48D9C5B88BE729E868CF86D4DADC745D9A598AB233DAB2CE2EF59382F"
+        },
+        {
+          "validationId": "disponibilidad",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\"]}\n",
+          "evidenceId": "1c33d99599da47ebb9f33212097a3871",
+          "startedAt": "2026-10-03T08:47:37.3596909+00:00",
+          "endedAt": "2026-10-03T08:47:49.062705+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "6499525A29F80AACC76F7DC9840810B102B25604480625A5B294F51A1753192E"
+        },
+        {
+          "validationId": "pos-funcional",
+          "attemptId": "integration",
+          "contractHash": "BD5B240DC1D5074445CF25161632E3E07506526D6144B36528A857A2A4AD2C81",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\",\"catalog\",\"atomic-rejection\",\"insufficient-stock\",\"sale-ticket-change-stock\",\"idempotency\",\"restart-persistence\",\"browser-sale\",\"delivery-instructions\"],\"browserVerified\":true}\n",
+          "evidenceId": "f55691edff8f4835b3ddca784f4fbc83",
+          "startedAt": "2026-10-03T08:47:49.0660871+00:00",
+          "endedAt": "2026-10-03T08:48:01.1675609+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "8D881FAD0CFE1F5E2463140BA421CC452788FE7EE9AD11C3A73293AADC69BD2F"
+        }
+      ],
+      "outcome": null,
+      "journeyStatus": 6,
+      "modelRequestsThisRun": 29,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "toolCounts": {
+        "tool:tarjeta": 14,
+        "tool:write_text_file": 10,
+        "tool:project_validate": 5
+      }
+    },
+    {
+      "runId": "72ccd2c4c211430091ffc65d052bce1f",
+      "clientKind": "deterministic-fixture",
+      "sourceJournalSha256": "38A8CC5218EFB92345EAB502A46D9280500C143722942CEA91704E350BFC5445",
+      "snapshot": {
+        "version": 1,
+        "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+        "startedAt": "2026-10-03T09:02:22.5337596+00:00",
+        "modelCalls": 29,
+        "work": [
+          {
+            "id": "estructura",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "0f708826425b4f9fae5ca546f8cfdb5b",
+            "corrections": 0
+          },
+          {
+            "id": "catalogo",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "8c2cd4dbda3f414a90f22848ae3fb364",
+            "corrections": 0
+          },
+          {
+            "id": "ventas",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "851a8257200045abb8d35511bf2e961b",
+            "corrections": 0
+          },
+          {
+            "id": "entrega",
+            "status": 3,
+            "attempts": 1,
+            "attemptId": "651243a3db7346818083251782c4a001",
+            "corrections": 0
+          }
+        ],
+        "results": [
+          {
+            "validationId": "estructura-valida",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+              "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "3c0f13c807d24cafb24f913a1dfdbac5",
+            "startedAt": "2026-10-03T09:02:47.9230973+00:00",
+            "endedAt": "2026-10-03T09:02:47.9274953+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "catalogo-escrito",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+              "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "843fde2d09e6424389a5335be62ff247",
+            "startedAt": "2026-10-03T09:02:47.9286342+00:00",
+            "endedAt": "2026-10-03T09:02:47.930936+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "ventas-escritas",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "f753758522424d2488811fe820ed3df8",
+            "startedAt": "2026-10-03T09:02:47.9317155+00:00",
+            "endedAt": "2026-10-03T09:02:47.9345202+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "documentacion",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "readme": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "66d3a1f2f86f438db49c638a885a1d08",
+            "startedAt": "2026-10-03T09:02:47.9352727+00:00",
+            "endedAt": "2026-10-03T09:02:47.9359937+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "compilacion",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+              "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+              "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+              "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+              "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+            },
+            "passed": true,
+            "observations": "{\"passed\":true,\"checks\":[\"offline-install\",\"build\"]}\n",
+            "evidenceId": "5d687250041442adae7abfbaba6265f8",
+            "startedAt": "2026-10-03T09:02:47.9365688+00:00",
+            "endedAt": "2026-10-03T09:02:55.7272995+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "disponibilidad",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+            },
+            "passed": true,
+            "observations": "{\"passed\":true,\"checks\":[\"health\"]}\n",
+            "evidenceId": "fdc2fbd1e96e4131abde7cad23035665",
+            "startedAt": "2026-10-03T09:02:55.7281483+00:00",
+            "endedAt": "2026-10-03T09:03:04.6664068+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "pos-funcional",
+            "attemptId": "integration",
+            "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+            "inputHashes": {
+              "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+              "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+              "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+              "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+              "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+              "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+              "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+              "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+              "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+            },
+            "passed": true,
+            "observations": "{\"passed\":true,\"checks\":[\"health\",\"catalog\",\"atomic-rejection\",\"insufficient-stock\",\"sale-ticket-change-stock\",\"idempotency\",\"restart-persistence\",\"browser-sale\",\"delivery-instructions\"],\"browserVerified\":true}\n",
+            "evidenceId": "d9226bd9d9f74204904c1e89ede5aac6",
+            "startedAt": "2026-10-03T09:03:04.6675408+00:00",
+            "endedAt": "2026-10-03T09:03:15.8447691+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          }
+        ],
+        "baseline": {
+          "package": "missing",
+          "lock": "missing",
+          "config": "missing",
+          "catalogo": "missing",
+          "persistencia": "missing",
+          "ventas": "missing",
+          "servidor": "missing",
+          "interfaz": "missing",
+          "readme": "missing",
+          "types": "missing"
+        }
+      },
+      "validations": [
+        {
+          "validationId": "estructura-valida",
+          "attemptId": "0f708826425b4f9fae5ca546f8cfdb5b",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "7ddc3430897049509a96f3a6f0a10425",
+          "startedAt": "2026-10-03T09:02:23.0904771+00:00",
+          "endedAt": "2026-10-03T09:02:23.0972157+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "85EDA21215192AD4F395197BC3B26D83BAE0298B194A053277741146E63E4E1F"
+        },
+        {
+          "validationId": "catalogo-escrito",
+          "attemptId": "8c2cd4dbda3f414a90f22848ae3fb364",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "7fc8f8b74fa64bdf8fd8a92d559c1850",
+          "startedAt": "2026-10-03T09:02:23.3233852+00:00",
+          "endedAt": "2026-10-03T09:02:23.3252531+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "AA7F074001F2FA2956B94F0F41DD887ADE06C0277051BB4C75D9F47D85E9713B"
+        },
+        {
+          "validationId": "ventas-escritas",
+          "attemptId": "851a8257200045abb8d35511bf2e961b",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "95cce2787b9f404eadb490398d521461",
+          "startedAt": "2026-10-03T09:02:23.6194868+00:00",
+          "endedAt": "2026-10-03T09:02:23.6224766+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "3041333FC35C47389D4BC926EFC1F48922E68D33E6BB381A62FB36A167A93D82"
+        },
+        {
+          "validationId": "documentacion",
+          "attemptId": "651243a3db7346818083251782c4a001",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "readme": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "c3173656f4ad42e18f53074e775b6421",
+          "startedAt": "2026-10-03T09:02:23.8246782+00:00",
+          "endedAt": "2026-10-03T09:02:23.8254324+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "D8DE3AB486E2D9C221528E0B7E88DD7DD89852E3BDF5FB58728041B9F12667F2"
+        },
+        {
+          "validationId": "compilacion",
+          "attemptId": "651243a3db7346818083251782c4a001",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"offline-install\",\"build\"]}\n",
+          "evidenceId": "5915b1663d204c1bb77ef97c9dc3516c",
+          "startedAt": "2026-10-03T09:02:23.8263317+00:00",
+          "endedAt": "2026-10-03T09:02:32.1601188+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "66ED5AE23B7373A15516F65C95C47ED216277AE3204F7D5A474BA256835A422C"
+        },
+        {
+          "validationId": "disponibilidad",
+          "attemptId": "651243a3db7346818083251782c4a001",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\"]}\n",
+          "evidenceId": "0df928dcd9dd49e0aecd37845ffd2137",
+          "startedAt": "2026-10-03T09:02:32.1612828+00:00",
+          "endedAt": "2026-10-03T09:02:38.4869105+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "EE565A654BE1B02A0E6C010C4E41EA7F3CB95BADE64C96A5E0A0BF9AB562FF2E"
+        },
+        {
+          "validationId": "pos-funcional",
+          "attemptId": "651243a3db7346818083251782c4a001",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\",\"catalog\",\"atomic-rejection\",\"insufficient-stock\",\"sale-ticket-change-stock\",\"idempotency\",\"restart-persistence\",\"browser-sale\",\"delivery-instructions\"],\"browserVerified\":true}\n",
+          "evidenceId": "0ab8adb0eced452d9f9a6fcdd8f164c3",
+          "startedAt": "2026-10-03T09:02:38.4877997+00:00",
+          "endedAt": "2026-10-03T09:02:47.7851169+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "F91B9F75690126113804249703693A6053D0CCD0BBDBBC91EEAC415ADE505462"
+        },
+        {
+          "validationId": "estructura-valida",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "3c0f13c807d24cafb24f913a1dfdbac5",
+          "startedAt": "2026-10-03T09:02:47.9230973+00:00",
+          "endedAt": "2026-10-03T09:02:47.9274953+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "6F13CDDC01DF05597B82A447B630929A513022A26C31408F77CC4B19A487DD07"
+        },
+        {
+          "validationId": "catalogo-escrito",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "843fde2d09e6424389a5335be62ff247",
+          "startedAt": "2026-10-03T09:02:47.9286342+00:00",
+          "endedAt": "2026-10-03T09:02:47.930936+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "43FE0112F807A8333199D2F3318A4A91FD319EDAF132C5A46F629699C212DA3C"
+        },
+        {
+          "validationId": "ventas-escritas",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "f753758522424d2488811fe820ed3df8",
+          "startedAt": "2026-10-03T09:02:47.9317155+00:00",
+          "endedAt": "2026-10-03T09:02:47.9345202+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "1A6B5EF0FB0FF5B6405D30813E8CA843D292166D350B0F531A31D90A4E5109A8"
+        },
+        {
+          "validationId": "documentacion",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "readme": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "66d3a1f2f86f438db49c638a885a1d08",
+          "startedAt": "2026-10-03T09:02:47.9352727+00:00",
+          "endedAt": "2026-10-03T09:02:47.9359937+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "11304944E420241AC7AF82A52997D05AC9C5F57D304D843596F7DC43267B7948"
+        },
+        {
+          "validationId": "compilacion",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"offline-install\",\"build\"]}\n",
+          "evidenceId": "5d687250041442adae7abfbaba6265f8",
+          "startedAt": "2026-10-03T09:02:47.9365688+00:00",
+          "endedAt": "2026-10-03T09:02:55.7272995+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "ABD0C1E6EFC7DAE31D89B3B7AB805C685D9163872FB988DE5A5B971C97C8BDB8"
+        },
+        {
+          "validationId": "disponibilidad",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\"]}\n",
+          "evidenceId": "fdc2fbd1e96e4131abde7cad23035665",
+          "startedAt": "2026-10-03T09:02:55.7281483+00:00",
+          "endedAt": "2026-10-03T09:03:04.6664068+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "ED014A3E81FDFFDB849AAD2BA80980B4E269416155944401D60BBD57AB0E38EC"
+        },
+        {
+          "validationId": "pos-funcional",
+          "attemptId": "integration",
+          "contractHash": "530D28C869A634A5872DF3796ABC6134FA7CB4840973253699959B36E07F80FA",
+          "inputHashes": {
+            "package": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A",
+            "lock": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1",
+            "config": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106",
+            "catalogo": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87",
+            "persistencia": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C",
+            "ventas": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059",
+            "servidor": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674",
+            "interfaz": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8",
+            "types": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+          },
+          "passed": true,
+          "observations": "{\"passed\":true,\"checks\":[\"health\",\"catalog\",\"atomic-rejection\",\"insufficient-stock\",\"sale-ticket-change-stock\",\"idempotency\",\"restart-persistence\",\"browser-sale\",\"delivery-instructions\"],\"browserVerified\":true}\n",
+          "evidenceId": "d9226bd9d9f74204904c1e89ede5aac6",
+          "startedAt": "2026-10-03T09:03:04.6675408+00:00",
+          "endedAt": "2026-10-03T09:03:15.8447691+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "00E971242BF7B9D0E6FB308A627EDE7DC9080D524835FCA3B902561D472BB9B7"
+        }
+      ],
+      "outcome": null,
+      "journeyStatus": 6,
+      "modelRequestsThisRun": 29,
+      "usage": {
+        "prompt_tokens": 0,
+        "completion_tokens": 0
+      },
+      "toolCounts": {
+        "tool:tarjeta": 14,
+        "tool:write_text_file": 10,
+        "tool:project_validate": 5
+      }
+    },
+    {
+      "runId": "dc1e188c03e44eb5abe5e62b236214f8",
+      "clientKind": "nvidia-z-ai/glm-5.3",
+      "sourceJournalSha256": "2C786034B184E9B8FC2D6DC1893B5B93B633DDCC0FE5614E422C4C956DADC321",
+      "snapshot": {
+        "version": 1,
+        "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+        "startedAt": "2026-10-03T08:49:33.2321494+00:00",
+        "modelCalls": 60,
+        "work": [
+          {
+            "id": "estructura",
+            "status": 0,
+            "attempts": 1,
+            "attemptId": "9cf8e042a02d499f8a5bb35002f606c8",
+            "corrections": 0
+          },
+          {
+            "id": "catalogo",
+            "status": 0,
+            "attempts": 1,
+            "attemptId": "25ad023daa0f488f8700346462e7e0da",
+            "corrections": 0
+          },
+          {
+            "id": "ventas",
+            "status": 0,
+            "attempts": 1,
+            "attemptId": "110dbb4a957245ba9eae95c8fed50e80",
+            "corrections": 0
+          },
+          {
+            "id": "entrega",
+            "status": 2,
+            "attempts": 1,
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "corrections": 1
+          }
+        ],
+        "results": [
+          {
+            "validationId": "estructura-valida",
+            "attemptId": "9cf8e042a02d499f8a5bb35002f606c8",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "128D5DED831A428508BF5155CAA4F62B67A0D781D90D8151EFC51FFBF48E5529",
+              "lock": "C582772203D6B552309EA5A465BACFE8E229A56A0D44150A1AA0735F72780358",
+              "config": "F033E2E55F9D4C43EAE92005DDC01BF1BD1BB1219A4B71812EFC28AA95BB87C2",
+              "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "89021133bf434c39822915d727f6e2b1",
+            "startedAt": "2026-10-03T08:50:50.2863299+00:00",
+            "endedAt": "2026-10-03T08:50:50.3160147+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "catalogo-escrito",
+            "attemptId": "25ad023daa0f488f8700346462e7e0da",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+              "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "813a52c13358480aa56be8acbe6542da",
+            "startedAt": "2026-10-03T08:51:32.4615411+00:00",
+            "endedAt": "2026-10-03T08:51:32.4642628+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "ventas-escritas",
+            "attemptId": "110dbb4a957245ba9eae95c8fed50e80",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "a9a78ac9335749beb56b5ad7d766d0b4",
+            "startedAt": "2026-10-03T08:55:14.7683451+00:00",
+            "endedAt": "2026-10-03T08:55:14.7712435+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "documentacion",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "readme": "56131A7143472188A19B4225E2C9E9319EEFBFB7C788E7AE613048A135349074"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "073c10a1896648148796d802ed112114",
+            "startedAt": "2026-10-03T08:58:05.495148+00:00",
+            "endedAt": "2026-10-03T08:58:05.4965422+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "compilacion",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+              "lock": "F1C025B9D231255D49DADDCF69C5EAF1F785FAF22E80A693E91938D422FA3753",
+              "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188",
+              "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+              "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7",
+              "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734",
+              "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+            },
+            "passed": false,
+            "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nsrc/servidor.ts(3,31): error TS2307: Cannot find module 'node:path' or its corresponding type declarations.\nsrc/servidor.ts(4,31): error TS2307: Cannot find module 'node:url' or its corresponding type declarations.\nsrc/servidor.ts(5,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(6,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(7,10): error TS2305: Module '\"./ventas.ts\"' has no exported member 'Caja'.\nsrc/servidor.ts(7,22): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(9,41): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.\nsrc/servidor.ts(12,16): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(13,14): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(14,23): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(23,21): error TS7006: Parameter 'c' implicitly has an 'any' type.\nsrc/servidor.ts(38,43): error TS7006: Parameter 'req' implicitly has an 'any' type.\nsrc/servidor.ts(38,48): error TS7006: Parameter 'res' implicitly has an 'any' type.\nsrc/servidor.ts(105,1): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(108,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/ventas.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/ventas.ts(3,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n\n\n2 !== 0\n\n",
+            "evidenceId": "915b3575de0f4c72b71392ed1176181c",
+            "startedAt": "2026-10-03T08:58:05.4975519+00:00",
+            "endedAt": "2026-10-03T08:58:08.3030999+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "disponibilidad",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188"
+            },
+            "passed": false,
+            "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nsrc/servidor.ts(3,31): error TS2307: Cannot find module 'node:path' or its corresponding type declarations.\nsrc/servidor.ts(4,31): error TS2307: Cannot find module 'node:url' or its corresponding type declarations.\nsrc/servidor.ts(5,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(6,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(7,10): error TS2305: Module '\"./ventas.ts\"' has no exported member 'Caja'.\nsrc/servidor.ts(7,22): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(9,41): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.\nsrc/servidor.ts(12,16): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(13,14): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(14,23): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(23,21): error TS7006: Parameter 'c' implicitly has an 'any' type.\nsrc/servidor.ts(38,43): error TS7006: Parameter 'req' implicitly has an 'any' type.\nsrc/servidor.ts(38,48): error TS7006: Parameter 'res' implicitly has an 'any' type.\nsrc/servidor.ts(105,1): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(108,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/ventas.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/ventas.ts(3,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n\n\n2 !== 0\n\n",
+            "evidenceId": "22b273e2b242481ea0e3c4158d864c64",
+            "startedAt": "2026-10-03T08:58:08.3050595+00:00",
+            "endedAt": "2026-10-03T08:58:11.685146+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "pos-funcional",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+              "lock": "F1C025B9D231255D49DADDCF69C5EAF1F785FAF22E80A693E91938D422FA3753",
+              "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188",
+              "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+              "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7",
+              "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734",
+              "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+            },
+            "passed": false,
+            "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nsrc/servidor.ts(3,31): error TS2307: Cannot find module 'node:path' or its corresponding type declarations.\nsrc/servidor.ts(4,31): error TS2307: Cannot find module 'node:url' or its corresponding type declarations.\nsrc/servidor.ts(5,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(6,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(7,10): error TS2305: Module '\"./ventas.ts\"' has no exported member 'Caja'.\nsrc/servidor.ts(7,22): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(9,41): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.\nsrc/servidor.ts(12,16): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(13,14): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(14,23): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(23,21): error TS7006: Parameter 'c' implicitly has an 'any' type.\nsrc/servidor.ts(38,43): error TS7006: Parameter 'req' implicitly has an 'any' type.\nsrc/servidor.ts(38,48): error TS7006: Parameter 'res' implicitly has an 'any' type.\nsrc/servidor.ts(105,1): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(108,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/ventas.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/ventas.ts(3,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n\n\n2 !== 0\n\n",
+            "evidenceId": "afa0d05106324765b62634b71915df7b",
+            "startedAt": "2026-10-03T08:58:11.6872949+00:00",
+            "endedAt": "2026-10-03T08:58:15.1793355+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          }
+        ],
+        "baseline": {
+          "package": "missing",
+          "lock": "missing",
+          "config": "missing",
+          "catalogo": "missing",
+          "persistencia": "missing",
+          "ventas": "missing",
+          "servidor": "missing",
+          "interfaz": "missing",
+          "readme": "missing",
+          "types": "missing"
+        }
+      },
+      "validations": [
+        {
+          "validationId": "estructura-valida",
+          "attemptId": "9cf8e042a02d499f8a5bb35002f606c8",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "package": "128D5DED831A428508BF5155CAA4F62B67A0D781D90D8151EFC51FFBF48E5529",
+            "lock": "C582772203D6B552309EA5A465BACFE8E229A56A0D44150A1AA0735F72780358",
+            "config": "F033E2E55F9D4C43EAE92005DDC01BF1BD1BB1219A4B71812EFC28AA95BB87C2",
+            "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "89021133bf434c39822915d727f6e2b1",
+          "startedAt": "2026-10-03T08:50:50.2863299+00:00",
+          "endedAt": "2026-10-03T08:50:50.3160147+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "6CEFA5881E166E1FA58B79DC0BA707BC2333607D27030C4A963A1135911606A1"
+        },
+        {
+          "validationId": "catalogo-escrito",
+          "attemptId": "25ad023daa0f488f8700346462e7e0da",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+            "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "813a52c13358480aa56be8acbe6542da",
+          "startedAt": "2026-10-03T08:51:32.4615411+00:00",
+          "endedAt": "2026-10-03T08:51:32.4642628+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "CA2E6DB155C4F6B7794E697E2028DA6196478E6E2AA16A05C15F6B6A9396F0A0"
+        },
+        {
+          "validationId": "ventas-escritas",
+          "attemptId": "110dbb4a957245ba9eae95c8fed50e80",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+            "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+            "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "a9a78ac9335749beb56b5ad7d766d0b4",
+          "startedAt": "2026-10-03T08:55:14.7683451+00:00",
+          "endedAt": "2026-10-03T08:55:14.7712435+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "9F485B37F387F3F25E9ACF874B4A974D97DFB1E26C88FDFBFC636251E93D1F23"
+        },
+        {
+          "validationId": "documentacion",
+          "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "readme": "56131A7143472188A19B4225E2C9E9319EEFBFB7C788E7AE613048A135349074"
+          },
+          "passed": true,
+          "observations": "Entradas presentes.",
+          "evidenceId": "073c10a1896648148796d802ed112114",
+          "startedAt": "2026-10-03T08:58:05.495148+00:00",
+          "endedAt": "2026-10-03T08:58:05.4965422+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "artifact-host",
+          "sourceSha256": "3003D87C958FA0E58C30029210FD474B454A03A77D80866AA41F08E5A9AE2553"
+        },
+        {
+          "validationId": "compilacion",
+          "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+            "lock": "F1C025B9D231255D49DADDCF69C5EAF1F785FAF22E80A693E91938D422FA3753",
+            "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188",
+            "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+            "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7",
+            "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+            "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+            "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734",
+            "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+          },
+          "passed": false,
+          "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nsrc/servidor.ts(3,31): error TS2307: Cannot find module 'node:path' or its corresponding type declarations.\nsrc/servidor.ts(4,31): error TS2307: Cannot find module 'node:url' or its corresponding type declarations.\nsrc/servidor.ts(5,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(6,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(7,10): error TS2305: Module '\"./ventas.ts\"' has no exported member 'Caja'.\nsrc/servidor.ts(7,22): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(9,41): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.\nsrc/servidor.ts(12,16): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(13,14): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(14,23): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(23,21): error TS7006: Parameter 'c' implicitly has an 'any' type.\nsrc/servidor.ts(38,43): error TS7006: Parameter 'req' implicitly has an 'any' type.\nsrc/servidor.ts(38,48): error TS7006: Parameter 'res' implicitly has an 'any' type.\nsrc/servidor.ts(105,1): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(108,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/ventas.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/ventas.ts(3,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n\n\n2 !== 0\n\n",
+          "evidenceId": "915b3575de0f4c72b71392ed1176181c",
+          "startedAt": "2026-10-03T08:58:05.4975519+00:00",
+          "endedAt": "2026-10-03T08:58:08.3030999+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "8D61CF9228B3ECC289A073C97FC4DE33E4FC92048BDADF78A880D62058B67274"
+        },
+        {
+          "validationId": "disponibilidad",
+          "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+            "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+            "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188"
+          },
+          "passed": false,
+          "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nsrc/servidor.ts(3,31): error TS2307: Cannot find module 'node:path' or its corresponding type declarations.\nsrc/servidor.ts(4,31): error TS2307: Cannot find module 'node:url' or its corresponding type declarations.\nsrc/servidor.ts(5,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(6,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(7,10): error TS2305: Module '\"./ventas.ts\"' has no exported member 'Caja'.\nsrc/servidor.ts(7,22): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(9,41): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.\nsrc/servidor.ts(12,16): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(13,14): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(14,23): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(23,21): error TS7006: Parameter 'c' implicitly has an 'any' type.\nsrc/servidor.ts(38,43): error TS7006: Parameter 'req' implicitly has an 'any' type.\nsrc/servidor.ts(38,48): error TS7006: Parameter 'res' implicitly has an 'any' type.\nsrc/servidor.ts(105,1): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(108,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/ventas.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/ventas.ts(3,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n\n\n2 !== 0\n\n",
+          "evidenceId": "22b273e2b242481ea0e3c4158d864c64",
+          "startedAt": "2026-10-03T08:58:08.3050595+00:00",
+          "endedAt": "2026-10-03T08:58:11.685146+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "08C974B6D08A7E8B126CEB243B4FC6FAC48C3C9A86B579370FC357FAA0FEC7F6"
+        },
+        {
+          "validationId": "pos-funcional",
+          "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+          "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+          "inputHashes": {
+            "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+            "lock": "F1C025B9D231255D49DADDCF69C5EAF1F785FAF22E80A693E91938D422FA3753",
+            "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188",
+            "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+            "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7",
+            "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+            "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+            "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734",
+            "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+          },
+          "passed": false,
+          "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its corresponding type declarations.\nsrc/servidor.ts(3,31): error TS2307: Cannot find module 'node:path' or its corresponding type declarations.\nsrc/servidor.ts(4,31): error TS2307: Cannot find module 'node:url' or its corresponding type declarations.\nsrc/servidor.ts(5,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(6,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(7,10): error TS2305: Module '\"./ventas.ts\"' has no exported member 'Caja'.\nsrc/servidor.ts(7,22): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/servidor.ts(9,41): error TS1343: The 'import.meta' meta-property is only allowed when the '--module' option is 'es2020', 'es2022', 'esnext', 'system', 'node16', or 'nodenext'.\nsrc/servidor.ts(12,16): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(13,14): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(14,23): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(23,21): error TS7006: Parameter 'c' implicitly has an 'any' type.\nsrc/servidor.ts(38,43): error TS7006: Parameter 'req' implicitly has an 'any' type.\nsrc/servidor.ts(38,48): error TS7006: Parameter 'res' implicitly has an 'any' type.\nsrc/servidor.ts(105,1): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/servidor.ts(108,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.\nsrc/ventas.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/ventas.ts(3,26): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\n\n\n2 !== 0\n\n",
+          "evidenceId": "afa0d05106324765b62634b71915df7b",
+          "startedAt": "2026-10-03T08:58:11.6872949+00:00",
+          "endedAt": "2026-10-03T08:58:15.1793355+00:00",
+          "validatorVersion": "1",
+          "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+          "sourceSha256": "35208628CF02E9193908E865F99DEAEC281CFB070C93D9146AE74E82E0D1F993"
+        }
+      ],
+      "outcome": "presupuesto de llamadas al modelo agotado",
+      "journeyStatus": 7,
+      "modelRequestsThisRun": 60,
+      "usage": {
+        "prompt_tokens": 646301,
+        "completion_tokens": 24623
+      },
+      "toolCounts": {
+        "tool:tarjeta": 15,
+        "tool:write_text_file": 14,
+        "tool:project_validate": 4,
+        "tool:read_text_file": 22,
+        "tool:project_command": 4
+      }
+    },
+    {
+      "runId": "bcf8b51736ee41479ec36f369515b5d6",
+      "clientKind": "nvidia-z-ai/glm-5.3-resumed",
+      "sourceJournalSha256": "6F0D10F20C659E3970CE0AC7F2BF376E32C9270D17EC0DEF51CB5A8ED1BD50D7",
+      "snapshot": {
+        "version": 1,
+        "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+        "startedAt": "2026-10-03T08:49:33.2321494+00:00",
+        "modelCalls": 73,
+        "work": [
+          {
+            "id": "estructura",
+            "status": 2,
+            "attempts": 2,
+            "attemptId": "ee3e2265695044ecadf4e25ae6746a50",
+            "corrections": 0
+          },
+          {
+            "id": "catalogo",
+            "status": 0,
+            "attempts": 1,
+            "attemptId": "25ad023daa0f488f8700346462e7e0da",
+            "corrections": 0
+          },
+          {
+            "id": "ventas",
+            "status": 0,
+            "attempts": 1,
+            "attemptId": "110dbb4a957245ba9eae95c8fed50e80",
+            "corrections": 0
+          },
+          {
+            "id": "entrega",
+            "status": 0,
+            "attempts": 1,
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "corrections": 1
+          }
+        ],
+        "results": [
+          {
+            "validationId": "estructura-valida",
+            "attemptId": "9cf8e042a02d499f8a5bb35002f606c8",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "128D5DED831A428508BF5155CAA4F62B67A0D781D90D8151EFC51FFBF48E5529",
+              "lock": "C582772203D6B552309EA5A465BACFE8E229A56A0D44150A1AA0735F72780358",
+              "config": "F033E2E55F9D4C43EAE92005DDC01BF1BD1BB1219A4B71812EFC28AA95BB87C2",
+              "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "89021133bf434c39822915d727f6e2b1",
+            "startedAt": "2026-10-03T08:50:50.2863299+00:00",
+            "endedAt": "2026-10-03T08:50:50.3160147+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "catalogo-escrito",
+            "attemptId": "25ad023daa0f488f8700346462e7e0da",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+              "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "813a52c13358480aa56be8acbe6542da",
+            "startedAt": "2026-10-03T08:51:32.4615411+00:00",
+            "endedAt": "2026-10-03T08:51:32.4642628+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "ventas-escritas",
+            "attemptId": "110dbb4a957245ba9eae95c8fed50e80",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "a9a78ac9335749beb56b5ad7d766d0b4",
+            "startedAt": "2026-10-03T08:55:14.7683451+00:00",
+            "endedAt": "2026-10-03T08:55:14.7712435+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "documentacion",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "readme": "56131A7143472188A19B4225E2C9E9319EEFBFB7C788E7AE613048A135349074"
+            },
+            "passed": true,
+            "observations": "Entradas presentes.",
+            "evidenceId": "073c10a1896648148796d802ed112114",
+            "startedAt": "2026-10-03T08:58:05.495148+00:00",
+            "endedAt": "2026-10-03T08:58:05.4965422+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "artifact-host"
+          },
+          {
+            "validationId": "compilacion",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+              "lock": "F1C025B9D231255D49DADDCF69C5EAF1F785FAF22E80A693E91938D422FA3753",
+              "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188",
+              "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+              "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7",
+              "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734",
+              "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+            },
+            "passed": false,
+            "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its... [truncado]",
+            "evidenceId": "915b3575de0f4c72b71392ed1176181c",
+            "startedAt": "2026-10-03T08:58:05.4975519+00:00",
+            "endedAt": "2026-10-03T08:58:08.3030999+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "disponibilidad",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188"
+            },
+            "passed": false,
+            "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its... [truncado]",
+            "evidenceId": "22b273e2b242481ea0e3c4158d864c64",
+            "startedAt": "2026-10-03T08:58:08.3050595+00:00",
+            "endedAt": "2026-10-03T08:58:11.685146+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          },
+          {
+            "validationId": "pos-funcional",
+            "attemptId": "e90519a76dee4a09a4c726b5b46982f9",
+            "contractHash": "E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F",
+            "inputHashes": {
+              "package": "347E1248D172E9920242F0850C9197892F21BE1D8A65DB8BBB79EEAA5A47350E",
+              "lock": "F1C025B9D231255D49DADDCF69C5EAF1F785FAF22E80A693E91938D422FA3753",
+              "config": "A391A435F5727A0F91762D21046A9CCBC56F95DF255B532D32D7F234A0129188",
+              "catalogo": "37E088EBC797BD39530075D803608776E1D7BB92037FBD42F78F37E69EE076FC",
+              "persistencia": "EBB632CDB8F86168A0AF9136C08EB7CAAA1AB68070DCC55F285F8DE3E8DC80D7",
+              "ventas": "ED419B7AA074CBA631517715CC531F92520003DC90FD9E15F055ABA18562D6D2",
+              "servidor": "0C646BEEAF7452A67A16E959703EE5E00D94C73855ED2AD165405063666E0093",
+              "interfaz": "13D2EC35919EA8F560DC58EC499A8E1D23AE66D025BF0E77FC1A0804375E6734",
+              "types": "D2E528F0B28DB2DF865CD5C4244681F6B09613A511FEBDD06F743B69A0E532EF"
+            },
+            "passed": false,
+            "observations": "command failed (2): \n> pos-minimo@1.0.0 build\n> tsc -p tsconfig.json\n\nsrc/catalogo.ts(2,30): error TS5097: An import path can only end with a '.ts' extension when 'allowImportingTsExtensions' is enabled.\nsrc/persistencia.ts(1,30): error TS2307: Cannot find module 'node:sqlite' or its corresponding type declarations.\nsrc/servidor.ts(1,18): error TS2307: Cannot find module 'node:http' or its corresponding type declarations.\nsrc/servidor.ts(2,42): error TS2307: Cannot find module 'node:fs' or its... [truncado]",
+            "evidenceId": "afa0d05106324765b62634b71915df7b",
+            "startedAt": "2026-10-03T08:58:11.6872949+00:00",
+            "endedAt": "2026-10-03T08:58:15.1793355+00:00",
+            "validatorVersion": "1",
+            "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86"
+          }
+        ],
+        "baseline": {
+          "package": "missing",
+          "lock": "missing",
+          "config": "missing",
+          "catalogo": "missing",
+          "persistencia": "missing",
+          "ventas": "missing",
+          "servidor": "missing",
+          "interfaz": "missing",
+          "readme": "missing",
+          "types": "missing"
+        }
+      },
+      "validations": [],
+      "outcome": "Sin progreso material tras 12 acciones; presupuesto de tarea agotado.",
+      "journeyStatus": 7,
+      "modelRequestsThisRun": 13,
+      "usage": {
+        "prompt_tokens": 149699,
+        "completion_tokens": 3449
+      },
+      "toolCounts": {
+        "tool:list_directory": 1,
+        "tool:read_text_file": 10,
+        "tool:tarjeta": 1
+      }
+    }
+  ]
+}

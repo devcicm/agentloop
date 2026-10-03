@@ -180,10 +180,31 @@ Estos cambios no ofrecen aislamiento de procesos/red, autenticidad criptografica
 de memoria ni prevencion absoluta de prompt injection. Para documentos hostiles,
 usar las restricciones anteriores y un aislamiento de sistema si se requiere
 contencion fuerte. Plugins/tools ejecutables siguen siendo codigo de confianza.
-Queda pendiente ampliar DTOs de dominio donde la estructura de un proyecto lo
+Los DTOs de proyectos se agregaron el 3 de octubre (seccion siguiente). Otros dominios pueden ampliarse cuando su estructura lo
 requiera; los resultados variables no acreditan automaticamente su semantica.
 
 Enfoque basado en validacion, separacion de datos y privilegios limitados:
 [OWASP Prompt Injection Prevention](https://cheatsheetseries.owasp.org/cheatsheets/LLM_Prompt_Injection_Prevention_Cheat_Sheet.html).
 La guia se uso como referencia de capas, no como prueba de inmunidad.
 Evidencia local: [validacion de seguridad](evidence/2026-10-01-seguridad/README.md).
+
+## Perfil de proyectos, 3 de octubre de 2026
+
+Los DTOs de proyecto y ejecucion se implementaron en Goals/Projects/Contracts.
+Campos desconocidos, duplicados, tipos incompatibles y constructor requerido
+incompleto se rechazan. Los snapshots recuperados se validan antes de restaurar
+estado. Evidencia se vincula a contrato, intento, entradas y ambiente del host.
+
+El perfil isolated-project-v1 elimina shell arbitrario de las herramientas del
+modelo. Solo hay perfiles de comandos del host y archivos declarados bajo root.
+La raiz excluye el harness, oraculos, secretos y journals. El contenedor recibe
+proyecto/oraculos readonly, usuario no root, red none, capabilities retiradas,
+no-new-privileges, memoria/CPU/PIDs acotados y tmpfs. No recibe variables de claves.
+Se fija la imagen local por ID y se confirma limpieza aun tras cancelacion.
+[Opciones Docker](https://docs.docker.com/engine/containers/run/).
+
+Los defectos se etiquetan como datos sin confianza; project_evidence solo acepta
+IDs registrados. Recibos, hashes y decisiones pertenecen al host. Esto limita
+poisoning de contexto y falsa evidencia; no prueba seguridad exhaustiva de codigo
+malicioso ni cambia la politica de shell de los goals generales.
+[Ocho verificaciones reales y limites](evidence/2026-10-03-proyectos/README.md).

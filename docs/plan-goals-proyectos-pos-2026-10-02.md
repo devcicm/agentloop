@@ -1,10 +1,23 @@
 # Plan de implementacion: goals verificables para proyectos y POS
 
-Fecha: 2 de octubre de 2026. Estado: **P0 implementada; P1-P6 pendientes**.
-Uso y limites actuales: [contratos y admision P0](goals-proyectos.md).
-Base revisada: commit `a15b5a2`, rama `feat/harness-eventos-tarjetas`.
-Este documento conserva el diseno por fases. P0 admite contratos; no construye
-el POS ni acredita una nueva ejecucion remota.
+Fecha del plan: 2 de octubre de 2026. Actualizacion: 3 de octubre.
+Estado: **P0-P5 implementadas; P6 con fixture aislado real y corrida NVIDIA registrada**.
+Uso vigente: [goals de proyectos](goals-proyectos.md). Resultados y limites:
+[evidencia del 3 de octubre](evidence/2026-10-03-proyectos/README.md).
+
+Las secciones de diseno conservan los requisitos iniciales. La tabla siguiente
+registra la implementacion; los nombres de clases se consolidaron en la proyeccion
+del actor existente, sin otro motor de ejecucion.
+
+| Fase | Implementacion actual |
+| --- | --- |
+| P0 | DTO estricto, admision y revision/hash |
+| P1 | ProjectRuntime/ProjectState; eventos, DAG, tarjetas por intento y cierre integrado |
+| P2 | Oraculos del host, resultados tipados, hashes frescos y evidencia consultable |
+| P3 | Brief por tarea, estimador conservador, poda, presupuestos persistidos y progreso material |
+| P4 | Backend Docker offline, perfiles fijos, aislamiento y limpieza confirmada |
+| P5 | Journal autoritativo, snapshot/checkpoint y reconciliacion de efectos inciertos |
+| P6 | Fixture POS real: compilacion, API, SQLite y navegador; NVIDIA evaluado por separado |
 
 ## 1. Resultado esperado
 
@@ -339,13 +352,14 @@ correspondientes y evidencia fechada con procedencia. La corrida remota no
 sustituye pruebas deterministas. El numero historico de 382 checks corresponde
 a la entrega anterior; no acredita funcionalidades propuestas aqui.
 
-## 12. Primera unidad de trabajo
+## 12. Resultado de implementacion
 
-P0 implementa DTOs y validacion del contrato, fixture POS declarativo y entrada
-explicita en CLI/runner. Todavia no ejecutar instaladores ni generar un POS durante
-esta fase. P0 deja un snapshot admitido para P1, con criterios
-obligatorios y errores legibles. Registrar las decisiones definitivas de stack,
-backend y presupuestos al implementar sus fases y medir sus resultados.
+P0-P6 se implementaron sobre el mismo coordinador. El fixture aislado completo
+paso; el resultado remoto y sus defectos se registran por separado. No se utiliza
+la salida del modelo como prueba de exito ni se copian archivos del fixture sobre
+el proyecto remoto para aparentar que el modelo lo completo.
 
-El cierre de este plan de implementacion requerira P6, no la mera existencia de
-las carpetas propuestas ni un informe de planeacion producido por el modelo.
+Desviaciones explicitas: estimador UTF-8 conservador, sin tokenizer exacto;
+checkpoint derivado sin lectura optimizada; dependencias offline limitadas a la
+imagen preparada; interfaz POS de un producto por venta, API con varios items.
+La garantia de cierre se limita a los criterios y oraculos versionados.

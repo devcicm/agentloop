@@ -51,7 +51,9 @@ public static class GoalRunFactory
         ArgumentNullException.ThrowIfNull(client);
         ArgumentNullException.ThrowIfNull(observers);
 
-        AgentLoop.Goals.Projects.ProjectContractAdmission.RequireExecutionSupport(run.ProjectContract);
+        if (run.ProjectContract is { } contract && (scope.Policy.AllowShell || scope.AllowedPaths.Count != 1
+            || Path.GetFullPath(scope.AllowedPaths[0]) != contract.Root || scope.Policy.WorkingDirectory != contract.Root))
+            throw new InvalidOperationException("Proyecto requiere scope exclusivo en root y shell deshabilitado.");
 
         var correlation = Correlation.Start();
 
@@ -62,10 +64,14 @@ public static class GoalRunFactory
         // directorio (el --cwd de la política).
         ledger.WorkingDirectory = scope.Policy.WorkingDirectory;
         ledger.AcceptanceObjective = run.Objective;
-        var tools = OperationTools.Build(ledger, supervisor, bus).Combine(BuiltInTools.DefaultRegistry()).Filter(scope.AllowsTool).WithScope(scope);
+        var project = run.ProjectContract is null ? null : new AgentLoop.Goals.Projects.ProjectRuntime(run.ProjectContract, ledger, bus, gate: supervisor.Puerta) { ResumeJournal = run.ResumeJournal };
+        var registry = OperationTools.Build(ledger, supervisor, bus).Combine(BuiltInTools.DefaultRegistry());
+        if (project is not null) registry = registry.Combine(project.Tools()).Filter(name => name is "tarjeta" or "write_text_file" or "read_text_file" or "list_directory" or "find_files" or "project_validate" or "project_command" or "project_evidence");
+        var tools = registry.Filter(scope.AllowsTool).WithScope(scope);
         var goalContext = new GoalContext
         {
             Goal = run.Goal,
+            Project = project,
             Bus = bus,
             Ledger = ledger,
             Supervisor = supervisor,

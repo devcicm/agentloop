@@ -24,6 +24,7 @@ public sealed record Goal(string Text, TimeSpan Budget)
 public sealed class GoalContext
 {
     public required Goal Goal { get; init; }
+    public Projects.ProjectRuntime? Project { get; init; }
 
     public required EventBus Bus { get; init; }
 

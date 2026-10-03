@@ -44,13 +44,14 @@ public sealed class GoalRunner : IRunner
                 throw new InvalidOperationException("El contrato del Run difiere del indicado en RunnerOptions.");
             run = run with { ProjectContract = admitted };
         }
-        AgentLoop.Goals.Projects.ProjectContractAdmission.RequireExecutionSupport(run.ProjectContract);
+        var project = run.ProjectContract?.Contract;
+        if (project is not null) run = run with { Objective = project.Objective, Goal = Goal.Of(project.Objective, project.Budgets.DeadlineSeconds), Budget = TimeSpan.FromSeconds(project.Budgets.DeadlineSeconds) };
 
         var policy = new ExecutionPolicy
         {
-            WorkingDirectory = Path.GetFullPath(options.WorkingDirectory),
-            MaxConcurrent = options.MaxConcurrent,
-            AllowShell = options.AllowShell, AllowedPaths = options.AllowedPaths,
+            WorkingDirectory = run.ProjectContract?.Root ?? Path.GetFullPath(options.WorkingDirectory),
+            MaxConcurrent = project?.Budgets.MaxConcurrentProcesses ?? options.MaxConcurrent,
+            AllowShell = project is null && options.AllowShell, AllowedPaths = run.ProjectContract is { } admittedRoot ? [admittedRoot.Root] : options.AllowedPaths,
             Mode = options.PolicyMode.ToLowerInvariant() switch
             {
                 "auto" => PolicyMode.Auto, "simular" => PolicyMode.Simular,
@@ -67,14 +68,14 @@ public sealed class GoalRunner : IRunner
 
             var coordinator = new EventOperationCoordinator(_client, run.Model ?? NvidiaOptions.FallbackModelId, setup.Tools, scope)
             {
-                MaxModelCalls = options.MaxIterations,
-                MaxTokens = options.MaxTokens,
+                MaxModelCalls = Math.Min(options.MaxIterations, project?.Budgets.MaxModelCalls ?? options.MaxIterations),
+                MaxTokens = Math.Min(options.MaxTokens, project?.Budgets.MaxOutputTokens ?? options.MaxTokens),
                 Thinking = options.Thinking,
-                Trace = line => setup.RunContext.Steps.OnLog(new StructuredLog(
-                    DateTimeOffset.Now,
-                    LogLevel.Info,
-                    "reactor",
-                    line)),
+                Trace = line =>
+                {
+                    setup.RunContext.Steps.OnLog(new StructuredLog(DateTimeOffset.Now, LogLevel.Info, "reactor", line));
+                    if (options.Verbose) Console.WriteLine(AgentLoop.Security.DataGuard.Display(line));
+                },
                 RecordModel = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
                     setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model ?? NvidiaOptions.FallbackModelId,
                     completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,

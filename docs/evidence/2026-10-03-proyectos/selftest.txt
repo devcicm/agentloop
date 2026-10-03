@@ -1,0 +1,530 @@
+Self-test sin red: maquina Tick/Tock que nunca termina.
+
+  tope de iteraciones -> IsBroken=True BreakReason=MaxIterations iteraciones=3
+  condicion booleana  -> IsBroken=True BreakReason=ConditionMet iteraciones=5
+
+Self-test de prompts: interpolacion, escapado y hilo.
+
+  [ok] interpolacion de parametros
+  [ok] no quedan huecos sin resolver
+  [ok] el bloque XML no se rompe con texto hostil
+  [ok] el escapado sobrevive al round-trip
+  [ok] el bloque JSON no se rompe
+  [ok] sin caracteres de control salvo \n y \t
+  [ok] sin surrogates huerfanos
+  [ok] el payload serializa
+  [ok] salida de tool normalizada a JSON
+  [ok] variable ausente falla en vez de colarse
+  [ok] el hilo acumula intercambios
+  [ok] el hilo respeta el tope
+  [ok] el recorte cae en frontera de turno
+  [ok] el hilo no guarda el system prompt
+  [ok] el turno nuevo lleva sistema + historial + entrada
+
+Self-test de thinking: peticion, parseo y politica.
+
+  [ok] thinking va en la raiz con type y budget_tokens
+  [ok] sin thinking no aparece el campo
+  [ok] un presupuesto ridiculo falla al construirse
+  [ok] reasoning_content -> traza tipada
+  [ok] los tokens de razonamiento se contabilizan
+  [ok] bloques de content -> thinking y texto separados
+  [ok] el bloque censurado cuenta como razonamiento
+  [ok] la firma del bloque se conserva
+  [ok] <think> se separa del contenido
+  [ok] razonamiento cobrado pero no expuesto queda registrado
+  [ok] sin razonamiento la traza queda vacia
+  [ok] razono sin llegar a responder se distingue
+  [ok] auto activa en un modelo desconocido
+  [ok] auto no insiste con el que no lo soporta
+  [ok] un rechazo en vivo desactiva el modelo
+  [ok] la evidencia positiva lo vuelve a activar
+  [ok] off no manda el parametro nunca
+  [ok] on lo manda aunque conste que no lo soporta
+  [ok] con thinking activo se sube el tope de tokens
+
+Self-test de streaming: acumulacion de chunks, thinking y tool calls.
+
+  [ok] el texto troceado se reensambla
+  [ok] el finish_reason del ultimo chunk se conserva
+  [ok] los chunks vacios no cuentan como delta
+  [ok] el razonamiento troceado se reensambla
+  [ok] el thinking del stream se tipa como reasoning_content
+  [ok] razonamiento y contenido no se mezclan
+  [ok] el <think> partido entre chunks se separa igual
+  [ok] los fragmentos de tool call se funden por index
+  [ok] la tool conserva id y nombre
+  [ok] los argumentos troceados parsean como JSON
+  [ok] las tool calls reensambladas son reenviables al gateway
+  [ok] el usage del ultimo chunk se recoge
+  [ok] el usage del stream cuenta tokens de razonamiento
+  [ok] stream y no-stream producen el mismo contenido
+  [ok] stream y no-stream producen el mismo thinking
+  [ok] stream y no-stream producen el mismo usage
+  [ok] stream y no-stream coinciden en finish_reason
+  [ok] los chunks sin delta se ignoran sin romper
+  [ok] sin finish_reason se deduce tool_calls
+  [ok] las tool calls sin id reciben uno sintetico
+
+Self-test de operaciones: reset events, bus, tarjetas y procesos.
+
+  [ok] el latch manual nace cerrado
+  [ok] esperar un latch cerrado caduca
+  [ok] una vez abierto, esperar vuelve al instante
+  [ok] y sigue abierto para el que llega tarde
+  [ok] Reset lo vuelve a cerrar
+  [ok] un waiter aparcado se libera al abrir
+  [ok] el auto-reset guarda una senal pendiente
+  [ok] y solo una: la segunda espera caduca
+  [ok] un bus vacio no despierta a nadie
+  [ok] publicar deja el evento pendiente
+  [ok] con pendientes, esperar no bloquea
+  [ok] Drain se lleva lo pendiente y vacia la cola
+  [ok] el historial conserva lo drenado
+  [ok] publicar despierta a quien estaba esperando
+  [ok] una tarjeta inventada se rechaza
+  [ok] avanzar sin abrir se rechaza
+  [ok] abrir sin sus campos se rechaza
+  [ok] abrir con todo se acepta
+  [ok] y deja la transaccion abierta
+  [ok] cerrar sin comprobar se rechaza
+  [ok] avanzar dentro de la transaccion se acepta
+  [ok] se puede abrir una transaccion dentro de otra
+  [ok] comprobar en la anidada se acepta
+  [ok] cerrar la anidada se acepta
+  [ok] pero NO cumple el objetivo: queda la raiz
+  [ok] y el sistema sabe que queda deuda
+  [ok] comprobar en la raiz se acepta
+  [ok] cerrar la raiz se acepta
+  [ok] ahora si: objetivo cumplido
+  [ok] y ya no queda ninguna tarjeta legal
+  [ok] jugar despues del cierre se rechaza
+  [ok] sin archivos mencionados el cierre no cambia
+  [ok] cerrar sin el archivo se rechaza
+  [ok] RequiredEvidence nombra lo que falta
+  [ok] cerrar con el archivo se acepta
+  [ok] tras cerrar no queda evidencia faltante
+  [ok] el manifiesto registra la verificacion
+  [ok] el agregado es estable ante re-verificacion
+  [ok] abortar cierra la operacion sin cumplirla
+  [ok] la politica veta un borrado de raiz
+  [ok] y deja pasar lo inocente
+  [ok] el tope de tiempo se recorta al maximo
+  [ok] en modo simular no se ejecuta nada
+  [ok] un comando corto termina con codigo 0
+  [ok] y su salida se captura
+  [ok] el final del proceso se publico como evento
+  [ok] el latch del proceso quedo abierto
+  [ok] lanzar vuelve al instante, sin esperar al proceso
+  [ok] el observador se dispara cuando aparece el patron
+  [ok] y trae la linea que lo disparo
+  [ok] esperar el fin del proceso funciona
+  [ok] leer devuelve la salida acumulada
+  [ok] y no la devuelve dos veces
+  [ok] la puerta de ejecucion se cierra y se abre
+  [ok] ejemplo con nada abierto sugiere abrir
+  [ok] ejemplo con transaccion abierta sugiere avanzar
+  [ok] ejemplo con avances sugiere comprobar
+  [ok] ejemplo con transaccion verificada sugiere cerrar
+  [ok] la poda respeta el tope
+  [ok] nunca tira el prompt de sistema
+  [ok] y no deja resultados de herramienta huerfanos
+
+
+Self-test de sanitizacion:
+  [ok] Plain quita NUL
+  [ok] Plain conserva tab
+  [ok] Plain normaliza CRLF
+  [ok] Plain colapsa CR solo
+  [ok] Plain quita control 0x07
+  [ok] Plain quita high surrogate solo
+  [ok] Plain quita low surrogate solo
+  [ok] Plain conserva pareja valida
+  [ok] Plain quita U+FFFE
+  [ok] Plain quita U+FFFF
+  [ok] Xml escapa &
+  [ok] Xml escapa <
+  [ok] Xml escapa "
+  [ok] Xml escapa '
+  [ok] Xml roundtrip con XDocument
+  [ok] Json escapa backslash
+  [ok] Json escapa comillas (\u0022)
+  [ok] Json no deja pasar NUL (Plain lo quita antes)
+  [ok] Json escapa newline
+  [ok] Json roundtrip con JsonDocument
+  [ok] EnsureJsonObject envuelve primitivo numero
+  [ok] EnsureJsonObject envuelve primitivo true
+  [ok] EnsureJsonObject envuelve primitivo null
+  [ok] EnsureJsonObject primitivo string es JSON valido
+  [ok] EnsureJsonObject primitivo string conserva su valor
+  [ok] EnsureJsonObject envuelve array
+  [ok] EnsureJsonObject pasa objeto con contenido
+  [ok] EnsureJsonObject reemplaza objeto vacio por texto
+  [ok] EnsureJsonObject envuelve texto suelto
+  [ok] EnsureJsonObject envuelve entrada vacia
+  [ok] EnsureJsonObject el resultado siempre parsea como JSON
+  [ok] Truncate recorta cuando max > marker
+  [ok] Truncate devuelve solo marker cuando max <= marker
+  [ok] Truncate no recorta cuando max >= length
+  [ok] Truncate no rompe surrogate pair
+  [ok] Truncate longitud 0 devuelve entrada
+  [ok] Contract PromptPlain delega en Plain
+  [ok] Contract PromptXmlTag delega en Xml
+  [ok] Contract ModelOutput delega en Plain
+  [ok] Contract LedgerField delega en Plain
+  [ok] renderizado con WD hostil sigue serializable
+  [ok] ledger field hostil sin controles
+  [ok] ledger field hostil serializable a JSON
+  [ok] Brief con controles queda saneado
+
+
+Self-test de concurrencia:
+  [ok] AsyncLock serializa: nunca hay dos dentro
+  [ok] IdempotencyKey determinista
+  [ok] IdempotencyKey distingue entradas
+  [ok] IdempotencyKey estable ante reordenamiento
+  [ok] clave canonica: reorden y espacios no cambian
+  [ok] clave canonica: anidado reordenado no cambia
+  [ok] clave canonica: arrays conservan orden
+  [ok] no-JSON: determinista pero sin colapsar
+  [ok] Cache acepta hasta capacidad
+  [ok] Cache devuelve lo guardado
+  [ok] Cache evicciona cuando se llena
+  [ok] Cache Clear vacia el cache
+  [ok] CardLedger: 200 avanzar concurrentes todos aceptados
+  [ok] CardLedger: jugadas registradas exactamente 201 (1 abrir + 200 avanzar)
+  [ok] CardLedger: 32 readers concurrentes con 32 writers, sin excepciones
+  [ok] CardLedger: reads no pierden jugadas ni duplican
+
+
+Self-test de IdempotentTool:
+  [ok] primera llamada ejecuta
+  [ok] primera llamada devuelve el valor
+  [ok] segunda llamada sirve cache
+  [ok] segunda llamada devuelve el mismo valor
+  [ok] tercera llamada con args distintos ejecuta
+  [ok] tercera llamada devuelve valor distinto
+  [ok] Hits contabilizados correctamente
+  [ok] Misses contabilizados correctamente
+  [ok] cache compartido entre wrappers
+  [ok] 64 hilos en paralelo: inner ejecuta 1 vez
+  [ok] 64 hilos: hits + misses = 64
+  [ok] fallo lanza en vez de quedarse pegado
+  [ok] fallo libera la clave: reintento ejecuta y devuelve
+  [ok] dentro del TTL sirve cache
+  [ok] TTL expirado vuelve a ejecutar
+
+
+Self-test de lifecycle mutex y bus dedup:
+  [ok] RunLifecycleMutex acepta Created->Pending
+  [ok] RunLifecycleMutex acepta Pending->Running
+  [ok] RunLifecycleMutex rechaza transicion invalida
+  [ok] 32 transiciones validas: todas aceptadas
+  [ok] 32 transiciones validas: nunca se solapan
+  [ok] primer evento se publica
+  [ok] evento identico se descarta
+  [ok] evento distinto se publica
+  [ok] mismo texto con distinto kind se publica
+  [ok] 1000 eventos distintos pasan todos
+  [ok] DedupWindow=0 desactiva deduplicacion
+  [ok] 32 hilos publicando lo mismo: solo 1 queda
+
+
+Self-test del Composition Root:
+  [ok] setup no es null
+  [ok] setup.Bus es EventBus
+  [ok] setup.Supervisor es ProcessSupervisor
+  [ok] setup.Ledger es CardLedger
+  [ok] setup.Ledger.Deck tiene 5 cartas
+  [ok] setup.Tools incluye tarjetas, procesos y archivos
+  [ok] setup.GoalContext.Goal.Text correcto
+  [ok] setup.RunContext.RunId == run.Id
+  [ok] setup.RunContext.Status == Running
+  [ok] setup.Runner es GoalRunner
+  [ok] bus.Publish dispara un BusEventStep
+  [ok] ultimo step es BusEvent
+  [ok] ultimo step lleva el texto del evento
+  [ok] dos builds producen mismo numero de tools
+  [ok] dos builds producen mismas cartas
+
+
+Self-test del watchdog:
+  [ok] watchdog: el loop termina antes del hang del cliente
+  [ok] watchdog: el estado final es Fallido (el modelo no respondio)
+  [ok] watchdog: DeadlineReached = true
+  [ok] watchdog: FailureReason menciona timeout
+  [ok] cancelacion externa: DeadlineReached = false
+
+
+Self-test de diagnostico de journeys:
+  [ok] cerrado se clasifica
+  [ok] cerrado cuenta las 4 tarjetas
+  [ok] inanicion se clasifica
+  [ok] inanicion cuenta narraciones
+  [ok] inanicion recomienda verificar
+  [ok] watchdog se clasifica
+  [ok] presupuesto se clasifica
+  [ok] rechazos se cuentan
+  [ok] rechazos se clasifican
+  [ok] nudges se cuentan
+  [ok] nudge seguido de tarjeta se detecta
+  [ok] procesos se cuentan
+  [ok] codigo distinto de cero se cuenta
+  [ok] pausa maxima se mide
+  [ok] archivos se extraen del objetivo
+  [ok] archivos ausentes se reportan vacios
+  [ok] vacio da desconocido
+  [ok] ilegible no lanza
+  [ok] evidencia verificada se cuenta
+  [ok] agregado de evidencia se lee
+  [ok] sin evidencia da cero y vacio
+
+
+Self-test de stress del dispatcher:
+  [ok] [h#seq] loop avanzo al menos un ciclo
+  [ok] [h#seq] el primer mensaje es System (contrato)
+  [ok] [h#seq] hay mensajes Assistant
+  [ok] [h#seq] sin tool results huerfanos
+  [ok] [h#seq] el bus no perdio eventos
+  [ok] [h#seq] hay plays en el ledger
+  [ok] [h#seq] el primer play es abrir aceptado
+  [ok] cliente fake recibio al menos una request (secuencial)
+  [ok] [h#par2] el primer play es abrir aceptado
+  [ok] [h#par2] hay plays en el ledger
+  [ok] [h#par2] el bus no perdio eventos
+  [ok] [h#par2] sin tool results huerfanos
+  [ok] [h#par2] hay mensajes Assistant
+  [ok] [h#par2] el primer mensaje es System (contrato)
+  [ok] [h#par2] loop avanzo al menos un ciclo
+  [ok] [h#par1] el primer play es abrir aceptado
+  [ok] [h#par1] hay plays en el ledger
+  [ok] [h#par1] el bus no perdio eventos
+  [ok] [h#par1] sin tool results huerfanos
+  [ok] [h#par1] hay mensajes Assistant
+  [ok] [h#par1] el primer mensaje es System (contrato)
+  [ok] [h#par1] loop avanzo al menos un ciclo
+  [ok] [h#par3] el primer play es abrir aceptado
+  [ok] [h#par3] hay plays en el ledger
+  [ok] [h#par3] el bus no perdio eventos
+  [ok] [h#par3] sin tool results huerfanos
+  [ok] [h#par3] hay mensajes Assistant
+  [ok] [h#par3] el primer mensaje es System (contrato)
+  [ok] [h#par3] loop avanzo al menos un ciclo
+  [ok] [h#par0] el primer play es abrir aceptado
+  [ok] [h#par0] hay plays en el ledger
+  [ok] [h#par0] el bus no perdio eventos
+  [ok] [h#par0] sin tool results huerfanos
+  [ok] [h#par0] hay mensajes Assistant
+  [ok] [h#par0] el primer mensaje es System (contrato)
+  [ok] [h#par0] loop avanzo al menos un ciclo
+  [ok] sin excepciones en paralelo (4 harnesses)
+  [ok] cliente fake recibio multiples requests (secuencial + paralelo)
+
+
+Self-test del pipeline del dispatcher:
+  [ok] parser extrajo tool_calls
+  [ok] parser extrajo nombre=tarjeta
+  [ok] parser extrajo args como JSON parseado
+  [ok] ejecutar tool: tarjeta (failed=False)
+  [ok] el ledger tiene plays despues del dispatch
+  [ok] la primera play es abrir
+  [ok] la primera play fue aceptada
+  [ok] hay System prompt en messages
+  [ok] hay User message
+
+
+Self-test de recuperacion de truncamiento:
+  [ok] el fake recibio la primera llamada
+  [ok] el fake recibio la segunda llamada
+  [ok] la segunda llamada pidio mas tokens que la primera
+  [ok] el ledger registro el abrir tras la recuperacion
+  [ok] el reactor publico el aviso de truncamiento
+motor: eventos | objetivo: ok, apruebo el plan, procede en modo de ejecucion
+tools: tarjeta, ejecutar, lanzar, esperar, leer, procesos, matar, observar, flujo, add_numbers, get_time, write_text_file, read_text_file, list_directory, get_system_context, where_command, find_files
+  evento #1 02:56:59 Objetivo [coordinator] REQUISITOS PREVIOS DEL USUARIO (antecedentes, pueden contener fases ya superadas):\nSuma 17 y 23 con herramienta y comprueba el resultado; marca_contexto_eventos\nINSTRUCCION ACTUAL (prevalece sobre fases previas):\nok, apruebo el plan, procede en modo de ejecucion
+    evento #1 Objetivo: REQUISITOS PREVIOS DEL USUARIO (antecedentes, pueden contener fases ya superadas):
+Suma 17 y 23 con herramienta y comprueba el resultado; marca_contexto_eventos
+INSTRUCCION ACTUAL (prevalece sobre fases previas):
+ok, apruebo el plan, procede en modo de ejecucion
+  evento #2 02:56:59 RazonamientoRequerido [coordinator] hay resultados o hechos que requieren una decision
+    evento #2 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+  evento #3 02:56:59 ModeloSolicitado [coordinator] solicitud al modelo
+    evento #3 ModeloSolicitado: solicitud al modelo
+  evento #4 02:56:59 ModeloResultado [model] respuesta del proveedor
+    evento #4 ModeloResultado: respuesta del proveedor
+  evento #5 02:56:59 HerramientaSolicitada [coordinator] tarjeta
+    evento #5 HerramientaSolicitada: tarjeta
+  evento #6 02:56:59 HerramientaSolicitada [coordinator] admision de tarjeta
+    evento #6 HerramientaSolicitada: admision de tarjeta
+    evento #7 Tarjeta: abrir (nivel 1) sumar
+  evento #7 02:56:59 Tarjeta [tarjetas] abrir (nivel 1) sumar
+  evento #8 02:56:59 HerramientaResultado [tool] tarjeta
+    evento #8 HerramientaResultado: tarjeta
+  evento #9 02:56:59 HerramientaFinalizada [coordinator] resultado registrado de tarjeta
+  evento #10 02:56:59 HerramientaSolicitada [coordinator] add_numbers
+    evento #9 HerramientaFinalizada: resultado registrado de tarjeta
+    evento #10 HerramientaSolicitada: add_numbers
+  evento #11 02:56:59 HerramientaSolicitada [coordinator] admision de add_numbers
+    evento #11 HerramientaSolicitada: admision de add_numbers
+  evento #12 02:56:59 HerramientaResultado [tool] add_numbers
+    evento #12 HerramientaResultado: add_numbers
+  evento #13 02:56:59 HerramientaFinalizada [coordinator] resultado registrado de add_numbers
+  evento #14 02:56:59 RazonamientoRequerido [coordinator] hay resultados o hechos que requieren una decision
+    evento #13 HerramientaFinalizada: resultado registrado de add_numbers
+    evento #14 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+  evento #15 02:56:59 ModeloSolicitado [coordinator] solicitud al modelo
+    evento #15 ModeloSolicitado: solicitud al modelo
+  evento #16 02:56:59 ModeloResultado [model] respuesta del proveedor
+    evento #16 ModeloResultado: respuesta del proveedor
+  evento #17 02:56:59 HerramientaSolicitada [coordinator] tarjeta
+    evento #17 HerramientaSolicitada: tarjeta
+  evento #18 02:56:59 HerramientaSolicitada [coordinator] admision de tarjeta
+  evento #19 02:56:59 Tarjeta [tarjetas] comprobar (nivel 1) resultado de add_numbers
+    evento #18 HerramientaSolicitada: admision de tarjeta
+  evento #20 02:56:59 HerramientaResultado [tool] tarjeta
+    evento #19 Tarjeta: comprobar (nivel 1) resultado de add_numbers
+    evento #20 HerramientaResultado: tarjeta
+  evento #21 02:56:59 HerramientaFinalizada [coordinator] resultado registrado de tarjeta
+  evento #22 02:56:59 RazonamientoRequerido [coordinator] hay resultados o hechos que requieren una decision
+    evento #21 HerramientaFinalizada: resultado registrado de tarjeta
+    evento #22 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+  evento #23 02:56:59 ModeloSolicitado [coordinator] solicitud al modelo
+  evento #24 02:56:59 ModeloResultado [model] respuesta del proveedor
+    evento #23 ModeloSolicitado: solicitud al modelo
+    evento #24 ModeloResultado: respuesta del proveedor
+  evento #25 02:56:59 HerramientaSolicitada [coordinator] tarjeta
+    evento #25 HerramientaSolicitada: tarjeta
+  evento #26 02:56:59 HerramientaSolicitada [coordinator] admision de tarjeta
+  evento #27 02:56:59 Tarjeta [tarjetas] cerrar (nivel 1) resultado de add_numbers
+  evento #28 02:56:59 HerramientaResultado [tool] tarjeta
+    evento #26 HerramientaSolicitada: admision de tarjeta
+    evento #27 Tarjeta: cerrar (nivel 1) resultado de add_numbers
+    evento #28 HerramientaResultado: tarjeta
+  evento #29 02:56:59 HerramientaFinalizada [coordinator] resultado registrado de tarjeta
+  evento #30 02:56:59 ObjetivoCumplido [coordinator] 40
+CUMPLIDO: 40
+cumplido | ciclos 3 | eventos 5 | tools 4 | tarjetas 3 (0 rechazadas) | procesos 0 | 0s | prompt=0 completion=0 total=0
+Evidencia: C:\Users\Carlos Ivan\Desktop\agent loop\.agentloop\operations\20261003-085659-f967dfea477b4473a91fdb56cf1d4375.json
+Self-test de arquitectura por eventos:
+  [ok] un esperador cancelado no roba la siguiente senal
+  [ok] drenar la cola no deja un despertar fantasma
+  [ok] publicar despierta al consumidor y conserva el evento
+  [ok] un observador roto no rompe publicacion ni despertar
+  [ok] 500 publicaciones concurrentes sin perdida ni duplicados
+  [ok] un lote parcial deja eventos disponibles sin esperar otra senal
+  [ok] sin eventos no hay llamada al LLM
+  [ok] el resultado de una herramienta publica un evento inmediato
+  [ok] resultado de herramienta sin cierre no cumple objetivo
+  [ok] eventos durante la llamada al LLM quedan pendientes
+  [ok] proceso vivo silencioso: espera asincrona sin consultar LLM
+  [ok] salida del proceso despierta y causa una reaccion
+  [ok] texto final del LLM no sustituye tarjeta de cierre
+  [ok] patron de salida publica Observador
+  [ok] fin del proceso publica ProcesoFin
+  [ok] CLI: texto libre y run usan reactor; solo chat usa conversacion
+  [ok] entrada principal CLI completa objetivo por tarjetas
+  [ok] CLI transmite requisitos del usuario y herramientas operativas
+  [ok] CLI conserva resultado y ruta de evidencia local
+Self-test del coordinador por eventos:
+  [ok] rechaza escritura antes de abrir sin modificar disco
+  [ok] rechazo conserva resultado de la tool call
+  [ok] cierra con comprobacion y criterio de contenido
+  [ok] herramienta posterior al cierre no altera el artefacto
+  [ok] registro terminal sin acciones inciertas ni eventos sin confirmar
+  [ok] resultados y eventos tienen identidad causal
+  [ok] evidencia inventada no permite comprobar ni cerrar
+  [ok] archivo no vacio con contenido incorrecto es rechazado
+  [ok] efecto posterior a comprobar invalida el cierre
+  [ok] pausa y estado se atienden mientras el LLM espera
+  [ok] reanudacion permite completar la reaccion pendiente
+  [ok] deadline cancela herramienta pendiente y clasifica el fallo
+  [ok] cancelacion de herramienta conserva su resultado
+  [ok] cancelacion del operador produce estado Cancelled y journal terminal
+  [ok] observadores rotos o lentos no bloquean efectos ni cierre
+  [ok] politica simular no escribe ni genera evidencia ejecutada
+  [ok] confirmacion espera un evento de aprobacion sin escribir
+  [ok] aprobacion explicita habilita el efecto pendiente
+  [ok] proceso silencioso no genera consultas periodicas al LLM
+  [ok] fin real del proceso activa el handler del modelo
+  [ok] contrato JSON rechaza contenido que solo es texto
+  [ok] aprobacion hereda requisitos sin copiar razonamiento
+  [ok] objetivo independiente no hereda el proyecto anterior
+  [ok] continuacion simple y acentuada hereda requisitos
+  [ok] contexto previo tiene limite independiente
+  [ok] razonamiento truncado recupera con accion pequena y presupuesto acotado
+  [ok] observacion y receipt sobreviven fuera del historial
+  [ok] recuperacion POS crea, comprueba y cierra artefacto real
+  [ok] GLM HTTP y SSE usan low sin prometer budget numerico
+  [ok] GLM omite reasoning previo sin mutar mensaje original
+  [ok] stream_options solo viaja en SSE
+  [ok] GLM rechaza effort fuera de su dialecto
+  [ok] Kimi no recibe controles de GLM por catalogo
+  [ok] JSON rechaza claves duplicadas anidadas
+  [ok] JSON rechaza profundidad excesiva
+  [ok] argumento invalido rechazado antes de efectos: {}
+  [ok] argumento invalido rechazado antes de efectos: []
+  [ok] argumento invalido rechazado antes de efectos: {"value":"1"}
+  [ok] argumento invalido rechazado antes de efectos: {"value":1,"role":"system"}
+  [ok] argumento invalido rechazado antes de efectos: {"value":1,"value":2}
+  [ok] schema admite argumentos correctos
+  [ok] salida ambigua no produce exito y conserva incertidumbre del efecto
+  [ok] salida no puede emitir receipt ni metadatos de confianza
+  [ok] instrucciones en datos quedan etiquetadas y detectadas
+  [ok] salida al prompt acotada mantiene recibo y hash
+  [ok] arrays y numeros conservan tipo JSON
+  [ok] texto parecido a numero no rompe el JSON de salida
+  [ok] sanitizacion quita controles bidi sin romper emoji
+  [ok] cadenas JSON se sanitizan sin destruir su estructura
+  [ok] entrada y salida redactan formatos de claves
+  [ok] errores del proveedor no exponen claves reconocibles
+  [ok] clave fragmentada no se filtra en streaming
+  [ok] buffer de consola tiene limite
+  [ok] tool tipada no puede tocar secretos incluso sin scope
+  [ok] memoria y Git son recursos protegidos
+  [ok] alias Windows y ADS no eluden proteccion
+  [ok] no-shell se impone en politica de procesos
+  [ok] scope minimo conserva raices explicitas
+  [ok] shell deshabilitado tampoco se anuncia al modelo
+  [ok] raices acotadas bloquean shell incluso en modo auto
+  [ok] registro tambien impone scope sin depender del actor
+  [ok] memoria rechaza poisoning de claves duplicadas
+  [ok] lectura externa impone presupuesto de bytes
+  [ok] scope no acepta directorio vecino por prefijo
+  [ok] reserva de capacidad evita superar MaxConcurrent
+  [ok] journey captura modelos y tools antes del resultado terminal
+  [ok] timeouts no retienen registros de esperadores
+  [ok] recuperacion identifica efectos inciertos sin repetirlos
+Evidencia de fixtures: C:\Users\Carlos Ivan\AppData\Local\Temp\agentloop-coordinator-eee9808c39784e8584bdd27c1c7ce06b
+OK project: admision sin crear raiz
+OK project: hash estable de revision admitida
+OK project: rechaza campo desconocido
+OK project: rechaza version desconocida
+OK project: rechaza ciclo
+OK project: rechaza ruta fuera de raiz
+OK project: rechaza validador desconocido
+OK project: rechaza shell arbitrario en parametros
+OK project: rechaza presupuestos invalidos
+OK project: rechaza referencia inexistente
+OK project: rechaza claves duplicadas
+OK project: habilita primera tarea por dependencias
+OK project: cerrar tarea no cumple proyecto
+OK project: poda intercambios completos conserva sistema y tarea
+OK project: contrato minimo imposible falla
+OK project: actor de proyecto cierra raiz con entregables verificados
+OK project: validacion integrada se ejecuta tras las tareas
+OK project: eventos de trabajo y validacion en el mismo bus
+OK project: tarjetas identifican tareas e intentos
+OK project: snapshot durable compatible sin acciones inciertas
+OK project: hash cambiado invalida cierre
+OK project: checkpoint atomico disponible
+OK project: pausa entre validadores no inicia comando siguiente
+OK project: senal manual reanuda batch sin polling
+OK project: detecta efecto admitido sin resolver
+OK project: no reejecuta efectos inciertos
+OK project: reconciliacion explicita desbloquea reconstruccion
+OK project: conserva registros antes de escritura final truncada
+OK project: corrupcion intermedia bloquea recuperacion
+OK project: presupuesto de correcciones por tarea
+PROJECT SELF-TEST OK: 30 comprobaciones; backend simulado, sin red.
+
+SELF-TEST OK

@@ -11,10 +11,14 @@ public sealed record RecoveryInspection(Guid RunId, bool Terminal, IReadOnlyList
 public sealed class OperationEventJournal : IDisposable
 {
     private readonly FileStream _stream;
+    private readonly long _maximumBytes;
+    private readonly int _maximumEntryBytes;
     public string Path { get; }
 
-    public OperationEventJournal(string directory, Guid runId)
+    public OperationEventJournal(string directory, Guid runId, long maximumBytes = long.MaxValue, int maximumEntryBytes = int.MaxValue)
     {
+        _maximumBytes = maximumBytes;
+        _maximumEntryBytes = maximumEntryBytes;
         Directory.CreateDirectory(directory);
         Path = System.IO.Path.Combine(directory, runId.ToString("N") + ".jsonl");
         // Nunca sobrescribir un intento anterior: una recuperacion debe reconciliarlo.
@@ -24,6 +28,8 @@ public sealed class OperationEventJournal : IDisposable
     public void Append(string phase, AgentEvent item, object? state = null)
     {
         var bytes = System.Text.Encoding.UTF8.GetBytes(DataGuard.Redact(JsonSerializer.Serialize(new JournalEntry(phase, item, DateTimeOffset.UtcNow, state))) + "\n");
+        if (bytes.Length > _maximumEntryBytes || _stream.Length + bytes.Length > _maximumBytes)
+            throw new IOException("Presupuesto de journal agotado; conservar admisiones y reconciliar efectos pendientes.");
         _stream.Write(bytes);
         _stream.Flush(flushToDisk: true);
     }

@@ -149,11 +149,20 @@ public static class ProjectContractAdmission
         return new(JsonSerializer.Serialize(dto with { Root = root }, ProjectJson.Options), root);
     }
 
-    public static void RequireExecutionSupport(AdmittedProjectContract? contract)
+    public static void CheckExecutionRoot(string root)
     {
-        if (contract is not null) throw new NotSupportedException(
-            "Contrato de proyecto admitido (" + contract.ContractHash + "). P0 permite admision; ejecucion por entregables requiere P1-P6. No se ejecutaron herramientas.");
+        CheckResource(root);
+        var hostRoot = Configuration.SecretStore.ResolveRepositoryRoot();
+        var relative = Path.GetRelativePath(root, hostRoot);
+        if (relative == "." || !Path.IsPathRooted(relative) && relative != ".." && !relative.StartsWith(".." + Path.DirectorySeparatorChar))
+            throw new InvalidOperationException("root de proyecto no puede contener el repo del harness.");
+        var insideHost = Path.GetRelativePath(hostRoot, root);
+        if (!Path.IsPathRooted(insideHost) && insideHost != ".." && !insideHost.StartsWith(".." + Path.DirectorySeparatorChar)
+            && !insideHost.StartsWith("artifacts" + Path.DirectorySeparatorChar + "generated" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            throw new InvalidOperationException("Dentro del harness, root debe estar bajo artifacts/generated/; los oraculos y el codigo del host son protegidos.");
     }
+
+    public static void CheckResource(string path) => ValidateResource(Path.GetFullPath(path));
 
     private static Dictionary<string, T> Index<T>(IReadOnlyList<T>? values, Func<T, string> key, string field) where T : class
     {

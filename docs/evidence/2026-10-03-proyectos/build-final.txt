@@ -1,0 +1,9 @@
+  AgentLoop -> C:\Users\Carlos Ivan\Desktop\agent loop\bin\Debug\net9.0\AgentLoop.dll
+
+Compilación correcta.
+    0 Advertencia(s)
+    0 Errores
+
+Tiempo transcurrido 00:00:01.11
+
+Hay actualizaciones de carga de trabajo disponibles. Ejecute "dotnet workload list" para obtener más información.

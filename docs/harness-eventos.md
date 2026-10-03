@@ -1,6 +1,6 @@
 # Harness vigente: arquitectura e implementacion
 
-Actualizado: 1 de octubre de 2026. Base del actor: commit 8b20a3f;
+Actualizado: 3 de octubre de 2026. Base del actor: commit 8b20a3f;
 esta entrega organiza proveedores y corrige contexto/recuperacion del bloqueo POS.
 El [informe del incidente](incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md)
 contiene el antes y sus limites. La [revision del 30](implementacion-coordinador-eventos-2026-09-30.md)
@@ -150,11 +150,39 @@ Pendientes: presupuesto por tokens reales de entrada, manifiesto de proyecto
 acordado antes de ejecutar, validadores funcionales por dominio, reconciliacion
 manual de efectos no cooperativos y sondeo remoto del dialecto Kimi K3.
 No se garantiza un POS terminado en el deadline predeterminado de 300 segundos.
-El [plan de goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md)
-ordena estos pendientes en fases y define los contratos y criterios de salida.
-P0 ya incorpora [contratos y admision](goals-proyectos.md). La ejecucion por
-entregables permanece bloqueada hasta las fases posteriores; los goals
-textuales conservan su comportamiento vigente.
+El [plan de goals verificables](plan-goals-proyectos-pos-2026-10-02.md) se implemento
+sobre este actor. [Guia vigente y ASCII antes/despues](goals-proyectos.md).
+
+```text
+CLI + contrato/hash -> preflight -> MISMO actor + bus + supervisor
+                                      |
+                               TrabajoHabilitado
+                                      |
+                             LLM -> tarjeta por intento
+                                      |
+                            archivos -> project_validate
+                                      |
+                  puerta manual -> Docker/oraculo -> evento resultado
+                                      |
+                    comprobar/cerrar hijo -> siguiente dependencia
+                                      |
+                   revalidar integrado -> comprobar/cerrar raiz
+```
+
+ProjectRuntime es una proyeccion del coordinador, ProjectState conserva el DAG y
+los intentos. ProjectValidationExecutor devuelve entregas inmutables al mailbox;
+los hechos del modelo no crean evidencia del host. La puerta de pausa se comparte
+con los validadores, incluso entre comandos de un batch. No hay otro loop de pasos.
+
+ProjectContextBudget acota el request por estimacion UTF-8 y conserva el brief
+actual. Los presupuestos de tiempo, llamadas y correcciones sobreviven a recuperacion.
+ProjectRecovery reconstruye desde el journal y bloquea efectos inciertos hasta
+reconciliacion explicita. Checkpoints son derivados, sin lectura optimizada aun.
+DockerProjectEnvironment ejecuta perfiles offline en almacenamiento efimero y
+comprueba retirada de contenedores; este backend se limita a proyectos con contrato.
+Los goals textuales conservan sus criterios y politica general.
+
+Validacion vigente: [415 checks, aislamiento real y resultados POS](evidence/2026-10-03-proyectos/README.md).
 
 ## Seguridad de datos y DTOs
 

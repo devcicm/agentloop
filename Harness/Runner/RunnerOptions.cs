@@ -6,7 +6,7 @@ namespace AgentLoop.Harness.Runner;
 /// <summary>Opciones que afinan como se ejecuta un Run.</summary>
 public sealed class RunnerOptions
 {
-    /// <summary>Optional project contract. P0 admits it, but execution remains gated until P1-P6.</summary>
+    /// <summary>Optional project contract. Execution requires the isolated backend preflight.</summary>
     public string? ProjectContractPath { get; init; }
 
     /// <summary>Presupuesto de solicitudes al LLM; nombre heredado, no iteraciones de estados.</summary>

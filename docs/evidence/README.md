@@ -85,3 +85,9 @@ si se ejecuta. Para el actor vigente usar `selftest-coordinator`.
 | [2026-10-01-seguridad/repository-audit.json](2026-10-01-seguridad/repository-audit.json) | Inventario documental de la entrega |
 | [2026-10-02-proyectos-p0/README.md](2026-10-02-proyectos-p0/README.md) | Alcance de compilacion P0; sin comprobacion funcional |
 | [2026-10-02-proyectos-p0/build.txt](2026-10-02-proyectos-p0/build.txt) | Compilacion sin errores ni advertencias |
+
+## 3 de octubre de 2026: proyectos por eventos
+
+[Indice y procedencia](2026-10-03-proyectos/README.md): suite local, aislamiento,
+fixture POS con API/navegador y corrida NVIDIA. Los journals y evidencias completos
+permanecen en almacenamiento local ignorado; se versionan resumenes sin claves.

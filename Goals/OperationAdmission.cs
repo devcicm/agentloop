@@ -11,7 +11,7 @@ namespace AgentLoop.Goals;
 public sealed class OperationAdmission(Scope scope, CardLedger ledger)
 {
     private static readonly HashSet<string> ReadOnly = new(StringComparer.Ordinal)
-    { "read_text_file", "list_directory", "find_files", "get_system_context", "where_command", "get_time", "add_numbers", "procesos", "leer" };
+    { "read_text_file", "list_directory", "find_files", "get_system_context", "where_command", "get_time", "add_numbers", "procesos", "leer", "project_evidence" };
     public static bool IsReadOnly(string name) => ReadOnly.Contains(name);
 
     public (ParsedToolCall Call, string? Rejection, bool Simulated) Admit(ParsedToolCall call)

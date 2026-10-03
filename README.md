@@ -86,7 +86,7 @@ Incidente y correccion POS: [informe](docs/incidentes/pos-planeacion-sin-ejecuci
 Validacion de recuperacion POS: [evidencia](docs/evidence/2026-10-01/README.md).
 Validacion vigente de seguridad: [evidencia](docs/evidence/2026-10-01-seguridad/README.md).
 
-Validacion local vigente del 1 de octubre: 382 comprobaciones correctas, 68 del
+Validacion local anterior del 1 de octubre: 382 comprobaciones correctas, 68 del
 coordinador; compilacion con 0 errores y 0 advertencias. Sin nueva inferencia remota.
 
 Validacion anterior registrada el 30 de septiembre de 2026, commit `8b20a3f`:
@@ -94,11 +94,25 @@ compilacion sin errores ni advertencias, 340 comprobaciones correctas y
 prueba NVIDIA de poema con escritura, lectura, comprobacion y cierre.
 No equivale a una comprobacion nueva de disponibilidad remota.
 
-[Contratos de proyectos y admision P0](docs/goals-proyectos.md):
-`dotnet run -- project-admit --project-contract "examples/project-goals/pos-minimo.example.json"`.
-La ejecucion del contrato sigue bloqueada; admitirlo no construye el POS.
+## Proyectos verificables por eventos
 
-[Plan de implementacion de goals para proyectos y POS](docs/plan-goals-proyectos-pos-2026-10-02.md).
+[Guia y flujo ASCII](docs/goals-proyectos.md). P0-P5 implementadas y P6 con
+fixture POS aislado real. La suite del 3 de octubre tiene **415 comprobaciones**.
+[Resultados del fixture y NVIDIA](docs/evidence/2026-10-03-proyectos/README.md).
+
+```powershell
+docker build -t agentloop-project-node:1 -f ProjectAssets/Dockerfile ProjectAssets
+dotnet run -- project-admit --project-contract "examples/project-goals/pos-minimo.example.json"
+dotnet run -- project-run --project-contract "examples/project-goals/pos-minimo.example.json" --fixture
+```
+
+Para NVIDIA, usar un contrato con root propio y omitir `--fixture`. El host exige
+validacion funcional antes de cerrar; fallos del modelo o presupuestos agotados
+no se declaran exito. La imagen preparada requiere Docker Linux; ejecucion offline,
+perfiles fijos, archivos declarados, contexto acotado y recuperacion por journal.
+`must-change` compara contra la baseline: usar una raiz nueva para repetir el fixture.
+
+[Plan de implementacion y estado](docs/plan-goals-proyectos-pos-2026-10-02.md).
 
 [Indice documental](docs/README.md) ·
 [Arquitectura y pendientes](docs/implementacion-coordinador-eventos-2026-09-30.md) ·

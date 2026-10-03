@@ -1,0 +1,468 @@
+evento #1 ProyectoAdmitido: contrato de proyecto admitido
+evento #2 TrabajoHabilitado: estructura
+evento #3 Objetivo: Construir un POS web local en TypeScript, Node y SQLite, una caja, productos, inventario, ventas atomicas, efectivo, cambio, ticket y persistencia. Usar centavos enteros. Entregar instrucciones de instalacion y evidencia funcional. Excluir facturacion fiscal, pagos bancarios y multisucursal.
+evento #4 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #5 ModeloSolicitado: solicitud al modelo
+evento #6 ModeloResultado: respuesta del proveedor
+evento #7 HerramientaSolicitada: tarjeta
+evento #8 HerramientaSolicitada: admision de tarjeta
+evento #9 Tarjeta: abrir (nivel 2) Tarea estructura: crear package.json, package-lock.json, tsconfig.json y src/types.d.ts va...
+evento #10 HerramientaResultado: tarjeta
+evento #11 HerramientaFinalizada: resultado registrado de tarjeta
+evento #12 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #13 ModeloSolicitado: solicitud al modelo
+evento #14 ModeloResultado: respuesta del proveedor
+evento #15 HerramientaSolicitada: write_text_file
+evento #16 HerramientaSolicitada: admision de write_text_file
+evento #17 HerramientaResultado: write_text_file
+evento #18 HerramientaFinalizada: resultado registrado de write_text_file
+evento #19 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #20 ModeloSolicitado: solicitud al modelo
+evento #21 ModeloResultado: respuesta del proveedor
+evento #22 HerramientaSolicitada: write_text_file
+evento #23 HerramientaSolicitada: admision de write_text_file
+evento #24 HerramientaResultado: write_text_file
+evento #25 HerramientaFinalizada: resultado registrado de write_text_file
+evento #26 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #27 ModeloSolicitado: solicitud al modelo
+evento #28 ModeloResultado: respuesta del proveedor
+evento #29 HerramientaSolicitada: write_text_file
+evento #30 HerramientaSolicitada: admision de write_text_file
+evento #31 HerramientaResultado: write_text_file
+evento #32 HerramientaFinalizada: resultado registrado de write_text_file
+evento #33 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #34 ModeloSolicitado: solicitud al modelo
+evento #35 ModeloResultado: respuesta del proveedor
+evento #36 HerramientaSolicitada: write_text_file
+evento #37 HerramientaSolicitada: admision de write_text_file
+evento #38 HerramientaResultado: write_text_file
+evento #39 HerramientaFinalizada: resultado registrado de write_text_file
+evento #40 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #41 ModeloSolicitado: solicitud al modelo
+evento #42 ModeloResultado: respuesta del proveedor
+evento #43 HerramientaSolicitada: project_validate
+evento #44 HerramientaSolicitada: admision de project_validate
+evento #45 ValidacionSolicitada: estructura
+evento #46 HerramientaResultado: project_validate
+evento #47 ValidacionFinalizada: estructura-valida
+evento #48 HerramientaFinalizada: resultado registrado de project_validate
+evento #49 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #50 ModeloSolicitado: solicitud al modelo
+evento #51 ModeloResultado: respuesta del proveedor
+evento #52 HerramientaSolicitada: tarjeta
+evento #53 HerramientaSolicitada: admision de tarjeta
+evento #54 TarjetaRechazada: comprobar RECHAZADA: Tarjeta exige work_item_id y attempt_id vigentes.
+evento #55 HerramientaResultado: tarjeta
+evento #56 Error: resultado registrado de tarjeta
+evento #57 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #58 ModeloSolicitado: solicitud al modelo
+evento #59 ModeloResultado: respuesta del proveedor
+evento #60 HerramientaSolicitada: tarjeta
+evento #61 HerramientaSolicitada: admision de tarjeta
+evento #62 Tarjeta: comprobar (nivel 2) Validacion del host estructura-valida sobre package.json, package-lock.json, tsconfig.json...
+evento #63 HerramientaResultado: tarjeta
+evento #64 HerramientaFinalizada: resultado registrado de tarjeta
+evento #65 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #66 ModeloSolicitado: solicitud al modelo
+evento #67 ModeloResultado: respuesta del proveedor
+evento #68 HerramientaSolicitada: tarjeta
+evento #69 HerramientaSolicitada: admision de tarjeta
+evento #70 Tarjeta: cerrar (nivel 2) package.json, package-lock.json, tsconfig.json y src/types.d.ts creados y validados por el...
+evento #71 HerramientaResultado: tarjeta
+evento #72 TrabajoAceptado: estructura
+evento #73 TrabajoHabilitado: catalogo
+evento #74 HerramientaFinalizada: resultado registrado de tarjeta
+evento #75 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #76 ModeloSolicitado: solicitud al modelo
+evento #77 ModeloResultado: respuesta del proveedor
+evento #78 HerramientaSolicitada: tarjeta
+evento #79 HerramientaSolicitada: admision de tarjeta
+evento #80 Tarjeta: abrir (nivel 2) Tarea catalogo: crear src/persistencia.ts (SQLite con node:sqlite) y src/catalogo.ts (prod...
+evento #81 HerramientaResultado: tarjeta
+evento #82 HerramientaFinalizada: resultado registrado de tarjeta
+evento #83 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #84 ModeloSolicitado: solicitud al modelo
+evento #85 ModeloResultado: respuesta del proveedor
+evento #86 HerramientaSolicitada: read_text_file
+evento #87 HerramientaSolicitada: admision de read_text_file
+evento #88 HerramientaResultado: read_text_file
+evento #89 HerramientaFinalizada: resultado registrado de read_text_file
+evento #90 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #91 ModeloSolicitado: solicitud al modelo
+evento #92 ModeloResultado: respuesta del proveedor
+evento #93 HerramientaSolicitada: write_text_file
+evento #94 HerramientaSolicitada: admision de write_text_file
+evento #95 HerramientaResultado: write_text_file
+evento #96 HerramientaFinalizada: resultado registrado de write_text_file
+evento #97 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #98 ModeloSolicitado: solicitud al modelo
+evento #99 ModeloResultado: respuesta del proveedor
+evento #100 HerramientaSolicitada: write_text_file
+evento #101 HerramientaSolicitada: admision de write_text_file
+evento #102 HerramientaResultado: write_text_file
+evento #103 HerramientaFinalizada: resultado registrado de write_text_file
+evento #104 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #105 ModeloSolicitado: solicitud al modelo
+evento #106 ModeloResultado: respuesta del proveedor
+evento #107 HerramientaSolicitada: project_validate
+evento #108 HerramientaSolicitada: admision de project_validate
+evento #109 ValidacionSolicitada: catalogo
+evento #110 HerramientaResultado: project_validate
+evento #111 ValidacionFinalizada: catalogo-escrito
+evento #112 HerramientaFinalizada: resultado registrado de project_validate
+evento #113 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #114 ModeloSolicitado: solicitud al modelo
+evento #115 ModeloResultado: respuesta del proveedor
+evento #116 HerramientaSolicitada: tarjeta
+evento #117 HerramientaSolicitada: admision de tarjeta
+evento #118 TarjetaRechazada: comprobar RECHAZADA: comprobar exige evidencia_id de una herramienta exitosa de esta transaccion
+evento #119 HerramientaResultado: tarjeta
+evento #120 Error: resultado registrado de tarjeta
+evento #121 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #122 ModeloSolicitado: solicitud al modelo
+evento #123 ModeloResultado: respuesta del proveedor
+evento #124 HerramientaSolicitada: tarjeta
+evento #125 HerramientaSolicitada: admision de tarjeta
+evento #126 Tarjeta: comprobar (nivel 2) Validacion host catalogo-escrito sobre src/catalogo.ts y src/persistencia.ts
+evento #127 HerramientaResultado: tarjeta
+evento #128 HerramientaFinalizada: resultado registrado de tarjeta
+evento #129 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #130 ModeloSolicitado: solicitud al modelo
+evento #131 ModeloResultado: respuesta del proveedor
+evento #132 HerramientaSolicitada: tarjeta
+evento #133 HerramientaSolicitada: admision de tarjeta
+evento #134 TarjetaRechazada: cerrar RECHAZADA: Tarjeta exige work_item_id y attempt_id vigentes.
+evento #135 HerramientaResultado: tarjeta
+evento #136 Error: resultado registrado de tarjeta
+evento #137 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #138 ModeloSolicitado: solicitud al modelo
+evento #139 ModeloResultado: respuesta del proveedor
+evento #140 HerramientaSolicitada: tarjeta
+evento #141 HerramientaSolicitada: admision de tarjeta
+evento #142 Tarjeta: cerrar (nivel 2) src/persistencia.ts (4393 bytes) y src/catalogo.ts (840 bytes) escritos y validados por el...
+evento #143 HerramientaResultado: tarjeta
+evento #144 TrabajoAceptado: catalogo
+evento #145 TrabajoHabilitado: ventas
+evento #146 HerramientaFinalizada: resultado registrado de tarjeta
+evento #147 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #148 ModeloSolicitado: solicitud al modelo
+evento #149 ModeloResultado: respuesta del proveedor
+evento #150 HerramientaSolicitada: tarjeta
+evento #151 HerramientaSolicitada: admision de tarjeta
+evento #152 Tarjeta: abrir (nivel 2) Tarea ventas: crear src/ventas.ts (ventas atomicas, idempotencia, cambio), src/servidor.ts...
+evento #153 HerramientaResultado: tarjeta
+evento #154 HerramientaFinalizada: resultado registrado de tarjeta
+evento #155 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #156 ModeloSolicitado: solicitud al modelo
+evento #157 ModeloResultado: respuesta del proveedor
+evento #158 HerramientaSolicitada: read_text_file
+evento #159 HerramientaSolicitada: admision de read_text_file
+evento #160 HerramientaResultado: read_text_file
+evento #161 HerramientaFinalizada: resultado registrado de read_text_file
+evento #162 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #163 ModeloSolicitado: solicitud al modelo
+evento #164 ModeloResultado: respuesta del proveedor
+evento #165 HerramientaSolicitada: read_text_file
+evento #166 HerramientaSolicitada: admision de read_text_file
+evento #167 HerramientaResultado: read_text_file
+evento #168 HerramientaFinalizada: resultado registrado de read_text_file
+evento #169 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #170 ModeloSolicitado: solicitud al modelo
+evento #171 ModeloResultado: respuesta del proveedor
+evento #172 HerramientaSolicitada: read_text_file
+evento #173 HerramientaSolicitada: admision de read_text_file
+evento #174 HerramientaResultado: read_text_file
+evento #175 HerramientaFinalizada: resultado registrado de read_text_file
+evento #176 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #177 ModeloSolicitado: solicitud al modelo
+evento #178 ModeloResultado: respuesta del proveedor
+evento #179 HerramientaSolicitada: read_text_file
+evento #180 HerramientaSolicitada: admision de read_text_file
+evento #181 HerramientaResultado: read_text_file
+evento #182 HerramientaFinalizada: resultado registrado de read_text_file
+evento #183 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #184 ModeloSolicitado: solicitud al modelo
+evento #185 ModeloResultado: respuesta del proveedor
+evento #186 HerramientaSolicitada: write_text_file
+evento #187 HerramientaSolicitada: admision de write_text_file
+evento #188 HerramientaResultado: write_text_file
+evento #189 HerramientaFinalizada: resultado registrado de write_text_file
+evento #190 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #191 ModeloSolicitado: solicitud al modelo
+evento #192 ModeloResultado: respuesta del proveedor
+evento #193 HerramientaSolicitada: read_text_file
+evento #194 HerramientaSolicitada: admision de read_text_file
+evento #195 HerramientaResultado: read_text_file
+evento #196 HerramientaFinalizada: resultado registrado de read_text_file
+evento #197 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #198 ModeloSolicitado: solicitud al modelo
+evento #199 ModeloResultado: respuesta del proveedor
+evento #200 HerramientaSolicitada: write_text_file
+evento #201 HerramientaSolicitada: admision de write_text_file
+evento #202 HerramientaResultado: write_text_file
+evento #203 HerramientaFinalizada: resultado registrado de write_text_file
+evento #204 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #205 ModeloSolicitado: solicitud al modelo
+evento #206 ModeloResultado: respuesta del proveedor
+evento #207 HerramientaSolicitada: write_text_file
+evento #208 HerramientaSolicitada: admision de write_text_file
+evento #209 HerramientaResultado: write_text_file
+evento #210 HerramientaFinalizada: resultado registrado de write_text_file
+evento #211 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #212 ModeloSolicitado: solicitud al modelo
+evento #213 ModeloResultado: respuesta del proveedor
+evento #214 HerramientaSolicitada: tarjeta
+evento #215 HerramientaSolicitada: admision de tarjeta
+evento #216 TarjetaRechazada: comprobar RECHAZADA: Validaciones obligatorias faltantes, fallidas o con entradas modificadas: ejecutar project_validate.
+evento #217 HerramientaResultado: tarjeta
+evento #218 Error: resultado registrado de tarjeta
+evento #219 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #220 ModeloSolicitado: solicitud al modelo
+evento #221 ModeloResultado: respuesta del proveedor
+evento #222 HerramientaSolicitada: project_validate
+evento #223 HerramientaSolicitada: admision de project_validate
+evento #224 ValidacionSolicitada: ventas
+evento #225 HerramientaResultado: project_validate
+evento #226 ValidacionFinalizada: ventas-escritas
+evento #227 HerramientaFinalizada: resultado registrado de project_validate
+evento #228 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #229 ModeloSolicitado: solicitud al modelo
+evento #230 ModeloResultado: respuesta del proveedor
+evento #231 HerramientaSolicitada: tarjeta
+evento #232 HerramientaSolicitada: admision de tarjeta
+evento #233 Tarjeta: comprobar (nivel 2) project_validate ejecutado para la tarea ventas: validacion ventas-escritas Passed=true, o...
+evento #234 HerramientaResultado: tarjeta
+evento #235 HerramientaFinalizada: resultado registrado de tarjeta
+evento #236 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #237 ModeloSolicitado: solicitud al modelo
+evento #238 ModeloResultado: respuesta del proveedor
+evento #239 HerramientaSolicitada: tarjeta
+evento #240 HerramientaSolicitada: admision de tarjeta
+evento #241 Tarjeta: cerrar (nivel 2) Tarea ventas completada: src/ventas.ts, src/servidor.ts y public/index.html escritos y val...
+evento #242 HerramientaResultado: tarjeta
+evento #243 TrabajoAceptado: ventas
+evento #244 TrabajoHabilitado: entrega
+evento #245 HerramientaFinalizada: resultado registrado de tarjeta
+evento #246 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #247 ModeloSolicitado: solicitud al modelo
+evento #248 ModeloResultado: respuesta del proveedor
+evento #249 HerramientaSolicitada: tarjeta
+evento #250 HerramientaSolicitada: admision de tarjeta
+evento #251 Tarjeta: abrir (nivel 2) Tarea entrega: escribir README.md con instalacion, arranque y POS_DB, y pasar las validaci...
+evento #252 HerramientaResultado: tarjeta
+evento #253 HerramientaFinalizada: resultado registrado de tarjeta
+evento #254 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #255 ModeloSolicitado: solicitud al modelo
+evento #256 ModeloResultado: respuesta del proveedor
+evento #257 HerramientaSolicitada: write_text_file
+evento #258 HerramientaSolicitada: admision de write_text_file
+evento #259 HerramientaResultado: write_text_file
+evento #260 HerramientaFinalizada: resultado registrado de write_text_file
+evento #261 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #262 ModeloSolicitado: solicitud al modelo
+evento #263 ModeloResultado: respuesta del proveedor
+evento #264 HerramientaSolicitada: project_command
+evento #265 HerramientaSolicitada: admision de project_command
+evento #266 ProcesoIniciado: build
+evento #267 ProcesoFin: build
+evento #268 HerramientaResultado: project_command
+evento #269 Error: resultado registrado de project_command
+evento #270 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #271 ModeloSolicitado: solicitud al modelo
+evento #272 ModeloResultado: respuesta del proveedor
+evento #273 HerramientaSolicitada: read_text_file
+evento #274 HerramientaSolicitada: admision de read_text_file
+evento #275 HerramientaResultado: read_text_file
+evento #276 HerramientaFinalizada: resultado registrado de read_text_file
+evento #277 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #278 ModeloSolicitado: solicitud al modelo
+evento #279 ModeloResultado: respuesta del proveedor
+evento #280 HerramientaSolicitada: read_text_file
+evento #281 HerramientaSolicitada: admision de read_text_file
+evento #282 HerramientaResultado: read_text_file
+evento #283 HerramientaFinalizada: resultado registrado de read_text_file
+evento #284 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #285 ModeloSolicitado: solicitud al modelo
+evento #286 ModeloResultado: respuesta del proveedor
+evento #287 HerramientaSolicitada: project_command
+evento #288 HerramientaSolicitada: admision de project_command
+evento #289 ProcesoIniciado: install
+evento #290 ProcesoFin: install
+evento #291 HerramientaResultado: project_command
+evento #292 Error: resultado registrado de project_command
+evento #293 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #294 ModeloSolicitado: solicitud al modelo
+evento #295 ModeloResultado: respuesta del proveedor
+evento #296 HerramientaSolicitada: write_text_file
+evento #297 HerramientaSolicitada: admision de write_text_file
+evento #298 HerramientaResultado: write_text_file
+evento #299 HerramientaFinalizada: resultado registrado de write_text_file
+evento #300 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #301 ModeloSolicitado: solicitud al modelo
+evento #302 ModeloResultado: respuesta del proveedor
+evento #303 HerramientaSolicitada: write_text_file
+evento #304 HerramientaSolicitada: admision de write_text_file
+evento #305 HerramientaResultado: write_text_file
+evento #306 HerramientaFinalizada: resultado registrado de write_text_file
+evento #307 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #308 ModeloSolicitado: solicitud al modelo
+evento #309 ModeloResultado: respuesta del proveedor
+evento #310 HerramientaSolicitada: project_command
+evento #311 HerramientaSolicitada: admision de project_command
+evento #312 ProcesoIniciado: build
+evento #313 ProcesoFin: build
+evento #314 HerramientaResultado: project_command
+evento #315 Error: resultado registrado de project_command
+evento #316 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #317 ModeloSolicitado: solicitud al modelo
+evento #318 ModeloResultado: respuesta del proveedor
+evento #319 HerramientaSolicitada: read_text_file
+evento #320 HerramientaSolicitada: admision de read_text_file
+evento #321 HerramientaResultado: read_text_file
+evento #322 HerramientaFinalizada: resultado registrado de read_text_file
+evento #323 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #324 ModeloSolicitado: solicitud al modelo
+evento #325 ModeloResultado: respuesta del proveedor
+evento #326 HerramientaSolicitada: write_text_file
+evento #327 HerramientaSolicitada: admision de write_text_file
+evento #328 HerramientaResultado: write_text_file
+evento #329 HerramientaFinalizada: resultado registrado de write_text_file
+evento #330 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #331 ModeloSolicitado: solicitud al modelo
+evento #332 ModeloResultado: respuesta del proveedor
+evento #333 HerramientaSolicitada: project_command
+evento #334 HerramientaSolicitada: admision de project_command
+evento #335 ProcesoIniciado: build
+evento #336 ProcesoFin: build
+evento #337 HerramientaResultado: project_command
+evento #338 Error: resultado registrado de project_command
+evento #339 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #340 ModeloSolicitado: solicitud al modelo
+evento #341 ModeloResultado: respuesta del proveedor
+evento #342 HerramientaSolicitada: read_text_file
+evento #343 HerramientaSolicitada: admision de read_text_file
+evento #344 HerramientaResultado: read_text_file
+evento #345 HerramientaFinalizada: resultado registrado de read_text_file
+evento #346 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #347 ModeloSolicitado: solicitud al modelo
+evento #348 ModeloResultado: respuesta del proveedor
+evento #349 HerramientaSolicitada: read_text_file
+evento #350 HerramientaSolicitada: admision de read_text_file
+evento #351 HerramientaResultado: read_text_file
+evento #352 HerramientaFinalizada: resultado registrado de read_text_file
+evento #353 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #354 ModeloSolicitado: solicitud al modelo
+evento #355 ModeloResultado: respuesta del proveedor
+evento #356 HerramientaSolicitada: read_text_file
+evento #357 HerramientaSolicitada: admision de read_text_file
+evento #358 HerramientaResultado: read_text_file
+evento #359 HerramientaFinalizada: resultado registrado de read_text_file
+evento #360 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #361 ModeloSolicitado: solicitud al modelo
+evento #362 ModeloResultado: respuesta del proveedor
+evento #363 HerramientaSolicitada: read_text_file
+evento #364 HerramientaSolicitada: admision de read_text_file
+evento #365 HerramientaResultado: read_text_file
+evento #366 HerramientaFinalizada: resultado registrado de read_text_file
+evento #367 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #368 ModeloSolicitado: solicitud al modelo
+evento #369 ModeloResultado: respuesta del proveedor
+evento #370 HerramientaSolicitada: read_text_file
+evento #371 HerramientaSolicitada: admision de read_text_file
+evento #372 HerramientaResultado: read_text_file
+evento #373 HerramientaFinalizada: resultado registrado de read_text_file
+evento #374 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #375 ModeloSolicitado: solicitud al modelo
+evento #376 ModeloResultado: respuesta del proveedor
+evento #377 HerramientaSolicitada: read_text_file
+evento #378 HerramientaSolicitada: admision de read_text_file
+evento #379 HerramientaResultado: read_text_file
+evento #380 HerramientaFinalizada: resultado registrado de read_text_file
+evento #381 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #382 ModeloSolicitado: solicitud al modelo
+evento #383 ModeloResultado: respuesta del proveedor
+evento #384 HerramientaSolicitada: read_text_file
+evento #385 HerramientaSolicitada: admision de read_text_file
+evento #386 HerramientaResultado: read_text_file
+evento #387 HerramientaFinalizada: resultado registrado de read_text_file
+evento #388 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #389 ModeloSolicitado: solicitud al modelo
+evento #390 ModeloResultado: respuesta del proveedor
+evento #391 HerramientaSolicitada: write_text_file
+evento #392 HerramientaSolicitada: admision de write_text_file
+evento #393 HerramientaResultado: write_text_file
+evento #394 HerramientaFinalizada: resultado registrado de write_text_file
+evento #395 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #396 ModeloSolicitado: solicitud al modelo
+evento #397 ModeloResultado: respuesta del proveedor
+evento #398 HerramientaSolicitada: tarjeta
+evento #399 HerramientaSolicitada: admision de tarjeta
+evento #400 Tarjeta: avanzar (nivel 2) README.md escrito (1836 bytes) con instalacion (npm ci --offline --ignore-scripts), compil...
+evento #401 HerramientaResultado: tarjeta
+evento #402 HerramientaFinalizada: resultado registrado de tarjeta
+evento #403 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #404 ModeloSolicitado: solicitud al modelo
+evento #405 ModeloResultado: respuesta del proveedor
+evento #406 HerramientaSolicitada: project_validate
+evento #407 HerramientaSolicitada: admision de project_validate
+evento #408 ValidacionSolicitada: entrega
+evento #409 ProcesoIniciado: build
+evento #410 ProcesoFin: build
+evento #411 ProcesoIniciado: health
+evento #412 ProcesoFin: health
+evento #413 ProcesoIniciado: pos
+evento #414 ProcesoFin: pos
+evento #415 HerramientaResultado: project_validate
+evento #416 ValidacionFinalizada: documentacion
+evento #417 ValidacionFallida: compilacion
+evento #418 ValidacionFallida: disponibilidad
+evento #419 ValidacionFallida: pos-funcional
+evento #420 Error: resultado registrado de project_validate
+evento #421 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #422 ModeloSolicitado: solicitud al modelo
+evento #423 ModeloResultado: respuesta del proveedor
+evento #424 HerramientaSolicitada: read_text_file
+evento #425 HerramientaSolicitada: admision de read_text_file
+evento #426 HerramientaResultado: read_text_file
+evento #427 HerramientaFinalizada: resultado registrado de read_text_file
+evento #428 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #429 ModeloSolicitado: solicitud al modelo
+evento #430 ModeloResultado: respuesta del proveedor
+evento #431 HerramientaSolicitada: read_text_file
+evento #432 HerramientaSolicitada: admision de read_text_file
+evento #433 HerramientaResultado: read_text_file
+evento #434 HerramientaFinalizada: resultado registrado de read_text_file
+evento #435 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #436 ModeloSolicitado: solicitud al modelo
+evento #437 ModeloResultado: respuesta del proveedor
+evento #438 HerramientaSolicitada: read_text_file
+evento #439 HerramientaSolicitada: admision de read_text_file
+evento #440 HerramientaResultado: read_text_file
+evento #441 HerramientaFinalizada: resultado registrado de read_text_file
+evento #442 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #443 ModeloSolicitado: solicitud al modelo
+evento #444 ModeloResultado: respuesta del proveedor
+evento #445 HerramientaSolicitada: read_text_file
+evento #446 HerramientaSolicitada: admision de read_text_file
+evento #447 HerramientaResultado: read_text_file
+evento #448 HerramientaFinalizada: resultado registrado de read_text_file
+evento #449 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #450 ModeloSolicitado: solicitud al modelo
+evento #451 ModeloResultado: respuesta del proveedor
+evento #452 HerramientaSolicitada: read_text_file
+evento #453 HerramientaSolicitada: admision de read_text_file
+evento #454 HerramientaResultado: read_text_file
+evento #455 HerramientaFinalizada: resultado registrado de read_text_file
+evento #456 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #457 ModeloSolicitado: solicitud al modelo
+evento #458 ModeloResultado: respuesta del proveedor
+evento #459 HerramientaSolicitada: read_text_file
+evento #460 HerramientaSolicitada: admision de read_text_file
+evento #461 HerramientaResultado: read_text_file
+evento #462 HerramientaFinalizada: resultado registrado de read_text_file
+evento #463 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #464 ModeloSolicitado: solicitud al modelo
+evento #465 ModeloResultado: respuesta del proveedor
+evento #466 Observador: recuperacion acotada: la respuesta anterior no ejecuto acciones. Emite una herramienta concreta y pequena; crea un archivo por llamada, no escribas el proyecto entero en razonamiento. Usa tarjetas; comprobar exige evidencia_id del resultado.
+evento #467 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+{"runId":"dc1e188c-03e4-4eb5-abe5-e62b236214f8","contractHash":"E117CA8E9BB10C9CA335CEB73E2FE89129A10F19EEB6D76684164307BAEB176F","status":"Failed","outcome":"presupuesto de llamadas al modelo agotado","journal":"C:\\Users\\Carlos Ivan\\Desktop\\agent loop\\.agentloop\\event-journal\\dc1e188c03e44eb5abe5e62b236214f8.jsonl"}

@@ -1,42 +1,260 @@
 {
   "version": 1,
   "goalId": "pos-minimo",
-  "revision": 1,
+  "revision": 2,
   "objective": "Construir un POS web local en TypeScript, Node y SQLite, una caja, productos, inventario, ventas atomicas, efectivo, cambio, ticket y persistencia. Usar centavos enteros. Entregar instrucciones de instalacion y evidencia funcional. Excluir facturacion fiscal, pagos bancarios y multisucursal.",
   "root": "artifacts/generated/pos-minimo",
   "executionProfile": "isolated-project-v1",
   "budgets": {
     "deadlineSeconds": 1800,
     "maxModelCalls": 120,
-    "maxInputTokens": 16000,
+    "maxInputTokens": 64000,
     "maxOutputTokens": 4096,
     "maxCorrectionsPerWorkItem": 3,
     "maxConcurrentProcesses": 2
   },
   "workItems": [
-    { "id": "estructura", "dependsOn": [], "artifactIds": ["package", "lock", "config"], "validationIds": ["estructura-valida"] },
-    { "id": "catalogo", "dependsOn": ["estructura"], "artifactIds": ["catalogo", "persistencia"], "validationIds": ["catalogo-escrito"] },
-    { "id": "ventas", "dependsOn": ["catalogo"], "artifactIds": ["ventas", "servidor", "interfaz"], "validationIds": ["ventas-escritas"] },
-    { "id": "entrega", "dependsOn": ["ventas"], "artifactIds": ["readme"], "validationIds": ["documentacion", "compilacion", "disponibilidad", "pos-funcional"] }
+    {
+      "id": "estructura",
+      "dependsOn": [],
+      "artifactIds": [
+        "package",
+        "lock",
+        "config",
+        "types"
+      ],
+      "validationIds": [
+        "estructura-valida"
+      ]
+    },
+    {
+      "id": "catalogo",
+      "dependsOn": [
+        "estructura"
+      ],
+      "artifactIds": [
+        "catalogo",
+        "persistencia"
+      ],
+      "validationIds": [
+        "catalogo-escrito"
+      ]
+    },
+    {
+      "id": "ventas",
+      "dependsOn": [
+        "catalogo"
+      ],
+      "artifactIds": [
+        "ventas",
+        "servidor",
+        "interfaz"
+      ],
+      "validationIds": [
+        "ventas-escritas"
+      ]
+    },
+    {
+      "id": "entrega",
+      "dependsOn": [
+        "ventas"
+      ],
+      "artifactIds": [
+        "readme"
+      ],
+      "validationIds": [
+        "documentacion",
+        "compilacion",
+        "disponibilidad",
+        "pos-funcional"
+      ]
+    }
   ],
   "artifacts": [
-    { "id": "package", "relativePath": "package.json", "required": true, "expectedKind": "json", "changePolicy": "must-change" },
-    { "id": "lock", "relativePath": "package-lock.json", "required": true, "expectedKind": "json", "changePolicy": "must-change" },
-    { "id": "config", "relativePath": "tsconfig.json", "required": true, "expectedKind": "json", "changePolicy": "must-change" },
-    { "id": "catalogo", "relativePath": "src/catalogo.ts", "required": true, "expectedKind": "file", "changePolicy": "must-change" },
-    { "id": "persistencia", "relativePath": "src/persistencia.ts", "required": true, "expectedKind": "file", "changePolicy": "must-change" },
-    { "id": "ventas", "relativePath": "src/ventas.ts", "required": true, "expectedKind": "file", "changePolicy": "must-change" },
-    { "id": "servidor", "relativePath": "src/servidor.ts", "required": true, "expectedKind": "file", "changePolicy": "must-change" },
-    { "id": "interfaz", "relativePath": "public/index.html", "required": true, "expectedKind": "file", "changePolicy": "must-change" },
-    { "id": "readme", "relativePath": "README.md", "required": true, "expectedKind": "file", "changePolicy": "must-change" }
+    {
+      "id": "package",
+      "relativePath": "package.json",
+      "required": true,
+      "expectedKind": "json",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "lock",
+      "relativePath": "package-lock.json",
+      "required": true,
+      "expectedKind": "json",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "config",
+      "relativePath": "tsconfig.json",
+      "required": true,
+      "expectedKind": "json",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "catalogo",
+      "relativePath": "src/catalogo.ts",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "persistencia",
+      "relativePath": "src/persistencia.ts",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "ventas",
+      "relativePath": "src/ventas.ts",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "servidor",
+      "relativePath": "src/servidor.ts",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "interfaz",
+      "relativePath": "public/index.html",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "readme",
+      "relativePath": "README.md",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "types",
+      "relativePath": "src/types.d.ts",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    }
   ],
   "validations": [
-    { "id": "estructura-valida", "validatorId": "artifact", "workItemId": "estructura", "parameters": { "artifactIds": ["package", "lock", "config"] }, "required": true, "timeoutSeconds": 30 },
-    { "id": "catalogo-escrito", "validatorId": "artifact", "workItemId": "catalogo", "parameters": { "artifactIds": ["catalogo", "persistencia"] }, "required": true, "timeoutSeconds": 30 },
-    { "id": "ventas-escritas", "validatorId": "artifact", "workItemId": "ventas", "parameters": { "artifactIds": ["ventas", "servidor", "interfaz"] }, "required": true, "timeoutSeconds": 30 },
-    { "id": "documentacion", "validatorId": "artifact", "workItemId": "entrega", "parameters": { "artifactIds": ["readme"] }, "required": true, "timeoutSeconds": 30 },
-    { "id": "compilacion", "validatorId": "build", "workItemId": "entrega", "parameters": { "artifactIds": ["package", "lock", "config", "catalogo", "persistencia", "ventas", "servidor", "interfaz"], "commandProfile": "node-build-v1" }, "required": true, "timeoutSeconds": 180 },
-    { "id": "disponibilidad", "validatorId": "process-probe", "workItemId": "entrega", "parameters": { "artifactIds": ["package", "servidor", "config"], "commandProfile": "node-service-v1", "scenario": "health-v1" }, "required": true, "timeoutSeconds": 60 },
-    { "id": "pos-funcional", "validatorId": "pos-functional", "workItemId": "entrega", "parameters": { "artifactIds": ["package", "lock", "config", "catalogo", "persistencia", "ventas", "servidor", "interfaz"], "commandProfile": "node-service-v1", "scenario": "pos-minimo-v1" }, "required": true, "timeoutSeconds": 180 }
+    {
+      "id": "estructura-valida",
+      "validatorId": "artifact",
+      "workItemId": "estructura",
+      "parameters": {
+        "artifactIds": [
+          "package",
+          "lock",
+          "config",
+          "types"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "catalogo-escrito",
+      "validatorId": "artifact",
+      "workItemId": "catalogo",
+      "parameters": {
+        "artifactIds": [
+          "catalogo",
+          "persistencia"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "ventas-escritas",
+      "validatorId": "artifact",
+      "workItemId": "ventas",
+      "parameters": {
+        "artifactIds": [
+          "ventas",
+          "servidor",
+          "interfaz"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "documentacion",
+      "validatorId": "artifact",
+      "workItemId": "entrega",
+      "parameters": {
+        "artifactIds": [
+          "readme"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "compilacion",
+      "validatorId": "build",
+      "workItemId": "entrega",
+      "parameters": {
+        "artifactIds": [
+          "package",
+          "lock",
+          "config",
+          "catalogo",
+          "persistencia",
+          "ventas",
+          "servidor",
+          "interfaz",
+          "types"
+        ],
+        "commandProfile": "node-build-v1"
+      },
+      "required": true,
+      "timeoutSeconds": 180
+    },
+    {
+      "id": "disponibilidad",
+      "validatorId": "process-probe",
+      "workItemId": "entrega",
+      "parameters": {
+        "artifactIds": [
+          "package",
+          "servidor",
+          "config"
+        ],
+        "commandProfile": "node-service-v1",
+        "scenario": "health-v1"
+      },
+      "required": true,
+      "timeoutSeconds": 60
+    },
+    {
+      "id": "pos-funcional",
+      "validatorId": "pos-functional",
+      "workItemId": "entrega",
+      "parameters": {
+        "artifactIds": [
+          "package",
+          "lock",
+          "config",
+          "catalogo",
+          "persistencia",
+          "ventas",
+          "servidor",
+          "interfaz",
+          "types"
+        ],
+        "commandProfile": "node-service-v1",
+        "scenario": "pos-minimo-v1"
+      },
+      "required": true,
+      "timeoutSeconds": 180
+    }
   ]
 }

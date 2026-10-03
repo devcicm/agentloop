@@ -57,6 +57,13 @@ public enum AgentEventKind
     DetencionAgotada,
     AprobacionSolicitada,
     Aprobacion,
+    ProyectoAdmitido,
+    TrabajoHabilitado,
+    ValidacionSolicitada,
+    ValidacionFinalizada,
+    ValidacionFallida,
+    TrabajoAceptado,
+    ReconciliacionRequerida,
 }
 
 /// <summary>

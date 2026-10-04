@@ -1,0 +1,89 @@
+{
+  "contractHash": "066D274644B1ED6DE77B97E5A6F3D540A08C09A6DC490040B355603F715432D8",
+  "snapshot": {
+    "version": 1,
+    "contractHash": "066D274644B1ED6DE77B97E5A6F3D540A08C09A6DC490040B355603F715432D8",
+    "startedAt": "2026-10-04T06:00:56.6343371+00:00",
+    "modelCalls": 13,
+    "work": [
+      {
+        "id": "definition",
+        "status": 3,
+        "attempts": 1,
+        "attemptId": "1d7cc7b4c7864c658526b2ee6cffc8a5",
+        "corrections": 0
+      },
+      {
+        "id": "delivery",
+        "status": 3,
+        "attempts": 1,
+        "attemptId": "b57e48c2598342a4babb0e7c79448b2c",
+        "corrections": 0
+      }
+    ],
+    "results": [
+      {
+        "validationId": "definition-valid",
+        "attemptId": "integration",
+        "contractHash": "066D274644B1ED6DE77B97E5A6F3D540A08C09A6DC490040B355603F715432D8",
+        "inputHashes": {
+          "definition": "C5A794E02192E8796A427A624A74ACA220EF15CA553F9CD8EB94601B90F9C3A3"
+        },
+        "passed": true,
+        "observations": "Entradas presentes y estructura valida.",
+        "evidenceId": "784defee9b92422cb79c01dc375f2c31",
+        "startedAt": "2026-10-04T06:01:51.8038635+00:00",
+        "endedAt": "2026-10-04T06:01:51.8062596+00:00",
+        "validatorVersion": "1",
+        "executionEnvironment": "artifact-host",
+        "profileHash": "229214DB3D7FF16CC008919E55913A8D0339E3C7CCFBE0E4EDE14A7782D5C99C"
+      },
+      {
+        "validationId": "delivery-valid",
+        "attemptId": "integration",
+        "contractHash": "066D274644B1ED6DE77B97E5A6F3D540A08C09A6DC490040B355603F715432D8",
+        "inputHashes": {
+          "delivery": "ACEB2A6BA4E4AB6B06C5230B0651AF72B3FB4FF6CBE3486504050547A50E8116"
+        },
+        "passed": true,
+        "observations": "Entradas presentes y estructura valida.",
+        "evidenceId": "6918c90f759f45239267f1cd48a53691",
+        "startedAt": "2026-10-04T06:01:51.8083372+00:00",
+        "endedAt": "2026-10-04T06:01:51.8109896+00:00",
+        "validatorVersion": "1",
+        "executionEnvironment": "artifact-host",
+        "profileHash": "229214DB3D7FF16CC008919E55913A8D0339E3C7CCFBE0E4EDE14A7782D5C99C"
+      },
+      {
+        "validationId": "coherence",
+        "attemptId": "integration",
+        "contractHash": "066D274644B1ED6DE77B97E5A6F3D540A08C09A6DC490040B355603F715432D8",
+        "inputHashes": {
+          "definition": "C5A794E02192E8796A427A624A74ACA220EF15CA553F9CD8EB94601B90F9C3A3",
+          "delivery": "ACEB2A6BA4E4AB6B06C5230B0651AF72B3FB4FF6CBE3486504050547A50E8116"
+        },
+        "passed": true,
+        "observations": "PASS: JSON y documento coherentes; validador externo ejecutado\n",
+        "evidenceId": "22c0031772cf4eae8149b19ddd980ad9",
+        "startedAt": "2026-10-04T06:01:51.8137379+00:00",
+        "endedAt": "2026-10-04T06:01:54.5183684+00:00",
+        "validatorVersion": "1",
+        "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+        "profileHash": "229214DB3D7FF16CC008919E55913A8D0339E3C7CCFBE0E4EDE14A7782D5C99C"
+      }
+    ],
+    "baseline": {
+      "definition": "missing",
+      "delivery": "missing"
+    },
+    "profileHash": "229214DB3D7FF16CC008919E55913A8D0339E3C7CCFBE0E4EDE14A7782D5C99C",
+    "knowledge": {
+      "artifacts": [],
+      "actionsWithoutProgress": 3,
+      "explorationReads": 0,
+      "explorationVersions": []
+    }
+  },
+  "uncertainActions": [],
+  "terminal": true
+}

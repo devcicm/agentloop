@@ -1,0 +1,9 @@
+dotnet : ERROR proyecto: No se pudo iniciar el ejecutable configurado del backend: An error occurred trying to start
+process 'C:\Users\Carlos Ivan\Desktop\agent loop\docs\evidence\2026-10-04-validacion-core-kernel\bundle\verify.mjs'
+with working directory 'C:\Users\Carlos Ivan\Desktop\agent loop'. The specified executable is not a valid application
+for this OS platform.
+En línea: 2 Carácter: 1
++ dotnet run --no-build --no-launch-profile -- project-run --project-co ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR proyecto:...is OS platform.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError

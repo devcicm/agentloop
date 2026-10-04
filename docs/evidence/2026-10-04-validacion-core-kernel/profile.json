@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "generic-docker-verification",
+  "instructions": "Crear definition.json con name generic-example y README.txt que mencione ese mismo nombre. Usar tarjetas y validadores del host para comprobar y cerrar. No basta planificar.",
+  "validators": [
+    {
+      "id": "external-check",
+      "handler": "command",
+      "commandId": "verify"
+    },
+    {
+      "id": "file-check",
+      "handler": "artifact"
+    }
+  ],
+  "commands": [
+    {
+      "id": "verify",
+      "arguments": [],
+      "modelCallable": false,
+      "timeoutSeconds": 120
+    }
+  ],
+  "execution": {
+    "adapter": "docker",
+    "docker": {
+      "executable": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+      "image": "agentloop-project-node:1",
+      "assetRoot": "C:\\Users\\Carlos Ivan\\Desktop\\agent loop\\docs\\evidence\\2026-10-04-validacion-core-kernel\\bundle",
+      "entryPoint": [
+        "node",
+        "/profile/verify.mjs"
+      ],
+      "projectMount": "/project",
+      "assetMount": "/profile",
+      "user": "1000:1000",
+      "memory": "768m",
+      "cpus": "1",
+      "pids": 128,
+      "temporaryMount": "/tmp:rw,nosuid,nodev,size=256m,mode=1777",
+      "workingDirectory": "/tmp",
+      "environment": {},
+      "resourceHashes": {
+        "verify.mjs": "b4c69860f3f8e7af0b2e13738a8e14fa7f426abe36fa929299ad8556b737fa44"
+      },
+      "controlTimeoutSeconds": 10,
+      "cleanupTimeoutSeconds": 10
+    }
+  },
+  "policy": {
+    "maxActionsWithoutProgress": 12,
+    "maxExplorationReads": 8,
+    "maxArtifactBytes": 16777216,
+    "maxEvidenceBytes": 1048576,
+    "maxObservationChars": 8000,
+    "maxSnapshotObservationChars": 512,
+    "maxDefectChars": 1200,
+    "maxNoteChars": 1000,
+    "evidencePageChars": 2000,
+    "maxCommandOutputChars": 64000,
+    "maxJournalBytes": 268435456,
+    "maxJournalEntryBytes": 4194304,
+    "contextMargin": 256,
+    "stopDrainSeconds": 30
+  }
+}

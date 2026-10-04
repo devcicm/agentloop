@@ -16,11 +16,12 @@ internal static partial class Program
             if (string.IsNullOrWhiteSpace(file) || file.StartsWith("--", StringComparison.Ordinal))
                 throw new InvalidOperationException("Uso: project-admit --project-contract <archivo.json> [--cwd <directorio>].");
             var admitted = ProjectContractAdmission.Load(file, StringOption(args, "--cwd") ?? Environment.CurrentDirectory);
+            var services = StringOption(args, "--project-profile") is null ? null : LoadProjectServices(args, admitted);
             var contract = admitted.Contract;
             Console.WriteLine(JsonSerializer.Serialize(new
             {
                 status = "admitted", executionRequires = "Perfil instalado, capacidades vinculadas y preflight del adaptador",
-                contractHash = admitted.ContractHash, contract,
+                contractHash = admitted.ContractHash, profileHash = services?.Hash, capabilitiesBound = services is not null, contract,
             }, new JsonSerializerOptions(AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) { WriteIndented = true }));
             return 0;
         }

@@ -1,0 +1,20 @@
+{
+  "date": "2026-10-04",
+  "baseCommit": "6085025",
+  "checksPassed": 430,
+  "projectChecksPassed": 48,
+  "buildExit": 0,
+  "selftestExit": 0,
+  "remoteExit": 0,
+  "codeRemoteExit": 0,
+  "fixtureExit": 0,
+  "negativeFixtureExit": 1,
+  "resumeExit": 0,
+  "inspectExit": 0,
+  "invalidBackendExit": 64,
+  "incompatibleProfileExit": 64,
+  "admissionExit": 0,
+  "remainingTestContainers": 0,
+  "github": "devcicm token invalid; user browser authorization required",
+  "remoteConfigured": false
+}

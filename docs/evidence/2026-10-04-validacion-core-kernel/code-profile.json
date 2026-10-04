@@ -1,0 +1,66 @@
+{
+  "version": 1,
+  "id": "generic-code-docker",
+  "instructions": "Crear src/calculator.mjs como modulo JavaScript ESM que exporte funcion add(a,b), suma numerica correcta. README.txt explica add y uso. Validar y cerrar con recibos host.",
+  "validators": [
+    {
+      "id": "external-check",
+      "handler": "command",
+      "commandId": "verify"
+    },
+    {
+      "id": "file-check",
+      "handler": "artifact"
+    }
+  ],
+  "commands": [
+    {
+      "id": "verify",
+      "arguments": [],
+      "modelCallable": false,
+      "timeoutSeconds": 120
+    }
+  ],
+  "execution": {
+    "adapter": "docker",
+    "docker": {
+      "executable": "C:\\Program Files\\Docker\\Docker\\resources\\bin\\docker.exe",
+      "image": "agentloop-project-node:1",
+      "assetRoot": "C:\\Users\\Carlos Ivan\\Desktop\\agent loop\\docs\\evidence\\2026-10-04-validacion-core-kernel\\code-bundle",
+      "entryPoint": [
+        "node",
+        "/profile/verify.mjs"
+      ],
+      "projectMount": "/project",
+      "assetMount": "/profile",
+      "user": "1000:1000",
+      "memory": "768m",
+      "cpus": "1",
+      "pids": 128,
+      "temporaryMount": "/tmp:rw,nosuid,nodev,size=256m,mode=1777",
+      "workingDirectory": "/tmp",
+      "environment": {},
+      "resourceHashes": {
+        "verify.mjs": "27cb0192538aad55801e8ed481760fec865fb1af8d66414a2bb7848ed9acae02"
+      },
+      "controlTimeoutSeconds": 10,
+      "cleanupTimeoutSeconds": 10
+    }
+  },
+  "policy": {
+    "maxActionsWithoutProgress": 12,
+    "maxExplorationReads": 8,
+    "maxArtifactBytes": 16777216,
+    "maxEvidenceBytes": 1048576,
+    "maxObservationChars": 8000,
+    "maxSnapshotObservationChars": 512,
+    "maxDefectChars": 1200,
+    "maxNoteChars": 1000,
+    "evidencePageChars": 2000,
+    "maxCommandOutputChars": 64000,
+    "maxJournalBytes": 268435456,
+    "maxJournalEntryBytes": 4194304,
+    "contextMargin": 256,
+    "stopDrainSeconds": 30
+  }
+}

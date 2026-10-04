@@ -22,6 +22,8 @@ public sealed class ProjectScriptClient(AdmittedProjectContract admitted, string
         string name;
         object args;
         var item = admitted.Contract.WorkItems.SingleOrDefault(w => w.Id == work);
+        // A repaired work attempt requires a new integration validation, not an old receipt.
+        if (item is not null) _steps.Remove("integration");
         if (item is not null && step == 0) { name = "tarjeta"; args = new { nombre = "abrir", objetivo = "entregable " + work, plan = "crear y validar", work_item_id = work, attempt_id = attempt }; }
         else if (item is not null && step <= item.ArtifactIds.Count)
         {

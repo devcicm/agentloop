@@ -1,0 +1,78 @@
+evento #1 ProyectoAdmitido: contrato de proyecto admitido
+evento #2 TrabajoHabilitado: definition
+evento #3 Objetivo: Crear definition.json con name generic-example y README.txt coherente mencionando generic-example. Validar con herramientas y cerrar todas las tarjetas y la raiz.
+evento #4 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #5 ModeloSolicitado: solicitud al modelo
+evento #6 ModeloResultado: respuesta del proveedor
+evento #7 HerramientaSolicitada: tarjeta
+evento #8 HerramientaSolicitada: admision de tarjeta
+evento #9 Tarjeta: abrir (nivel 2) entregable definition
+evento #10 HerramientaResultado: tarjeta
+evento #11 HerramientaFinalizada: resultado registrado de tarjeta
+evento #12 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #13 ModeloSolicitado: solicitud al modelo
+evento #14 ModeloResultado: respuesta del proveedor
+evento #15 HerramientaSolicitada: write_text_file
+evento #16 HerramientaSolicitada: admision de write_text_file
+evento #17 HerramientaResultado: write_text_file
+evento #18 HerramientaFinalizada: resultado registrado de write_text_file
+evento #19 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #20 ModeloSolicitado: solicitud al modelo
+evento #21 ModeloResultado: respuesta del proveedor
+evento #22 HerramientaSolicitada: project_validate
+evento #23 HerramientaSolicitada: admision de project_validate
+evento #24 ValidacionSolicitada: definition
+evento #25 HerramientaResultado: project_validate
+evento #26 ValidacionFinalizada: definition-valid
+evento #27 HerramientaFinalizada: resultado registrado de project_validate
+evento #28 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #29 ModeloSolicitado: solicitud al modelo
+evento #30 ModeloResultado: respuesta del proveedor
+evento #31 HerramientaSolicitada: tarjeta
+evento #32 HerramientaSolicitada: admision de tarjeta
+evento #33 Tarjeta: comprobar (nivel 2) validadores host
+evento #34 HerramientaResultado: tarjeta
+evento #35 HerramientaFinalizada: resultado registrado de tarjeta
+evento #36 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #37 ModeloSolicitado: solicitud al modelo
+evento #38 ModeloResultado: respuesta del proveedor
+evento #39 HerramientaSolicitada: tarjeta
+evento #40 HerramientaSolicitada: admision de tarjeta
+evento #41 Tarjeta: cerrar (nivel 2) entregable comprobado
+evento #42 HerramientaResultado: tarjeta
+evento #43 TrabajoAceptado: definition
+evento #44 TrabajoHabilitado: delivery
+evento #45 HerramientaFinalizada: resultado registrado de tarjeta
+evento #46 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #47 ModeloSolicitado: solicitud al modelo
+evento #48 ModeloResultado: respuesta del proveedor
+evento #49 HerramientaSolicitada: tarjeta
+evento #50 HerramientaSolicitada: admision de tarjeta
+evento #51 Tarjeta: abrir (nivel 2) entregable delivery
+evento #52 HerramientaResultado: tarjeta
+evento #53 HerramientaFinalizada: resultado registrado de tarjeta
+evento #54 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #55 ModeloSolicitado: solicitud al modelo
+evento #56 ModeloResultado: respuesta del proveedor
+evento #57 HerramientaSolicitada: write_text_file
+evento #58 HerramientaSolicitada: admision de write_text_file
+evento #59 HerramientaResultado: write_text_file
+evento #60 HerramientaFinalizada: resultado registrado de write_text_file
+contexto: 3 mensajes retirados; conocimiento de tarea preservado
+evento #61 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+evento #62 ModeloSolicitado: solicitud al modelo
+evento #63 ModeloResultado: respuesta del proveedor
+evento #64 HerramientaSolicitada: project_validate
+evento #65 HerramientaSolicitada: admision de project_validate
+evento #66 ValidacionSolicitada: delivery
+evento #67 ProcesoIniciado: verify
+evento #68 ProcesoFin: verify
+evento #69 HerramientaResultado: project_validate
+evento #70 ValidacionFinalizada: delivery-valid
+evento #71 ValidacionFallida: coherence
+evento #72 Error: resultado registrado de project_validate
+evento #73 RazonamientoRequerido: hay resultados o hechos que requieren una decision
+contexto: 9 mensajes retirados; conocimiento de tarea preservado
+evento #74 ModeloSolicitado: solicitud al modelo
+evento #75 ModeloResultado: respuesta del proveedor
+{"runId":"e60c92b4-5869-4106-8a7c-8275b8b78d9c","contractHash":"0D0B837B3AE3815A251CCD07C9C5BE099D0C9F86FDD9B7332F62B93346D76B21","status":"Failed","outcome":"Validador fallo en fixture; no se declara exito.","journal":"C:\\Users\\Carlos Ivan\\Desktop\\agent loop\\.agentloop\\event-journal\\e60c92b4586941068a7c8275b8b78d9c.jsonl"}

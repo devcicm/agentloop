@@ -110,7 +110,14 @@ public sealed class DockerProjectEnvironment(string root, Guid runId, DockerExec
         start.Environment.Clear();
         if (systemRoot is not null) start.Environment["SystemRoot"] = systemRoot;
         using var process = new Process { StartInfo = start };
-        if (!process.Start()) throw new IOException("No se pudo iniciar Docker.");
+        try
+        {
+            if (!process.Start()) throw new IOException("No se pudo iniciar el ejecutable del backend.");
+        }
+        catch (System.ComponentModel.Win32Exception ex)
+        {
+            throw new IOException("No se pudo iniciar el ejecutable configurado del backend: " + DataGuard.Display(ex.Message), ex);
+        }
         async Task<string> Capture(StreamReader reader)
         {
             var output = new StringBuilder();

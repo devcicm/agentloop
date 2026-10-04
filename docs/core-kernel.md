@@ -1,6 +1,6 @@
 # Kernel, Core y host del harness
 
-Actualizado: 3 de octubre de 2026. Sustituye el acoplamiento al ejercicio de la
+Actualizado: 4 de octubre de 2026. Sustituye el acoplamiento al ejercicio de la
 revision 5132301. El POS se retiro del codigo y de los assets desplegados por el
 proyecto. Sus fuentes se conservaron en `artifacts/exercises/pos-legacy/`, ignorado
 por Git. La evidencia fechada conserva su valor historico para aquella revision.
@@ -136,5 +136,5 @@ separaron en Cli/ProjectCommands.cs. Los journals anteriores pueden inspeccionar
 su evidencia sin profileHash no se reutiliza para ejecutar bajo el nuevo perfil.
 
 Compilacion registrada en [evidencia de esta entrega](evidence/2026-10-03-core-kernel/README.md).
-No se ejecutaron nuevas pruebas funcionales ni inferencias remotas en esta entrega;
-las 415 comprobaciones y el ejercicio POS corresponden a 5132301.
+Validacion posterior: [suite, memoria, reparacion por eventos y NVIDIA/Docker](evidence/2026-10-04-validacion-core-kernel/README.md).
+Las 415 comprobaciones y el ejercicio POS anteriores corresponden a 5132301.

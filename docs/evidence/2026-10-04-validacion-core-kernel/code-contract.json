@@ -1,0 +1,96 @@
+{
+  "version": 1,
+  "goalId": "external-code-project",
+  "revision": 1,
+  "objective": "Crear src/calculator.mjs como modulo JavaScript ESM que exporte funcion add(a,b), suma numerica correcta. README.txt explica add y uso. Validar y cerrar con recibos host.",
+  "root": "C:\\Users\\Carlos Ivan\\Desktop\\agentloop-generated\\validation-20261004-code",
+  "workItems": [
+    {
+      "id": "definition",
+      "dependsOn": [],
+      "artifactIds": [
+        "definition"
+      ],
+      "validationIds": [
+        "definition-valid"
+      ]
+    },
+    {
+      "id": "delivery",
+      "dependsOn": [
+        "definition"
+      ],
+      "artifactIds": [
+        "delivery"
+      ],
+      "validationIds": [
+        "delivery-valid",
+        "coherence"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "definition",
+      "relativePath": "src/calculator.mjs",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "delivery",
+      "relativePath": "README.txt",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    }
+  ],
+  "validations": [
+    {
+      "id": "definition-valid",
+      "validatorId": "file-check",
+      "workItemId": "definition",
+      "parameters": {
+        "artifactIds": [
+          "definition"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "delivery-valid",
+      "validatorId": "file-check",
+      "workItemId": "delivery",
+      "parameters": {
+        "artifactIds": [
+          "delivery"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "coherence",
+      "validatorId": "external-check",
+      "workItemId": "delivery",
+      "parameters": {
+        "artifactIds": [
+          "definition",
+          "delivery"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    }
+  ],
+  "budgets": {
+    "deadlineSeconds": 900,
+    "maxModelCalls": 40,
+    "maxInputTokens": 64000,
+    "maxOutputTokens": 4096,
+    "maxCorrectionsPerWorkItem": 3,
+    "maxConcurrentProcesses": 1
+  },
+  "executionProfile": "generic-code-docker"
+}

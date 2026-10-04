@@ -113,8 +113,8 @@ de dominio viven en perfiles externos. La raiz generada debe estar fuera del rep
 El ejemplo acredita archivos/JSON; para comportamiento se instala un validador externo.
 
 [Compilacion de esta entrega](docs/evidence/2026-10-03-core-kernel/README.md).
-Las 415 comprobaciones y el ejercicio aislado anteriores corresponden a 5132301;
-esta entrega no vuelve a ejecutar pruebas ni inferencia remota.
+Las 415 comprobaciones y el ejercicio aislado anteriores corresponden a 5132301.
+Validacion posterior del Core/Kernel: [pruebas locales y NVIDIA con Docker](docs/evidence/2026-10-04-validacion-core-kernel/README.md).
 
 [Indice documental](docs/README.md) ·
 [Arquitectura y pendientes](docs/implementacion-coordinador-eventos-2026-09-30.md) ·

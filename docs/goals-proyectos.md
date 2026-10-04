@@ -1,6 +1,6 @@
 # Proyectos genericos por eventos
 
-Actualizado: 3 de octubre de 2026. [Arquitectura Core/Kernel](core-kernel.md).
+Actualizado: 4 de octubre de 2026. [Arquitectura Core/Kernel](core-kernel.md).
 El ejercicio POS fue retirado del producto; los proyectos y perfiles son entradas
 externas del host. No hay perfil implicito ni dependencia de un lenguaje concreto.
 
@@ -110,5 +110,5 @@ cambiado o snapshot antiguo sin profileHash no permite reutilizar evidencia.
 [Entrega Core/Kernel](evidence/2026-10-03-core-kernel/README.md): compilacion y cambios.
 [Evidencia historica del ejercicio](evidence/2026-10-03-proyectos/README.md) corresponde
 a 5132301; sus pruebas no acreditan la version abstracta actual. Los checks
-existentes se adaptaron a una fixture generica; no se ejecutaron nuevamente en
-esta entrega. El comportamiento remoto posterior a estos cambios sigue sin medir.
+existentes se adaptaron a una fixture generica.
+Validacion posterior del 4 de octubre: [pruebas y ejecucion remota](evidence/2026-10-04-validacion-core-kernel/README.md).

@@ -6,6 +6,9 @@ no describen necesariamente el codigo actual. No se regeneran sobre el original.
 
 ## Capturas y alcance
 
+- 2026-10-04, Core/Kernel: suite, memoria, reparacion por eventos, perfiles Docker,
+  NVIDIA remoto y recuperacion. Ver [validacion](2026-10-04-validacion-core-kernel/README.md).
+
 - 2026-10-02, proyectos P0: contratos y admision; compilacion sin errores ni
   advertencias, sin tests nuevos. Ver [evidencia](2026-10-02-proyectos-p0/README.md).
 

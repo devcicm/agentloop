@@ -1,0 +1,2603 @@
+[
+  {
+    "phase": "received",
+    "sequence": 1,
+    "kind": 28,
+    "source": "project",
+    "text": "contrato de proyecto admitido",
+    "eventId": "18047b1e-22e9-4cbb-af0a-94f1daae38ef",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 1,
+    "kind": 28,
+    "source": "project",
+    "text": "contrato de proyecto admitido",
+    "eventId": "18047b1e-22e9-4cbb-af0a-94f1daae38ef",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 2,
+    "kind": 29,
+    "source": "project",
+    "text": "definition",
+    "eventId": "cddb28de-3d95-4895-9a54-1c53328a766b",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 2,
+    "kind": 29,
+    "source": "project",
+    "text": "definition",
+    "eventId": "cddb28de-3d95-4895-9a54-1c53328a766b",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 3,
+    "kind": 0,
+    "source": "coordinator",
+    "text": "Crear src/calculator.mjs como modulo JavaScript ESM que exporte funcion add(a,b), suma numerica correcta. README.txt explica add y uso. Validar y cerrar con recibos host.",
+    "eventId": "3546bf5a-1408-4dd8-9495-5c6c99203c8e",
+    "causationId": "18047b1e-22e9-4cbb-af0a-94f1daae38ef"
+  },
+  {
+    "phase": "applied",
+    "sequence": 3,
+    "kind": 0,
+    "source": "coordinator",
+    "text": "Crear src/calculator.mjs como modulo JavaScript ESM que exporte funcion add(a,b), suma numerica correcta. README.txt explica add y uso. Validar y cerrar con recibos host.",
+    "eventId": "3546bf5a-1408-4dd8-9495-5c6c99203c8e",
+    "causationId": "18047b1e-22e9-4cbb-af0a-94f1daae38ef"
+  },
+  {
+    "phase": "received",
+    "sequence": 4,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "5036bfdb-2826-43ba-a67c-b0c03890b707",
+    "causationId": "18047b1e-22e9-4cbb-af0a-94f1daae38ef"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 5,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "0789d06a-3c33-48a8-a0b5-5cb7c3487872",
+    "causationId": "5036bfdb-2826-43ba-a67c-b0c03890b707"
+  },
+  {
+    "phase": "applied",
+    "sequence": 4,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "5036bfdb-2826-43ba-a67c-b0c03890b707",
+    "causationId": "18047b1e-22e9-4cbb-af0a-94f1daae38ef"
+  },
+  {
+    "phase": "received",
+    "sequence": 5,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "0789d06a-3c33-48a8-a0b5-5cb7c3487872",
+    "causationId": "5036bfdb-2826-43ba-a67c-b0c03890b707"
+  },
+  {
+    "phase": "applied",
+    "sequence": 5,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "0789d06a-3c33-48a8-a0b5-5cb7c3487872",
+    "causationId": "5036bfdb-2826-43ba-a67c-b0c03890b707"
+  },
+  {
+    "phase": "received",
+    "sequence": 6,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "61742f20-0c9f-4e06-9c0d-52d8fcb1ec35",
+    "causationId": "0789d06a-3c33-48a8-a0b5-5cb7c3487872"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 6,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "61742f20-0c9f-4e06-9c0d-52d8fcb1ec35",
+    "causationId": "0789d06a-3c33-48a8-a0b5-5cb7c3487872"
+  },
+  {
+    "phase": "applied",
+    "sequence": 6,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "61742f20-0c9f-4e06-9c0d-52d8fcb1ec35",
+    "causationId": "0789d06a-3c33-48a8-a0b5-5cb7c3487872"
+  },
+  {
+    "phase": "received",
+    "sequence": 7,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "40ce57db-b830-4f48-9e45-3b8aeddacbcf",
+    "causationId": "61742f20-0c9f-4e06-9c0d-52d8fcb1ec35"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 8,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "6ce10720-87a8-48f6-8202-f773f041cfa8",
+    "causationId": "40ce57db-b830-4f48-9e45-3b8aeddacbcf"
+  },
+  {
+    "phase": "applied",
+    "sequence": 7,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "40ce57db-b830-4f48-9e45-3b8aeddacbcf",
+    "causationId": "61742f20-0c9f-4e06-9c0d-52d8fcb1ec35"
+  },
+  {
+    "phase": "received",
+    "sequence": 8,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "6ce10720-87a8-48f6-8202-f773f041cfa8",
+    "causationId": "40ce57db-b830-4f48-9e45-3b8aeddacbcf"
+  },
+  {
+    "phase": "applied",
+    "sequence": 8,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "6ce10720-87a8-48f6-8202-f773f041cfa8",
+    "causationId": "40ce57db-b830-4f48-9e45-3b8aeddacbcf"
+  },
+  {
+    "phase": "received",
+    "sequence": 9,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "abrir (nivel 2) Crear src/calculator.mjs (modulo ESM con add(a,b)) y README.txt explicando add y su uso; v...",
+    "eventId": "991ee264-7de5-4450-abbb-3ecd3650703c",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 9,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "abrir (nivel 2) Crear src/calculator.mjs (modulo ESM con add(a,b)) y README.txt explicando add y su uso; v...",
+    "eventId": "991ee264-7de5-4450-abbb-3ecd3650703c",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 10,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "b9da4712-25f7-4109-9436-ec8e32e9c620",
+    "causationId": "6ce10720-87a8-48f6-8202-f773f041cfa8"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 10,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "b9da4712-25f7-4109-9436-ec8e32e9c620",
+    "causationId": "6ce10720-87a8-48f6-8202-f773f041cfa8"
+  },
+  {
+    "phase": "applied",
+    "sequence": 10,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "b9da4712-25f7-4109-9436-ec8e32e9c620",
+    "causationId": "6ce10720-87a8-48f6-8202-f773f041cfa8"
+  },
+  {
+    "phase": "received",
+    "sequence": 11,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "0e5d869f-3cc6-4634-a43d-936625c7ec32",
+    "causationId": "b9da4712-25f7-4109-9436-ec8e32e9c620"
+  },
+  {
+    "phase": "applied",
+    "sequence": 11,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "0e5d869f-3cc6-4634-a43d-936625c7ec32",
+    "causationId": "b9da4712-25f7-4109-9436-ec8e32e9c620"
+  },
+  {
+    "phase": "received",
+    "sequence": 12,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "f850bca1-cb17-458c-a958-0ce08e55c82c",
+    "causationId": "b9da4712-25f7-4109-9436-ec8e32e9c620"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 13,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "5be6ce06-9efe-4be9-942f-487241f8ddb0",
+    "causationId": "f850bca1-cb17-458c-a958-0ce08e55c82c"
+  },
+  {
+    "phase": "applied",
+    "sequence": 12,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "f850bca1-cb17-458c-a958-0ce08e55c82c",
+    "causationId": "b9da4712-25f7-4109-9436-ec8e32e9c620"
+  },
+  {
+    "phase": "received",
+    "sequence": 13,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "5be6ce06-9efe-4be9-942f-487241f8ddb0",
+    "causationId": "f850bca1-cb17-458c-a958-0ce08e55c82c"
+  },
+  {
+    "phase": "applied",
+    "sequence": 13,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "5be6ce06-9efe-4be9-942f-487241f8ddb0",
+    "causationId": "f850bca1-cb17-458c-a958-0ce08e55c82c"
+  },
+  {
+    "phase": "received",
+    "sequence": 14,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "cf7b0576-a2da-40c4-abb4-ea601e3f1e3f",
+    "causationId": "5be6ce06-9efe-4be9-942f-487241f8ddb0"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 14,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "cf7b0576-a2da-40c4-abb4-ea601e3f1e3f",
+    "causationId": "5be6ce06-9efe-4be9-942f-487241f8ddb0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 14,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "cf7b0576-a2da-40c4-abb4-ea601e3f1e3f",
+    "causationId": "5be6ce06-9efe-4be9-942f-487241f8ddb0"
+  },
+  {
+    "phase": "received",
+    "sequence": 15,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "write_text_file",
+    "eventId": "2b3cef2b-e611-47b5-b24b-04081338b73d",
+    "causationId": "cf7b0576-a2da-40c4-abb4-ea601e3f1e3f"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 16,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de write_text_file",
+    "eventId": "757e02a6-e754-463c-8582-9c3a1ab979da",
+    "causationId": "2b3cef2b-e611-47b5-b24b-04081338b73d"
+  },
+  {
+    "phase": "applied",
+    "sequence": 15,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "write_text_file",
+    "eventId": "2b3cef2b-e611-47b5-b24b-04081338b73d",
+    "causationId": "cf7b0576-a2da-40c4-abb4-ea601e3f1e3f"
+  },
+  {
+    "phase": "received",
+    "sequence": 16,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de write_text_file",
+    "eventId": "757e02a6-e754-463c-8582-9c3a1ab979da",
+    "causationId": "2b3cef2b-e611-47b5-b24b-04081338b73d"
+  },
+  {
+    "phase": "applied",
+    "sequence": 16,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de write_text_file",
+    "eventId": "757e02a6-e754-463c-8582-9c3a1ab979da",
+    "causationId": "2b3cef2b-e611-47b5-b24b-04081338b73d"
+  },
+  {
+    "phase": "received",
+    "sequence": 17,
+    "kind": 15,
+    "source": "tool",
+    "text": "write_text_file",
+    "eventId": "39ebe543-5813-4020-a9bd-80f210ce0d61",
+    "causationId": "757e02a6-e754-463c-8582-9c3a1ab979da"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 17,
+    "kind": 15,
+    "source": "tool",
+    "text": "write_text_file",
+    "eventId": "39ebe543-5813-4020-a9bd-80f210ce0d61",
+    "causationId": "757e02a6-e754-463c-8582-9c3a1ab979da"
+  },
+  {
+    "phase": "applied",
+    "sequence": 17,
+    "kind": 15,
+    "source": "tool",
+    "text": "write_text_file",
+    "eventId": "39ebe543-5813-4020-a9bd-80f210ce0d61",
+    "causationId": "757e02a6-e754-463c-8582-9c3a1ab979da"
+  },
+  {
+    "phase": "received",
+    "sequence": 18,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de write_text_file",
+    "eventId": "4f535e71-b4fd-4ede-816d-c6168a5de72f",
+    "causationId": "39ebe543-5813-4020-a9bd-80f210ce0d61"
+  },
+  {
+    "phase": "applied",
+    "sequence": 18,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de write_text_file",
+    "eventId": "4f535e71-b4fd-4ede-816d-c6168a5de72f",
+    "causationId": "39ebe543-5813-4020-a9bd-80f210ce0d61"
+  },
+  {
+    "phase": "received",
+    "sequence": 19,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "4fe03324-cebd-487b-a63a-40900a4ebfcf",
+    "causationId": "39ebe543-5813-4020-a9bd-80f210ce0d61"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 20,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "a2c72fa4-bfa8-4a1d-9cd4-99651616899c",
+    "causationId": "4fe03324-cebd-487b-a63a-40900a4ebfcf"
+  },
+  {
+    "phase": "applied",
+    "sequence": 19,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "4fe03324-cebd-487b-a63a-40900a4ebfcf",
+    "causationId": "39ebe543-5813-4020-a9bd-80f210ce0d61"
+  },
+  {
+    "phase": "received",
+    "sequence": 20,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "a2c72fa4-bfa8-4a1d-9cd4-99651616899c",
+    "causationId": "4fe03324-cebd-487b-a63a-40900a4ebfcf"
+  },
+  {
+    "phase": "applied",
+    "sequence": 20,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "a2c72fa4-bfa8-4a1d-9cd4-99651616899c",
+    "causationId": "4fe03324-cebd-487b-a63a-40900a4ebfcf"
+  },
+  {
+    "phase": "received",
+    "sequence": 21,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "fcd03c56-d493-4a23-b2e6-9f823d8deeec",
+    "causationId": "a2c72fa4-bfa8-4a1d-9cd4-99651616899c"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 21,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "fcd03c56-d493-4a23-b2e6-9f823d8deeec",
+    "causationId": "a2c72fa4-bfa8-4a1d-9cd4-99651616899c"
+  },
+  {
+    "phase": "applied",
+    "sequence": 21,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "fcd03c56-d493-4a23-b2e6-9f823d8deeec",
+    "causationId": "a2c72fa4-bfa8-4a1d-9cd4-99651616899c"
+  },
+  {
+    "phase": "received",
+    "sequence": 22,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "write_text_file",
+    "eventId": "e08af2d7-265c-429c-b20d-849a3294289f",
+    "causationId": "fcd03c56-d493-4a23-b2e6-9f823d8deeec"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 23,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de write_text_file",
+    "eventId": "3f716441-bb86-40bd-9197-c4e08f10ff6d",
+    "causationId": "e08af2d7-265c-429c-b20d-849a3294289f"
+  },
+  {
+    "phase": "applied",
+    "sequence": 22,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "write_text_file",
+    "eventId": "e08af2d7-265c-429c-b20d-849a3294289f",
+    "causationId": "fcd03c56-d493-4a23-b2e6-9f823d8deeec"
+  },
+  {
+    "phase": "received",
+    "sequence": 23,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de write_text_file",
+    "eventId": "3f716441-bb86-40bd-9197-c4e08f10ff6d",
+    "causationId": "e08af2d7-265c-429c-b20d-849a3294289f"
+  },
+  {
+    "phase": "applied",
+    "sequence": 23,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de write_text_file",
+    "eventId": "3f716441-bb86-40bd-9197-c4e08f10ff6d",
+    "causationId": "e08af2d7-265c-429c-b20d-849a3294289f"
+  },
+  {
+    "phase": "received",
+    "sequence": 24,
+    "kind": 15,
+    "source": "tool",
+    "text": "write_text_file",
+    "eventId": "64b42ef1-9023-4f0b-88f6-3168724af21a",
+    "causationId": "3f716441-bb86-40bd-9197-c4e08f10ff6d"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 24,
+    "kind": 15,
+    "source": "tool",
+    "text": "write_text_file",
+    "eventId": "64b42ef1-9023-4f0b-88f6-3168724af21a",
+    "causationId": "3f716441-bb86-40bd-9197-c4e08f10ff6d"
+  },
+  {
+    "phase": "applied",
+    "sequence": 24,
+    "kind": 15,
+    "source": "tool",
+    "text": "write_text_file",
+    "eventId": "64b42ef1-9023-4f0b-88f6-3168724af21a",
+    "causationId": "3f716441-bb86-40bd-9197-c4e08f10ff6d"
+  },
+  {
+    "phase": "received",
+    "sequence": 25,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de write_text_file",
+    "eventId": "c22268bc-6068-4797-99c5-f5973b3d33b5",
+    "causationId": "64b42ef1-9023-4f0b-88f6-3168724af21a"
+  },
+  {
+    "phase": "applied",
+    "sequence": 25,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de write_text_file",
+    "eventId": "c22268bc-6068-4797-99c5-f5973b3d33b5",
+    "causationId": "64b42ef1-9023-4f0b-88f6-3168724af21a"
+  },
+  {
+    "phase": "received",
+    "sequence": 26,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "79a70dff-dd3f-4590-a4b1-d7d59b522365",
+    "causationId": "64b42ef1-9023-4f0b-88f6-3168724af21a"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 27,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "809884bb-730a-4892-a8fc-01f5ba16d5a0",
+    "causationId": "79a70dff-dd3f-4590-a4b1-d7d59b522365"
+  },
+  {
+    "phase": "applied",
+    "sequence": 26,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "79a70dff-dd3f-4590-a4b1-d7d59b522365",
+    "causationId": "64b42ef1-9023-4f0b-88f6-3168724af21a"
+  },
+  {
+    "phase": "received",
+    "sequence": 27,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "809884bb-730a-4892-a8fc-01f5ba16d5a0",
+    "causationId": "79a70dff-dd3f-4590-a4b1-d7d59b522365"
+  },
+  {
+    "phase": "applied",
+    "sequence": 27,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "809884bb-730a-4892-a8fc-01f5ba16d5a0",
+    "causationId": "79a70dff-dd3f-4590-a4b1-d7d59b522365"
+  },
+  {
+    "phase": "received",
+    "sequence": 28,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "2522189e-c454-4394-b281-63bd6d362004",
+    "causationId": "809884bb-730a-4892-a8fc-01f5ba16d5a0"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 28,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "2522189e-c454-4394-b281-63bd6d362004",
+    "causationId": "809884bb-730a-4892-a8fc-01f5ba16d5a0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 28,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "2522189e-c454-4394-b281-63bd6d362004",
+    "causationId": "809884bb-730a-4892-a8fc-01f5ba16d5a0"
+  },
+  {
+    "phase": "received",
+    "sequence": 29,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "project_validate",
+    "eventId": "0263b2da-0f27-4b04-aa9b-bf7b47db38ce",
+    "causationId": "2522189e-c454-4394-b281-63bd6d362004"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 30,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "87c9da79-a57c-4ac0-9d58-9118f89904d6",
+    "causationId": "0263b2da-0f27-4b04-aa9b-bf7b47db38ce"
+  },
+  {
+    "phase": "applied",
+    "sequence": 29,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "project_validate",
+    "eventId": "0263b2da-0f27-4b04-aa9b-bf7b47db38ce",
+    "causationId": "2522189e-c454-4394-b281-63bd6d362004"
+  },
+  {
+    "phase": "received",
+    "sequence": 30,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "87c9da79-a57c-4ac0-9d58-9118f89904d6",
+    "causationId": "0263b2da-0f27-4b04-aa9b-bf7b47db38ce"
+  },
+  {
+    "phase": "applied",
+    "sequence": 30,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "87c9da79-a57c-4ac0-9d58-9118f89904d6",
+    "causationId": "0263b2da-0f27-4b04-aa9b-bf7b47db38ce"
+  },
+  {
+    "phase": "received",
+    "sequence": 31,
+    "kind": 30,
+    "source": "validator",
+    "text": "definition",
+    "eventId": "8b600c2d-4637-4e3a-be33-31a85a362fd3",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 31,
+    "kind": 30,
+    "source": "validator",
+    "text": "definition",
+    "eventId": "8b600c2d-4637-4e3a-be33-31a85a362fd3",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 32,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "67d31d51-9759-4c5f-9052-3880ba408854",
+    "causationId": "87c9da79-a57c-4ac0-9d58-9118f89904d6"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 32,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "67d31d51-9759-4c5f-9052-3880ba408854",
+    "causationId": "87c9da79-a57c-4ac0-9d58-9118f89904d6"
+  },
+  {
+    "phase": "applied",
+    "sequence": 32,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "67d31d51-9759-4c5f-9052-3880ba408854",
+    "causationId": "87c9da79-a57c-4ac0-9d58-9118f89904d6"
+  },
+  {
+    "phase": "received",
+    "sequence": 33,
+    "kind": 31,
+    "source": "validator",
+    "text": "definition-valid",
+    "eventId": "9814de87-e217-495d-8a6f-a85d58e33210",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 33,
+    "kind": 31,
+    "source": "validator",
+    "text": "definition-valid",
+    "eventId": "9814de87-e217-495d-8a6f-a85d58e33210",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 34,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de project_validate",
+    "eventId": "e2c5459e-d8b7-4113-a91f-d48fb2adcf50",
+    "causationId": "67d31d51-9759-4c5f-9052-3880ba408854"
+  },
+  {
+    "phase": "applied",
+    "sequence": 34,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de project_validate",
+    "eventId": "e2c5459e-d8b7-4113-a91f-d48fb2adcf50",
+    "causationId": "67d31d51-9759-4c5f-9052-3880ba408854"
+  },
+  {
+    "phase": "received",
+    "sequence": 35,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "72b7f279-ede0-4de2-adc9-086b7e6a53d0",
+    "causationId": "67d31d51-9759-4c5f-9052-3880ba408854"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 36,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "f91adcec-bd95-4761-979b-df9073058c87",
+    "causationId": "72b7f279-ede0-4de2-adc9-086b7e6a53d0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 35,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "72b7f279-ede0-4de2-adc9-086b7e6a53d0",
+    "causationId": "67d31d51-9759-4c5f-9052-3880ba408854"
+  },
+  {
+    "phase": "received",
+    "sequence": 36,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "f91adcec-bd95-4761-979b-df9073058c87",
+    "causationId": "72b7f279-ede0-4de2-adc9-086b7e6a53d0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 36,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "f91adcec-bd95-4761-979b-df9073058c87",
+    "causationId": "72b7f279-ede0-4de2-adc9-086b7e6a53d0"
+  },
+  {
+    "phase": "received",
+    "sequence": 37,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "35e2bc93-16cd-418f-8ae3-68b51a78e258",
+    "causationId": "f91adcec-bd95-4761-979b-df9073058c87"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 37,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "35e2bc93-16cd-418f-8ae3-68b51a78e258",
+    "causationId": "f91adcec-bd95-4761-979b-df9073058c87"
+  },
+  {
+    "phase": "applied",
+    "sequence": 37,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "35e2bc93-16cd-418f-8ae3-68b51a78e258",
+    "causationId": "f91adcec-bd95-4761-979b-df9073058c87"
+  },
+  {
+    "phase": "received",
+    "sequence": 38,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "932b736c-3d8d-4e01-a9f5-d716ac3d1778",
+    "causationId": "35e2bc93-16cd-418f-8ae3-68b51a78e258"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 39,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "37ac48b5-ca18-4bad-985d-e077d840c006",
+    "causationId": "932b736c-3d8d-4e01-a9f5-d716ac3d1778"
+  },
+  {
+    "phase": "applied",
+    "sequence": 38,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "932b736c-3d8d-4e01-a9f5-d716ac3d1778",
+    "causationId": "35e2bc93-16cd-418f-8ae3-68b51a78e258"
+  },
+  {
+    "phase": "received",
+    "sequence": 39,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "37ac48b5-ca18-4bad-985d-e077d840c006",
+    "causationId": "932b736c-3d8d-4e01-a9f5-d716ac3d1778"
+  },
+  {
+    "phase": "applied",
+    "sequence": 39,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "37ac48b5-ca18-4bad-985d-e077d840c006",
+    "causationId": "932b736c-3d8d-4e01-a9f5-d716ac3d1778"
+  },
+  {
+    "phase": "received",
+    "sequence": 40,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "comprobar (nivel 2) project_validate para definition: definition-valid Passed=true",
+    "eventId": "9548f438-1016-45eb-b93a-c234a992be68",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 40,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "comprobar (nivel 2) project_validate para definition: definition-valid Passed=true",
+    "eventId": "9548f438-1016-45eb-b93a-c234a992be68",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 41,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "132b06a0-ebc3-4015-a81a-03f8264d43d4",
+    "causationId": "37ac48b5-ca18-4bad-985d-e077d840c006"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 41,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "132b06a0-ebc3-4015-a81a-03f8264d43d4",
+    "causationId": "37ac48b5-ca18-4bad-985d-e077d840c006"
+  },
+  {
+    "phase": "applied",
+    "sequence": 41,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "132b06a0-ebc3-4015-a81a-03f8264d43d4",
+    "causationId": "37ac48b5-ca18-4bad-985d-e077d840c006"
+  },
+  {
+    "phase": "received",
+    "sequence": 42,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "42ce1be1-1700-4e2d-8e70-d191b0dedb4f",
+    "causationId": "132b06a0-ebc3-4015-a81a-03f8264d43d4"
+  },
+  {
+    "phase": "applied",
+    "sequence": 42,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "42ce1be1-1700-4e2d-8e70-d191b0dedb4f",
+    "causationId": "132b06a0-ebc3-4015-a81a-03f8264d43d4"
+  },
+  {
+    "phase": "received",
+    "sequence": 43,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "20a47f3b-9968-465a-a216-4bd10be65903",
+    "causationId": "132b06a0-ebc3-4015-a81a-03f8264d43d4"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 44,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "f8aa4264-7842-440a-a5cb-a54b74ad3721",
+    "causationId": "20a47f3b-9968-465a-a216-4bd10be65903"
+  },
+  {
+    "phase": "applied",
+    "sequence": 43,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "20a47f3b-9968-465a-a216-4bd10be65903",
+    "causationId": "132b06a0-ebc3-4015-a81a-03f8264d43d4"
+  },
+  {
+    "phase": "received",
+    "sequence": 44,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "f8aa4264-7842-440a-a5cb-a54b74ad3721",
+    "causationId": "20a47f3b-9968-465a-a216-4bd10be65903"
+  },
+  {
+    "phase": "applied",
+    "sequence": 44,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "f8aa4264-7842-440a-a5cb-a54b74ad3721",
+    "causationId": "20a47f3b-9968-465a-a216-4bd10be65903"
+  },
+  {
+    "phase": "received",
+    "sequence": 45,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "195de5df-d923-4594-a255-98fdfaf53a0c",
+    "causationId": "f8aa4264-7842-440a-a5cb-a54b74ad3721"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 45,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "195de5df-d923-4594-a255-98fdfaf53a0c",
+    "causationId": "f8aa4264-7842-440a-a5cb-a54b74ad3721"
+  },
+  {
+    "phase": "applied",
+    "sequence": 45,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "195de5df-d923-4594-a255-98fdfaf53a0c",
+    "causationId": "f8aa4264-7842-440a-a5cb-a54b74ad3721"
+  },
+  {
+    "phase": "received",
+    "sequence": 46,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "709e1952-a9ba-4529-be8a-e779712177b2",
+    "causationId": "195de5df-d923-4594-a255-98fdfaf53a0c"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 47,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "ed1c576a-1ed1-4b02-b139-eaf5949db256",
+    "causationId": "709e1952-a9ba-4529-be8a-e779712177b2"
+  },
+  {
+    "phase": "applied",
+    "sequence": 46,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "709e1952-a9ba-4529-be8a-e779712177b2",
+    "causationId": "195de5df-d923-4594-a255-98fdfaf53a0c"
+  },
+  {
+    "phase": "received",
+    "sequence": 47,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "ed1c576a-1ed1-4b02-b139-eaf5949db256",
+    "causationId": "709e1952-a9ba-4529-be8a-e779712177b2"
+  },
+  {
+    "phase": "applied",
+    "sequence": 47,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "ed1c576a-1ed1-4b02-b139-eaf5949db256",
+    "causationId": "709e1952-a9ba-4529-be8a-e779712177b2"
+  },
+  {
+    "phase": "received",
+    "sequence": 48,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "cerrar (nivel 2) src/calculator.mjs creado con export function add(a,b){return a+b;} y validado por el host...",
+    "eventId": "304915b2-cdb6-4b82-b583-57e868e3bc8d",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 48,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "cerrar (nivel 2) src/calculator.mjs creado con export function add(a,b){return a+b;} y validado por el host...",
+    "eventId": "304915b2-cdb6-4b82-b583-57e868e3bc8d",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 49,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "a81c3bfd-f858-441d-8db1-caef2e77914e",
+    "causationId": "ed1c576a-1ed1-4b02-b139-eaf5949db256"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 49,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "a81c3bfd-f858-441d-8db1-caef2e77914e",
+    "causationId": "ed1c576a-1ed1-4b02-b139-eaf5949db256"
+  },
+  {
+    "phase": "applied",
+    "sequence": 49,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "a81c3bfd-f858-441d-8db1-caef2e77914e",
+    "causationId": "ed1c576a-1ed1-4b02-b139-eaf5949db256"
+  },
+  {
+    "phase": "received",
+    "sequence": 50,
+    "kind": 33,
+    "source": "project",
+    "text": "definition",
+    "eventId": "a82d9ddd-bd38-4b68-9b57-005e106eedbc",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 50,
+    "kind": 33,
+    "source": "project",
+    "text": "definition",
+    "eventId": "a82d9ddd-bd38-4b68-9b57-005e106eedbc",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 51,
+    "kind": 29,
+    "source": "project",
+    "text": "delivery",
+    "eventId": "a01ab3e9-fa96-4991-8dd6-e80b1a46c4c5",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 51,
+    "kind": 29,
+    "source": "project",
+    "text": "delivery",
+    "eventId": "a01ab3e9-fa96-4991-8dd6-e80b1a46c4c5",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 52,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "fcd83896-a7d4-4533-8b24-717117a6f5bb",
+    "causationId": "a81c3bfd-f858-441d-8db1-caef2e77914e"
+  },
+  {
+    "phase": "applied",
+    "sequence": 52,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "fcd83896-a7d4-4533-8b24-717117a6f5bb",
+    "causationId": "a81c3bfd-f858-441d-8db1-caef2e77914e"
+  },
+  {
+    "phase": "received",
+    "sequence": 53,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "8c014c35-7f4b-4c34-9b08-1ece5b331aab",
+    "causationId": "a81c3bfd-f858-441d-8db1-caef2e77914e"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 54,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "fe4c0490-5481-4419-b090-cb62367e30e0",
+    "causationId": "8c014c35-7f4b-4c34-9b08-1ece5b331aab"
+  },
+  {
+    "phase": "applied",
+    "sequence": 53,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "8c014c35-7f4b-4c34-9b08-1ece5b331aab",
+    "causationId": "a81c3bfd-f858-441d-8db1-caef2e77914e"
+  },
+  {
+    "phase": "received",
+    "sequence": 54,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "fe4c0490-5481-4419-b090-cb62367e30e0",
+    "causationId": "8c014c35-7f4b-4c34-9b08-1ece5b331aab"
+  },
+  {
+    "phase": "applied",
+    "sequence": 54,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "fe4c0490-5481-4419-b090-cb62367e30e0",
+    "causationId": "8c014c35-7f4b-4c34-9b08-1ece5b331aab"
+  },
+  {
+    "phase": "received",
+    "sequence": 55,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "d8961203-0be0-49ea-a106-8280bf1e4bd2",
+    "causationId": "fe4c0490-5481-4419-b090-cb62367e30e0"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 55,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "d8961203-0be0-49ea-a106-8280bf1e4bd2",
+    "causationId": "fe4c0490-5481-4419-b090-cb62367e30e0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 55,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "d8961203-0be0-49ea-a106-8280bf1e4bd2",
+    "causationId": "fe4c0490-5481-4419-b090-cb62367e30e0"
+  },
+  {
+    "phase": "received",
+    "sequence": 56,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "9e491171-9872-47be-b44f-28a25628d74f",
+    "causationId": "d8961203-0be0-49ea-a106-8280bf1e4bd2"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 57,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "cf5124c3-49e6-4363-8375-aa0374a6f265",
+    "causationId": "9e491171-9872-47be-b44f-28a25628d74f"
+  },
+  {
+    "phase": "applied",
+    "sequence": 56,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "9e491171-9872-47be-b44f-28a25628d74f",
+    "causationId": "d8961203-0be0-49ea-a106-8280bf1e4bd2"
+  },
+  {
+    "phase": "received",
+    "sequence": 57,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "cf5124c3-49e6-4363-8375-aa0374a6f265",
+    "causationId": "9e491171-9872-47be-b44f-28a25628d74f"
+  },
+  {
+    "phase": "applied",
+    "sequence": 57,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "cf5124c3-49e6-4363-8375-aa0374a6f265",
+    "causationId": "9e491171-9872-47be-b44f-28a25628d74f"
+  },
+  {
+    "phase": "received",
+    "sequence": 58,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "abrir (nivel 2) Completar el work item delivery: README.txt explica add y su uso, validado por el host (de...",
+    "eventId": "8e755903-eb69-42a6-a7a8-e623c8cba166",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 58,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "abrir (nivel 2) Completar el work item delivery: README.txt explica add y su uso, validado por el host (de...",
+    "eventId": "8e755903-eb69-42a6-a7a8-e623c8cba166",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 59,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608",
+    "causationId": "cf5124c3-49e6-4363-8375-aa0374a6f265"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 59,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608",
+    "causationId": "cf5124c3-49e6-4363-8375-aa0374a6f265"
+  },
+  {
+    "phase": "applied",
+    "sequence": 59,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608",
+    "causationId": "cf5124c3-49e6-4363-8375-aa0374a6f265"
+  },
+  {
+    "phase": "received",
+    "sequence": 60,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "8e3cd3c4-8ff7-4aba-bd3a-0797f0c1187f",
+    "causationId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608"
+  },
+  {
+    "phase": "applied",
+    "sequence": 60,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "8e3cd3c4-8ff7-4aba-bd3a-0797f0c1187f",
+    "causationId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608"
+  },
+  {
+    "phase": "received",
+    "sequence": 61,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "6513d5ff-b7a0-46a0-85b3-f6e0bb1f4eee",
+    "causationId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 62,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "ea01a6b8-4c5c-45d1-8f95-5a80df1da179",
+    "causationId": "6513d5ff-b7a0-46a0-85b3-f6e0bb1f4eee"
+  },
+  {
+    "phase": "applied",
+    "sequence": 61,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "6513d5ff-b7a0-46a0-85b3-f6e0bb1f4eee",
+    "causationId": "9ff69b61-9a9a-4957-ad9f-6662aaa2e608"
+  },
+  {
+    "phase": "received",
+    "sequence": 62,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "ea01a6b8-4c5c-45d1-8f95-5a80df1da179",
+    "causationId": "6513d5ff-b7a0-46a0-85b3-f6e0bb1f4eee"
+  },
+  {
+    "phase": "applied",
+    "sequence": 62,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "ea01a6b8-4c5c-45d1-8f95-5a80df1da179",
+    "causationId": "6513d5ff-b7a0-46a0-85b3-f6e0bb1f4eee"
+  },
+  {
+    "phase": "received",
+    "sequence": 63,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "6901abfd-970c-4869-91bc-b6b59c607956",
+    "causationId": "ea01a6b8-4c5c-45d1-8f95-5a80df1da179"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 63,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "6901abfd-970c-4869-91bc-b6b59c607956",
+    "causationId": "ea01a6b8-4c5c-45d1-8f95-5a80df1da179"
+  },
+  {
+    "phase": "applied",
+    "sequence": 63,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "6901abfd-970c-4869-91bc-b6b59c607956",
+    "causationId": "ea01a6b8-4c5c-45d1-8f95-5a80df1da179"
+  },
+  {
+    "phase": "received",
+    "sequence": 64,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "project_validate",
+    "eventId": "83256ce1-7c7d-4d24-8007-a19a2b7bf390",
+    "causationId": "6901abfd-970c-4869-91bc-b6b59c607956"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 65,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "79d77d27-00be-46c6-bd8d-1dd613d718ba",
+    "causationId": "83256ce1-7c7d-4d24-8007-a19a2b7bf390"
+  },
+  {
+    "phase": "applied",
+    "sequence": 64,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "project_validate",
+    "eventId": "83256ce1-7c7d-4d24-8007-a19a2b7bf390",
+    "causationId": "6901abfd-970c-4869-91bc-b6b59c607956"
+  },
+  {
+    "phase": "received",
+    "sequence": 65,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "79d77d27-00be-46c6-bd8d-1dd613d718ba",
+    "causationId": "83256ce1-7c7d-4d24-8007-a19a2b7bf390"
+  },
+  {
+    "phase": "applied",
+    "sequence": 65,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "79d77d27-00be-46c6-bd8d-1dd613d718ba",
+    "causationId": "83256ce1-7c7d-4d24-8007-a19a2b7bf390"
+  },
+  {
+    "phase": "received",
+    "sequence": 66,
+    "kind": 30,
+    "source": "validator",
+    "text": "delivery",
+    "eventId": "e9bd9335-2870-41cb-9be3-ea447332e83a",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 66,
+    "kind": 30,
+    "source": "validator",
+    "text": "delivery",
+    "eventId": "e9bd9335-2870-41cb-9be3-ea447332e83a",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 67,
+    "kind": 3,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "1d5f6a02-e67b-4755-aecf-7562b221f0a1",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 67,
+    "kind": 3,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "1d5f6a02-e67b-4755-aecf-7562b221f0a1",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 68,
+    "kind": 5,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "6f5fb5a1-d41c-47ac-9ac7-6c5227e569fa",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 68,
+    "kind": 5,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "6f5fb5a1-d41c-47ac-9ac7-6c5227e569fa",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 69,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "fe324bb9-07fe-46fc-b509-c481b8e22efe",
+    "causationId": "79d77d27-00be-46c6-bd8d-1dd613d718ba"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 69,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "fe324bb9-07fe-46fc-b509-c481b8e22efe",
+    "causationId": "79d77d27-00be-46c6-bd8d-1dd613d718ba"
+  },
+  {
+    "phase": "applied",
+    "sequence": 69,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "fe324bb9-07fe-46fc-b509-c481b8e22efe",
+    "causationId": "79d77d27-00be-46c6-bd8d-1dd613d718ba"
+  },
+  {
+    "phase": "received",
+    "sequence": 70,
+    "kind": 31,
+    "source": "validator",
+    "text": "delivery-valid",
+    "eventId": "67d96cff-da21-402e-a5fa-062ab0817de5",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 70,
+    "kind": 31,
+    "source": "validator",
+    "text": "delivery-valid",
+    "eventId": "67d96cff-da21-402e-a5fa-062ab0817de5",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 71,
+    "kind": 31,
+    "source": "validator",
+    "text": "coherence",
+    "eventId": "acd37114-c673-48a0-b279-be9b4d8d4ee2",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 71,
+    "kind": 31,
+    "source": "validator",
+    "text": "coherence",
+    "eventId": "acd37114-c673-48a0-b279-be9b4d8d4ee2",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 72,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de project_validate",
+    "eventId": "13c6d9a4-b075-4108-9b87-cb0875809a65",
+    "causationId": "fe324bb9-07fe-46fc-b509-c481b8e22efe"
+  },
+  {
+    "phase": "applied",
+    "sequence": 72,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de project_validate",
+    "eventId": "13c6d9a4-b075-4108-9b87-cb0875809a65",
+    "causationId": "fe324bb9-07fe-46fc-b509-c481b8e22efe"
+  },
+  {
+    "phase": "received",
+    "sequence": 73,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "6e465946-fd52-4b4e-b8d9-91bdf3f1434e",
+    "causationId": "fe324bb9-07fe-46fc-b509-c481b8e22efe"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 74,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "d1f1e1bc-c6d7-4c12-b8a8-96726961c669",
+    "causationId": "6e465946-fd52-4b4e-b8d9-91bdf3f1434e"
+  },
+  {
+    "phase": "applied",
+    "sequence": 73,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "6e465946-fd52-4b4e-b8d9-91bdf3f1434e",
+    "causationId": "fe324bb9-07fe-46fc-b509-c481b8e22efe"
+  },
+  {
+    "phase": "received",
+    "sequence": 74,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "d1f1e1bc-c6d7-4c12-b8a8-96726961c669",
+    "causationId": "6e465946-fd52-4b4e-b8d9-91bdf3f1434e"
+  },
+  {
+    "phase": "applied",
+    "sequence": 74,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "d1f1e1bc-c6d7-4c12-b8a8-96726961c669",
+    "causationId": "6e465946-fd52-4b4e-b8d9-91bdf3f1434e"
+  },
+  {
+    "phase": "received",
+    "sequence": 75,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "6bcec5ef-d14c-4217-8932-fd3d9e9797ab",
+    "causationId": "d1f1e1bc-c6d7-4c12-b8a8-96726961c669"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 75,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "6bcec5ef-d14c-4217-8932-fd3d9e9797ab",
+    "causationId": "d1f1e1bc-c6d7-4c12-b8a8-96726961c669"
+  },
+  {
+    "phase": "applied",
+    "sequence": 75,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "6bcec5ef-d14c-4217-8932-fd3d9e9797ab",
+    "causationId": "d1f1e1bc-c6d7-4c12-b8a8-96726961c669"
+  },
+  {
+    "phase": "received",
+    "sequence": 76,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "8f1550ad-d273-4f9e-a6e3-a745d4b443c2",
+    "causationId": "6bcec5ef-d14c-4217-8932-fd3d9e9797ab"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 77,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "d581b230-3b3e-478a-a744-44634f1cd7bc",
+    "causationId": "8f1550ad-d273-4f9e-a6e3-a745d4b443c2"
+  },
+  {
+    "phase": "applied",
+    "sequence": 76,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "8f1550ad-d273-4f9e-a6e3-a745d4b443c2",
+    "causationId": "6bcec5ef-d14c-4217-8932-fd3d9e9797ab"
+  },
+  {
+    "phase": "received",
+    "sequence": 77,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "d581b230-3b3e-478a-a744-44634f1cd7bc",
+    "causationId": "8f1550ad-d273-4f9e-a6e3-a745d4b443c2"
+  },
+  {
+    "phase": "applied",
+    "sequence": 77,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "d581b230-3b3e-478a-a744-44634f1cd7bc",
+    "causationId": "8f1550ad-d273-4f9e-a6e3-a745d4b443c2"
+  },
+  {
+    "phase": "received",
+    "sequence": 78,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "comprobar (nivel 2) project_validate para delivery: delivery-valid y coherence Passed=true",
+    "eventId": "c0157c50-a061-4221-91af-aea2885cdea2",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 78,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "comprobar (nivel 2) project_validate para delivery: delivery-valid y coherence Passed=true",
+    "eventId": "c0157c50-a061-4221-91af-aea2885cdea2",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 79,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3",
+    "causationId": "d581b230-3b3e-478a-a744-44634f1cd7bc"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 79,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3",
+    "causationId": "d581b230-3b3e-478a-a744-44634f1cd7bc"
+  },
+  {
+    "phase": "applied",
+    "sequence": 79,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3",
+    "causationId": "d581b230-3b3e-478a-a744-44634f1cd7bc"
+  },
+  {
+    "phase": "received",
+    "sequence": 80,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "e084532e-c420-4792-b085-32c7b77cbce4",
+    "causationId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3"
+  },
+  {
+    "phase": "applied",
+    "sequence": 80,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "e084532e-c420-4792-b085-32c7b77cbce4",
+    "causationId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3"
+  },
+  {
+    "phase": "received",
+    "sequence": 81,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "7f87646f-1805-497c-afab-747498650ec8",
+    "causationId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 82,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "a2b73331-7e88-4b79-ae51-2cfe8e31a221",
+    "causationId": "7f87646f-1805-497c-afab-747498650ec8"
+  },
+  {
+    "phase": "applied",
+    "sequence": 81,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "7f87646f-1805-497c-afab-747498650ec8",
+    "causationId": "53e99d0b-05e8-4db4-8613-96de6b4f78f3"
+  },
+  {
+    "phase": "received",
+    "sequence": 82,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "a2b73331-7e88-4b79-ae51-2cfe8e31a221",
+    "causationId": "7f87646f-1805-497c-afab-747498650ec8"
+  },
+  {
+    "phase": "applied",
+    "sequence": 82,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "a2b73331-7e88-4b79-ae51-2cfe8e31a221",
+    "causationId": "7f87646f-1805-497c-afab-747498650ec8"
+  },
+  {
+    "phase": "received",
+    "sequence": 83,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "3943531c-014e-4642-addf-a4ea2494e46f",
+    "causationId": "a2b73331-7e88-4b79-ae51-2cfe8e31a221"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 83,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "3943531c-014e-4642-addf-a4ea2494e46f",
+    "causationId": "a2b73331-7e88-4b79-ae51-2cfe8e31a221"
+  },
+  {
+    "phase": "applied",
+    "sequence": 83,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "3943531c-014e-4642-addf-a4ea2494e46f",
+    "causationId": "a2b73331-7e88-4b79-ae51-2cfe8e31a221"
+  },
+  {
+    "phase": "received",
+    "sequence": 84,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "c4f43ad0-ca65-4dcd-813a-29f1e96dc74e",
+    "causationId": "3943531c-014e-4642-addf-a4ea2494e46f"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 85,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "5c1445c4-cc5c-449d-a802-cc394bd4ec59",
+    "causationId": "c4f43ad0-ca65-4dcd-813a-29f1e96dc74e"
+  },
+  {
+    "phase": "applied",
+    "sequence": 84,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "c4f43ad0-ca65-4dcd-813a-29f1e96dc74e",
+    "causationId": "3943531c-014e-4642-addf-a4ea2494e46f"
+  },
+  {
+    "phase": "received",
+    "sequence": 85,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "5c1445c4-cc5c-449d-a802-cc394bd4ec59",
+    "causationId": "c4f43ad0-ca65-4dcd-813a-29f1e96dc74e"
+  },
+  {
+    "phase": "applied",
+    "sequence": 85,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "5c1445c4-cc5c-449d-a802-cc394bd4ec59",
+    "causationId": "c4f43ad0-ca65-4dcd-813a-29f1e96dc74e"
+  },
+  {
+    "phase": "received",
+    "sequence": 86,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "cerrar (nivel 2) README.txt explica add y su uso; validaciones host delivery-valid y coherence pasadas.",
+    "eventId": "8050890f-d200-4d99-b41a-47a927caf137",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 86,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "cerrar (nivel 2) README.txt explica add y su uso; validaciones host delivery-valid y coherence pasadas.",
+    "eventId": "8050890f-d200-4d99-b41a-47a927caf137",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 87,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "2220b553-0f52-4cb6-b65a-a6168e103a92",
+    "causationId": "5c1445c4-cc5c-449d-a802-cc394bd4ec59"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 87,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "2220b553-0f52-4cb6-b65a-a6168e103a92",
+    "causationId": "5c1445c4-cc5c-449d-a802-cc394bd4ec59"
+  },
+  {
+    "phase": "applied",
+    "sequence": 87,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "2220b553-0f52-4cb6-b65a-a6168e103a92",
+    "causationId": "5c1445c4-cc5c-449d-a802-cc394bd4ec59"
+  },
+  {
+    "phase": "received",
+    "sequence": 88,
+    "kind": 33,
+    "source": "project",
+    "text": "delivery",
+    "eventId": "4fade6ea-7f87-4d4e-99be-bbe62ca9ae3d",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 88,
+    "kind": 33,
+    "source": "project",
+    "text": "delivery",
+    "eventId": "4fade6ea-7f87-4d4e-99be-bbe62ca9ae3d",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 89,
+    "kind": 29,
+    "source": "project",
+    "text": "integracion final",
+    "eventId": "3ae559ae-7dd0-4127-834f-b2071936b9f0",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 89,
+    "kind": 29,
+    "source": "project",
+    "text": "integracion final",
+    "eventId": "3ae559ae-7dd0-4127-834f-b2071936b9f0",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 90,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "b3119a0f-3136-4edc-9a85-c6b7743d60fa",
+    "causationId": "2220b553-0f52-4cb6-b65a-a6168e103a92"
+  },
+  {
+    "phase": "applied",
+    "sequence": 90,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "b3119a0f-3136-4edc-9a85-c6b7743d60fa",
+    "causationId": "2220b553-0f52-4cb6-b65a-a6168e103a92"
+  },
+  {
+    "phase": "received",
+    "sequence": 91,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "c45333b0-e2c4-43b2-8489-3c5fc1e6435a",
+    "causationId": "2220b553-0f52-4cb6-b65a-a6168e103a92"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 92,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "1697b9cb-9f6e-4549-948c-4dcda7e7160a",
+    "causationId": "c45333b0-e2c4-43b2-8489-3c5fc1e6435a"
+  },
+  {
+    "phase": "applied",
+    "sequence": 91,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "c45333b0-e2c4-43b2-8489-3c5fc1e6435a",
+    "causationId": "2220b553-0f52-4cb6-b65a-a6168e103a92"
+  },
+  {
+    "phase": "received",
+    "sequence": 92,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "1697b9cb-9f6e-4549-948c-4dcda7e7160a",
+    "causationId": "c45333b0-e2c4-43b2-8489-3c5fc1e6435a"
+  },
+  {
+    "phase": "applied",
+    "sequence": 92,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "1697b9cb-9f6e-4549-948c-4dcda7e7160a",
+    "causationId": "c45333b0-e2c4-43b2-8489-3c5fc1e6435a"
+  },
+  {
+    "phase": "received",
+    "sequence": 93,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "0ccb048e-423e-464b-98ce-37833f5c8a62",
+    "causationId": "1697b9cb-9f6e-4549-948c-4dcda7e7160a"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 93,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "0ccb048e-423e-464b-98ce-37833f5c8a62",
+    "causationId": "1697b9cb-9f6e-4549-948c-4dcda7e7160a"
+  },
+  {
+    "phase": "applied",
+    "sequence": 93,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "0ccb048e-423e-464b-98ce-37833f5c8a62",
+    "causationId": "1697b9cb-9f6e-4549-948c-4dcda7e7160a"
+  },
+  {
+    "phase": "received",
+    "sequence": 94,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "project_validate",
+    "eventId": "e06dc58a-6124-4e0e-b63d-b5e89281ad19",
+    "causationId": "0ccb048e-423e-464b-98ce-37833f5c8a62"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 95,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "5f27a10e-36dd-4fe5-a6b6-31ac08fb9bbd",
+    "causationId": "e06dc58a-6124-4e0e-b63d-b5e89281ad19"
+  },
+  {
+    "phase": "applied",
+    "sequence": 94,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "project_validate",
+    "eventId": "e06dc58a-6124-4e0e-b63d-b5e89281ad19",
+    "causationId": "0ccb048e-423e-464b-98ce-37833f5c8a62"
+  },
+  {
+    "phase": "received",
+    "sequence": 95,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "5f27a10e-36dd-4fe5-a6b6-31ac08fb9bbd",
+    "causationId": "e06dc58a-6124-4e0e-b63d-b5e89281ad19"
+  },
+  {
+    "phase": "applied",
+    "sequence": 95,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de project_validate",
+    "eventId": "5f27a10e-36dd-4fe5-a6b6-31ac08fb9bbd",
+    "causationId": "e06dc58a-6124-4e0e-b63d-b5e89281ad19"
+  },
+  {
+    "phase": "received",
+    "sequence": 96,
+    "kind": 30,
+    "source": "validator",
+    "text": "__goal__",
+    "eventId": "bc79e891-157d-4d74-8ced-cde95c094810",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 96,
+    "kind": 30,
+    "source": "validator",
+    "text": "__goal__",
+    "eventId": "bc79e891-157d-4d74-8ced-cde95c094810",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 97,
+    "kind": 3,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "00180567-f41e-414a-8d83-184a210b503b",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 97,
+    "kind": 3,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "00180567-f41e-414a-8d83-184a210b503b",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 98,
+    "kind": 5,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "6a2c55a7-9c5d-42cc-9173-8ecc0089f7db",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 98,
+    "kind": 5,
+    "source": "project-adapter",
+    "text": "verify",
+    "eventId": "6a2c55a7-9c5d-42cc-9173-8ecc0089f7db",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 99,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a",
+    "causationId": "5f27a10e-36dd-4fe5-a6b6-31ac08fb9bbd"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 99,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a",
+    "causationId": "5f27a10e-36dd-4fe5-a6b6-31ac08fb9bbd"
+  },
+  {
+    "phase": "applied",
+    "sequence": 99,
+    "kind": 15,
+    "source": "tool",
+    "text": "project_validate",
+    "eventId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a",
+    "causationId": "5f27a10e-36dd-4fe5-a6b6-31ac08fb9bbd"
+  },
+  {
+    "phase": "received",
+    "sequence": 100,
+    "kind": 31,
+    "source": "validator",
+    "text": "definition-valid",
+    "eventId": "107a8947-fde0-4697-bbe3-ae4c6da652aa",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 100,
+    "kind": 31,
+    "source": "validator",
+    "text": "definition-valid",
+    "eventId": "107a8947-fde0-4697-bbe3-ae4c6da652aa",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 101,
+    "kind": 31,
+    "source": "validator",
+    "text": "delivery-valid",
+    "eventId": "1ed1fb9e-5d68-4db6-8f97-8dcb259642b3",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 101,
+    "kind": 31,
+    "source": "validator",
+    "text": "delivery-valid",
+    "eventId": "1ed1fb9e-5d68-4db6-8f97-8dcb259642b3",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 102,
+    "kind": 31,
+    "source": "validator",
+    "text": "coherence",
+    "eventId": "fd3d6424-855f-4580-a2c9-f21d3229833e",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 102,
+    "kind": 31,
+    "source": "validator",
+    "text": "coherence",
+    "eventId": "fd3d6424-855f-4580-a2c9-f21d3229833e",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 103,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de project_validate",
+    "eventId": "4eb66335-1ea5-4464-a9db-cf445442d4b1",
+    "causationId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a"
+  },
+  {
+    "phase": "applied",
+    "sequence": 103,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de project_validate",
+    "eventId": "4eb66335-1ea5-4464-a9db-cf445442d4b1",
+    "causationId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a"
+  },
+  {
+    "phase": "received",
+    "sequence": 104,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "10777b7e-7f98-4cf0-b19e-a127eb4fdcb9",
+    "causationId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 105,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "d372108a-b2ff-473e-a6ba-33ac46f4315e",
+    "causationId": "10777b7e-7f98-4cf0-b19e-a127eb4fdcb9"
+  },
+  {
+    "phase": "applied",
+    "sequence": 104,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "10777b7e-7f98-4cf0-b19e-a127eb4fdcb9",
+    "causationId": "8f037321-ed6f-4aa5-98d1-e0f5122d5d3a"
+  },
+  {
+    "phase": "received",
+    "sequence": 105,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "d372108a-b2ff-473e-a6ba-33ac46f4315e",
+    "causationId": "10777b7e-7f98-4cf0-b19e-a127eb4fdcb9"
+  },
+  {
+    "phase": "applied",
+    "sequence": 105,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "d372108a-b2ff-473e-a6ba-33ac46f4315e",
+    "causationId": "10777b7e-7f98-4cf0-b19e-a127eb4fdcb9"
+  },
+  {
+    "phase": "received",
+    "sequence": 106,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "09fce35a-a05f-49e0-9b32-b45c2243affc",
+    "causationId": "d372108a-b2ff-473e-a6ba-33ac46f4315e"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 106,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "09fce35a-a05f-49e0-9b32-b45c2243affc",
+    "causationId": "d372108a-b2ff-473e-a6ba-33ac46f4315e"
+  },
+  {
+    "phase": "applied",
+    "sequence": 106,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "09fce35a-a05f-49e0-9b32-b45c2243affc",
+    "causationId": "d372108a-b2ff-473e-a6ba-33ac46f4315e"
+  },
+  {
+    "phase": "received",
+    "sequence": 107,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "b22a23a4-5f44-404f-a037-469d1244cd9c",
+    "causationId": "09fce35a-a05f-49e0-9b32-b45c2243affc"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 108,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "dc19b705-2697-4ed9-875d-9c6cbb304e94",
+    "causationId": "b22a23a4-5f44-404f-a037-469d1244cd9c"
+  },
+  {
+    "phase": "applied",
+    "sequence": 107,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "b22a23a4-5f44-404f-a037-469d1244cd9c",
+    "causationId": "09fce35a-a05f-49e0-9b32-b45c2243affc"
+  },
+  {
+    "phase": "received",
+    "sequence": 108,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "dc19b705-2697-4ed9-875d-9c6cbb304e94",
+    "causationId": "b22a23a4-5f44-404f-a037-469d1244cd9c"
+  },
+  {
+    "phase": "applied",
+    "sequence": 108,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "dc19b705-2697-4ed9-875d-9c6cbb304e94",
+    "causationId": "b22a23a4-5f44-404f-a037-469d1244cd9c"
+  },
+  {
+    "phase": "received",
+    "sequence": 109,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "comprobar (nivel 1) project_validate en __goal__/integration: definition-valid, delivery-valid y coherence Pas...",
+    "eventId": "633e5268-17a1-4cb1-a06e-44820fd08ea6",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 109,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "comprobar (nivel 1) project_validate en __goal__/integration: definition-valid, delivery-valid y coherence Pas...",
+    "eventId": "633e5268-17a1-4cb1-a06e-44820fd08ea6",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 110,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "0fa3ad68-f153-475f-8c46-65014acacc83",
+    "causationId": "dc19b705-2697-4ed9-875d-9c6cbb304e94"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 110,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "0fa3ad68-f153-475f-8c46-65014acacc83",
+    "causationId": "dc19b705-2697-4ed9-875d-9c6cbb304e94"
+  },
+  {
+    "phase": "applied",
+    "sequence": 110,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "0fa3ad68-f153-475f-8c46-65014acacc83",
+    "causationId": "dc19b705-2697-4ed9-875d-9c6cbb304e94"
+  },
+  {
+    "phase": "received",
+    "sequence": 111,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "1546456b-5cb4-45e1-a708-fcb62ace7339",
+    "causationId": "0fa3ad68-f153-475f-8c46-65014acacc83"
+  },
+  {
+    "phase": "applied",
+    "sequence": 111,
+    "kind": 10,
+    "source": "coordinator",
+    "text": "resultado registrado de tarjeta",
+    "eventId": "1546456b-5cb4-45e1-a708-fcb62ace7339",
+    "causationId": "0fa3ad68-f153-475f-8c46-65014acacc83"
+  },
+  {
+    "phase": "received",
+    "sequence": 112,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "42b80bcb-433c-4da3-ac7a-7894fe9c871f",
+    "causationId": "0fa3ad68-f153-475f-8c46-65014acacc83"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 113,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "94d9baae-efa8-4748-bd55-0fb672d83869",
+    "causationId": "42b80bcb-433c-4da3-ac7a-7894fe9c871f"
+  },
+  {
+    "phase": "applied",
+    "sequence": 112,
+    "kind": 16,
+    "source": "coordinator",
+    "text": "hay resultados o hechos que requieren una decision",
+    "eventId": "42b80bcb-433c-4da3-ac7a-7894fe9c871f",
+    "causationId": "0fa3ad68-f153-475f-8c46-65014acacc83"
+  },
+  {
+    "phase": "received",
+    "sequence": 113,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "94d9baae-efa8-4748-bd55-0fb672d83869",
+    "causationId": "42b80bcb-433c-4da3-ac7a-7894fe9c871f"
+  },
+  {
+    "phase": "applied",
+    "sequence": 113,
+    "kind": 12,
+    "source": "coordinator",
+    "text": "solicitud al modelo",
+    "eventId": "94d9baae-efa8-4748-bd55-0fb672d83869",
+    "causationId": "42b80bcb-433c-4da3-ac7a-7894fe9c871f"
+  },
+  {
+    "phase": "received",
+    "sequence": 114,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "4234d840-d895-469a-98da-235bdcb67362",
+    "causationId": "94d9baae-efa8-4748-bd55-0fb672d83869"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 114,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "4234d840-d895-469a-98da-235bdcb67362",
+    "causationId": "94d9baae-efa8-4748-bd55-0fb672d83869"
+  },
+  {
+    "phase": "applied",
+    "sequence": 114,
+    "kind": 13,
+    "source": "model",
+    "text": "respuesta del proveedor",
+    "eventId": "4234d840-d895-469a-98da-235bdcb67362",
+    "causationId": "94d9baae-efa8-4748-bd55-0fb672d83869"
+  },
+  {
+    "phase": "received",
+    "sequence": 115,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "0a28f780-11cc-44a7-9c6c-057f227cfbe0",
+    "causationId": "4234d840-d895-469a-98da-235bdcb67362"
+  },
+  {
+    "phase": "admitted",
+    "sequence": 116,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "df04de81-e2a9-4c9b-b75b-7d5d38d365dc",
+    "causationId": "0a28f780-11cc-44a7-9c6c-057f227cfbe0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 115,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "tarjeta",
+    "eventId": "0a28f780-11cc-44a7-9c6c-057f227cfbe0",
+    "causationId": "4234d840-d895-469a-98da-235bdcb67362"
+  },
+  {
+    "phase": "received",
+    "sequence": 116,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "df04de81-e2a9-4c9b-b75b-7d5d38d365dc",
+    "causationId": "0a28f780-11cc-44a7-9c6c-057f227cfbe0"
+  },
+  {
+    "phase": "applied",
+    "sequence": 116,
+    "kind": 14,
+    "source": "coordinator",
+    "text": "admision de tarjeta",
+    "eventId": "df04de81-e2a9-4c9b-b75b-7d5d38d365dc",
+    "causationId": "0a28f780-11cc-44a7-9c6c-057f227cfbe0"
+  },
+  {
+    "phase": "received",
+    "sequence": 117,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "cerrar (nivel 1) src/calculator.mjs (modulo ESM con add(a,b)) y README.txt creados y validados por el host;...",
+    "eventId": "88e2c696-599b-46ac-bb92-277db559bfac",
+    "causationId": null
+  },
+  {
+    "phase": "applied",
+    "sequence": 117,
+    "kind": 1,
+    "source": "tarjetas",
+    "text": "cerrar (nivel 1) src/calculator.mjs (modulo ESM con add(a,b)) y README.txt creados y validados por el host;...",
+    "eventId": "88e2c696-599b-46ac-bb92-277db559bfac",
+    "causationId": null
+  },
+  {
+    "phase": "received",
+    "sequence": 118,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "c0ff2b60-27e6-4ab2-9410-a8de5a98d2fb",
+    "causationId": "df04de81-e2a9-4c9b-b75b-7d5d38d365dc"
+  },
+  {
+    "phase": "resolved",
+    "sequence": 118,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "c0ff2b60-27e6-4ab2-9410-a8de5a98d2fb",
+    "causationId": "df04de81-e2a9-4c9b-b75b-7d5d38d365dc"
+  },
+  {
+    "phase": "terminal",
+    "sequence": 120,
+    "kind": 22,
+    "source": "coordinator",
+    "text": "src/calculator.mjs (modulo ESM con add(a,b)) y README.txt creados y validados por el host; integracion final aprobada.",
+    "eventId": "754fee8b-a2a6-4b57-ad5c-08b87ebf8408",
+    "causationId": "c0ff2b60-27e6-4ab2-9410-a8de5a98d2fb"
+  },
+  {
+    "phase": "applied",
+    "sequence": 118,
+    "kind": 15,
+    "source": "tool",
+    "text": "tarjeta",
+    "eventId": "c0ff2b60-27e6-4ab2-9410-a8de5a98d2fb",
+    "causationId": "df04de81-e2a9-4c9b-b75b-7d5d38d365dc"
+  }
+]

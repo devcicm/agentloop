@@ -1,0 +1,6 @@
+dotnet : ERROR: Contrato y perfil no coinciden.
+En línea: 2 Carácter: 450
++ ... TEXITCODE"; dotnet run --no-build --no-launch-profile -- project-admi ...
++                 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (ERROR: Contrato y perfil no coinciden.:String) [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError

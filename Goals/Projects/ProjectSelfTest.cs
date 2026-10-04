@@ -23,9 +23,10 @@ public static class ProjectSelfTest
         public Task CheckPreviousRunAsync(Guid runId, CancellationToken token) => Task.CompletedTask;
         public int Calls { get; private set; }
         public Action? FirstCommand { get; init; }
+        public int? FailOnCall { get; init; }
         public Task PreflightAsync(CancellationToken token) => Task.CompletedTask;
         public Task<ProjectCommandResult> RunAsync(string profile, TimeSpan timeout, CancellationToken token)
-        { Calls++; if (Calls == 1) FirstCommand?.Invoke(); return Task.FromResult(new ProjectCommandResult(0, "fixture de mecanismo, sin aislamiento ni oraculo real", true)); }
+        { Calls++; if (Calls == 1) FirstCommand?.Invoke(); return Task.FromResult(new ProjectCommandResult(Calls == FailOnCall ? 1 : 0, "fixture de mecanismo, sin aislamiento ni oraculo real", true)); }
     }
 
     public static async Task<bool> RunAsync(CancellationToken token)
@@ -50,6 +51,17 @@ public static class ProjectSelfTest
         }
         var services = new ProjectServices(profile, baseServices.SourcePath, baseServices.EvidenceDirectory, baseServices.EnvironmentFactory, baseServices.Validators);
         var admitted = ProjectContractAdmission.Admit(example.ToJsonString(), repo);
+        var invalidExecutable = Path.Combine(Path.GetTempPath(), "agentloop-invalid-backend-" + Guid.NewGuid().ToString("N") + ".exe");
+        await File.WriteAllTextAsync(invalidExecutable, "not an executable", token);
+        try
+        {
+            var invalidDefinition = new DockerExecutionDefinition(invalidExecutable, "unused", Path.GetTempPath(), ["unused"], "/project", "/profile",
+                "1000:1000", "128m", "1", 16, "/tmp", "/tmp", new Dictionary<string, string>(), new Dictionary<string, string>(), 2, 2);
+            await new DockerProjectEnvironment(root, Guid.NewGuid(), invalidDefinition, [], profile.Policy).PreflightAsync(token);
+            Check("backend no ejecutable falla como error controlado", false);
+        }
+        catch (IOException) { Check("backend no ejecutable falla como error controlado", true); }
+        finally { File.Delete(invalidExecutable); }
         Check("admision sin crear raiz", !Directory.Exists(root));
         var copy = admitted.Contract;
         Check("hash estable de revision admitida", ProjectContractAdmission.Admit(admitted.CanonicalJson, repo).ContractHash == admitted.ContractHash);
@@ -88,6 +100,33 @@ public static class ProjectSelfTest
         try { ProjectContextBudget.Fit(new ChatRequest { Model = "fixture", Messages = [ChatMessage.FromSystem(new string('x', 5000)), ChatMessage.FromUser("actual")] }, 1000); Check("contrato minimo imposible falla", false); }
         catch (InvalidOperationException) { Check("contrato minimo imposible falla", true); }
 
+        var knowledge = new ProjectKnowledge();
+        Check("primera lectura consume exploracion", knowledge.ObserveRead("definition", "hash-one", 2));
+        knowledge.Note("definition", "hash-one", "hallazgo sin autoridad");
+        Check("relectura no renueva exploracion", !knowledge.ObserveRead("definition", "hash-one", 2));
+        knowledge.RecordAction(false, false);
+        var restoredKnowledge = new ProjectKnowledge();
+        restoredKnowledge.Restore(knowledge.Snapshot(), new HashSet<string> { "definition", "delivery" });
+        Check("snapshot conserva notas lecturas y presupuesto", restoredKnowledge.Artifacts.Single().Reads == 2
+            && restoredKnowledge.Artifacts.Single().Note == "hallazgo sin autoridad" && restoredKnowledge.ActionsWithoutProgress == 1);
+        Check("recuperacion no permite renovar lectura previa", !restoredKnowledge.ObserveRead("definition", "hash-one", 2));
+        Check("hash nuevo elimina nota anterior", restoredKnowledge.ObserveRead("definition", "hash-two", 2)
+            && restoredKnowledge.Artifacts.Single().Note is null);
+        Check("exploracion agotada no habilita lecturas libres", !restoredKnowledge.ObserveRead("delivery", "hash-three", 2));
+        restoredKnowledge.RecordAction(true, false);
+        Check("progreso material reinicia contador", restoredKnowledge.ActionsWithoutProgress == 0);
+        restoredKnowledge.BeginWork();
+        Check("nueva tarea preserva conocimiento reinicia exploracion", restoredKnowledge.Artifacts.Count == 2 && restoredKnowledge.ExplorationReads == 0);
+        try { restoredKnowledge.Restore(knowledge.Snapshot() with { ExplorationReads = 99 }, new HashSet<string> { "definition" }); Check("rechaza presupuesto recuperado inconsistente", false); }
+        catch (InvalidOperationException) { Check("rechaza presupuesto recuperado inconsistente", true); }
+
+        var repair = new ProjectState(copy);
+        repair.EnableNext(); repair.AcceptCurrent(); repair.EnableNext(); repair.AcceptCurrent();
+        repair.RecordValidationFailure("delivery");
+        repair.Invalidate(["definition"]);
+        Check("integracion invalida productor y dependencias", repair.Snapshot.All(w => w.Status == ProjectWorkStatus.Pending)
+            && repair.Snapshot.Single(w => w.Id == "delivery").Corrections == 1 && repair.EnableNext()!.Id == "definition");
+
         var bus = new EventBus { RunId = Guid.NewGuid(), AsyncObservers = true, DedupWindow = TimeSpan.Zero };
         var policy = new ExecutionPolicy { WorkingDirectory = root, AllowedPaths = [root], AllowShell = false };
         using var supervisor = new ProcessSupervisor(bus, policy);
@@ -110,6 +149,43 @@ public static class ProjectSelfTest
         await File.AppendAllTextAsync(changed, " ", token);
         Check("hash cambiado invalida cierre", runtime.CheckCard(CardKind.Comprobacion, new Dictionary<string,string> { ["work_item_id"] = "__goal__", ["attempt_id"] = "integration" }) is not null);
         Check("checkpoint atomico disponible", File.Exists(engine.JournalPath + ".checkpoint.json"));
+        var pageResult = recovered.Snapshot.Results.First();
+        var evidencePath = Path.Combine(services.EvidenceDirectory, bus.RunId.ToString("N"), pageResult.EvidenceId + ".json");
+        await File.WriteAllTextAsync(evidencePath, JsonSerializer.Serialize(pageResult with { Observations = new string('d', profile.Policy.EvidencePageChars + 17) }, ProjectJson.Options), token);
+        async Task<ToolExecution> Evidence(object arguments) => await runtime.Tools().ExecuteAsync(
+            new AgentLoop.Parsing.ParsedToolCall(Guid.NewGuid().ToString("N"), "project_evidence", JsonSerializer.SerializeToElement(arguments), JsonSerializer.Serialize(arguments), false), token);
+        var firstPage = await Evidence(new { evidence_id = pageResult.EvidenceId });
+        using var firstPageJson = JsonDocument.Parse(firstPage.Output);
+        var nextOffset = firstPageJson.RootElement.GetProperty("next_offset").GetInt32();
+        var lastPage = await Evidence(new { evidence_id = pageResult.EvidenceId, offset = nextOffset });
+        using var lastPageJson = JsonDocument.Parse(lastPage.Output);
+        Check("evidencia paginada no pierde diagnostico", !firstPage.Failed && !lastPage.Failed
+            && nextOffset == profile.Policy.EvidencePageChars && lastPageJson.RootElement.GetProperty("observations").GetString()!.Length == 17
+            && lastPageJson.RootElement.GetProperty("next_offset").ValueKind == JsonValueKind.Null);
+        Check("evidencia rechaza offset fuera de rango", (await Evidence(new { evidence_id = pageResult.EvidenceId, offset = int.MaxValue })).Failed);
+        await File.WriteAllTextAsync(evidencePath, JsonSerializer.Serialize(pageResult with { ProfileHash = "other-profile" }, ProjectJson.Options), token);
+        Check("evidencia rechaza perfil alterado", (await Evidence(new { evidence_id = pageResult.EvidenceId })).Failed);
+        await File.WriteAllTextAsync(evidencePath, JsonSerializer.Serialize(pageResult, ProjectJson.Options), token);
+        var repairRoot = Path.Combine(root, "repair-project");
+        var repairContractNode = example.DeepClone(); repairContractNode["root"] = repairRoot;
+        var repairContract = ProjectContractAdmission.Admit(repairContractNode.ToJsonString(), repo);
+        var repairBus = new EventBus { RunId = Guid.NewGuid(), AsyncObservers = true, DedupWindow = TimeSpan.Zero };
+        var repairPolicy = new ExecutionPolicy { WorkingDirectory = repairRoot, AllowedPaths = [repairRoot], AllowShell = false };
+        using var repairSupervisor = new ProcessSupervisor(repairBus, repairPolicy);
+        var repairLedger = new CardLedger(CardDeck.Transaccional) { WorkingDirectory = repairRoot };
+        var repairEnvironment = new FakeEnvironment { FailOnCall = 3 };
+        var repairRuntime = new ProjectRuntime(repairContract, repairLedger, repairBus, services, repairEnvironment, repairSupervisor.Puerta);
+        var repairScope = Scope.Minimal(repairPolicy);
+        var repairTools = OperationTools.Build(repairLedger, repairSupervisor, repairBus).Combine(BuiltInTools.DefaultRegistry()).Combine(repairRuntime.Tools())
+            .Filter(n => n is "tarjeta" or "write_text_file" or "project_validate").WithScope(repairScope);
+        var repairContext = new GoalContext { Goal = Goal.Of(copy.Objective, copy.Budgets.DeadlineSeconds), Bus = repairBus, Ledger = repairLedger, Supervisor = repairSupervisor, Project = repairRuntime };
+        var repairEngine = new EventOperationCoordinator(new ProjectScriptClient(repairContract, Path.Combine(repo, "examples", "fixtures", "minimal"), profile.Policy.MaxArtifactBytes), "fixture", repairTools, repairScope)
+            { JournalDirectory = Path.Combine(root, "repair-journal"), MaxModelCalls = 100 };
+        var repaired = await repairEngine.RunAsync(repairContext, token);
+        Check("fallo de integracion habilita reparacion por eventos y cierre", repaired.IsSuccess && repairEnvironment.Calls == 8
+            && repairRuntime.State.Snapshot.Single(w => w.Id == "delivery").Attempts == 2
+            && repairRuntime.State.Snapshot.Single(w => w.Id == "delivery").Corrections == 1
+            && repairBus.History.Any(e => e.Kind == AgentEventKind.ValidacionFallida));
         var validationGate = new AgentLoop.Concurrency.AsyncManualResetEvent(signaled: true);
         var blocked = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);
         var gatedEnvironment = new FakeEnvironment { FirstCommand = () => { validationGate.Reset(); blocked.TrySetResult(); } };

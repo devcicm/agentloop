@@ -1,0 +1,49 @@
+OK project: backend no ejecutable falla como error controlado
+OK project: admision sin crear raiz
+OK project: hash estable de revision admitida
+OK project: rechaza campo desconocido
+OK project: rechaza version desconocida
+OK project: rechaza ciclo
+OK project: rechaza ruta fuera de raiz
+OK project: rechaza validador desconocido
+OK project: rechaza shell arbitrario en parametros
+OK project: rechaza presupuestos invalidos
+OK project: rechaza referencia inexistente
+OK project: rechaza claves duplicadas
+OK project: root protege agent loop
+OK project: root protege Kernel
+OK project: snapshot exige campos requeridos
+OK project: habilita primera tarea por dependencias
+OK project: cerrar tarea no cumple proyecto
+OK project: poda intercambios completos conserva sistema y tarea
+OK project: contrato minimo imposible falla
+OK project: primera lectura consume exploracion
+OK project: relectura no renueva exploracion
+OK project: snapshot conserva notas lecturas y presupuesto
+OK project: recuperacion no permite renovar lectura previa
+OK project: hash nuevo elimina nota anterior
+OK project: exploracion agotada no habilita lecturas libres
+OK project: progreso material reinicia contador
+OK project: nueva tarea preserva conocimiento reinicia exploracion
+OK project: rechaza presupuesto recuperado inconsistente
+OK project: integracion invalida productor y dependencias
+OK project: actor de proyecto cierra raiz con entregables verificados
+OK project: validacion integrada se ejecuta tras las tareas
+OK project: eventos de trabajo y validacion en el mismo bus
+OK project: tarjetas identifican tareas e intentos
+OK project: snapshot durable compatible sin acciones inciertas
+OK project: hash cambiado invalida cierre
+OK project: checkpoint atomico disponible
+OK project: evidencia paginada no pierde diagnostico
+OK project: evidencia rechaza offset fuera de rango
+OK project: evidencia rechaza perfil alterado
+OK project: fallo de integracion habilita reparacion por eventos y cierre
+OK project: pausa entre validadores no inicia comando siguiente
+OK project: senal manual reanuda batch sin polling
+OK project: detecta efecto admitido sin resolver
+OK project: no reejecuta efectos inciertos
+OK project: reconciliacion explicita desbloquea reconstruccion
+OK project: conserva registros antes de escritura final truncada
+OK project: corrupcion intermedia bloquea recuperacion
+OK project: presupuesto de correcciones por tarea
+PROJECT SELF-TEST OK: 48 comprobaciones; backend simulado, sin red.

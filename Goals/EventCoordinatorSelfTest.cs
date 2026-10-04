@@ -218,7 +218,7 @@ public static class EventCoordinatorSelfTest
         var task = OperationContextBuilder.Build("ok, apruebo el plan, procede en modo de ejecucion",
             "sistema", [ChatMessage.FromUser("Crea un proyecto de ejemplo con archivos web y persistencia"),
                 ChatMessage.FromAssistant("plan", reasoning: new string('x', 30000))]);
-        Check("aprobacion hereda requisitos sin copiar razonamiento", task.Inherited && task.Objective.Contains("pos_system") && task.SessionContext == "sistema");
+        Check("aprobacion hereda requisitos sin copiar razonamiento", task.Inherited && task.Objective.Contains("archivos web y persistencia") && !task.Objective.Contains(new string('x', 100)) && task.SessionContext == "sistema");
         var independent = OperationContextBuilder.Build("crea un poema nuevo", "sistema", [ChatMessage.FromUser("proyecto anterior")]);
         Check("objetivo independiente no hereda el proyecto anterior", !independent.Inherited && !independent.Objective.Contains("proyecto"));
         var bounded = OperationContextBuilder.Build("continua", new string('s', 20000),

@@ -3,7 +3,8 @@ using System.Text.Json;
 using AgentLoop.Cards;
 using AgentLoop.Events;
 using AgentLoop.Goals.Projects.Contracts;
-using AgentLoop.Harness.Execution;
+using AgentLoop.Kernel.Projects;
+using AgentLoop.Harness.Composition;
 using AgentLoop.Parsing;
 using AgentLoop.Security;
 using AgentLoop.Tools;
@@ -23,7 +24,12 @@ public sealed class ProjectRuntime
     private readonly Dictionary<string, ValidationResultDto> _results = new(StringComparer.Ordinal);
     private Dictionary<string, string> _hashes;
     private Dictionary<string, string> _baseline;
-    private int _withoutProgress;
+    private readonly ProjectKnowledge _knowledge = new();
+    private readonly ProjectServices _services;
+    private readonly ProjectProfileDto _profile;
+    public ProjectRuntimePolicy Policy => _profile.Policy;
+    public ProjectRecoveryPolicy RecoveryPolicy => new(Policy.MaxJournalBytes, Policy.MaxJournalEntryBytes);
+    public string Instructions => _profile.Instructions;
     private readonly AsyncManualResetEvent _gate;
     public AdmittedProjectContract Admitted { get; }
     public ProjectGoalDto Contract { get; }
@@ -35,19 +41,23 @@ public sealed class ProjectRuntime
     public string ActiveId => State.Active?.Id ?? "__goal__";
     public string AttemptId => State.Active?.AttemptId ?? "integration";
 
-    public ProjectRuntime(AdmittedProjectContract admitted, CardLedger ledger, EventBus bus, IProjectExecutionEnvironment? environment = null, AsyncManualResetEvent? gate = null)
+    public ProjectRuntime(AdmittedProjectContract admitted, CardLedger ledger, EventBus bus, ProjectServices services, IProjectExecutionEnvironment? environment = null, AsyncManualResetEvent? gate = null)
     {
         Admitted = admitted;
         Contract = admitted.Contract;
         _ledger = ledger;
         _bus = bus;
         _gate = gate ?? new AsyncManualResetEvent(signaled: true);
-        _environment = environment ?? new DockerProjectEnvironment(admitted.Root, bus);
+        _services = services;
+        _profile = services.Profile;
+        services.Bind(admitted);
+        _environment = environment ?? services.EnvironmentFactory.Create(admitted.Root, bus.RunId,
+            notice => bus.Publish(notice.Started ? AgentEventKind.ProcesoIniciado : AgentEventKind.ProcesoFin,
+                "project-adapter", notice.CommandId, notice));
         State = new(Contract);
-        var hostRoot = Configuration.SecretStore.ResolveRepositoryRoot();
         ProjectContractAdmission.CheckExecutionRoot(admitted.Root);
-        _evidenceRoots.Add(Path.Combine(hostRoot, ".agentloop", "project-evidence", bus.RunId.ToString("N")));
-        _validator = new(admitted, _environment, _evidenceRoots[0], _gate);
+        _evidenceRoots.Add(Path.Combine(services.EvidenceDirectory, bus.RunId.ToString("N")));
+        _validator = new(admitted, _environment, _evidenceRoots[0], _gate, services);
         _hashes = _validator.HashInputs(Contract.Artifacts.Select(a => a.Id));
         _baseline = new(_hashes, StringComparer.Ordinal);
     }
@@ -56,9 +66,16 @@ public sealed class ProjectRuntime
     {
         if (ResumeJournal is not null)
         {
-            var snapshot = ProjectRecovery.Load(ResumeJournal, Admitted);
-            foreach (var previous in ProjectRecovery.RunIds(ResumeJournal, Admitted))
-                _evidenceRoots.Add(Path.Combine(Configuration.SecretStore.ResolveRepositoryRoot(), ".agentloop", "project-evidence", previous.ToString("N")));
+            var snapshot = ProjectRecovery.Load(ResumeJournal, Admitted, RecoveryPolicy);
+            if (snapshot.ProfileHash != _services.Hash) throw new InvalidOperationException("Perfil cambiado o journal anterior sin perfil; no se reutiliza evidencia.");
+            if (snapshot.Knowledge is not null)
+            {
+                _knowledge.Restore(snapshot.Knowledge, Contract.Artifacts.Select(a => a.Id).ToHashSet(StringComparer.Ordinal));
+                if (_knowledge.ExplorationReads > Policy.MaxExplorationReads || _knowledge.Artifacts.Any(a => (a.Note?.Length ?? 0) > Policy.MaxNoteChars))
+                    throw new InvalidOperationException("Contexto recuperado excede politica.");
+            }
+            foreach (var previous in ProjectRecovery.RunIds(ResumeJournal, Admitted, RecoveryPolicy))
+                _evidenceRoots.Add(Path.Combine(_services.EvidenceDirectory, previous.ToString("N")));
             State.Restore(snapshot.Work);
             StartedAt = snapshot.StartedAt;
             ModelCalls = snapshot.ModelCalls;
@@ -70,7 +87,7 @@ public sealed class ProjectRuntime
         if (Remaining <= TimeSpan.Zero) throw new InvalidOperationException("Deadline original agotado; crear una nueva revision/operacion.");
         await _environment.PreflightAsync(token);
         if (ResumeJournal is not null)
-            foreach (var previous in ProjectRecovery.RunIds(ResumeJournal, Admitted)) await _environment.CheckPreviousRunAsync(previous, token);
+            foreach (var previous in ProjectRecovery.RunIds(ResumeJournal, Admitted, RecoveryPolicy)) await _environment.CheckPreviousRunAsync(previous, token);
         await _gate.WaitAsync(token);
         ProjectContractAdmission.CheckResource(Admitted.Root);
         Directory.CreateDirectory(Admitted.Root);
@@ -83,13 +100,14 @@ public sealed class ProjectRuntime
     public void PublishStart()
     {
         _bus.Publish(AgentEventKind.ProyectoAdmitido, "project", "contrato de proyecto admitido",
-            new { contractHash = Admitted.ContractHash, contract = Contract, sourceJournal = ResumeJournal, sourceHash = ResumeJournal is null ? null : ProjectRecovery.JournalHash(ResumeJournal), startedAt = StartedAt, executionEnvironment = _environment.Identity });
+            new { contractHash = Admitted.ContractHash, contract = Contract, sourceJournal = ResumeJournal, sourceHash = ResumeJournal is null ? null : ProjectRecovery.JournalHash(ResumeJournal, RecoveryPolicy), startedAt = StartedAt, executionEnvironment = _environment.Identity, profileHash = _services.Hash });
         _bus.Publish(AgentEventKind.TrabajoHabilitado, "project", ActiveId, new ProjectEventDataDto(1, Admitted.ContractHash, ActiveId, AttemptId));
     }
 
     private void EnableNext()
     {
         var next = State.EnableNext();
+        _knowledge.BeginWork();
         _bus.Publish(AgentEventKind.TrabajoHabilitado, "project", next?.Id ?? "integracion final",
             new ProjectEventDataDto(1, Admitted.ContractHash, ActiveId, AttemptId));
     }
@@ -98,8 +116,13 @@ public sealed class ProjectRuntime
     {
         contractHash = Admitted.ContractHash, workItemId = ActiveId, attemptId = AttemptId,
         work = State.Snapshot, task = Contract.WorkItems.SingleOrDefault(w => w.Id == ActiveId),
+        knowledge = _knowledge.Artifacts.Select(a => new { a.ArtifactId, a.Reads, fresh = _hashes.GetValueOrDefault(a.ArtifactId) == a.Hash,
+            note = a.Note is null ? null : DataGuard.PromptData("model-note:" + a.ArtifactId, a.Note, Policy.MaxNoteChars) }),
+        progress = new { _knowledge.ActionsWithoutProgress, _knowledge.ExplorationReads },
+        guidance = "Consulta defectos por evidence_id y conserva hallazgos con project_note. Las lecturas repetidas sin cambio no son progreso; corrige y valida antes del cierre.",
+        artifactHashes = _hashes, commands = _profile.Commands.Where(c => c.ModelCallable).Select(c => c.Id),
         artifacts = Contract.Artifacts, validations = Contract.Validations.Where(v => v.WorkItemId == ActiveId || ActiveId == "__goal__"),
-        defects = _results.Values.Where(v => !v.Passed).Select(v => new { v.ValidationId, v.EvidenceId, observations = DataGuard.PromptData("validator:" + v.ValidationId, v.Observations, 1200) }),
+        defects = _results.Values.Where(v => !v.Passed).Select(v => new { v.ValidationId, v.EvidenceId, observations = DataGuard.PromptData("validator:" + v.ValidationId, v.Observations, Policy.MaxDefectChars) }),
     }, ProjectJson.Options);
 
     public string? Admit(ParsedToolCall call)
@@ -144,7 +167,7 @@ public sealed class ProjectRuntime
     {
         var specs = Contract.Validations.Where(v => v.Required && (workId == "__goal__" || v.WorkItemId == workId));
         return specs.All(v => _results.TryGetValue(v.Id, out var result) && result.Passed
-            && result.ContractHash == Admitted.ContractHash
+            && result.ContractHash == Admitted.ContractHash && result.ProfileHash == _services.Hash
             && (workId == "__goal__" ? result.AttemptId == "integration" : State.Active?.Id != workId || result.AttemptId == AttemptId)
             && result.InputHashes.Count == v.Parameters.ArtifactIds.Count
             && _validator.HashInputs(v.Parameters.ArtifactIds).All(p => result.InputHashes.TryGetValue(p.Key, out var hash) && hash == p.Value));
@@ -162,6 +185,19 @@ public sealed class ProjectRuntime
         State.Invalidate(differences);
         _hashes = changed;
         var progress = differences.Length > 0;
+        var exploration = false;
+        if (!execution.Failed && call.Name == "read_text_file")
+        {
+            var path = Path.GetFullPath(call.Arguments.GetProperty("path").GetString()!, Admitted.Root);
+            var artifact = Contract.Artifacts.SingleOrDefault(a => string.Equals(Path.GetFullPath(a.RelativePath, Admitted.Root), path,
+                OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal));
+            if (artifact is not null) exploration = _knowledge.ObserveRead(artifact.Id, _hashes[artifact.Id], Policy.MaxExplorationReads);
+        }
+        if (!execution.Failed && call.Name == "project_note")
+        {
+            var artifact = call.Arguments.GetProperty("artifact_id").GetString()!;
+            _knowledge.Note(artifact, _hashes[artifact], DataGuard.Input(call.Arguments.GetProperty("note").GetString()!));
+        }
         if (execution.ToolName == "project_validate")
         {
             using var data = JsonDocument.Parse(execution.Output);
@@ -174,7 +210,17 @@ public sealed class ProjectRuntime
                     _bus.Publish(result.Passed ? AgentEventKind.ValidacionFinalizada : AgentEventKind.ValidacionFallida,
                         "validator", result.ValidationId, result);
                 }
-                if (results.Any(r => !r.Passed)) State.RecordValidationFailure();
+                var failures = results.Where(r => !r.Passed).ToArray();
+                if (failures.Length > 0)
+                {
+                    if (call.Arguments.GetProperty("work_item_id").GetString() == "__goal__")
+                    {
+                        var affected = Contract.Validations.Where(v => failures.Any(r => r.ValidationId == v.Id)).ToArray();
+                        foreach (var owner in affected.Select(v => v.WorkItemId).Distinct()) State.RecordValidationFailure(owner);
+                        State.Invalidate(affected.SelectMany(v => v.Parameters.ArtifactIds));
+                    }
+                    else State.RecordValidationFailure();
+                }
             }
         }
         if (call.Name == "tarjeta" && !execution.Failed)
@@ -189,16 +235,29 @@ public sealed class ProjectRuntime
             }
             else if (card == "abortar" && !State.AllAccepted) { State.AbortCurrent(); EnableNext(); }
         }
-        if (progress) _withoutProgress = 0;
-        else if (++_withoutProgress > 12) throw new InvalidOperationException("Sin progreso material tras 12 acciones; presupuesto de tarea agotado.");
+        if (State.Active is null && !State.AllAccepted && _ledger.OpenCount == 1) EnableNext();
+        _knowledge.RecordAction(progress, exploration);
+        if (_knowledge.ActionsWithoutProgress > Policy.MaxActionsWithoutProgress)
+            throw new InvalidOperationException("Sin progreso material; presupuesto configurado de acciones agotado.");
         return progress;
     }
 
-    public ProjectSnapshotDto Snapshot() => new(1, Admitted.ContractHash, StartedAt, ModelCalls, State.Snapshot, _results.Values.Select(r => r with { Observations = Prompting.TextSanitizer.Truncate(r.Observations, 512) }).ToArray(), _baseline);
+    public ProjectSnapshotDto Snapshot() => new(1, Admitted.ContractHash, StartedAt, ModelCalls, State.Snapshot, _results.Values.Select(r => r with { Observations = Prompting.TextSanitizer.Truncate(r.Observations, Policy.MaxSnapshotObservationChars) }).ToArray(), _baseline, _services.Hash, _knowledge.Snapshot());
 
     public ToolRegistry Tools() => new([
+        new DelegateTool("project_note", "Guarda un hallazgo de contexto vinculado al hash del artefacto; no acredita validacion ni progreso.",
+            """{"type":"object","properties":{"artifact_id":{"type":"string"},"hash":{"type":"string"},"note":{"type":"string"}},"required":["artifact_id","hash","note"]}""",
+            (args, token) =>
+            {
+                var id = args.GetProperty("artifact_id").GetString()!;
+                if (!_hashes.TryGetValue(id, out var hash) || args.GetProperty("hash").GetString() != hash)
+                    throw new InvalidOperationException("Nota exige hash vigente del artefacto.");
+                var note = args.GetProperty("note").GetString()!;
+                if (note.Length > Policy.MaxNoteChars) throw new InvalidOperationException("Nota excede politica.");
+                return ValueTask.FromResult(JsonSerializer.Serialize(new { artifact_id = id, hash, stored = true }));
+            }),
         new DelegateTool("project_evidence", "Lee observaciones de evidencia del host por id, sin admitir rutas arbitrarias.",
-            """{"type":"object","properties":{"evidence_id":{"type":"string"}},"required":["evidence_id"]}""",
+            """{"type":"object","properties":{"evidence_id":{"type":"string"},"offset":{"type":"integer","minimum":0}},"required":["evidence_id"]}""",
             (args, token) =>
             {
                 var id = args.GetProperty("evidence_id").GetString();
@@ -206,9 +265,16 @@ public sealed class ProjectRuntime
                 var path = _evidenceRoots.Select(root => Path.Combine(root, id + ".json")).FirstOrDefault(File.Exists)
                     ?? throw new FileNotFoundException("Registro completo no disponible; repetir validacion.");
                 ProjectContractAdmission.CheckResource(path);
-                if (new FileInfo(path).Length > 1024 * 1024) throw new IOException("Evidencia excede presupuesto.");
+                if (new FileInfo(path).Length > Policy.MaxEvidenceBytes) throw new IOException("Evidencia excede presupuesto.");
                 var result = JsonSerializer.Deserialize<ValidationResultDto>(StrictJson.Parse(File.ReadAllText(path)).GetRawText(), ProjectJson.Options)!;
-                return ValueTask.FromResult(JsonSerializer.Serialize(new { result.ValidationId, result.EvidenceId, result.Passed, observations = DataGuard.Display(result.Observations), result.ExecutionEnvironment }));
+                if (result.EvidenceId != id || result.ContractHash != Admitted.ContractHash || result.ProfileHash != _services.Hash)
+                    throw new InvalidOperationException("Registro de evidencia incompatible.");
+                var offset = args.TryGetProperty("offset", out var offsetValue) ? offsetValue.GetInt32() : 0;
+                var text = DataGuard.Display(result.Observations);
+                if (offset < 0 || offset > text.Length) throw new InvalidOperationException("Offset invalido.");
+                var count = Math.Min(Policy.EvidencePageChars, text.Length - offset);
+                return ValueTask.FromResult(JsonSerializer.Serialize(new { result.ValidationId, result.EvidenceId, result.Passed,
+                    observations = text.Substring(offset, count), offset, next_offset = offset + count < text.Length ? (int?)(offset + count) : null, result.ExecutionEnvironment }));
             }),
         new DelegateTool("project_validate", "Ejecuta los validadores del host para la tarea vigente. Sus resultados no los declara el modelo.",
             """{"type":"object","properties":{"work_item_id":{"type":"string"},"attempt_id":{"type":"string"}},"required":["work_item_id","attempt_id"]}""",
@@ -222,15 +288,17 @@ public sealed class ProjectRuntime
                 var batch = Guid.NewGuid().ToString("N");
                 _deliveries[batch] = results;
                 return JsonSerializer.Serialize(new { batch_id = batch, codigo = results.All(r => r.Passed) ? 0 : 1,
-                    results = results.Select(r => new { r.ValidationId, r.Passed, r.EvidenceId, observations = Prompting.TextSanitizer.Truncate(r.Observations, 1000) }) });
+                    results = results.Select(r => new { r.ValidationId, r.Passed, r.EvidenceId, observations = Prompting.TextSanitizer.Truncate(r.Observations, Policy.MaxDefectChars) }) });
             }),
-        new DelegateTool("project_command", "Comando de proyecto aislado: install o build. No admite texto de shell.",
-            """{"type":"object","properties":{"profile":{"type":"string","enum":["install","build"]},"work_item_id":{"type":"string"},"attempt_id":{"type":"string"}},"required":["profile","work_item_id","attempt_id"]}""",
+        new DelegateTool("project_command", "Ejecuta un comando admitido por el perfil del host. No admite texto de shell.",
+            """{"type":"object","properties":{"profile":{"type":"string"},"work_item_id":{"type":"string"},"attempt_id":{"type":"string"}},"required":["profile","work_item_id","attempt_id"]}""",
             async (args, token) =>
             {
                 if (args.GetProperty("work_item_id").GetString() != ActiveId || args.GetProperty("attempt_id").GetString() != AttemptId
                     || _ledger.OpenCount != (State.AllAccepted ? 1 : 2)) throw new InvalidOperationException("Intento/transaccion no vigente.");
-                var result = await _environment.RunAsync(args.GetProperty("profile").GetString()!, TimeSpan.FromSeconds(120), token);
+                var command = _profile.Commands.SingleOrDefault(c => c.Id == args.GetProperty("profile").GetString() && c.ModelCallable)
+                    ?? throw new InvalidOperationException("Comando no habilitado al modelo por el perfil.");
+                var result = await _environment.RunAsync(command.Id, TimeSpan.FromSeconds(command.TimeoutSeconds), token);
                 return JsonSerializer.Serialize(new { codigo = result.ExitCode, output = result.Output, cleanupConfirmed = result.CleanupConfirmed });
             }),
     ]);

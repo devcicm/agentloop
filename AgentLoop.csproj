@@ -8,7 +8,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Include="ProjectAssets/**" CopyToOutputDirectory="PreserveNewest" />
+    <Compile Remove="Kernel/**/*.cs;Core/**/*.cs" />
+    <ProjectReference Include="Kernel/AgentLoop.Kernel.csproj" />
+    <ProjectReference Include="Core/AgentLoop.Core.csproj" />
   </ItemGroup>
 
 </Project>

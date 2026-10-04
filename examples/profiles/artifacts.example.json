@@ -1,0 +1,31 @@
+{
+  "version": 1,
+  "id": "artifact-project",
+  "instructions": "Construir los entregables declarados. La validacion de archivos solo acredita presencia y estructura, no comportamiento de aplicaciones.",
+  "validators": [
+    {
+      "id": "file-check",
+      "handler": "artifact"
+    }
+  ],
+  "commands": [],
+  "execution": {
+    "adapter": "artifact"
+  },
+  "policy": {
+    "maxActionsWithoutProgress": 12,
+    "maxExplorationReads": 8,
+    "maxArtifactBytes": 16777216,
+    "maxEvidenceBytes": 1048576,
+    "maxObservationChars": 8000,
+    "maxSnapshotObservationChars": 512,
+    "maxDefectChars": 1200,
+    "maxNoteChars": 1000,
+    "evidencePageChars": 2000,
+    "maxCommandOutputChars": 64000,
+    "maxJournalBytes": 268435456,
+    "maxJournalEntryBytes": 4194304,
+    "contextMargin": 256,
+    "stopDrainSeconds": 30
+  }
+}

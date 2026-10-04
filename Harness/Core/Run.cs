@@ -17,6 +17,7 @@ public sealed record Run(
     string? Model = null)
 {
     public AgentLoop.Goals.Projects.AdmittedProjectContract? ProjectContract { get; init; }
+    public AgentLoop.Harness.Composition.ProjectServices? ProjectServices { get; init; }
     public string? ResumeJournal { get; init; }
 
     public static Run FromObjective(string objective, int deadlineSeconds, string? model = null)

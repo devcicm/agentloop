@@ -208,3 +208,15 @@ IDs registrados. Recibos, hashes y decisiones pertenecen al host. Esto limita
 poisoning de contexto y falsa evidencia; no prueba seguridad exhaustiva de codigo
 malicioso ni cambia la politica de shell de los goals generales.
 [Ocho verificaciones reales y limites](evidence/2026-10-03-proyectos/README.md).
+
+## Core/Kernel y perfiles externos
+
+El perfil lo instala el host antes de consultar al modelo. La admision estructural
+se separa de Bind de capacidades. Los handlers validan su definicion al admitir;
+los IDs y comandos de dominio se resuelven mediante registros inyectables.
+Raiz de proyecto independiente del repo, perfil y evidencia. Los recursos Docker
+se fijan por resourceHashes y se comprueban antes de comandos; imagen fijada por ID.
+El modelo recibe solo comandos modelCallable. Las notas de contexto son datos sin
+confianza vinculados a hash y no acreditan criterios. El perfil queda registrado
+en snapshot y resultados; su cambio bloquea reutilizacion de evidencia.
+[Guia vigente](core-kernel.md). Los DTOs de dominio viven ahora en Core/Projects/Contracts.

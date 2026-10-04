@@ -8,6 +8,7 @@ public sealed class RunnerOptions
 {
     /// <summary>Optional project contract. Execution requires the isolated backend preflight.</summary>
     public string? ProjectContractPath { get; init; }
+    public AgentLoop.Harness.Composition.ProjectServices? ProjectServices { get; init; }
 
     /// <summary>Presupuesto de solicitudes al LLM; nombre heredado, no iteraciones de estados.</summary>
     public int MaxIterations { get; init; } = 80;
@@ -31,6 +32,9 @@ public sealed class RunnerOptions
     public bool Verbose { get; init; }
 
     public int MaxTokens { get; init; } = 2048;
+
+    public string? Model { get; init; }
+    public AgentLoop.Kernel.Projects.ITokenBudgetEstimator? ContextEstimator { get; init; }
 
     public ThinkingPolicy? Thinking { get; init; }
 }

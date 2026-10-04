@@ -297,7 +297,7 @@ consumidores pueden reconstruir la causalidad concurrente.
 
 ### M03 — Cancelar marca el waiter, pero no lo retira
 
-**Evidencia:** [ResetEvents](../Concurrency/ResetEvents.cs), lineas 83, 150 y 165.
+**Evidencia:** [ResetEvents](../Kernel/Concurrency/ResetEvents.cs), lineas 83, 150 y 165.
 
 Los waiters vencidos o cancelados se retiran cuando llega un `Set` posterior.
 Si solo hay cancelaciones/timeouts, permanecen acumulados en `_waiters`.

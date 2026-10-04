@@ -2,10 +2,7 @@ using System.Text.Json;
 
 namespace AgentLoop.Provider;
 
-/// <summary>
-/// CAPA 1 - comunicacion directa con el proveedor. Habla HTTP y nada mas:
-/// devuelve el JSON crudo para que la capa de parseo lo interprete.
-/// </summary>
+/// <summary>Port for model requests. Implementations own provider transport and dialect adaptation.</summary>
 public interface ILLMClient
 {
     Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default);

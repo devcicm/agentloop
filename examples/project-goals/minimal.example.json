@@ -1,0 +1,82 @@
+{
+  "version": 1,
+  "goalId": "minimal-project",
+  "revision": 1,
+  "objective": "Crear una definicion JSON y un documento de entrega coherente con ella.",
+  "root": "../agentloop-generated/minimal",
+  "workItems": [
+    {
+      "id": "definition",
+      "dependsOn": [],
+      "artifactIds": [
+        "definition"
+      ],
+      "validationIds": [
+        "definition-valid"
+      ]
+    },
+    {
+      "id": "delivery",
+      "dependsOn": [
+        "definition"
+      ],
+      "artifactIds": [
+        "delivery"
+      ],
+      "validationIds": [
+        "delivery-valid"
+      ]
+    }
+  ],
+  "artifacts": [
+    {
+      "id": "definition",
+      "relativePath": "definition.json",
+      "required": true,
+      "expectedKind": "json",
+      "changePolicy": "must-change"
+    },
+    {
+      "id": "delivery",
+      "relativePath": "README.txt",
+      "required": true,
+      "expectedKind": "file",
+      "changePolicy": "must-change"
+    }
+  ],
+  "validations": [
+    {
+      "id": "definition-valid",
+      "validatorId": "file-check",
+      "workItemId": "definition",
+      "parameters": {
+        "artifactIds": [
+          "definition"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    },
+    {
+      "id": "delivery-valid",
+      "validatorId": "file-check",
+      "workItemId": "delivery",
+      "parameters": {
+        "artifactIds": [
+          "delivery"
+        ]
+      },
+      "required": true,
+      "timeoutSeconds": 30
+    }
+  ],
+  "budgets": {
+    "deadlineSeconds": 300,
+    "maxModelCalls": 40,
+    "maxInputTokens": 64000,
+    "maxOutputTokens": 4096,
+    "maxCorrectionsPerWorkItem": 3,
+    "maxConcurrentProcesses": 1
+  },
+  "executionProfile": "artifact-project"
+}

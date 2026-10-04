@@ -6,6 +6,17 @@ El [informe del incidente](incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md
 contiene el antes y sus limites. La [revision del 30](implementacion-coordinador-eventos-2026-09-30.md)
 conserva la implementacion y validacion anteriores.
 
+## Separacion Core/Kernel vigente
+
+[Arquitectura y ASCII actual](core-kernel.md). Kernel contiene puertos LLM,
+ejecucion, eventos y senales. Core contiene DTOs, estado y conocimiento. El host
+inyecta perfiles y plugins; ya no carga un protocolo POS ni una imagen fija.
+Las instrucciones de dominio viven fuera de root. El actor y el bus son los
+existentes. Lecturas/notas quedan vinculadas a hashes; la evidencia se pagina y
+su vigencia exige el hash del perfil. Los flujos generales de las secciones
+siguientes siguen aplicando; el ejercicio anterior es evidencia historica.
+
+
 ## Componentes y responsabilidades
 
 | Componente | Responsabilidad implementada |
@@ -178,11 +189,11 @@ ProjectContextBudget acota el request por estimacion UTF-8 y conserva el brief
 actual. Los presupuestos de tiempo, llamadas y correcciones sobreviven a recuperacion.
 ProjectRecovery reconstruye desde el journal y bloquea efectos inciertos hasta
 reconciliacion explicita. Checkpoints son derivados, sin lectura optimizada aun.
-DockerProjectEnvironment ejecuta perfiles offline en almacenamiento efimero y
+DockerProjectEnvironment recibe su configuracion del perfil externo, ejecuta en almacenamiento efimero y
 comprueba retirada de contenedores; este backend se limita a proyectos con contrato.
 Los goals textuales conservan sus criterios y politica general.
 
-Validacion vigente: [415 checks, aislamiento real y resultados POS](evidence/2026-10-03-proyectos/README.md).
+Validacion de 5132301: [415 checks, aislamiento real y resultados del ejercicio](evidence/2026-10-03-proyectos/README.md).
 
 ## Seguridad de datos y DTOs
 

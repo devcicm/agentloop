@@ -91,3 +91,8 @@ si se ejecuta. Para el actor vigente usar `selftest-coordinator`.
 [Indice y procedencia](2026-10-03-proyectos/README.md): suite local, aislamiento,
 fixture POS con API/navegador y corrida NVIDIA. Los journals y evidencias completos
 permanecen en almacenamiento local ignorado; se versionan resumenes sin claves.
+
+## Separacion Core/Kernel y perfiles externos
+
+[Entrega posterior del 3 de octubre](2026-10-03-core-kernel/README.md): compilacion,
+inventario y migracion del ejercicio. La evidencia POS previa pertenece a 5132301.

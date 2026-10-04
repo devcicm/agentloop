@@ -22,7 +22,7 @@ using AgentLoop.Goals.Projects;
 
 namespace AgentLoop;
 
-internal static class Program
+internal static partial class Program
 {
     private const string ModelsArtifact = "artifacts/agentic-models.json";
 
@@ -2496,106 +2496,6 @@ internal static class Program
         return 64;
     }
 
-    private static int ProjectAdmissionCommand(string[] args)
-    {
-        try
-        {
-            var file = StringOption(args, "--project-contract");
-            if (string.IsNullOrWhiteSpace(file) || file.StartsWith("--", StringComparison.Ordinal))
-                throw new InvalidOperationException("Uso: project-admit --project-contract <archivo.json> [--cwd <directorio>].");
-            var admitted = ProjectContractAdmission.Load(file, StringOption(args, "--cwd") ?? Environment.CurrentDirectory);
-            var contract = admitted.Contract;
-            Console.WriteLine(JsonSerializer.Serialize(new
-            {
-                status = "admitted", executionRequires = "Docker Linux e imagen agentloop-project-node:1; preflight obligatorio",
-                contractHash = admitted.ContractHash, contract,
-            }, new JsonSerializerOptions(AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) { WriteIndented = true }));
-            return 0;
-        }
-        catch (Exception ex) when (ex is IOException or JsonException or InvalidOperationException
-            or UnauthorizedAccessException or ArgumentException or NotSupportedException)
-        {
-            Console.Error.WriteLine(DataGuard.Display("ERROR: " + ex.Message));
-            return 64;
-        }
-    }
-
-    private static AdmittedProjectContract LoadProjectContract(string[] args)
-    {
-        var path = StringOption(args, "--project-contract");
-        if (string.IsNullOrWhiteSpace(path) || path.StartsWith("--", StringComparison.Ordinal))
-            throw new InvalidOperationException("Falta --project-contract <archivo.json>.");
-        return ProjectContractAdmission.Load(path, StringOption(args, "--cwd") ?? Environment.CurrentDirectory);
-    }
-
-    private static int ProjectRecoveryCommand(string[] args, string command)
-    {
-        try
-        {
-            var contract = LoadProjectContract(args);
-            var journal = Path.GetFullPath(StringOption(args, "--resume-journal") ?? throw new InvalidOperationException("Falta --resume-journal <jsonl>."));
-            if (command == "project-reconcile")
-                ProjectRecovery.Reconcile(journal, contract,
-                    StringOption(args, "--action-id") ?? "", StringOption(args, "--decision") ?? "",
-                    StringOption(args, "--note") ?? "");
-            Console.WriteLine(JsonSerializer.Serialize(ProjectRecovery.Inspect(journal, contract), new JsonSerializerOptions(AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) { WriteIndented = true }));
-            return 0;
-        }
-        catch (Exception ex) when (ex is IOException or JsonException or InvalidOperationException or UnauthorizedAccessException or ArgumentException)
-        { Console.Error.WriteLine(DataGuard.Display(ex.Message)); return 64; }
-    }
-
-    private static async Task<int> ProjectBackendCheckAsync(string[] args, CancellationToken token)
-    {
-        try
-        {
-            var contract = LoadProjectContract(args);
-            if (!Directory.Exists(contract.Root)) throw new InvalidOperationException("El chequeo de montajes requiere una raiz existente; project-run crea la raiz despues del preflight.");
-            var environment = new Harness.Execution.DockerProjectEnvironment(contract.Root, new EventBus { RunId = Guid.NewGuid() });
-            await environment.PreflightAsync(token);
-            var result = await environment.RunAsync("security", TimeSpan.FromSeconds(30), token);
-            Console.WriteLine(JsonSerializer.Serialize(new { environment = environment.Identity, result }));
-            return result.ExitCode == 0 && result.CleanupConfirmed ? 0 : 1;
-        }
-        catch (Exception ex) when (ex is IOException or InvalidOperationException or JsonException or UnauthorizedAccessException or ArgumentException)
-        { Console.Error.WriteLine(DataGuard.Display(ex.Message)); return 64; }
-    }
-
-    private static async Task<int> ProjectRunAsync(string[] args, CancellationToken token)
-    {
-        try
-        {
-            var contract = LoadProjectContract(args);
-            var resume = StringOption(args, "--resume-journal");
-            if (resume is not null) ProjectRecovery.Load(Path.GetFullPath(resume), contract);
-            // Fail without reading credentials or requesting a model when the isolated backend is unavailable.
-            await new Harness.Execution.DockerProjectEnvironment(contract.Root, new EventBus()).PreflightAsync(token);
-            var spec = contract.Contract;
-            var model = HasFlag(args, "--fixture") ? "fixture-pos" : ResolveModel(args);
-            var thinking = ResolveThinkingPolicy(args);
-            using var clientOwner = HasFlag(args, "--fixture") ? null : BuildClient(out _, thinking);
-            ILLMClient client = clientOwner is not null ? clientOwner : new ProjectScriptClient(contract, Path.Combine(SecretStore.ResolveRepositoryRoot(), "examples", "pos-minimo"));
-            var run = Harness.Core.Run.FromObjective(spec.Objective, spec.Budgets.DeadlineSeconds, model)
-                with { ProjectContract = contract, ResumeJournal = resume is null ? null : Path.GetFullPath(resume) };
-            var options = new Harness.Runner.RunnerOptions
-            {
-                WorkingDirectory = contract.Root, AllowShell = false, AllowedPaths = [contract.Root],
-                DeadlineSeconds = spec.Budgets.DeadlineSeconds,
-                MaxIterations = Math.Min(IntOption(args, "--max-ciclos", spec.Budgets.MaxModelCalls), spec.Budgets.MaxModelCalls),
-                MaxTokens = Math.Min(IntOption(args, "--max-tokens", spec.Budgets.MaxOutputTokens), spec.Budgets.MaxOutputTokens),
-                MaxConcurrent = spec.Budgets.MaxConcurrentProcesses, Thinking = thinking, Verbose = true,
-            };
-            var store = new Harness.Durable.FileRunStore(Path.Combine(SecretStore.ResolveRepositoryRoot(), "artifacts", "journeys"));
-            var (result, journey) = await Harness.Composition.GoalRunFactory.RunWithRunnerAsync(run, options, client, store, token);
-            Console.WriteLine(DataGuard.Display(JsonSerializer.Serialize(new { runId = run.Id, contractHash = contract.ContractHash,
-                status = journey.FinalStatus.ToString(), outcome = journey.Outcome,
-                journal = Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop", "event-journal", run.Id.ToString("N") + ".jsonl") })));
-            return result.IsSuccess ? 0 : 1;
-        }
-        catch (Exception ex) when (ex is IOException or JsonException or InvalidOperationException or UnauthorizedAccessException or ArgumentException or NotSupportedException)
-        { Console.Error.WriteLine(DataGuard.Display("ERROR proyecto: " + ex.Message)); return 64; }
-    }
-
     private static int InspectOperation(string[] args)
     {
         if (args.Length < 2) return Fail("Uso: recuperacion <ruta.jsonl>");
@@ -2625,9 +2525,9 @@ internal static class Program
               selftest              Valida el harness completo sin tocar la red.
               selftest-coordinator Verifica admision, evidencia y controles del actor.
               project-admit         Valida un contrato de proyecto sin LLM ni ejecucion.
-              project-run           Construye entregables por eventos; exige backend aislado.
+              project-run           Construye entregables por eventos con perfil explicito.
               selftest-projects     Verifica contratos y actor con backend simulado, sin red.
-              project-check-backend Comprueba montajes y limites del contenedor dedicado.
+              project-check-backend Preflight del adaptador; --command ejecuta un check del perfil.
               project-inspect       Inspecciona estado durable sin repetir acciones.
               project-reconcile     Registra una decision del operador sobre una accion incierta.
               recuperacion <jsonl>  Inspecciona eventos y acciones pendientes tras interrupcion.
@@ -2645,7 +2545,9 @@ internal static class Program
               --deadline <s>        goal: presupuesto de la operacion en segundos (300).
               --max-ciclos <n>      goal: presupuesto de llamadas al modelo (80).
               --project-contract <json> Contrato versionado de proyecto.
-              --fixture             project-run: fixture determinista sin LLM; conserva aislamiento real.
+              --project-profile <json> Perfil externo admitido por el host.
+              --fixture --fixture-root <ruta> Cliente determinista con archivos externos.
+              --evidence-dir <ruta> Almacen de evidencia del host.
               --resume-journal <jsonl> Recupera estado sin repetir efectos inciertos.
               --action-id <id> --decision applied|not-applied --note "<texto>"  Reconciliacion explicita.
               --artifact <ruta>    goal: fija el archivo que debe observarse y comprobarse.

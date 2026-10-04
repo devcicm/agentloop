@@ -1,13 +1,15 @@
 # Indice de documentacion
 
-Documentacion actualizada al 3 de octubre de 2026. Suite local: 415 comprobaciones
-correctas. Fixture POS aislado real y corrida NVIDIA: [evidencia vigente](evidence/2026-10-03-proyectos/README.md).
-El codigo determina el comportamiento; los informes fechados conservan su revision.
+Documentacion actualizada al 3 de octubre de 2026: [Core/Kernel y perfiles externos](core-kernel.md).
+[Compilacion actual](evidence/2026-10-03-core-kernel/README.md). Las 415 comprobaciones
+y el POS corresponden a la revision anterior 5132301; no se reejecutaron aqui.
+Los informes fechados conservan su revision de origen.
 
 ## Guias vigentes
 
 | Documento | Alcance |
 | --- | --- |
+| [Core/Kernel y host](core-kernel.md) | Bibliotecas independientes, puertos, perfiles y contexto |
 | [Goals de proyectos por eventos](goals-proyectos.md) | Contratos, tareas, validadores, aislamiento, contexto y recuperacion |
 | [Seguridad, datos y DTOs](seguridad-datos-harness.md) | Sanitizacion, contratos, limites de confianza y uso acotado |
 | [Harness vigente y flujos ASCII](harness-eventos.md) | Arquitectura general, proveedores, contexto y recuperacion |
@@ -23,7 +25,7 @@ El codigo determina el comportamiento; los informes fechados conservan su revisi
 
 | Documento | Estado |
 | --- | --- |
-| [Goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md) | P0-P5 implementadas; P6 con fixture real y resultado remoto documentado |
+| [Goals verificables para proyectos y POS](plan-goals-proyectos-pos-2026-10-02.md) | Informe de la revision 5132301; ejercicio retirado del producto actual |
 
 ## Informes historicos
 

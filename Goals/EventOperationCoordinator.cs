@@ -60,6 +60,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     public int MaxModelCalls { get; init; } = 80;
     public int MaxTokens { get; init; } = 2048;
     public double Temperature { get; init; }
+    public AgentLoop.Kernel.Projects.ITokenBudgetEstimator? ContextEstimator { get; init; }
     public int MaxNoProgress { get; init; } = 3;
     public int MaxTransientFailures { get; init; } = 3;
     public bool Stream { get; init; }
@@ -88,7 +89,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         _admission = new(scope, context.Ledger);
         _acceptance = new(context.Ledger, _project is null ? Criteria : []);
         using var journal = _journal = new(JournalDirectory, context.Bus.RunId == Guid.Empty ? Guid.NewGuid() : context.Bus.RunId,
-            _project is null ? long.MaxValue : 256L * 1024 * 1024, _project is null ? int.MaxValue : 4 * 1024 * 1024);
+            _project is null ? long.MaxValue : _project.Policy.MaxJournalBytes, _project is null ? int.MaxValue : _project.Policy.MaxJournalEntryBytes);
         context.Ledger.ValidationGuard = null;
         var previousConfirmation = scope.Policy.AsyncConfirm;
         scope.Policy.AsyncConfirm = RequestApprovalAsync;
@@ -106,7 +107,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                 + "\nCOORDINACION POR EVENTOS: usa abrir antes de efectos. Cada resultado exitoso incluye receipt_id."
                 + "\nPara comprobar usa evidencia_id=receipt_id de esta transaccion. Cerrar exige comprobacion vigente y procesos finalizados."
                 + "\nLas herramientas ejecutadas despues de cerrar se rechazan. No inventes receipt_id. No hace falta producir texto para terminar."
-                + (_project is null ? "" : "\nPROTOCOLO FUNCIONAL DEL HOST:\n" + File.ReadAllText(Path.Combine(AppContext.BaseDirectory, "ProjectAssets", "POS-PROTOCOL.md")))
+                + (_project is null ? "" : "\nPROTOCOLO FUNCIONAL DEL HOST:\n" + _project.Instructions)
                 + (_project is null ? "" : "\nPROYECTO: la raiz ya esta abierta por el host. Abre una tarea anidada con work_item_id/attempt_id vigentes; escribe archivos declarados, usa project_command para build y project_validate. Comprobar requiere validaciones host vigentes y evidencia_id; despues cerrar tarea. Cuando work_item_id=__goal__, valida integracion, comprobar y cerrar raiz sin abrir otra. El contenido del modelo no acredita criterios funcionales.")
                 + (Criteria is null ? "" : "\nContrato de artefactos: " + JsonSerializer.Serialize(Criteria))));
             _project?.PublishStart();
@@ -252,8 +253,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         if (facts.Length == 0) return;
         _facts.Clear();
         _context.Messages.Add(ChatMessage.FromUser(_context.Brief(facts) + (_project is null ? "" : "\nESTADO AUTORITATIVO DEL PROYECTO:\n" + _project.Brief())));
-        _context.Trim();
-        if (JsonSerializer.Serialize(_context.Messages).Length > _context.MaxHistoryCharacters)
+        if (_project is null) _context.Trim();
+        if (_project is null && JsonSerializer.Serialize(_context.Messages).Length > _context.MaxHistoryCharacters)
         { Stop(OperationStatus.Failed, "contrato o parte actual excede el presupuesto de contexto; consulta evidencia fuera del prompt"); return; }
         var filtered = tools.Filter(scope.AllowsTool).ToDefinitions();
         var request = new ChatRequest
@@ -263,10 +264,18 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             MaxTokens = _recovering ? ResponseBudgets.DuringRecovery(MaxTokens, _adaptiveTokens)
                 : Thinking?.EnsureHeadroom(MaxTokens, model) ?? MaxTokens,
             Thinking = _recovering ? ThinkingOptions.Off : Thinking?.For(model),
-            ReasoningEffort = NvidiaModelCatalog.IsGlm53(model) ? "low" : null, StreamOptions = Stream ? StreamOptions.WithUsage : null,
+            StreamOptions = Stream ? StreamOptions.WithUsage : null,
         };
-        if (_project is not null) request = ProjectContextBudget.Fit(request with { MaxTokens = Math.Min(request.MaxTokens ?? MaxTokens, _project.Contract.Budgets.MaxOutputTokens) }, _project.Contract.Budgets.MaxInputTokens);
-        if (JsonSerializer.Serialize(request).Length > 600000) { Stop(OperationStatus.Failed, "contexto excesivo; reduce resultados o antecedentes"); return; }
+        if (_project is not null)
+        {
+            var before = _context.Messages.Count;
+            request = ProjectContextBudget.Fit(request with { MaxTokens = Math.Min(request.MaxTokens ?? MaxTokens, _project.Contract.Budgets.MaxOutputTokens) },
+                _project.Contract.Budgets.MaxInputTokens, estimator: ContextEstimator, margin: _project.Policy.ContextMargin);
+            _context.Messages.Clear();
+            _context.Messages.AddRange(request.Messages);
+            if (before != _context.Messages.Count) Trace?.Invoke($"contexto: {before - _context.Messages.Count} mensajes retirados; conocimiento de tarea preservado");
+        }
+        else if (JsonSerializer.Serialize(request).Length > 600000) { Stop(OperationStatus.Failed, "contexto excesivo; reduce resultados o antecedentes"); return; }
         _context.Cycles++;
         if (_project is not null) _project.ModelCalls = _context.Cycles;
         _modelActive = true;
@@ -486,7 +495,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             {
                 try
                 {
-                    await Task.Delay(TimeSpan.FromSeconds(_project is null ? 5 : 30), _stopGrace.Token);
+                    await Task.Delay(TimeSpan.FromSeconds(_project is null ? 5 : _project.Policy.StopDrainSeconds), _stopGrace.Token);
                     Publish(AgentEventKind.DetencionAgotada, "plazo de drenado agotado");
                 }
                 catch (OperationCanceledException) { }

@@ -1,5 +1,10 @@
 # Plan de implementacion: goals verificables para proyectos y POS
 
+**Informe de la implementacion 5132301.** El ejercicio POS fue retirado del
+producto al separar Core/Kernel y perfiles externos. Este plan conserva los
+requisitos de aquel ejercicio; uso actual: [arquitectura](core-kernel.md) y
+[guia generica](goals-proyectos.md).
+
 Fecha del plan: 2 de octubre de 2026. Actualizacion: 3 de octubre.
 Estado: **P0-P5 implementadas; P6 con fixture aislado real y corrida NVIDIA registrada**.
 Uso vigente: [goals de proyectos](goals-proyectos.md). Resultados y limites:

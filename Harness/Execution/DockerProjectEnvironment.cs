@@ -1,28 +1,23 @@
 using System.Diagnostics;
 using System.Text;
-using AgentLoop.Events;
+using System.Security.Cryptography;
+using AgentLoop.Kernel.Projects;
 using AgentLoop.Security;
 
 namespace AgentLoop.Harness.Execution;
 
-public sealed record ProjectCommandResult(int ExitCode, string Output, bool CleanupConfirmed);
-public interface IProjectExecutionEnvironment
+/// <summary>Host-selected profiles only. No shell, no host env forwarded, read-only project mount, no external network.</summary>
+public sealed class DockerEnvironmentFactory(DockerExecutionDefinition definition, IReadOnlyList<ProjectCommandDefinition> commands, ProjectRuntimePolicy policy) : IProjectEnvironmentFactory
 {
-    int Running { get; }
-    string Identity => "simulated-backend";
-    Task CheckPreviousRunAsync(Guid runId, CancellationToken token) => Task.CompletedTask;
-    Task PreflightAsync(CancellationToken token);
-    Task<ProjectCommandResult> RunAsync(string profile, TimeSpan timeout, CancellationToken token);
+    public IProjectExecutionEnvironment Create(string root, Guid runId, Action<ProjectProcessNotice>? observer = null)
+        => new DockerProjectEnvironment(root, runId, definition, commands, policy, observer);
 }
 
-/// <summary>Host-selected profiles only. No shell, no host env forwarded, read-only project mount, no external network.</summary>
-public sealed class DockerProjectEnvironment(string root, EventBus bus) : IProjectExecutionEnvironment
+public sealed class DockerProjectEnvironment(string root, Guid runId, DockerExecutionDefinition definition,
+    IReadOnlyList<ProjectCommandDefinition> commands, ProjectRuntimePolicy policy, Action<ProjectProcessNotice>? observer = null) : IProjectExecutionEnvironment
 {
-    public const string ImageTag = "agentloop-project-node:1";
-    private readonly string _docker = OperatingSystem.IsWindows()
-        ? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.ProgramFiles), "Docker", "Docker", "resources", "bin", "docker.exe")
-        : "/usr/bin/docker";
-    private readonly string _oracle = Path.Combine(AppContext.BaseDirectory, "ProjectAssets");
+    private string _docker => definition.Executable;
+    private string _oracle => definition.AssetRoot;
     private string? _image;
     private int _running;
     public int Running => Volatile.Read(ref _running);
@@ -30,7 +25,7 @@ public sealed class DockerProjectEnvironment(string root, EventBus bus) : IProje
 
     public async Task CheckPreviousRunAsync(Guid runId, CancellationToken token)
     {
-        var result = await InvokeAsync(["ps", "--filter", "label=agentloop.run=" + runId.ToString("N"), "--format", "{{.Names}}"], TimeSpan.FromSeconds(10), token);
+        var result = await InvokeAsync(["ps", "--filter", "label=agentloop.run=" + runId.ToString("N"), "--format", "{{.Names}}"], TimeSpan.FromSeconds(definition.ControlTimeoutSeconds), token);
         if (result.ExitCode != 0 || !string.IsNullOrWhiteSpace(result.Output))
             throw new InvalidOperationException("Recuperacion bloqueada: contenedores previos vivos o estado no comprobable: " + result.Output);
     }
@@ -39,41 +34,69 @@ public sealed class DockerProjectEnvironment(string root, EventBus bus) : IProje
     {
         AgentLoop.Goals.Projects.ProjectContractAdmission.CheckExecutionRoot(root);
         if (!File.Exists(_docker)) throw new InvalidOperationException("Backend aislado ausente: Docker CLI no encontrado en su ruta dedicada.");
-        var info = await InvokeAsync(["info", "--format", "{{.OSType}}"], TimeSpan.FromSeconds(10), token);
+        var info = await InvokeAsync(["info", "--format", "{{.OSType}}"], TimeSpan.FromSeconds(definition.ControlTimeoutSeconds), token);
         if (info.ExitCode != 0 || info.Output.Trim() != "linux")
             throw new InvalidOperationException("Backend aislado no disponible: iniciar el motor Linux de Docker. " + DataGuard.Display(info.Output));
-        var image = await InvokeAsync(["image", "inspect", "--format", "{{.Id}}", ImageTag], TimeSpan.FromSeconds(10), token);
+        var image = await InvokeAsync(["image", "inspect", "--format", "{{.Id}}", definition.Image], TimeSpan.FromSeconds(definition.ControlTimeoutSeconds), token);
         if (image.ExitCode != 0 || !image.Output.Trim().StartsWith("sha256:", StringComparison.Ordinal))
-            throw new InvalidOperationException("Falta la imagen local " + ImageTag + "; construir ProjectAssets/Dockerfile segun la guia.");
+            throw new InvalidOperationException("Falta la imagen local " + definition.Image + "; preparar el perfil externo.");
         _image = image.Output.Trim(); // Pin this execution to the resolved local immutable image ID.
-        if (!File.Exists(Path.Combine(_oracle, "run.mjs"))) throw new InvalidOperationException("Faltan oraculos del host en ProjectAssets.");
+        if (!Directory.Exists(_oracle)) throw new InvalidOperationException("Faltan recursos externos del perfil.");
         if (root.Contains(',') || _oracle.Contains(',')) throw new InvalidOperationException("El backend bind-mount no admite comas en estas rutas.");
+        VerifyResources();
+    }
+
+    private void VerifyResources()
+    {
+        foreach (var resource in definition.ResourceHashes)
+        {
+            var path = Path.GetFullPath(resource.Key, _oracle);
+            var relative = Path.GetRelativePath(_oracle, path);
+            if (Path.IsPathRooted(relative) || relative == ".." || relative.StartsWith(".." + Path.DirectorySeparatorChar))
+                throw new InvalidOperationException("Recurso fuera del perfil.");
+            AgentLoop.Goals.Projects.ProjectContractAdmission.CheckResource(path);
+            using var stream = File.OpenRead(path);
+            if (stream.Length > policy.MaxArtifactBytes || !Convert.ToHexString(SHA256.HashData(stream)).Equals(resource.Value, StringComparison.OrdinalIgnoreCase))
+                throw new InvalidOperationException("Recurso del perfil modificado: " + resource.Key);
+        }
     }
 
     public async Task<ProjectCommandResult> RunAsync(string profile, TimeSpan timeout, CancellationToken token)
     {
         if (_image is null) throw new InvalidOperationException("Ejecutar preflight antes del comando.");
-        if (profile is not ("install" or "build" or "health" or "pos" or "security")) throw new InvalidOperationException("Perfil de comando no autorizado.");
-        var name = "agentloop-" + bus.RunId.ToString("N") + "-" + Guid.NewGuid().ToString("N");
-        var args = new List<string> { "run", "--rm", "--name", name, "--label", "agentloop.run=" + bus.RunId.ToString("N"),
+        VerifyResources();
+        var command = commands.SingleOrDefault(c => c.Id == profile) ?? throw new InvalidOperationException("Comando de perfil no autorizado.");
+        timeout = timeout < TimeSpan.FromSeconds(command.TimeoutSeconds) ? timeout : TimeSpan.FromSeconds(command.TimeoutSeconds);
+        var name = "agentloop-" + runId.ToString("N") + "-" + Guid.NewGuid().ToString("N");
+        var args = new List<string> { "run", "--rm", "--name", name, "--label", "agentloop.run=" + runId.ToString("N"),
             "--network", "none", "--read-only", "--cap-drop", "ALL", "--security-opt", "no-new-privileges=true",
-            "--user", "1000:1000", "--memory", "768m", "--memory-swap", "768m", "--cpus", "1", "--pids-limit", "128",
-            "--tmpfs", "/tmp:rw,nosuid,nodev,size=256m,mode=1777", "--workdir", "/tmp",
-            "--mount", "type=bind,source=" + Path.GetFullPath(root) + ",target=/project,readonly",
-            "--mount", "type=bind,source=" + _oracle + ",target=/oracle,readonly",
-            "--env", "HOME=/tmp", "--env", "PLAYWRIGHT_BROWSERS_PATH=/opt/browsers", _image, "node", "/oracle/run.mjs", profile };
+            "--user", definition.User, "--memory", definition.Memory, "--memory-swap", definition.Memory,
+            "--cpus", definition.Cpus, "--pids-limit", definition.Pids.ToString(System.Globalization.CultureInfo.InvariantCulture),
+            "--tmpfs", definition.TemporaryMount, "--workdir", definition.WorkingDirectory,
+            "--mount", "type=bind,source=" + Path.GetFullPath(root) + ",target=" + definition.ProjectMount + ",readonly",
+            "--mount", "type=bind,source=" + _oracle + ",target=" + definition.AssetMount + ",readonly" };
+        foreach (var entry in definition.Environment) { args.Add("--env"); args.Add(entry.Key + "=" + entry.Value); }
+        args.Add(_image);
+        args.AddRange(definition.EntryPoint);
+        args.AddRange(command.Arguments);
         Interlocked.Increment(ref _running);
-        bus.Publish(AgentEventKind.ProcesoIniciado, "project-container", profile, new { container = name });
         ProjectCommandResult? result = null;
-        try { result = await InvokeAsync(args, timeout, token); }
+        try { observer?.Invoke(new(profile, name, true, null, null)); result = await InvokeAsync(args, timeout, token); }
         finally
         {
             // Cleanup uses its own bounded budget even after cancellation, never a model-provided name.
-            var removed = await InvokeAsync(["rm", "--force", name], TimeSpan.FromSeconds(10), CancellationToken.None);
-            var inspected = await InvokeAsync(["inspect", name], TimeSpan.FromSeconds(5), CancellationToken.None);
-            var absent = removed.ExitCode == 0 || inspected.ExitCode == 1 && inspected.Output.Contains("No such", StringComparison.OrdinalIgnoreCase);
-            Interlocked.Decrement(ref _running);
-            bus.Publish(AgentEventKind.ProcesoFin, "project-container", profile, new { container = name, codigo = result?.ExitCode, cleanupConfirmed = absent });
+            var absent = false;
+            try
+            {
+                var removed = await InvokeAsync(["rm", "--force", name], TimeSpan.FromSeconds(definition.CleanupTimeoutSeconds), CancellationToken.None);
+                var inspected = await InvokeAsync(["inspect", name], TimeSpan.FromSeconds(definition.CleanupTimeoutSeconds), CancellationToken.None);
+                absent = removed.ExitCode == 0 || inspected.ExitCode == 1 && inspected.Output.Contains("No such", StringComparison.OrdinalIgnoreCase);
+            }
+            finally
+            {
+                Interlocked.Decrement(ref _running);
+                observer?.Invoke(new(profile, name, false, result?.ExitCode, absent));
+            }
             if (!absent) throw new InvalidOperationException("Efecto incierto: no se pudo confirmar la eliminacion del contenedor " + name);
         }
         return result! with { CleanupConfirmed = true };
@@ -94,7 +117,7 @@ public sealed class DockerProjectEnvironment(string root, EventBus bus) : IProje
             var buffer = new char[2048];
             int count;
             while ((count = await reader.ReadAsync(buffer)) > 0)
-                if (output.Length < 64000) output.Append(buffer, 0, Math.Min(count, 64000 - output.Length));
+                if (output.Length < policy.MaxCommandOutputChars) output.Append(buffer, 0, Math.Min(count, policy.MaxCommandOutputChars - output.Length));
             return DataGuard.Display(output.ToString());
         }
         var stdout = Capture(process.StandardOutput);

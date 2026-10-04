@@ -1,0 +1,76 @@
+{
+  "baseCommit": "5132301",
+  "disposition": "local-ignored-exercise",
+  "files": [
+    {
+      "sourcePath": "examples/pos-minimo/package-lock.json",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/package-lock.json",
+      "sha256": "C4BCDAB5DC527398A164F8759FE86CA188C1A741E331091F9714B7CDA36925D1"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/package.json",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/package.json",
+      "sha256": "AD0E20654E047CA6F1620EF2D5FF53F8E2ECF151F811F5A8B13A13DF2C0BF28A"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/public/index.html",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/public/index.html",
+      "sha256": "AA8ABA091117D617D24381FD1D576E76ABA7C7F41DB55C68EC0B3FFBF7F2A8F8"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/README.md",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/README.md",
+      "sha256": "D5DE96ECAFD4FC725197E6D4A8AB90FFF20C07AE8D013DB9401E949D0548FEB1"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/src/catalogo.ts",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/src/catalogo.ts",
+      "sha256": "BEE99D5C9AB492992781F3D3E090F7AF37FDB24B1BDBAE4F31E70B17BC8CBF87"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/src/persistencia.ts",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/src/persistencia.ts",
+      "sha256": "832FBDAAA435E8C827874F410BF8163CB5E5907E2ADAB79781FC97E0581DC95C"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/src/servidor.ts",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/src/servidor.ts",
+      "sha256": "E664ACB91283190256DDF927F42333AADDC4FB523BD88125BAB925B25A245674"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/src/types.d.ts",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/src/types.d.ts",
+      "sha256": "89CF17077BBE6DA7F80D42CE960222FBAC9591A6B89E097967F67FA9981F148F"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/src/ventas.ts",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/src/ventas.ts",
+      "sha256": "5CD54A70ABFACC98EEFDB35D57FDA9360F21523105992C7BBE04104BF9EC7059"
+    },
+    {
+      "sourcePath": "examples/pos-minimo/tsconfig.json",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/pos-minimo/tsconfig.json",
+      "sha256": "E1FF720555E70C9D69D4D9024C1ADB87D31B8F9D2B2C9819C46C9B7FBFF0E106"
+    },
+    {
+      "sourcePath": "examples/project-goals/pos-minimo.example.json",
+      "retainedPath": "artifacts/exercises/pos-legacy/examples/project-goals/pos-minimo.example.json",
+      "sha256": "DD767F8F03E06F9107A219285AA0AD3FEC0D72E54E447358D9FD0E13495FE571"
+    },
+    {
+      "sourcePath": "ProjectAssets/Dockerfile",
+      "retainedPath": "artifacts/exercises/pos-legacy/ProjectAssets/Dockerfile",
+      "sha256": "F336349A9575E3A71B2FA32D0A1715DA6764FA8C0150AD694821CC3AD5AD8A33"
+    },
+    {
+      "sourcePath": "ProjectAssets/POS-PROTOCOL.md",
+      "retainedPath": "artifacts/exercises/pos-legacy/ProjectAssets/POS-PROTOCOL.md",
+      "sha256": "92A84B8D8E0290C4B104FFE6A3F9BF5C728A3ECD84963C004096ED40C7A5EE21"
+    },
+    {
+      "sourcePath": "ProjectAssets/run.mjs",
+      "retainedPath": "artifacts/exercises/pos-legacy/ProjectAssets/run.mjs",
+      "sha256": "ED77102549807AC3125D5B44ED83BEF3B1034903F8D05DC7D4E5AFDAB1F376C8"
+    }
+  ]
+}

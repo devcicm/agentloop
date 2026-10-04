@@ -1,0 +1,62 @@
+{
+  "version": 1,
+  "id": "external-command-project",
+  "instructions": "Construir los artefactos del contrato y solicitar validacion del host. Los comandos y su criterio de exito pertenecen al perfil externo.",
+  "validators": [
+    {
+      "id": "external-check",
+      "handler": "command",
+      "commandId": "verify"
+    }
+  ],
+  "commands": [
+    {
+      "id": "verify",
+      "arguments": [],
+      "modelCallable": false,
+      "timeoutSeconds": 120
+    }
+  ],
+  "execution": {
+    "adapter": "docker",
+    "docker": {
+      "executable": "REEMPLAZAR_CON_RUTA_DOCKER",
+      "image": "REEMPLAZAR_CON_IMAGEN_PREPARADA",
+      "assetRoot": "REEMPLAZAR_CON_BUNDLE_EXTERNO",
+      "entryPoint": [
+        "REEMPLAZAR_CON_EJECUTABLE",
+        "REEMPLAZAR_CON_VALIDADOR"
+      ],
+      "projectMount": "/project",
+      "assetMount": "/profile",
+      "user": "1000:1000",
+      "memory": "768m",
+      "cpus": "1",
+      "pids": 128,
+      "temporaryMount": "/tmp:rw,nosuid,nodev,size=256m,mode=1777",
+      "workingDirectory": "/tmp",
+      "environment": {},
+      "resourceHashes": {
+        "REEMPLAZAR_CON_ARCHIVO": "REEMPLAZAR_CON_SHA256"
+      },
+      "controlTimeoutSeconds": 10,
+      "cleanupTimeoutSeconds": 10
+    }
+  },
+  "policy": {
+    "maxActionsWithoutProgress": 12,
+    "maxExplorationReads": 8,
+    "maxArtifactBytes": 16777216,
+    "maxEvidenceBytes": 1048576,
+    "maxObservationChars": 8000,
+    "maxSnapshotObservationChars": 512,
+    "maxDefectChars": 1200,
+    "maxNoteChars": 1000,
+    "evidencePageChars": 2000,
+    "maxCommandOutputChars": 64000,
+    "maxJournalBytes": 268435456,
+    "maxJournalEntryBytes": 4194304,
+    "contextMargin": 256,
+    "stopDrainSeconds": 30
+  }
+}

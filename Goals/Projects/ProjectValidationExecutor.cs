@@ -1,14 +1,16 @@
 using System.Security.Cryptography;
 using System.Text.Json;
 using AgentLoop.Goals.Projects.Contracts;
-using AgentLoop.Harness.Execution;
+using AgentLoop.Kernel.Projects;
+using AgentLoop.Harness.Composition;
 using AgentLoop.Security;
 using AgentLoop.Concurrency;
 
 namespace AgentLoop.Goals.Projects;
 
-public sealed class ProjectValidationExecutor(AdmittedProjectContract admitted, IProjectExecutionEnvironment environment, string evidenceRoot, AsyncManualResetEvent gate)
+public sealed class ProjectValidationExecutor(AdmittedProjectContract admitted, IProjectExecutionEnvironment environment, string evidenceRoot, AsyncManualResetEvent gate, ProjectServices services)
 {
+    private readonly ProjectProfileDto _profile = services.Profile;
     private readonly ProjectGoalDto _contract = admitted.Contract;
     public Dictionary<string, string> HashInputs(IEnumerable<string> artifactIds)
     {
@@ -22,10 +24,10 @@ public sealed class ProjectValidationExecutor(AdmittedProjectContract admitted, 
         }
         return hashes;
     }
-    private static string HashFile(string path)
+    private string HashFile(string path)
     {
         using var stream = File.OpenRead(path);
-        if (stream.Length > 16 * 1024 * 1024) throw new IOException("Artefacto excede 16 MiB.");
+        if (stream.Length > _profile.Policy.MaxArtifactBytes) throw new IOException("Artefacto excede politica de bytes.");
         return Convert.ToHexString(SHA256.HashData(stream));
     }
 
@@ -41,25 +43,20 @@ public sealed class ProjectValidationExecutor(AdmittedProjectContract admitted, 
             var started = DateTimeOffset.UtcNow;
             var before = HashInputs(spec.Parameters.ArtifactIds);
             var passed = !before.Values.Contains("missing");
+            var observedEnvironment = environment.Identity;
             var observations = passed ? "Entradas presentes." : "Faltan artefactos de entrada.";
             using var budget = CancellationTokenSource.CreateLinkedTokenSource(token);
             budget.CancelAfter(TimeSpan.FromSeconds(spec.TimeoutSeconds));
             try
             {
-                if (passed && spec.ValidatorId == "artifact")
-                    foreach (var id in spec.Parameters.ArtifactIds)
-                    {
-                        var artifact = _contract.Artifacts.Single(a => a.Id == id);
-                        var path = Path.GetFullPath(artifact.RelativePath, admitted.Root);
-                        if (new FileInfo(path).Length == 0) throw new InvalidOperationException("Artefacto vacio: " + id);
-                        if (artifact.ExpectedKind == "json") StrictJson.Parse(await File.ReadAllTextAsync(path, budget.Token));
-                    }
-                else if (passed)
+                if (passed)
                 {
-                    var profile = spec.ValidatorId switch { "build" => "build", "process-probe" => "health", "pos-functional" => "pos", _ => throw new InvalidOperationException("Validador no registrado.") };
-                    var command = await environment.RunAsync(profile, TimeSpan.FromSeconds(spec.TimeoutSeconds), budget.Token);
-                    passed = command.ExitCode == 0 && command.CleanupConfirmed;
-                    observations = command.Output;
+                    var definition = _profile.Validators.Single(v => v.Id == spec.ValidatorId);
+                    var handler = services.Validators[definition.Handler].Create(_contract, environment);
+                    var observation = await handler.ValidateAsync(spec, definition, budget.Token);
+                    passed = observation.Passed;
+                    observations = observation.Observations;
+                    observedEnvironment = observation.Environment;
                 }
             }
             catch (Exception ex) when (ex is not OperationCanceledException || !token.IsCancellationRequested)
@@ -67,10 +64,12 @@ public sealed class ProjectValidationExecutor(AdmittedProjectContract admitted, 
             var after = HashInputs(spec.Parameters.ArtifactIds);
             passed &= before.All(pair => after[pair.Key] == pair.Value);
             var result = new ValidationResultDto(spec.Id, attemptId, admitted.ContractHash, before, passed,
-                Prompting.TextSanitizer.Truncate(DataGuard.Display(observations), 4000), Guid.NewGuid().ToString("N"), started, DateTimeOffset.UtcNow, ExecutionEnvironment: spec.ValidatorId == "artifact" ? "artifact-host" : environment.Identity);
+                Prompting.TextSanitizer.Truncate(DataGuard.Display(observations), _profile.Policy.MaxObservationChars), Guid.NewGuid().ToString("N"), started, DateTimeOffset.UtcNow, ExecutionEnvironment: observedEnvironment, ProfileHash: services.Hash);
             Directory.CreateDirectory(evidenceRoot);
-            await File.WriteAllTextAsync(Path.Combine(evidenceRoot, result.EvidenceId + ".json"),
-                JsonSerializer.Serialize(result, ProjectJson.Options), token);
+            var payload = JsonSerializer.Serialize(result, ProjectJson.Options);
+            if (System.Text.Encoding.UTF8.GetByteCount(payload) > _profile.Policy.MaxEvidenceBytes)
+                throw new IOException("Registro de evidencia excede politica; no se declara validacion exitosa.");
+            await File.WriteAllTextAsync(Path.Combine(evidenceRoot, result.EvidenceId + ".json"), payload, token);
             results.Add(result);
         }
         return results;

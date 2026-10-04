@@ -1,15 +1,9 @@
 using System.Text;
 using System.Text.Json;
 using AgentLoop.Provider;
+using AgentLoop.Kernel.Projects;
 
 namespace AgentLoop.Harness.Context;
-
-public interface ITokenBudgetEstimator
-{
-    string Version { get; }
-    bool Exact { get; }
-    int Estimate(string text);
-}
 
 /// <summary>Conservative UTF-8 byte upper bound; explicitly not a tokenizer count.</summary>
 public sealed class Utf8TokenBudgetEstimator : ITokenBudgetEstimator
@@ -21,11 +15,11 @@ public sealed class Utf8TokenBudgetEstimator : ITokenBudgetEstimator
 
 public static class ProjectContextBudget
 {
-    public static ChatRequest Fit(ChatRequest request, int maxInput, ITokenBudgetEstimator? estimator = null)
+    public static ChatRequest Fit(ChatRequest request, int maxInput, ITokenBudgetEstimator? estimator = null, int margin = 0)
     {
         estimator ??= new Utf8TokenBudgetEstimator();
         var messages = request.Messages.ToList();
-        int Size() => checked(estimator.Estimate(JsonSerializer.Serialize(request with { Messages = messages })) + 256);
+        int Size() => checked(estimator.Estimate(JsonSerializer.Serialize(request with { Messages = messages })) + margin);
         // Remove complete exchanges only; preserve system and the latest work brief.
         while (Size() > maxInput)
         {

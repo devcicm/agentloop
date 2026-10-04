@@ -216,17 +216,17 @@ public static class EventCoordinatorSelfTest
         }
 
         var task = OperationContextBuilder.Build("ok, apruebo el plan, procede en modo de ejecucion",
-            "sistema", [ChatMessage.FromUser("Crea un POS en pos_system con HTML JS y SQLite"),
+            "sistema", [ChatMessage.FromUser("Crea un proyecto de ejemplo con archivos web y persistencia"),
                 ChatMessage.FromAssistant("plan", reasoning: new string('x', 30000))]);
         Check("aprobacion hereda requisitos sin copiar razonamiento", task.Inherited && task.Objective.Contains("pos_system") && task.SessionContext == "sistema");
-        var independent = OperationContextBuilder.Build("crea un poema nuevo", "sistema", [ChatMessage.FromUser("POS anterior")]);
-        Check("objetivo independiente no hereda el proyecto anterior", !independent.Inherited && !independent.Objective.Contains("POS"));
+        var independent = OperationContextBuilder.Build("crea un poema nuevo", "sistema", [ChatMessage.FromUser("proyecto anterior")]);
+        Check("objetivo independiente no hereda el proyecto anterior", !independent.Inherited && !independent.Objective.Contains("proyecto"));
         var bounded = OperationContextBuilder.Build("continua", new string('s', 20000),
             Enumerable.Range(0, 20).Select(_ => ChatMessage.FromUser(new string('u', 20000))).ToArray());
         Check("continuacion simple y acentuada hereda requisitos",
-            bounded.Inherited && OperationContextBuilder.Build("contin\u00faa", "", [ChatMessage.FromUser("POS")]).Inherited);
+            bounded.Inherited && OperationContextBuilder.Build("contin\u00faa", "", [ChatMessage.FromUser("proyecto")]).Inherited);
         Check("contexto previo tiene limite independiente", bounded.Objective.Length < 7000 && bounded.SessionContext.Length < 6100);
-        using (var fixture = new Fixture(root, "recuperacion POS"))
+        using (var fixture = new Fixture(root, "recuperacion de proyecto"))
         {
             var path = Path.Combine(root, "pos.txt");
             var recoveryRequired = false;
@@ -258,7 +258,7 @@ public static class EventCoordinatorSelfTest
             Check("razonamiento truncado recupera con accion pequena y presupuesto acotado", recoveryRequired
                 && ResponseBudgets.DuringRecovery(50000, 4096) == 8192);
             Check("observacion y receipt sobreviven fuera del historial", observedAfterTrim);
-            Check("recuperacion POS crea, comprueba y cierra artefacto real", result.IsSuccess && File.ReadAllText(path) == "40");
+            Check("recuperacion de proyecto crea, comprueba y cierra artefacto real", result.IsSuccess && File.ReadAllText(path) == "40");
         }
         await ProviderContractSelfTest.RunAsync(Check, token);
         await AgentLoop.Security.SecuritySelfTest.RunAsync(Check, root, token);

@@ -94,25 +94,27 @@ compilacion sin errores ni advertencias, 340 comprobaciones correctas y
 prueba NVIDIA de poema con escritura, lectura, comprobacion y cierre.
 No equivale a una comprobacion nueva de disponibilidad remota.
 
-## Proyectos verificables por eventos
+## Core, Kernel y proyectos genericos
 
-[Guia y flujo ASCII](docs/goals-proyectos.md). P0-P5 implementadas y P6 con
-fixture POS aislado real. La suite del 3 de octubre tiene **415 comprobaciones**.
-[Resultados del fixture y NVIDIA](docs/evidence/2026-10-03-proyectos/README.md).
+[Arquitectura independiente y flujo ASCII](docs/core-kernel.md).
+`AgentLoop.Kernel` expone puertos, contratos y senales; `AgentLoop.Core` conserva
+estado y conocimiento; el ejecutable compone adaptadores y coordina por eventos.
+El ejercicio POS fue archivado localmente y retirado de la implementacion.
 
 ```powershell
-docker build -t agentloop-project-node:1 -f ProjectAssets/Dockerfile ProjectAssets
-dotnet run -- project-admit --project-contract "examples/project-goals/pos-minimo.example.json"
-dotnet run -- project-run --project-contract "examples/project-goals/pos-minimo.example.json" --fixture
+dotnet build AgentLoop.sln
+dotnet run -- project-admit --project-contract "examples/project-goals/minimal.example.json" --project-profile "examples/profiles/artifacts.example.json"
+dotnet run -- project-run --project-contract "examples/project-goals/minimal.example.json" --project-profile "examples/profiles/artifacts.example.json" --fixture --fixture-root "examples/fixtures/minimal"
 ```
 
-Para NVIDIA, usar un contrato con root propio y omitir `--fixture`. El host exige
-validacion funcional antes de cerrar; fallos del modelo o presupuestos agotados
-no se declaran exito. La imagen preparada requiere Docker Linux; ejecucion offline,
-perfiles fijos, archivos declarados, contexto acotado y recuperacion por journal.
-`must-change` compara contra la baseline: usar una raiz nueva para repetir el fixture.
+[Guia de perfiles, contexto y recuperacion](docs/goals-proyectos.md).
+No hay perfil implicito. El host registra validadores y comandos; las instrucciones
+de dominio viven en perfiles externos. La raiz generada debe estar fuera del repo.
+El ejemplo acredita archivos/JSON; para comportamiento se instala un validador externo.
 
-[Plan de implementacion y estado](docs/plan-goals-proyectos-pos-2026-10-02.md).
+[Compilacion de esta entrega](docs/evidence/2026-10-03-core-kernel/README.md).
+Las 415 comprobaciones y el ejercicio aislado anteriores corresponden a 5132301;
+esta entrega no vuelve a ejecutar pruebas ni inferencia remota.
 
 [Indice documental](docs/README.md) ·
 [Arquitectura y pendientes](docs/implementacion-coordinador-eventos-2026-09-30.md) ·

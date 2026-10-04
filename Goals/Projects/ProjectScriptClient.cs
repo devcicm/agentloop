@@ -4,7 +4,7 @@ using AgentLoop.Provider;
 namespace AgentLoop.Goals.Projects;
 
 /// <summary>Explicit deterministic fixture, never selected for normal model runs.</summary>
-public sealed class ProjectScriptClient(AdmittedProjectContract admitted, string fixtureRoot) : ILLMClient
+public sealed class ProjectScriptClient(AdmittedProjectContract admitted, string fixtureRoot, int maxArtifactBytes) : ILLMClient
 {
     private readonly Dictionary<string, int> _steps = new();
     public Task<IReadOnlyList<ModelInfo>> ListModelsAsync(CancellationToken cancellationToken = default) => Task.FromResult<IReadOnlyList<ModelInfo>>([]);
@@ -27,7 +27,10 @@ public sealed class ProjectScriptClient(AdmittedProjectContract admitted, string
         {
             var spec = admitted.Contract.Artifacts.Single(a => a.Id == item.ArtifactIds[step - 1]);
             name = "write_text_file";
-            args = new { path = Path.GetFullPath(spec.RelativePath, admitted.Root), content = File.ReadAllText(Path.GetFullPath(spec.RelativePath, fixtureRoot)) };
+            var source = Path.GetFullPath(spec.RelativePath, fixtureRoot);
+            ProjectContractAdmission.CheckResource(source);
+            if (new FileInfo(source).Length > maxArtifactBytes) throw new IOException("Fixture excede politica de artefactos.");
+            args = new { path = Path.GetFullPath(spec.RelativePath, admitted.Root), content = File.ReadAllText(source) };
         }
         else
         {

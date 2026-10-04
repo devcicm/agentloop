@@ -56,7 +56,7 @@ public static class ProjectContractAdmission
         var root = Path.TrimEndingDirectorySeparator(Path.GetFullPath(dto.Root, Path.GetFullPath(workingDirectory)));
         ValidateResource(root);
         if (File.Exists(root)) throw Invalid("root debe ser un directorio, no un archivo.");
-        if (dto.ExecutionProfile != "isolated-project-v1") throw Invalid("executionProfile no soportado: usar isolated-project-v1.");
+        Id(dto.ExecutionProfile);
         if (dto.Budgets is null) throw Invalid("Falta budgets.");
         Range(dto.Budgets.DeadlineSeconds, 1, 86400, "deadlineSeconds");
         Range(dto.Budgets.MaxModelCalls, 1, 1000, "maxModelCalls");
@@ -105,17 +105,9 @@ public static class ProjectContractAdmission
             References(validation.Parameters.ArtifactIds, artifacts, "parameters.artifactIds");
             if (validation.Parameters.ArtifactIds.Count == 0) throw Invalid("Una validacion debe declarar sus artefactos de entrada.");
             Range(validation.TimeoutSeconds, 1, dto.Budgets.DeadlineSeconds, "timeoutSeconds");
-            // These IDs describe the planned host capabilities, not installed executable validators.
-            var p = validation.Parameters;
-            var correct = validation.ValidatorId switch
-            {
-                "artifact" => p.CommandProfile is null && p.Scenario is null,
-                "build" => p.CommandProfile == "node-build-v1" && p.Scenario is null,
-                "process-probe" => p.CommandProfile == "node-service-v1" && p.Scenario == "health-v1",
-                "pos-functional" => p.CommandProfile == "node-service-v1" && p.Scenario == "pos-minimo-v1",
-                _ => false,
-            };
-            if (!correct) throw Invalid("ValidatorId o parametros no reconocidos: " + validation.Id);
+            Id(validation.ValidatorId);
+            if (validation.Parameters.CommandProfile is not null) Id(validation.Parameters.CommandProfile);
+            if (validation.Parameters.Scenario is not null) Id(validation.Parameters.Scenario);
         }
         foreach (var artifact in artifacts.Values.Where(a => a.Required))
             if (!work.Values.Any(w => w.ArtifactIds.Contains(artifact.Id, StringComparer.Ordinal))
@@ -157,9 +149,8 @@ public static class ProjectContractAdmission
         if (relative == "." || !Path.IsPathRooted(relative) && relative != ".." && !relative.StartsWith(".." + Path.DirectorySeparatorChar))
             throw new InvalidOperationException("root de proyecto no puede contener el repo del harness.");
         var insideHost = Path.GetRelativePath(hostRoot, root);
-        if (!Path.IsPathRooted(insideHost) && insideHost != ".." && !insideHost.StartsWith(".." + Path.DirectorySeparatorChar)
-            && !insideHost.StartsWith("artifacts" + Path.DirectorySeparatorChar + "generated" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
-            throw new InvalidOperationException("Dentro del harness, root debe estar bajo artifacts/generated/; los oraculos y el codigo del host son protegidos.");
+        if (!Path.IsPathRooted(insideHost) && insideHost != ".." && !insideHost.StartsWith(".." + Path.DirectorySeparatorChar))
+            throw new InvalidOperationException("El proyecto debe tener una raiz independiente del repositorio del harness.");
     }
 
     public static void CheckResource(string path) => ValidateResource(Path.GetFullPath(path));

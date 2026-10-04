@@ -24,9 +24,9 @@ public sealed class ProjectState(ProjectGoalDto contract)
         return _work[next.Id] = old with { Status = ProjectWorkStatus.Active, Attempts = old.Attempts + 1, AttemptId = Guid.NewGuid().ToString("N") };
     }
 
-    public void RecordValidationFailure()
+    public void RecordValidationFailure(string? workItemId = null)
     {
-        var active = Active;
+        var active = workItemId is null ? Active : _work.GetValueOrDefault(workItemId);
         if (active is null) return;
         var corrections = active.Corrections + 1;
         _work[active.Id] = active with { Corrections = corrections };

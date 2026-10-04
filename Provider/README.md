@@ -1,6 +1,6 @@
 # Proveedores LLM
 
-Estructura activa desde el 1 de octubre de 2026. Namespace publico compartido
+Actualizado el 3 de octubre de 2026. Los puertos compartidos viven en Kernel; las politicas genericas de recuperacion viven en Core. Namespace publico compartido
 `AgentLoop.Provider`; las carpetas delimitan las responsabilidades reales.
 
 ```text
@@ -16,13 +16,9 @@ Provider/
 IMPLEMENTADO
 Provider/
 +-- Contracts/
-|   +-- ChatContracts.cs          mensajes, tools, requests y modelos
-|   +-- ILLMClient.cs             puerto usado por harness y discovery
 |   +-- LLMException.cs          error tipado, sin credenciales
 |   +-- TransportOptions.cs      endpoint, timeout, retry y credencial
 +-- Helpers/
-|   +-- ThinkingPolicy.cs        preferencias y soporte observado
-|   +-- ResponseBudgets.cs       respuesta de recuperacion acotada
 |   +-- TransientErrors.cs       clasificacion HTTP compartida
 +-- Transport/
 |   +-- ChatCompletionsTransport.cs  envio cancelable y retry 1,2,4 segundos
@@ -33,6 +29,11 @@ Provider/
     +-- NvidiaRequestAdapter.cs  dialecto por modelo
     +-- ProviderContractSelfTest.cs  contratos sin red por HTTP simulado
 ```
+
+Puertos compartidos: Kernel/LLM/ILLMClient.cs, ChatContracts.cs y ThinkingPolicy.cs.
+Core/LLM/ResponseBudgets.cs conserva politica generica de recuperacion.
+El motor no selecciona modelos NVIDIA ni aplica knobs GLM: los decide el host y
+el adaptador del proveedor. [Arquitectura](../docs/core-kernel.md).
 
 ## Contrato de integracion
 

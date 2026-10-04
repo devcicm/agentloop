@@ -2,6 +2,7 @@ using System.Security.Cryptography;
 using System.Text.Json;
 using AgentLoop.Goals.Projects.Contracts;
 using AgentLoop.Security;
+using AgentLoop.Kernel.Projects;
 
 namespace AgentLoop.Goals.Projects;
 
@@ -11,15 +12,18 @@ public sealed record ReconciliationDto(int Version, string SourceHash, string Co
 
 public static class ProjectRecovery
 {
-    public static ProjectRecoveryInspection Inspect(string path, AdmittedProjectContract contract) => InspectCore(path, contract, 0);
+    public static ProjectRecoveryPolicy InspectionDefaults { get; } = new(256L * 1024 * 1024, 4 * 1024 * 1024);
+    public static ProjectRecoveryInspection Inspect(string path, AdmittedProjectContract contract, ProjectRecoveryPolicy? policy = null)
+        => InspectCore(path, contract, 0, policy ?? InspectionDefaults);
 
-    private static ProjectRecoveryInspection InspectCore(string path, AdmittedProjectContract contract, int depth)
+    private static ProjectRecoveryInspection InspectCore(string path, AdmittedProjectContract contract, int depth, ProjectRecoveryPolicy policy)
     {
+        if (policy.MaxJournalBytes < 1 || policy.MaxEntryBytes < 1) throw new ArgumentException("Politica de recuperacion invalida.");
         if (depth > 32) throw new InvalidOperationException("Cadena de recuperacion demasiado larga o ciclica.");
         string? sourceJournal = null;
         string? sourceHash = null;
         ProjectContractAdmission.CheckResource(Path.GetFullPath(path));
-        if (new FileInfo(path).Length > 256L * 1024 * 1024) throw new IOException("Journal excede presupuesto de recuperacion (256 MiB).");
+        if (new FileInfo(path).Length > policy.MaxJournalBytes) throw new IOException("Journal excede presupuesto de recuperacion configurado.");
         var pending = new HashSet<string>(StringComparer.Ordinal);
         ProjectSnapshotDto? snapshot = null;
         var matched = false;
@@ -30,8 +34,8 @@ public static class ProjectRecovery
             while (lines.MoveNext())
             {
                 JsonElement entry;
-                if (lines.Current.Length > 4 * 1024 * 1024) throw new InvalidOperationException("Entrada de journal demasiado grande.");
-                try { entry = StrictJson.Parse(lines.Current, 4 * 1024 * 1024); }
+                if (lines.Current.Length > policy.MaxEntryBytes) throw new InvalidOperationException("Entrada de journal demasiado grande.");
+                try { entry = StrictJson.Parse(lines.Current, policy.MaxEntryBytes); }
                 catch (JsonException)
                 {
                     if (lines.MoveNext()) throw new InvalidOperationException("Journal corrupto antes de su ultima linea.");
@@ -43,7 +47,7 @@ public static class ProjectRecovery
                 var dataText = item.GetProperty("Data");
                 if (dataText.ValueKind == JsonValueKind.String)
                 {
-                    var data = StrictJson.Parse(dataText.GetString()!, 4 * 1024 * 1024);
+                    var data = StrictJson.Parse(dataText.GetString()!, policy.MaxEntryBytes);
                     if (data.TryGetProperty("contractHash", out var hash))
                     {
                         if (hash.GetString() != contract.ContractHash) throw new InvalidOperationException("Journal pertenece a otra revision de contrato.");
@@ -79,8 +83,8 @@ public static class ProjectRecovery
         }
         if (sourceJournal is not null)
         {
-            if (JournalHash(sourceJournal) != sourceHash) throw new InvalidOperationException("El journal de origen cambio despues de recuperar.");
-            var parent = InspectCore(sourceJournal, contract, depth + 1);
+            if (JournalHash(sourceJournal, policy) != sourceHash) throw new InvalidOperationException("El journal de origen cambio despues de recuperar.");
+            var parent = InspectCore(sourceJournal, contract, depth + 1, policy);
             if (parent.UncertainActions.Count > 0) throw new InvalidOperationException("Reconciliar primero el journal de origen: " + sourceJournal);
         }
         if (!matched || snapshot is null || snapshot.Version != 1 || snapshot.ContractHash != contract.ContractHash)
@@ -91,6 +95,9 @@ public static class ProjectRecovery
         if (snapshot.ModelCalls < 0 || snapshot.ModelCalls > contract.Contract.Budgets.MaxModelCalls
             || snapshot.Baseline.Count != contract.Contract.Artifacts.Count
             || contract.Contract.Artifacts.Any(a => !snapshot.Baseline.ContainsKey(a.Id))) throw new InvalidOperationException("Snapshot inconsistente.");
+        if (snapshot.ProfileHash is not null && (snapshot.ProfileHash.Length != 64 || snapshot.ProfileHash.Any(c => !char.IsAsciiHexDigit(c))))
+            throw new InvalidOperationException("Hash de perfil incompatible.");
+        if (snapshot.Knowledge is not null) new ProjectKnowledge().Restore(snapshot.Knowledge, contract.Contract.Artifacts.Select(a => a.Id).ToHashSet(StringComparer.Ordinal));
         var stateCheck = new ProjectState(contract.Contract);
         stateCheck.Restore(snapshot.Work);
         var knownValidations = contract.Contract.Validations.ToDictionary(v => v.Id);
@@ -99,7 +106,7 @@ public static class ProjectRecovery
         foreach (var result in snapshot.Results)
             if (!knownValidations.TryGetValue(result.ValidationId ?? "", out var specification)
                 || result.ContractHash != contract.ContractHash || !Guid.TryParseExact(result.EvidenceId, "N", out _)
-                || result.ValidatorVersion != "1" || result.InputHashes.Count != specification.Parameters.ArtifactIds.Count
+                || result.ProfileHash != snapshot.ProfileHash || result.ValidatorVersion != "1" || result.InputHashes.Count != specification.Parameters.ArtifactIds.Count
                 || specification.Parameters.ArtifactIds.Any(id => !result.InputHashes.ContainsKey(id))
                 || result.Passed && result.InputHashes.Values.Contains("missing"))
                 throw new InvalidOperationException("Resultado de validacion inconsistente en snapshot.");
@@ -108,7 +115,7 @@ public static class ProjectRecovery
         {
             var sidecar = path + ".reconciliation." + action + ".json";
             if (!File.Exists(sidecar)) continue;
-            var json = ReadBounded(sidecar);
+            var json = ReadBounded(sidecar, policy);
             var decision = JsonSerializer.Deserialize<ReconciliationDto>(json, ProjectJson.Options)!;
             if (decision.Version != 1 || decision.SourceHash != currentHash || decision.ContractHash != contract.ContractHash
                 || decision.ActionId != action || decision.Decision is not ("applied" or "not-applied"))
@@ -118,16 +125,18 @@ public static class ProjectRecovery
         return new(contract.ContractHash, snapshot, pending.ToArray(), terminal);
     }
 
-    public static string JournalHash(string path)
+    public static string JournalHash(string path, ProjectRecoveryPolicy? policy = null)
     {
+        policy ??= InspectionDefaults;
         ProjectContractAdmission.CheckResource(Path.GetFullPath(path));
-        if (new FileInfo(path).Length > 256L * 1024 * 1024) throw new IOException("Journal excede presupuesto.");
+        if (new FileInfo(path).Length > policy.MaxJournalBytes) throw new IOException("Journal excede presupuesto.");
         return Hash(path);
     }
 
-    public static IReadOnlyList<Guid> RunIds(string path, AdmittedProjectContract contract)
+    public static IReadOnlyList<Guid> RunIds(string path, AdmittedProjectContract contract, ProjectRecoveryPolicy? policy = null)
     {
-        Inspect(path, contract); // Validate complete chain before using identities.
+        policy ??= InspectionDefaults;
+        Inspect(path, contract, policy); // Validate complete chain before using identities.
         var ids = new List<Guid>();
         for (var depth = 0; depth <= 32 && path is not null; depth++)
         {
@@ -135,14 +144,14 @@ public static class ProjectRecovery
             foreach (var line in File.ReadLines(path))
             {
                 JsonElement entry;
-                try { entry = StrictJson.Parse(line, 4 * 1024 * 1024); }
+                try { entry = StrictJson.Parse(line, policy.MaxEntryBytes); }
                 catch (JsonException) { break; }
                 var item = entry.GetProperty("Event");
                 var id = item.GetProperty("RunId").GetGuid();
                 if (!ids.Contains(id)) ids.Add(id);
                 if (item.GetProperty("Data").ValueKind == JsonValueKind.String)
                 {
-                    var data = StrictJson.Parse(item.GetProperty("Data").GetString()!, 4 * 1024 * 1024);
+                    var data = StrictJson.Parse(item.GetProperty("Data").GetString()!, policy.MaxEntryBytes);
                     if (data.TryGetProperty("sourceJournal", out var source) && source.ValueKind == JsonValueKind.String) parent = source.GetString();
                 }
             }
@@ -151,16 +160,16 @@ public static class ProjectRecovery
         return ids;
     }
 
-    public static ProjectSnapshotDto Load(string path, AdmittedProjectContract contract)
+    public static ProjectSnapshotDto Load(string path, AdmittedProjectContract contract, ProjectRecoveryPolicy? policy = null)
     {
-        var inspected = Inspect(path, contract);
+        var inspected = Inspect(path, contract, policy);
         if (inspected.UncertainActions.Count > 0) throw new InvalidOperationException("Reconciliacion requerida para acciones: " + string.Join(", ", inspected.UncertainActions));
         return inspected.Snapshot; // Acceptance is revalidated; no effect is replayed here.
     }
 
-    public static void Reconcile(string path, AdmittedProjectContract contract, string actionId, string decision, string note)
+    public static void Reconcile(string path, AdmittedProjectContract contract, string actionId, string decision, string note, ProjectRecoveryPolicy? policy = null)
     {
-        var inspected = Inspect(path, contract);
+        var inspected = Inspect(path, contract, policy);
         if (!inspected.UncertainActions.Contains(actionId) || actionId.Length != 32 || actionId.Any(c => !char.IsAsciiHexDigit(c)))
             throw new InvalidOperationException("actionId no corresponde a una accion incierta.");
         if (decision is not ("applied" or "not-applied")) throw new InvalidOperationException("decision debe ser applied o not-applied; unknown mantiene el bloqueo.");
@@ -189,11 +198,11 @@ public static class ProjectRecovery
         }
         File.Move(temporary, path, overwrite: true);
     }
-    private static string ReadBounded(string path)
+    private static string ReadBounded(string path, ProjectRecoveryPolicy policy)
     {
         ProjectContractAdmission.CheckResource(Path.GetFullPath(path));
-        if (new FileInfo(path).Length > 4 * 1024 * 1024) throw new IOException("Archivo excede presupuesto.");
-        return StrictJson.Parse(File.ReadAllText(path), 4 * 1024 * 1024).GetRawText();
+        if (new FileInfo(path).Length > policy.MaxEntryBytes) throw new IOException("Archivo excede presupuesto.");
+        return StrictJson.Parse(File.ReadAllText(path), policy.MaxEntryBytes).GetRawText();
     }
     private static string Hash(string path) { using var stream = File.OpenRead(path); return Convert.ToHexString(SHA256.HashData(stream)); }
 }

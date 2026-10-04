@@ -44,6 +44,8 @@ public sealed class GoalRunner : IRunner
                 throw new InvalidOperationException("El contrato del Run difiere del indicado en RunnerOptions.");
             run = run with { ProjectContract = admitted };
         }
+        if (run.ProjectContract is not null && run.ProjectServices is null) run = run with { ProjectServices = options.ProjectServices ?? throw new InvalidOperationException("Proyecto requiere servicios/perfil instalados por el host.") };
+        run = run with { Model = run.Model ?? options.Model ?? throw new InvalidOperationException("El host debe seleccionar el modelo de la operacion.") };
         var project = run.ProjectContract?.Contract;
         if (project is not null) run = run with { Objective = project.Objective, Goal = Goal.Of(project.Objective, project.Budgets.DeadlineSeconds), Budget = TimeSpan.FromSeconds(project.Budgets.DeadlineSeconds) };
 
@@ -66,18 +68,19 @@ public sealed class GoalRunner : IRunner
         {
             setup.RunContext.Steps.OnRunStart(run.Id);
 
-            var coordinator = new EventOperationCoordinator(_client, run.Model ?? NvidiaOptions.FallbackModelId, setup.Tools, scope)
+            var coordinator = new EventOperationCoordinator(_client, run.Model!, setup.Tools, scope)
             {
                 MaxModelCalls = Math.Min(options.MaxIterations, project?.Budgets.MaxModelCalls ?? options.MaxIterations),
                 MaxTokens = Math.Min(options.MaxTokens, project?.Budgets.MaxOutputTokens ?? options.MaxTokens),
                 Thinking = options.Thinking,
+                ContextEstimator = options.ContextEstimator,
                 Trace = line =>
                 {
                     setup.RunContext.Steps.OnLog(new StructuredLog(DateTimeOffset.Now, LogLevel.Info, "reactor", line));
                     if (options.Verbose) Console.WriteLine(AgentLoop.Security.DataGuard.Display(line));
                 },
                 RecordModel = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
-                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model ?? NvidiaOptions.FallbackModelId,
+                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model!,
                     completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,
                     completion.Thinking.Observed ? completion.Thinking.ToString() : null)),
                 RecordTool = (tool, output, succeeded, elapsed) => setup.RunContext.Steps.Record(new ToolStep(

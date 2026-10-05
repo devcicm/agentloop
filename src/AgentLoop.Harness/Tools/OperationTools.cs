@@ -111,12 +111,12 @@ public static class OperationTools
         => new(
             name: "ejecutar",
             description: "Ejecuta un comando en una terminal y espera a que termine. Para cosas cortas. " +
-                         "Si puede tardar, usa lanzar en vez de esto.",
+                         "Si puede tardar, usa lanzar en vez de esto. Los efectos destructivos requieren aprobacion del operador; no puedes otorgartela.",
             parametersJsonSchema: """
             {
               "type": "object",
               "properties": {
-                "comando": { "type": "string", "description": "El comando tal cual, en una linea." },
+                "comando": { "type": "string", "description": "Script completo con saltos de linea reales. Admite here-strings de PowerShell y heredocs de bash/sh. En JSON usa \n para representar cada salto; al decodificar debe ser un salto real." },
                 "shell": { "type": "string", "enum": ["bash", "sh", "powershell", "pwsh", "cmd"], "description": "Interprete. Por defecto el nativo del sistema." },
                 "timeout_ms": { "type": "integer", "description": "Tope de espera en milisegundos (60000 por defecto)." },
                 "motivo": { "type": "string", "description": "Para que lo ejecutas. Queda en la traza." }
@@ -156,7 +156,7 @@ public static class OperationTools
             {
               "type": "object",
               "properties": {
-                "comando": { "type": "string", "description": "El comando tal cual, en una linea." },
+                "comando": { "type": "string", "description": "Script completo con saltos de linea reales. Admite here-strings de PowerShell y heredocs de bash/sh. En JSON usa \n para representar cada salto; al decodificar debe ser un salto real." },
                 "shell": { "type": "string", "enum": ["bash", "sh", "powershell", "pwsh", "cmd"], "description": "Interprete. Por defecto el nativo del sistema." },
                 "etiqueta": { "type": "string", "description": "Nombre corto para reconocerlo en los eventos." }
               },

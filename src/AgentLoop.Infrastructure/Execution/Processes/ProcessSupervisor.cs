@@ -32,7 +32,8 @@ public sealed class ProcessSupervisor : IProcessSupervisor, IDisposable
     public ProcessSupervisor(EventBus bus, ExecutionPolicy? policy = null)
     {
         _bus = bus;
-        Policy = policy ?? ExecutionPolicy.Default;
+        Policy = policy ?? new ExecutionPolicy();
+        Policy.RiskClassifier ??= new ShellCommandRiskClassifier();
         if (Policy.MaxConcurrent < 1) throw new ArgumentOutOfRangeException(nameof(policy));
         _capacity = new SemaphoreSlim(Policy.MaxConcurrent, Policy.MaxConcurrent);
     }
@@ -96,18 +97,18 @@ public sealed class ProcessSupervisor : IProcessSupervisor, IDisposable
         if (!decision.Allowed)
         {
             _bus.Publish(AgentEventKind.Error, "politica", $"comando rechazado: {decision.Reason}", new { comando = command.Command });
-            throw new InvalidOperationException(decision.Reason);
+            throw new ExecutionRejectedException(decision.Reason);
         }
 
         if (decision.Simulated)
         {
-            throw new InvalidOperationException("modo simulacion: los procesos en segundo plano no se lanzan.");
+            throw new ExecutionRejectedException("modo simulacion: los procesos en segundo plano no se lanzan.");
         }
 
         await Puerta.WaitAsync(cancellationToken).ConfigureAwait(false);
         var startInfo = command.ToStartInfo(Policy.WorkingDirectory);
         if (!await _capacity.WaitAsync(0, cancellationToken).ConfigureAwait(false))
-            throw new InvalidOperationException($"capacidad agotada (tope {Policy.MaxConcurrent} procesos)");
+            throw new ExecutionRejectedException($"capacidad agotada (tope {Policy.MaxConcurrent} procesos)");
 
         var id = $"p{Interlocked.Increment(ref _counter)}";
         var process = new Process
@@ -160,7 +161,7 @@ public sealed class ProcessSupervisor : IProcessSupervisor, IDisposable
         if (Policy.Mode == PolicyMode.Simular)
         {
             var decision = await Policy.EvaluateAsync(command, cancellationToken).ConfigureAwait(false);
-            if (!decision.Allowed) throw new InvalidOperationException(decision.Reason);
+            if (!decision.Allowed) throw new ExecutionRejectedException(decision.Reason);
             _bus.Publish(AgentEventKind.Aviso, "politica", $"simulado (no se ejecuta): {command}");
             return new ShellResult("(simulado)", command, null, false, true, TimeSpan.Zero, [], false);
         }

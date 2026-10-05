@@ -24,12 +24,13 @@ Modelos configurados: `z-ai/glm-5.3` y `moonshotai/kimi-k3`; incluir un ID
 en la lista no garantiza acceso o disponibilidad del proveedor.
 
 [Presentacion de consola y opciones visuales](docs/guides/consola-ui.md).
+[Comandos multilinea, permisos y edicion con lectura previa](docs/guides/comandos-permisos-edicion.md).
 
 ## Entradas y capacidades
 
 | Entrada | Ejecutor y alcance | Evidencia |
 | --- | --- | --- |
-| Texto libre / `run` en `interactive` | Actor por eventos, 17 tools, tarjetas, memoria | Journal y resumen de operacion en `.agentloop/` |
+| Texto libre / `run` en `interactive` | Actor por eventos, 19 tools, tarjetas, memoria | Journal y resumen de operacion en `.agentloop/` |
 | `run`, `goal`, `lobos` independientes | Actor por eventos, archivos y procesos | Journal en `.agentloop/event-journal/` |
 | `journal` | `GoalRunner` sobre el actor | Journal y snapshot/Journey en `artifacts/journeys/` |
 | `chat` independiente | Una llamada sin herramientas | Consola |
@@ -50,7 +51,7 @@ dotnet run --project src/AgentLoop.Cli -- recuperacion ".agentloop/event-journal
 Las herramientas se componen en `GoalRunFactory` y se filtran por `Scope`:
 
 - Datos y archivos: `add_numbers`, `get_time`, `write_text_file`,
-  `read_text_file`, `list_directory`, `get_system_context`, `where_command`, `find_files`.
+  `read_text_file`, `code_view`, `edit_text_file`, `list_directory`, `get_system_context`, `where_command`, `find_files`.
 - Operaciones: `tarjeta`, `ejecutar`, `lanzar`, `esperar`, `leer`, `procesos`,
   `matar`, `observar`, `flujo`.
 

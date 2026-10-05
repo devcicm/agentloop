@@ -63,4 +63,5 @@ public enum AgentEventKind
     ValidacionFallida,
     TrabajoAceptado,
     ReconciliacionRequerida,
+    PermisosRevocados,
 }

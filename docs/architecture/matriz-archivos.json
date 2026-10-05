@@ -2589,7 +2589,12 @@
       "src/AgentLoop.Harness/Execution/Contracts/PolicyMode.cs",
       "src/AgentLoop.Harness/Execution/Contracts/ShellCommand.cs",
       "src/AgentLoop.Harness/Execution/Contracts/ShellKind.cs",
-      "src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs"
+      "src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/CommandRisk.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/CommandRiskAssessment.cs",
+      "src/AgentLoop.Harness/Execution/Ports/ICommandRiskClassifier.cs",
+      "src/AgentLoop.Infrastructure/Execution/Processes/ShellCommandRiskClassifier.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/ExecutionRejectedException.cs"
     ],
     "types": [
       "ShellKind",
@@ -2615,7 +2620,11 @@
       "src/AgentLoop.Infrastructure/Tools/BuiltInTools.cs",
       "src/AgentLoop.Infrastructure/Tools/FileTools.cs",
       "src/AgentLoop.Infrastructure/Tools/SystemTools.cs",
-      "src/AgentLoop.Infrastructure/Tools/ToolArguments.cs"
+      "src/AgentLoop.Infrastructure/Tools/ToolArguments.cs",
+      "src/AgentLoop.Infrastructure/Files/Editing/TextDocumentSnapshot.cs",
+      "src/AgentLoop.Infrastructure/Files/Editing/TextEditingOptions.cs",
+      "src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs",
+      "src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs"
     ],
     "types": [
       "BuiltInTools"

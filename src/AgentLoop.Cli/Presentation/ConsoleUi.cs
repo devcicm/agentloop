@@ -94,6 +94,37 @@ internal static class ConsoleUi
         Text(clean, tone, 2);
     }
     public static string Margin => _plain ? "" : "  ";
+    public static void Approval(AgentEvent item)
+    {
+        if (item.Kind != AgentEventKind.AprobacionSolicitada || item.Data is null) return;
+        using var document = System.Text.Json.JsonDocument.Parse(item.Data);
+        var data = document.RootElement;
+        Section("APROBACION  /  Efecto pendiente");
+        foreach (var field in new[] { "approval_id", "shell", "cwd", "risk", "reason", "comando" })
+            if (data.TryGetProperty(field, out var value)) Field(field, value.ToString());
+        var continuous = data.TryGetProperty("continuous_allowed", out var allowed) && allowed.ValueKind == System.Text.Json.JsonValueKind.True;
+        Text(continuous ? "aprobar [id] continuo: permiso para este interprete y directorio durante la sesion."
+            : "Destructivo u opaco: solo aprobacion puntual, incluso con permisos continuos.", ConsoleColor.Yellow);
+    }
+    public static void ToolResult(string name, string output, bool success)
+    {
+        if (!success || name is not ("code_view" or "edit_text_file")) return;
+        using var document = System.Text.Json.JsonDocument.Parse(output);
+        var data = document.RootElement;
+        Section(name == "code_view" ? "CODE VIEW  /  Documento leido" : "EDICION  /  Resultado");
+        if (data.TryGetProperty("path", out var path)) Field("Archivo", path.GetString());
+        if (name == "code_view")
+        {
+            if (data.TryGetProperty("code_view", out var code))
+                foreach (var line in DataGuard.Display(code.GetString() ?? "").Replace("\r\n", "\n").Split('\n'))
+                    Styled(Margin + line + Environment.NewLine, ConsoleColor.Gray);
+            foreach (var field in new[] { "start_line", "next_line", "next_column", "truncated" })
+                if (data.TryGetProperty(field, out var value)) Field(field, value);
+        }
+        else
+            foreach (var field in new[] { "preview", "written", "changes", "before_excerpt", "after_excerpt" })
+                if (data.TryGetProperty(field, out var value)) Field(field, value);
+    }
     public static string StreamMargin => _plain ? "" : "    ";
     public static void Prompt(int exchanges)
     {

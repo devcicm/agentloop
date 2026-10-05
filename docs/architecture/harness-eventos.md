@@ -1,5 +1,13 @@
 # Harness vigente: arquitectura e implementacion
 
+## Comandos y documentos (2026-10-05)
+
+La ampliacion actual conserva el reactor por eventos: aprobaciones con ID y
+revocacion de permisos son eventos del operador. `ejecutar`/`lanzar` conservan
+scripts multilinea; el editor exige recibos de lectura ligados a version y rango.
+Detalles, limites y flujos: [comandos, permisos y edicion](../guides/comandos-permisos-edicion.md).
+
+
 Actualizado: 3 de octubre de 2026. Base del actor: commit 8b20a3f;
 esta entrega organiza proveedores y corrige contexto/recuperacion del bloqueo POS.
 El [informe del incidente](../incidents/pos-planeacion-sin-ejecucion-2026-10-01.md)

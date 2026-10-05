@@ -40,7 +40,7 @@ public static class GoalRunFactory
         ledger.AcceptanceObjective = run.Objective;
         var project = run.ProjectContract is null ? null : new AgentLoop.Goals.Projects.ProjectRuntime(run.ProjectContract, ledger, bus, run.ProjectServices ?? throw new InvalidOperationException("Falta composicion de proyecto."), gate: supervisor.Puerta) { ResumeJournal = run.ResumeJournal };
         var registry = OperationTools.Build(ledger, supervisor, bus).Combine(BuiltInTools.DefaultRegistry());
-        if (project is not null) registry = registry.Combine(project.Tools()).Filter(name => name is "tarjeta" or "write_text_file" or "read_text_file" or "list_directory" or "find_files" or "project_validate" or "project_command" or "project_evidence" or "project_note");
+        if (project is not null) registry = registry.Combine(project.Tools()).Filter(name => name is "tarjeta" or "write_text_file" or "read_text_file" or "code_view" or "edit_text_file" or "list_directory" or "find_files" or "project_validate" or "project_command" or "project_evidence" or "project_note");
         var tools = registry.Filter(scope.AllowsTool).WithScope(scope);
         var goalContext = new GoalContext
         {

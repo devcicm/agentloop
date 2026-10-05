@@ -16,6 +16,7 @@ Los informes fechados conservan su revision de origen.
 
 | Documento | Alcance |
 | --- | --- |
+| [Comandos, permisos y edicion](guides/comandos-permisos-edicion.md) | Here-strings, aprobaciones por eventos, permisos continuos y lectura obligatoria |
 | [Core/Kernel y host](architecture/core-kernel.md) | Bibliotecas independientes, puertos, perfiles y contexto |
 | [Goals de proyectos por eventos](architecture/goals-proyectos.md) | Contratos, tareas, validadores, aislamiento, contexto y recuperacion |
 | [Seguridad, datos y DTOs](guides/seguridad-datos-harness.md) | Sanitizacion, contratos, limites de confianza y uso acotado |

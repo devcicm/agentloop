@@ -29,6 +29,7 @@ public sealed class OperationAcceptance
         if (execution.Failed || transactionId is null || execution.ToolName is "tarjeta" or "esperar" or "lanzar" or "flujo" or "matar" or "observar") return null;
         using var output = JsonDocument.Parse(execution.Output);
         var root = output.RootElement;
+        if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("preview", out var preview) && preview.ValueKind == JsonValueKind.True) return null;
         if (root.ValueKind == JsonValueKind.Object && root.TryGetProperty("simulado", out var simulated) && simulated.ValueKind == JsonValueKind.True) return null;
         var receipt = new ObservationReceipt(Guid.NewGuid().ToString("N"), transactionId, execution.ToolName,
             Convert.ToHexString(SHA256.HashData(Encoding.UTF8.GetBytes(execution.Output))), DateTimeOffset.UtcNow);

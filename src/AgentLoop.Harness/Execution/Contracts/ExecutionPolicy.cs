@@ -65,33 +65,42 @@ public sealed class ExecutionPolicy
     public Func<ShellCommand, bool>? Confirm { get; init; }
     public Func<ShellCommand, CancellationToken, ValueTask<bool>>? AsyncConfirm { get; set; }
 
+    public ICommandRiskClassifier? RiskClassifier { get; set; }
+    private readonly System.Collections.Concurrent.ConcurrentDictionary<string, byte> _continuous = new(OperatingSystem.IsWindows() ? StringComparer.OrdinalIgnoreCase : StringComparer.Ordinal);
+    public IReadOnlyList<string> ContinuousPermissions => _continuous.Keys.Order(StringComparer.Ordinal).ToArray();
+    private string PermissionKey(ShellCommand command) => command.Shell + " | " + Path.GetFullPath(command.WorkingDirectory ?? WorkingDirectory);
+    public CommandRiskAssessment Assess(ShellCommand command) => RiskClassifier?.Assess(command)
+        ?? new(CommandRisk.Opaque, "El host no instalo un clasificador; se requiere aprobacion puntual.");
+    public bool GrantContinuous(ShellCommand command)
+    {
+        if (Assess(command).RequiresFreshApproval) return false;
+        _continuous[PermissionKey(command)] = 0;
+        return true;
+    }
+    public bool HasContinuousPermission(ShellCommand command) => !Assess(command).RequiresFreshApproval && _continuous.ContainsKey(PermissionKey(command));
+    public void RevokeContinuousPermissions() => _continuous.Clear();
+    private PolicyDecision? Preliminary(ShellCommand command)
+    {
+        if (!AllowShell || AllowedPaths.Count > 0) return new(false,"shell arbitrario deshabilitado por politica/scope");
+        if (_denied.Any(r => r.IsMatch(command.Command))) return new(false,"comando vetado por politica");
+        if (Mode == PolicyMode.Simular) return new(true,"modo simulacion: no se ejecuta nada",Simulated:true);
+        var risk = Assess(command);
+        if (!risk.RequiresFreshApproval && (Mode == PolicyMode.Auto || _continuous.ContainsKey(PermissionKey(command))))
+            return new(true,"permitido por politica o permiso continuo vigente");
+        return null;
+    }
     public async ValueTask<PolicyDecision> EvaluateAsync(ShellCommand command, CancellationToken token)
     {
-        if (!AllowShell || AllowedPaths.Count > 0) return new(false, "shell arbitrario deshabilitado por politica/scope");
-        if (Mode != PolicyMode.Confirmar || AsyncConfirm is null) return Evaluate(command);
-        var offender = _denied.FirstOrDefault(r => r.IsMatch(command.Command));
-        if (offender is not null) return new(false, "comando vetado por politica");
-        return await AsyncConfirm(command, token).ConfigureAwait(false) ? new(true, "confirmado") : new(false, "rechazado por operador");
+        token.ThrowIfCancellationRequested();
+        if (Preliminary(command) is {} decision) return decision;
+        if (AsyncConfirm is not null)
+            return await AsyncConfirm(command,token).ConfigureAwait(false) ? new(true,"confirmado por operador") : new(false,"rechazado por operador");
+        return Confirm is not null && Confirm(command) ? new(true,"confirmado por operador") : new(false,"comando requiere aprobacion del operador");
     }
-
     public PolicyDecision Evaluate(ShellCommand command)
     {
-        if (!AllowShell || AllowedPaths.Count > 0) return new(false, "shell arbitrario deshabilitado por politica/scope");
-        var offender = _denied.FirstOrDefault(r => r.IsMatch(command.Command));
-        if (offender is not null)
-        {
-            return new PolicyDecision(false, $"bloqueado por la politica (patron {offender}); reformula sin eso.");
-        }
-
-        return Mode switch
-        {
-            PolicyMode.Simular => new PolicyDecision(true, "modo simulacion: no se ejecuta nada", Simulated: true),
-            PolicyMode.Confirmar when Confirm is null => new PolicyDecision(false, "modo confirmar sin nadie que confirme"),
-            PolicyMode.Confirmar => Confirm(command)
-                ? new PolicyDecision(true, "confirmado")
-                : new PolicyDecision(false, "rechazado en la confirmacion"),
-            _ => new PolicyDecision(true, "permitido"),
-        };
+        if (Preliminary(command) is {} decision) return decision;
+        return Confirm is not null && Confirm(command) ? new(true,"confirmado por operador") : new(false,"comando requiere aprobacion del operador");
     }
 
     public TimeSpan Clamp(TimeSpan requested)

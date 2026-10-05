@@ -6,41 +6,6 @@ namespace AgentLoop.Tools;
 public static class FileTools
 {
 
-    public static DelegateTool WriteTextFile { get; } = new(
-        "write_text_file", "Escribe texto UTF-8 en un archivo. Acepta rutas absolutas y rutas relativas al directorio actual.",
-        """{"type":"object","properties":{"path":{"type":"string"},"content":{"type":"string"}},"required":["path","content"]}""",
-        async (arguments, token) =>
-        {
-            var path = ToolArguments.ResolvePath(arguments, "path");
-            var content = ToolArguments.ReadRequiredString(arguments, "content");
-            if (content.Length > 1000000) throw new InvalidOperationException("tope de escritura: un millon de caracteres");
-            token.ThrowIfCancellationRequested();
-            var parent = Path.GetDirectoryName(path);
-            if (!string.IsNullOrEmpty(parent)) Directory.CreateDirectory(parent);
-            var temporary = path + "." + Guid.NewGuid().ToString("N") + ".tmp";
-            try
-            {
-                await File.WriteAllTextAsync(temporary, content, new System.Text.UTF8Encoding(false), token);
-                token.ThrowIfCancellationRequested();
-                File.Move(temporary, path, overwrite: true);
-            }
-            finally { if (File.Exists(temporary)) File.Delete(temporary); }
-            return JsonSerializer.Serialize(new { path, bytes = new FileInfo(path).Length, written = true });
-        });
-
-    public static DelegateTool ReadTextFile { get; } = new(
-        "read_text_file", "Lee un archivo UTF-8 y devuelve su contenido y número de líneas.",
-        """{"type":"object","properties":{"path":{"type":"string"}},"required":["path"]}""",
-        async (arguments, token) =>
-        {
-            var path = ToolArguments.ResolvePath(arguments, "path");
-            await using var stream = File.OpenRead(path);
-            if (stream.Length > 1000000) throw new InvalidOperationException("archivo demasiado grande; usa una lectura acotada por shell");
-            using var reader = new StreamReader(stream, System.Text.Encoding.UTF8);
-            var content = await reader.ReadToEndAsync(token);
-            return JsonSerializer.Serialize(new { path, content, lines = content.Split('\n').Length });
-        });
-
     public static DelegateTool ListDirectory { get; } = new(
         "list_directory", "Lista hasta 200 archivos y directorios con sus rutas absolutas.",
         """{"type":"object","properties":{"path":{"type":"string"}},"required":["path"]}""",

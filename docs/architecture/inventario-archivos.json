@@ -616,6 +616,10 @@
     "nature": "captura historica"
   },
   {
+    "path": "docs/guides/comandos-permisos-edicion.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/guides/consola-ui.md",
     "nature": "documentacion"
   },
@@ -761,7 +765,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "c769fe35efb83599c3a9cf2b6c59d6dc98b967f5b9eb6e2a9e85641da1a92f19",
+    "sha256": "b1789061d85cebb1b1f477896c207aea519431cc80a238852b76d28ec54e0744",
     "purpose": [
       "La entrada principal del CLI publica un objetivo y ejecuta el reactor."
     ],
@@ -773,7 +777,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "4ee21d8f46d50498731173734e3c0f2f2c1f26a1a44ac425fce46e8c495e1d9c",
+    "sha256": "217c9340fdad91c5f5f26af6968bb5f1636aebc60b26b53249f262e429f74f8f",
     "purpose": [
       "Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts."
     ],
@@ -831,7 +835,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "ba454d9651fc8b58b6d715a19425c4f8189de4570f1f39f4bf4f4c01c8f433aa",
+    "sha256": "62ec01ab8ec433c1da235a160fd753e5496470824976c0b8efa6428da3241804",
     "purpose": [
       "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
     ],
@@ -855,7 +859,7 @@
     "types": [
       "ConsoleUi"
     ],
-    "sha256": "04998e136487a70734e5d7e104c7d46eee687d2f29199d2bcca750d4dc7be08f",
+    "sha256": "e2d82ad86887fd95195e6369861d4a1fdc36533204092c90614e206f94ad100c",
     "purpose": [
       "Presentacion del host: paneles, colores, margenes, sangrias y ajuste de texto."
     ],
@@ -1765,7 +1769,7 @@
     "types": [
       "OperationContract"
     ],
-    "sha256": "6450eabc266270b7e1e30e70df14b4a0d35785ebbc5861039a9f155141b6774f",
+    "sha256": "eab382e42947d7fd55e601ae284f1e9d6a42b5cb4fae2751c43a1c93d06448e1",
     "purpose": [
       "Contrato compartido de tarjetas y entorno, independiente de ejecutores."
     ],
@@ -1808,16 +1812,52 @@
     "nature": "orquestacion/puerto"
   },
   {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/CommandRisk.cs",
+    "sha256": "c2ef64888fd603e865eef704254e2080dbd8198088e3a71ab28825d70864f737",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "CommandRisk"
+    ],
+    "purpose": [
+      "Contrato o estructura: CommandRisk"
+    ],
+    "nature": "puerto/contrato"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/CommandRiskAssessment.cs",
+    "sha256": "35bd160ceaa5061ae58f0f1738678d227259fb8dad4e6a59a5bdd7a9a4deae68",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "CommandRiskAssessment"
+    ],
+    "purpose": [
+      "Contrato o estructura: CommandRiskAssessment"
+    ],
+    "nature": "puerto/contrato"
+  },
+  {
     "path": "src/AgentLoop.Harness/Execution/Contracts/ExecutionPolicy.cs",
     "namespace": "AgentLoop.Terminals",
     "types": [
       "ExecutionPolicy"
     ],
-    "sha256": "43e0765976db57c18aa98ea3bc06670b3f8d0e3a306317f1e5472b78354b7418",
+    "sha256": "2ddfd814293b66d803c97bd23474b388edefa1d5ce1f528e5ec5667f869d18cf",
     "purpose": [
       "El cinturon de seguridad de la ejecucion: directorio de trabajo, tope de duracion, tope de procesos vivos y una lista negra de comandos irreversibles. No es un sandbox y no pretende serlo: un agente con shell puede hacer cualquier cosa que pueda hacer el usuario que lo lanza. Lo que hace la lista negra es evitar el accidente tonto (un borrado de raiz, un formateo, un apagado), no contener a nadie decidido."
     ],
     "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ExecutionRejectedException.cs",
+    "sha256": "62a20729ff5bcc1e7bf67e7416c34db154a4f777ffb2532366cbd5244dddcdb3",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ExecutionRejectedException"
+    ],
+    "purpose": [
+      "Rechazo del supervisor antes de arrancar el proceso; no acredita efectos inciertos."
+    ],
+    "nature": "puerto/contrato"
   },
   {
     "path": "src/AgentLoop.Harness/Execution/Contracts/GoalRunSetup.cs",
@@ -2022,6 +2062,18 @@
       "Resultado de una ejecucion con espera."
     ],
     "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Ports/ICommandRiskClassifier.cs",
+    "sha256": "194a81505fdb8da71c2ce2d40a9ea9c3e8f05ab56a146b45aa09a3fa253e8f1c",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ICommandRiskClassifier"
+    ],
+    "purpose": [
+      "Contrato o estructura: ICommandRiskClassifier"
+    ],
+    "nature": "puerto/contrato"
   },
   {
     "path": "src/AgentLoop.Harness/Execution/Ports/IGoalRunSetupFactory.cs",
@@ -2411,7 +2463,7 @@
     "types": [
       "OperationAcceptance"
     ],
-    "sha256": "34762a03cc326bd9b316fc436b536c03e167ab3bfa08c3d3f878427da7b5cf6e",
+    "sha256": "4f9a7c5ba4a04dd87b306ad374f6358b0ab0d154c3c0a10df379d4eb569d56fb",
     "purpose": [
       "Observaciones producidas por herramientas y criterios fijados al admitir el objetivo."
     ],
@@ -2423,7 +2475,7 @@
     "types": [
       "OperationAdmission"
     ],
-    "sha256": "eb9c68461f459a1ea3a0d95a420850c15997168a75a2c1c3ef5b6edb08ba3f64",
+    "sha256": "ad3208dd4a033c6b3d10d1062bb2f4782a900174081752554e8db6e20d6fb1b4",
     "purpose": [
       "Puerta comun de tarjetas y politica, aplicada antes de cada herramienta."
     ],
@@ -2435,7 +2487,7 @@
     "types": [
       "EventOperationCoordinator"
     ],
-    "sha256": "521413c97e9b9a55fbbdf78c2022c531138d5cc57e75894548ca13268d752b2a",
+    "sha256": "d71d3cc1e8b07d598d776a377b022a0e78ac10f07883b878b9dddb587f6d5420",
     "purpose": [
       "Un actor de operacion. Cada publicacion agenda su handler; no itera estados ni llama StepAsync. Modelo y herramientas publican resultados desde tareas independientes."
     ],
@@ -2603,7 +2655,7 @@
     "types": [
       "ProjectRuntime"
     ],
-    "sha256": "9ea8241f149676801929758e2fb07d6a681b1700bfa34a547bc60db8d3f1e96a",
+    "sha256": "b19f350d4795d8c395168499e219b4a28b0c547b5172ad947893afaf17ed90eb",
     "purpose": [
       "Project projection owned by the existing actor. Async validators return immutable deliveries."
     ],
@@ -3069,7 +3121,7 @@
     "types": [
       "OperationTools"
     ],
-    "sha256": "5a44809e06d998c241e6001336d3deea06f8b794fdb97efebe07d0110c76a012",
+    "sha256": "93962d6b2cc97604d620a6711d3c8e5cf3af5e39f31fc716ddc6aad836170f95",
     "purpose": [
       "Las herramientas con las que el agente opera: jugar tarjetas de estado y manejar terminales. Reparto deliberado: ejecutar es para lo corto (espera el resultado), y lanzar + esperar/leer/observar es para lo largo, que es lo que evita que el agente se quede parado delante de un proceso de diez minutos. Ninguna de las dos bloquea un hilo: la espera es sobre reset events."
     ],
@@ -3093,7 +3145,7 @@
     "types": [
       "ToolRegistry"
     ],
-    "sha256": "67eb178fd0baee407581aaa4e74e9190d7c3ad59b9c0b04250aa12284100f0cc",
+    "sha256": "f3c09399d3d6fb8fc4acfd1be83cc6b7b435782eb74b35b59ebe0a5bf25134a6",
     "purpose": [
       "Catalogo de herramientas: genera los schemas y despacha las llamadas."
     ],
@@ -3157,7 +3209,7 @@
     "types": [
       "GoalRunFactory"
     ],
-    "sha256": "5240f9f9c2dd54d9b7540021f1c37d78b6901f45095539606a9b57fb2d7724be",
+    "sha256": "48b1420449ef08fe3e1b1833522e78343834b6874c9723aa84d2f7ea95cc4bd8",
     "purpose": [
       "Composicion compartida del harness de operaciones: monta bus con identidad causal, supervisor, tarjetas, registro canonical de tools filtrado por Scope, contexto y captura local de evidencia. GoalRunner usa el actor por eventos; el puerto ILLMClient separa al proveedor del motor."
     ],
@@ -3265,11 +3317,23 @@
     "types": [
       "ProcessSupervisor"
     ],
-    "sha256": "e0bba2fa2423ee4c9b82f8c9363f6b0333f4b3f3e7788d8e74f6722ddfe8ab3a",
+    "sha256": "ddcf41488c49db35259caf353868081173369ad7bd3bcf088bee1892a4dae392",
     "purpose": [
       "Lanza y vigila procesos sin bloquear a quien lo llama. Nada aqui espera de forma sincrona: arrancar devuelve un handle al instante, la salida llega por eventos del propio Process (hilos del pool) y el fin del proceso se anuncia abriendo el latch del handle. El agente puede lanzar tres comandos, seguir razonando y enterarse de los tres cuando lleguen. La salida no se publica linea a linea: eso ahogaria al modelo en un build ruidoso. Se publica un aviso agrupado cada con cuantas lineas hay nuevas, y el agente decide si las lee. Lo que si se publica siempre es lo que cambia el estado: arranque, fin y patrones vigilados."
     ],
     "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Processes/ShellCommandRiskClassifier.cs",
+    "sha256": "061087d405a7cee93f72a1528157ff2ccc2e9ee0bd74373fc5bee36e4a37824e",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellCommandRiskClassifier"
+    ],
+    "purpose": [
+      "Heuristica configurable del host; no interpreta ni ejecuta codigo para clasificarlo."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs",
@@ -3277,7 +3341,7 @@
     "types": [
       "ShellProcessStartInfoFactory"
     ],
-    "sha256": "749cd8ba4b05fdec610f1b244c48048adfc17bc5a891dc6b2770edad7e6dc8e9",
+    "sha256": "b2ab5cd52ad041fc96cc3f383fd7ca0f8781e51fe263ab5c023a1b8d92c28054",
     "purpose": [
       "Los argumentos van por ArgumentList y no concatenados: asi el comando viaja como un unico argumento y no hay que pelearse con el escapado de comillas de cada interprete."
     ],
@@ -3306,6 +3370,54 @@
       "Declaracion ClassDeclaration: CommandValidatorFactory"
     ],
     "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/Editing/TextDocumentSnapshot.cs",
+    "sha256": "66d851f537466249c0389bc4bf4b11670c629d91950ee8f7ef05513e3e46cd40",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "TextDocumentSnapshot"
+    ],
+    "purpose": [
+      "Version de bytes y texto; conserva codificacion, BOM y terminadores del documento."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/Editing/TextEditingOptions.cs",
+    "sha256": "e85d2e15fbc40820b647debd0e084a44f8adf7ae9486773d049d52f430b9bc11",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "TextEditingOptions"
+    ],
+    "purpose": [
+      "Presupuestos del editor instalados por el host; independientes del proyecto o lenguaje."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs",
+    "sha256": "18b37486fee03ec9c3018b94949497d1594ed76279f36c216f8128e9e25a3552",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "TextEditingTools"
+    ],
+    "purpose": [
+      "Edicion vinculada a lectura y version. Cada registro tiene sus propios recibos en memoria."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs",
+    "sha256": "3125b9ad1c6268033c1be5e6fd29642623b1526f8012d67b354934356b967fae",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "TextReadReceipt"
+    ],
+    "purpose": [
+      "Lectura emitida por una instancia del registro: version y rango realmente devueltos."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Infrastructure/Files/EvidenceManifest.cs",
@@ -3651,7 +3763,7 @@
     "types": [
       "BuiltInTools"
     ],
-    "sha256": "19d8445f096a552cb4b7a0b03c3b23d6779f1eb683230ec5ca35ef201f21a753",
+    "sha256": "0d61b0ba23c70ab9ad62e360c696a5c57e570a38a719b6afe6ac16edf6b89e60",
     "purpose": [
       "Set por defecto para chat, run e interactive."
     ],
@@ -3663,7 +3775,7 @@
     "types": [
       "FileTools"
     ],
-    "sha256": "e082741cb936c01be9432909fa7973c9584781992f3c2c7092b3f3e859039b7d",
+    "sha256": "cf9818bac9b71705c493334bbbb193aef1b542fcf0c23dc9765f03246f2d90e8",
     "purpose": [
       "Declaracion ClassDeclaration: FileTools"
     ],
@@ -3739,7 +3851,7 @@
     "types": [
       "AgentEventKind"
     ],
-    "sha256": "ec7c69d4f66a899605484325a36b43adba65138060d962e3292a2b4d37cbb9f8",
+    "sha256": "be189e04d9010953c070d9cfd7bb89d8f35adb1d6bf648518b7a2de1d444e726",
     "purpose": [
       "Que clase de suceso es. El agente reacciona a esto, no a turnos de conversacion."
     ],

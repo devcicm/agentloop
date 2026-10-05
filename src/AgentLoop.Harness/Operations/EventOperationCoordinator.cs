@@ -29,7 +29,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     private readonly HashSet<Guid> _appliedEvents = [];
     private bool _started, _terminal, _paused, _modelActive, _reasonQueued, _actionActive;
     private bool _stopGraceScheduled;
-    private readonly ConcurrentDictionary<Guid, TaskCompletionSource<bool>> _approvals = new();
+    private readonly ConcurrentDictionary<Guid, PendingApproval> _approvals = new();
     private EventOperationResult? _finish;
     private string? _stopReason;
     private OperationStatus _stopStatus;
@@ -113,17 +113,33 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         Publish(kind, "control del operador");
     }
 
-    public void Approve(bool approved) => Publish(AgentEventKind.Aprobacion, "decision del operador", new { approved });
+    private sealed record PendingApproval(Terminals.ShellCommand Command, TaskCompletionSource<bool> Completion);
+    public void RevokeContinuousPermissions() => Publish(AgentEventKind.PermisosRevocados, "revocar permisos continuos por operador");
+    public bool Approve(bool approved, bool continuous = false, string? approvalId = null)
+    {
+        if (_lifetime.IsCancellationRequested || _terminal) return false;
+        Guid id;
+        if (approvalId is null)
+        {
+            var pending = _approvals.Keys.ToArray();
+            if (pending.Length != 1) return false;
+            id = pending[0];
+        }
+        else if (!Guid.TryParse(approvalId, out id) || !_approvals.ContainsKey(id)) return false;
+        Publish(AgentEventKind.Aprobacion,"decision del operador",new { approved, continuous, approval_id = id });
+        return true;
+    }
 
     private async ValueTask<bool> RequestApprovalAsync(Terminals.ShellCommand command, CancellationToken token)
     {
         var id = Guid.NewGuid();
         var completion = new TaskCompletionSource<bool>(TaskCreationOptions.RunContinuationsAsynchronously);
-        _approvals[id] = completion;
+        _approvals[id] = new(command, completion);
         try
         {
+            var risk = scope.Policy.Assess(command);
             Publish(AgentEventKind.AprobacionSolicitada, "aprobar/rechazar: " + command.Command,
-                new { approval_id = id, comando = command.Command, shell = command.Shell.ToString() });
+                new { approval_id = id, comando = command.Command, shell = command.Shell.ToString(), cwd = command.WorkingDirectory ?? scope.Policy.WorkingDirectory, risk = risk.Risk.ToString(), reason = risk.Reason, continuous_allowed = !risk.RequiresFreshApproval });
             return await completion.Task.WaitAsync(token).ConfigureAwait(false);
         }
         finally { _approvals.TryRemove(id, out _); }
@@ -159,13 +175,29 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             _context.Bus.Drain(1024);
             switch (item.Kind)
             {
+                case AgentEventKind.PermisosRevocados:
+                    scope.Policy.RevokeContinuousPermissions();
+                    break;
                 case AgentEventKind.Cancelacion: Stop(OperationStatus.Cancelled, "cancelado por el operador"); break;
                 case AgentEventKind.DetencionAgotada:
                     if (_stopReason is not null) Finish(_stopStatus, _stopReason + "; quedaron acciones inciertas, consulta el journal antes de repetir");
                     break;
                 case AgentEventKind.Aprobacion:
                     using (var decision = JsonDocument.Parse(item.Data!))
-                        foreach (var approval in _approvals.Values.Take(1)) approval.TrySetResult(decision.RootElement.GetProperty("approved").GetBoolean());
+                    {
+                        var data = decision.RootElement;
+                        if (data.TryGetProperty("approval_id", out var idNode) && idNode.TryGetGuid(out var approvalId)
+                            && _approvals.TryRemove(approvalId, out var pending))
+                        {
+                            var approved = data.GetProperty("approved").GetBoolean();
+                            if (approved && data.TryGetProperty("continuous",out var continuous) && continuous.ValueKind == JsonValueKind.True)
+                            {
+                                var granted = scope.Policy.GrantContinuous(pending.Command);
+                                Observe(() => Trace?.Invoke(granted ? "permiso continuo registrado para shell y directorio; los destructivos requieren nueva aprobacion" : "permiso continuo no aplicable: autorizacion puntual"));
+                            }
+                            pending.Completion.TrySetResult(approved);
+                        }
+                    }
                     break;
                 case AgentEventKind.DeadlineAlcanzado:
                     _context.DeadlineReached = true;
@@ -388,21 +420,26 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         {
             var clock = Stopwatch.StartNew();
             ToolExecution execution;
+            var effectsInvoked = false;
             try
             {
                 if (admission.Rejection is not null) execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = admission.Rejection }), true);
                 else if (admission.Simulated) execution = new(call.Id, call.Name, "{\"simulado\":true,\"executed\":false}", false);
                 else
                 {
-                    if (scope.Policy.Mode == Terminals.PolicyMode.Confirmar && call.Name == "write_text_file"
-                        && !await RequestApprovalAsync(new Terminals.ShellCommand(scope.Policy.DefaultShell,
-                            "write_text_file " + admission.Call.Arguments.GetProperty("path").GetString()), _lifetime.Token))
-                        throw new InvalidOperationException("escritura rechazada por operador");
+                    if (scope.Policy.Mode == Terminals.PolicyMode.Confirmar && (call.Name is "write_text_file" or "edit_text_file")
+                        && !(admission.Call.Arguments.TryGetProperty("preview",out var preview) && preview.ValueKind == JsonValueKind.True))
+                    {
+                        var effect=new Terminals.ShellCommand(scope.Policy.DefaultShell,call.Name+" "+admission.Call.Arguments.GetProperty("path").GetString());
+                        if (!scope.Policy.HasContinuousPermission(effect) && !await RequestApprovalAsync(effect,_lifetime.Token))
+                            throw new InvalidOperationException("edicion/escritura rechazada por operador");
+                    }
                     await _context.Supervisor.Puerta.WaitAsync(_lifetime.Token).ConfigureAwait(false);
+                    effectsInvoked = !OperationAdmission.IsReadOnly(call.Name) && call.Name != "tarjeta";
                     execution = await tools.ExecuteAsync(admission.Call, _lifetime.Token).ConfigureAwait(false);
                 }
             }
-            catch (Exception error) { execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = error.Message }), true) { EffectsMayHaveOccurred = _project is not null && admission.Rejection is null && call.Name != "tarjeta" && !OperationAdmission.IsReadOnly(call.Name) }; }
+            catch (Exception error) { execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = error.Message }), true) { EffectsMayHaveOccurred = effectsInvoked }; }
             _actions[actionId] = new(execution, transactionId, clock.Elapsed, call);
             _context.Bus.Publish(AgentEventKind.HerramientaResultado, "tool", call.Name,
                 new { action_id = actionId.ToString("N"), call_id = call.Id, tool = call.Name }, admitted.EventId);

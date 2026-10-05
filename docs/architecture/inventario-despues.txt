@@ -152,6 +152,7 @@ docs/evidence/eventos-final-2026-09-30.log
 docs/evidence/eventos-nvidia-2026-09-28.log
 docs/evidence/eventos-regresion-antes-2026-09-28.log
 docs/evidence/eventos-regresion-despues-2026-09-28.log
+docs/guides/comandos-permisos-edicion.md
 docs/guides/consola-ui.md
 docs/guides/contexto-y-memoria.md
 docs/guides/contexto-y-recursos.md
@@ -267,7 +268,10 @@ src/AgentLoop.Harness/Context/OperationContract.cs
 src/AgentLoop.Harness/Context/OperationTaskContext.cs
 src/AgentLoop.Harness/Events/AgentEventFormatting.cs
 src/AgentLoop.Harness/Events/EventBus.cs
+src/AgentLoop.Harness/Execution/Contracts/CommandRisk.cs
+src/AgentLoop.Harness/Execution/Contracts/CommandRiskAssessment.cs
 src/AgentLoop.Harness/Execution/Contracts/ExecutionPolicy.cs
+src/AgentLoop.Harness/Execution/Contracts/ExecutionRejectedException.cs
 src/AgentLoop.Harness/Execution/Contracts/GoalRunSetup.cs
 src/AgentLoop.Harness/Execution/Contracts/Journey.cs
 src/AgentLoop.Harness/Execution/Contracts/JourneyDiagnosis.cs
@@ -285,6 +289,7 @@ src/AgentLoop.Harness/Execution/Contracts/ShellFailureReason.cs
 src/AgentLoop.Harness/Execution/Contracts/ShellKind.cs
 src/AgentLoop.Harness/Execution/Contracts/ShellOutcome.cs
 src/AgentLoop.Harness/Execution/Contracts/ShellResult.cs
+src/AgentLoop.Harness/Execution/Ports/ICommandRiskClassifier.cs
 src/AgentLoop.Harness/Execution/Ports/IGoalRunSetupFactory.cs
 src/AgentLoop.Harness/Execution/Ports/IOutputWatcher.cs
 src/AgentLoop.Harness/Execution/Ports/IProcessHandle.cs
@@ -390,9 +395,14 @@ src/AgentLoop.Infrastructure/Execution/Docker/DockerProjectEnvironment.cs
 src/AgentLoop.Infrastructure/Execution/Processes/OutputWatcher.cs
 src/AgentLoop.Infrastructure/Execution/Processes/ProcessHandle.cs
 src/AgentLoop.Infrastructure/Execution/Processes/ProcessSupervisor.cs
+src/AgentLoop.Infrastructure/Execution/Processes/ShellCommandRiskClassifier.cs
 src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs
 src/AgentLoop.Infrastructure/Execution/Validation/CommandProjectValidator.cs
 src/AgentLoop.Infrastructure/Execution/Validation/CommandValidatorFactory.cs
+src/AgentLoop.Infrastructure/Files/Editing/TextDocumentSnapshot.cs
+src/AgentLoop.Infrastructure/Files/Editing/TextEditingOptions.cs
+src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs
+src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs
 src/AgentLoop.Infrastructure/Files/EvidenceManifest.cs
 src/AgentLoop.Infrastructure/GlobalUsings.cs
 src/AgentLoop.Infrastructure/Persistence/AtomicFileWriter.cs

@@ -118,7 +118,7 @@ public sealed class ProjectRuntime
 
     public string? Admit(ParsedToolCall call)
     {
-        if (call.Name == "write_text_file")
+        if (call.Name is "write_text_file" or "edit_text_file")
         {
             var path = Path.GetFullPath(call.Arguments.GetProperty("path").GetString()!, Admitted.Root);
             var comparison = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
@@ -177,7 +177,7 @@ public sealed class ProjectRuntime
         _hashes = changed;
         var progress = differences.Length > 0;
         var exploration = false;
-        if (!execution.Failed && call.Name == "read_text_file")
+        if (!execution.Failed && (call.Name is "read_text_file" or "code_view"))
         {
             var path = Path.GetFullPath(call.Arguments.GetProperty("path").GetString()!, Admitted.Root);
             var artifact = Contract.Artifacts.SingleOrDefault(a => string.Equals(Path.GetFullPath(a.RelativePath, Admitted.Root), path,

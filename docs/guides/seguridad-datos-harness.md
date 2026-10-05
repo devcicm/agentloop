@@ -1,5 +1,13 @@
 # Datos, DTOs y seguridad del harness
 
+## Ampliacion de permisos y archivos (2026-10-05)
+
+Los comandos detectados como destructivos u opacos piden autorizacion puntual,
+incluso en auto. El permiso continuo se limita a shell/cwd y memoria de sesion;
+no modifica vetos. Las tools de edicion exigen lectura previa con hash/rango.
+Ver [protocolo, flujos y limites](comandos-permisos-edicion.md).
+
+
 Entrega: 1 de octubre de 2026. Base: a28ccfb; rama feat/harness-eventos-tarjetas.
 La operacion sigue dirigida por eventos. Los controles se ejecutan al recibir
 entrada, admitir acciones y registrar resultados; no agregan un ciclo de polling.

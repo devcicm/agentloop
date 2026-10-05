@@ -73,8 +73,8 @@ public static class ShellProcessStartInfoFactory
         info.ArgumentList.Add("-NonInteractive");
         info.ArgumentList.Add("-ExecutionPolicy");
         info.ArgumentList.Add("Bypass");
-        info.ArgumentList.Add("-Command");
-        info.ArgumentList.Add(command.Command);
+        info.ArgumentList.Add("-EncodedCommand");
+        info.ArgumentList.Add(Convert.ToBase64String(System.Text.Encoding.Unicode.GetBytes(command.Command)));
     }
 
 }

@@ -135,9 +135,11 @@ public sealed class ToolRegistry
         }
         catch (Exception ex)
         {
+            var uncertain = invoked && ex is not AgentLoop.Terminals.ExecutionRejectedException
+                && !AgentLoop.Goals.OperationAdmission.IsReadOnly(call.Name);
             return new ToolExecution(call.Id, call.Name,
-                JsonSerializer.Serialize(new ToolFailureDto(DataGuard.Display($"{ex.GetType().Name}: {ex.Message}"), invoked)), Failed: true)
-                { EffectsMayHaveOccurred = invoked };
+                JsonSerializer.Serialize(new ToolFailureDto(DataGuard.Display($"{ex.GetType().Name}: {ex.Message}"), uncertain)), Failed: true)
+                { EffectsMayHaveOccurred = uncertain };
         }
     }
 

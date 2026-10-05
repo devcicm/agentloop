@@ -27,7 +27,10 @@ internal static partial class Program
             lock (consoleGate) { renderer?.Close(); ConsoleUi.Log(text); }
         }
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
-            run, Scope.Minimal(policy), client, [], item => Log($"  evento {item.Format()}"));
+            run, Scope.Minimal(policy), client, [], item =>
+            {
+                lock (consoleGate) { Log($"  evento {item.Format()}"); ConsoleUi.Approval(item); }
+            });
         using var supervisor = setup.Supervisor;
         var tools = setup.Tools;
         thread.Variables.WithDefaults(settings.Model, tools.Names);
@@ -43,6 +46,7 @@ internal static partial class Program
             MaxModelCalls = maxCycles,
             MaxTokens = 2048, Thinking = settings.Thinking, Stream = settings.Stream,
             OnDelta = renderer is null ? null : delta => { lock (consoleGate) renderer.Render(delta); },
+            OnToolCall = (name, output, success, _) => { lock (consoleGate) { renderer?.Close(); ConsoleUi.ToolResult(name, output, success); } },
             Trace = line => Log($"    {line}"),
         };
         ConsoleUi.Section("OPERACION  /  Objetivo por eventos");
@@ -147,9 +151,14 @@ internal static partial class Program
                 Log($"  Â· {item.Format()}", EventColor(item.Kind));
                 if (item.Kind == AgentEventKind.AprobacionSolicitada)
                 {
-                    Console.Write("Aprobar efecto [s/N]: ");
-                    var approved = !Console.IsInputRedirected && Console.ReadLine()?.Trim().ToLowerInvariant() is "s" or "si";
-                    approvalTarget?.Approve(approved);
+                    ConsoleUi.Approval(item);
+                    using var request = JsonDocument.Parse(item.Data!);
+                    var continuousAllowed = request.RootElement.GetProperty("continuous_allowed").GetBoolean();
+                    ConsoleUi.Styled(ConsoleUi.Margin + (continuousAllowed ? "[s: una vez / c: continuo / N: rechazar] " : "[s: una vez / N: rechazar] "), ConsoleColor.Yellow);
+                    var answer = Console.IsInputRedirected ? null : Console.ReadLine()?.Trim().ToLowerInvariant();
+                    var continuous = continuousAllowed && answer == "c";
+                    approvalTarget?.Approve(continuous || answer is "s" or "si", continuous,
+                        request.RootElement.GetProperty("approval_id").GetString());
                 }
             });
         using var supervisor = setup.Supervisor;
@@ -175,6 +184,7 @@ internal static partial class Program
             Thinking = thinking,
             Stream = stream,
             OnDelta = renderer is null ? null : renderer.Render,
+            OnToolCall = (name, output, success, _) => { lock (console) { renderer?.Close(); ConsoleUi.ToolResult(name, output, success); } },
             Trace = line => Log($"    {line}"),
         };
 

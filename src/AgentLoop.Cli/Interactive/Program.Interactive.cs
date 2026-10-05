@@ -122,6 +122,25 @@ internal static partial class Program
                 var verb = tokens[0].ToLowerInvariant();
                 var rest = string.Join(' ', tokens.Skip(1));
 
+                if (verb == "permisos")
+                {
+                    if (rest.Equals("revocar", StringComparison.OrdinalIgnoreCase))
+                    {
+                        var coordinator = Volatile.Read(ref activeCoordinator);
+                        if (coordinator is null) settings.Policy.RevokeContinuousPermissions();
+                        else coordinator.RevokeContinuousPermissions();
+                        ConsoleUi.Text("Revocacion de permisos continuos solicitada.", ConsoleColor.Yellow);
+                    }
+                    else
+                    {
+                        ConsoleUi.Section("PERMISOS  /  Solo esta sesion");
+                        foreach (var permission in settings.Policy.ContinuousPermissions) ConsoleUi.Text(permission);
+                        if (settings.Policy.ContinuousPermissions.Count == 0) ConsoleUi.Text("Sin permisos continuos.");
+                        ConsoleUi.Text("permisos revocar: elimina todos los permisos continuos.");
+                    }
+                    continue;
+                }
+
                 if (verb is "salir" or "exit" or "quit" or "q")
                 {
                     Volatile.Read(ref activeCoordinator)?.Control(AgentEventKind.Cancelacion);
@@ -132,7 +151,13 @@ internal static partial class Program
                 {
                     var coordinator = Volatile.Read(ref activeCoordinator);
                     if (coordinator is null) ConsoleUi.Text("No hay operacion activa.", ConsoleColor.DarkGray);
-                    else if (verb is "aprobar" or "rechazar") coordinator.Approve(verb == "aprobar");
+                    else if (verb is "aprobar" or "rechazar")
+                    {
+                        var continuous = tokens.Skip(1).Any(t => t.Equals("continuo", StringComparison.OrdinalIgnoreCase));
+                        var id = tokens.Skip(1).FirstOrDefault(t => !t.Equals("continuo", StringComparison.OrdinalIgnoreCase));
+                        if (!coordinator.Approve(verb == "aprobar", continuous, id))
+                            ConsoleUi.Text("Sin solicitud unica pendiente. Usa aprobar/rechazar <approval_id>.", ConsoleColor.Yellow);
+                    }
                     else coordinator.Control(verb switch
                     {
                         "pausa" => AgentEventKind.Pausa, "reanudar" => AgentEventKind.Reanudacion,
@@ -440,7 +465,8 @@ internal static partial class Program
         ConsoleUi.Text("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
         ConsoleUi.Text("  stream on|off        pinta la respuesta segun llega o de golpe");
         ConsoleUi.Text("  estado | pausa | reanudar | cancelar   controles de la operacion activa");
-        ConsoleUi.Text("  aprobar | rechazar   responde a una solicitud de autorizacion");
+        ConsoleUi.Text("  aprobar [id] [continuo] | rechazar [id]   autorizacion del operador");
+        ConsoleUi.Text("  permisos | permisos revocar   consulta o revoca permisos de sesion");
         ConsoleUi.Text("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
         ConsoleUi.Text("  discover | selftest | ayuda   utilidades sueltas");
         ConsoleUi.Text("  salir                cierra");

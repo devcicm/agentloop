@@ -221,7 +221,10 @@ internal static partial class Program
               y cada linea, patron o final publica un evento que lo despierta.
 
               Con --politica simular no se ejecuta nada y se responde que habria pasado; con
-              confirmar, los efectos requieren aprobacion: [s/N] con goal y aprobar/rechazar en interactive. Hay una lista de comandos
+              confirmar, los efectos requieren aprobacion: s/c/N con goal y aprobar [id] [continuo]/rechazar [id] en interactive.
+              permisos lista autorizaciones de sesion; permisos revocar las elimina. Destructivos/opacos requieren permiso puntual aun en auto.
+              code_view/read_text_file deben leer antes de edit_text_file o sobrescribir; se exige read_receipt vigente.
+              ejecutar/lanzar admiten saltos reales, here-strings PowerShell y heredocs bash/sh. Hay una lista de comandos
               irreversibles vetada siempre. No es un sandbox: evita el accidente, no contiene
               a nadie decidido.
 

@@ -58,7 +58,7 @@ internal static partial class Program
         }
         catch (Exception ex) when (ex is InvalidOperationException or IOException or JsonException or UnauthorizedAccessException or ArgumentException)
         {
-            Console.Error.WriteLine($"ERROR: {ex.Message}");
+            ConsoleUi.Error($"ERROR: {ex.Message}");
             return 64;
         }
 
@@ -131,7 +131,7 @@ internal static partial class Program
                 if (verb is "pausa" or "reanudar" or "estado" or "cancelar" or "aprobar" or "rechazar")
                 {
                     var coordinator = Volatile.Read(ref activeCoordinator);
-                    if (coordinator is null) Console.WriteLine("No hay operacion activa.");
+                    if (coordinator is null) ConsoleUi.Text("No hay operacion activa.", ConsoleColor.DarkGray);
                     else if (verb is "aprobar" or "rechazar") coordinator.Approve(verb == "aprobar");
                     else coordinator.Control(verb switch
                     {
@@ -142,7 +142,7 @@ internal static partial class Program
                 }
                 if (activeOperation is { IsCompleted: false })
                 {
-                    Console.WriteLine("Operacion activa. Usa estado, pausa, reanudar, cancelar o aprobar/rechazar.");
+                    ConsoleUi.Text("Operacion activa. Usa estado, pausa, reanudar, cancelar o aprobar/rechazar.", ConsoleColor.Yellow);
                     continue;
                 }
 
@@ -180,7 +180,7 @@ internal static partial class Program
                             // Un solo cliente y una sola politica para la sesion: lo que aprenda
                             // sobre el thinking de un modelo vale para los turnos siguientes.
                             client = BuildClient(out var keySource, policy);
-                            Console.WriteLine($"key: {keySource}");
+                            ConsoleUi.Field("Credencial", keySource);
                             Console.WriteLine();
                         }
 
@@ -192,7 +192,7 @@ internal static partial class Program
                 }
 
                 Console.WriteLine();
-                Console.WriteLine($"[codigo de salida {lastExitCode}]");
+                ConsoleUi.Status($"Codigo de salida: {lastExitCode}", lastExitCode == 0);
                 Console.WriteLine();
             }
         }
@@ -232,8 +232,8 @@ internal static partial class Program
         switch (verb)
         {
             case "memoria":
-                if (thread.Memory is null || thread.Memory.Notes.Count == 0) Console.WriteLine("  (sin recuerdos guardados)");
-                else foreach (var note in thread.Memory.Notes) Console.WriteLine($"  {note.Key} = {note.Value}");
+                ConsoleUi.Section("MEMORIA  /  Recuerdos persistidos");                if (thread.Memory is null || thread.Memory.Notes.Count == 0) ConsoleUi.Text("Sin recuerdos guardados.", ConsoleColor.DarkGray);
+                else foreach (var note in thread.Memory.Notes) ConsoleUi.Field(note.Key, note.Value);
                 return true;
 
             case "recordar":
@@ -241,12 +241,12 @@ internal static partial class Program
                 {
                     if (thread.Memory is null) throw new InvalidOperationException("Memoria no inicializada.");
                     thread.Memory.Remember(rest);
-                    Console.WriteLine("  Recuerdo guardado para las siguientes sesiones.");
+                    ConsoleUi.Text("  Recuerdo guardado para las siguientes sesiones.");
                 });
                 return true;
 
             case "olvidar":
-                RunSessionEdit(() => Console.WriteLine(thread.Memory?.Forget(rest) == true ? "  Recuerdo eliminado." : "  No existe esa clave."));
+                RunSessionEdit(() => ConsoleUi.Text(thread.Memory?.Forget(rest) == true ? "  Recuerdo eliminado." : "  No existe esa clave."));
                 return true;
 
             case "contexto":
@@ -255,8 +255,12 @@ internal static partial class Program
                     if (rest.Equals("compactar", StringComparison.OrdinalIgnoreCase)) thread.Compact();
                     else if (rest.StartsWith("limite ", StringComparison.OrdinalIgnoreCase) && int.TryParse(rest[7..].Trim(), out var limit)) thread.SetHistoryLimit(limit);
                     else if (rest.Length > 0) throw new InvalidOperationException("Usa contexto, contexto compactar o contexto limite <caracteres>.");
-                    Console.WriteLine($"  Historial: {thread.Messages.Count}/{thread.MaxMessages} mensajes, {thread.HistoryCharacters}/{thread.MaxHistoryCharacters} caracteres JSON; descartados: {thread.DroppedMessages} mensajes.");
-                    Console.WriteLine($"  Memoria: {thread.Memory?.Notes.Count ?? 0} recuerdos. Compactar conserva el ultimo intercambio; nuevo limpia el historial.");
+                    ConsoleUi.Section("CONTEXTO  /  Uso y limites");
+                    ConsoleUi.Field("Mensajes", $"{thread.Messages.Count} / {thread.MaxMessages}");
+                    ConsoleUi.Field("Caracteres", $"{thread.HistoryCharacters} / {thread.MaxHistoryCharacters}");
+                    ConsoleUi.Field("Descartados", thread.DroppedMessages);
+                    ConsoleUi.Field("Recuerdos", thread.Memory?.Notes.Count ?? 0);
+                    ConsoleUi.Text("Compactar conserva el ultimo intercambio; nuevo limpia el historial.", ConsoleColor.DarkGray);
                 });
                 return true;
 
@@ -267,15 +271,16 @@ internal static partial class Program
                     if (rest.Equals("guardar", StringComparison.OrdinalIgnoreCase)) thread.SaveSession(path);
                     else if (rest.Equals("cargar", StringComparison.OrdinalIgnoreCase)) thread.LoadSession(path);
                     else throw new InvalidOperationException("Usa sesion guardar o sesion cargar.");
-                    Console.WriteLine($"  Sesion {rest}: {path} ({thread.Messages.Count} mensajes).");
+                    ConsoleUi.Text($"  Sesion {rest}: {path} ({thread.Messages.Count} mensajes).");
                 });
                 return true;
 
             case "modelos" or "models":
-                Console.WriteLine("  modelos NVIDIA disponibles:");
+                ConsoleUi.Section("MODELOS  /  Catalogo configurado");
+                ConsoleUi.Text("La lista configurada no acredita disponibilidad remota.", ConsoleColor.DarkGray);
                 foreach (var available in NvidiaOptions.SupportedModels)
                 {
-                    Console.WriteLine($"    {(string.Equals(available, settings.Model, StringComparison.OrdinalIgnoreCase) ? "*" : " ")} {available}");
+                    ConsoleUi.Text($"{(string.Equals(available, settings.Model, StringComparison.OrdinalIgnoreCase) ? "[activo]" : "        ")} {available}", string.Equals(available, settings.Model, StringComparison.OrdinalIgnoreCase) ? ConsoleColor.Cyan : ConsoleColor.Gray, 2);
                 }
                 return true;
 
@@ -285,7 +290,7 @@ internal static partial class Program
                     var requested = rest.Trim();
                     if (requested.Length == 0)
                     {
-                        Console.WriteLine($"  modelo actual: {settings.Model}");
+                        ConsoleUi.Text($"  modelo actual: {settings.Model}");
                         return;
                     }
 
@@ -301,7 +306,7 @@ internal static partial class Program
 
                     settings.Model = selected;
                     thread.Variables.Set("modelo", selected);
-                    Console.WriteLine($"  modelo cambiado a: {selected}");
+                    ConsoleUi.Text($"  modelo cambiado a: {selected}");
                 });
                 return true;
 
@@ -319,7 +324,7 @@ internal static partial class Program
                         };
                     }
 
-                    Console.WriteLine($"  stream: {(settings.Stream ? "activo (se pinta segun llega)" : "apagado (respuesta completa)")}");
+                    ConsoleUi.Text($"  stream: {(settings.Stream ? "activo (se pinta segun llega)" : "apagado (respuesta completa)")}");
                 });
                 return true;
 
@@ -338,13 +343,13 @@ internal static partial class Program
                         }
                     }
 
-                    Console.WriteLine($"  thinking: {DescribeThinking(policy, model)}");
+                    ConsoleUi.Text($"  thinking: {DescribeThinking(policy, model)}");
                 });
                 return true;
 
             case "nuevo" or "reset":
                 thread.Clear();
-                Console.WriteLine("Hilo reiniciado; las variables y la plantilla se mantienen.");
+                ConsoleUi.Text("Hilo reiniciado; las variables y la plantilla se mantienen.");
                 return true;
 
             case "historial":
@@ -363,12 +368,12 @@ internal static partial class Program
                 RunSessionEdit(() =>
                 {
                     thread.Variables.SetAssignment(rest);
-                    Console.WriteLine($"  {rest[..rest.IndexOf('=')].Trim()} = {thread.Variables[rest[..rest.IndexOf('=')].Trim()]}");
+                    ConsoleUi.Text($"  {rest[..rest.IndexOf('=')].Trim()} = {thread.Variables[rest[..rest.IndexOf('=')].Trim()]}");
                 });
                 return true;
 
             case "unset":
-                Console.WriteLine(thread.Variables.Remove(rest.Trim())
+                ConsoleUi.Text(thread.Variables.Remove(rest.Trim())
                     ? $"  {rest.Trim()} eliminada."
                     : $"  {rest.Trim()} no estaba definida.");
                 return true;
@@ -381,7 +386,7 @@ internal static partial class Program
                         : PromptTemplate.Parse(rest);
 
                     thread.UseSystemTemplate(template);
-                    Console.WriteLine($"  plantilla cargada ({template.Placeholders.Count} variables).");
+                    ConsoleUi.Text($"  plantilla cargada ({template.Placeholders.Count} variables).");
                     PrintSystemPrompt(thread);
                 });
                 return true;
@@ -401,7 +406,7 @@ internal static partial class Program
         }
         catch (Exception ex) when (ex is InvalidOperationException or ArgumentOutOfRangeException or IOException or JsonException or UnauthorizedAccessException)
         {
-            Console.Error.WriteLine($"  ERROR: {ex.Message}");
+            ConsoleUi.Error($"  ERROR: {ex.Message}");
         }
     }
 
@@ -493,7 +498,7 @@ internal static partial class Program
         }
         catch (PromptTemplateException ex)
         {
-            Console.Error.WriteLine($"  ERROR: {ex.Message}");
+            ConsoleUi.Error($"  ERROR: {ex.Message}");
         }
     }
 

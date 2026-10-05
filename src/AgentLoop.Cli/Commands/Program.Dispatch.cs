@@ -42,17 +42,17 @@ internal static partial class Program
         }
         catch (LLMException ex)
         {
-            Console.Error.WriteLine($"ERROR del proveedor: {ex.Message}");
+            ConsoleUi.Error($"ERROR del proveedor: {ex.Message}");
             if (ex.IsQuotaOrAccess)
             {
-                Console.Error.WriteLine("La clave no tiene acceso a ese modelo en NVIDIA. Revisa la credencial y los permisos del proveedor.");
+                ConsoleUi.Error("La clave no tiene acceso a ese modelo en NVIDIA. Revisa la credencial y los permisos del proveedor.");
             }
 
             return 1;
         }
         catch (InvalidOperationException ex)
         {
-            Console.Error.WriteLine($"ERROR: {ex.Message}");
+            ConsoleUi.Error($"ERROR: {ex.Message}");
             return 1;
         }
         finally

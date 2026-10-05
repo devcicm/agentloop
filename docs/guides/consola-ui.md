@@ -36,10 +36,11 @@ No incorpora decisiones del agente ni modifica los datos persistidos.
 | Tarjetas y exito | Verde |
 | Fallos, rechazos y aprobacion | Rojo o amarillo segun el evento |
 | Razonamiento y trazas auxiliares | Gris oscuro |
-| Metricas, historial y variables | Etiquetas y valores alineados |
+| Metricas, historial, variables, memoria y contexto | Etiquetas y valores alineados |
 | Respuesta en streaming | Sangria al inicio de cada linea; separada del razonamiento |
 
 Los bloques de texto se ajustan al ancho disponible hasta 96 columnas.
+La ayuda usa el mismo presentador y los errores conservan su canal stderr.
 Los colores originales de la terminal se restauran al terminar cada escritura.
 El sombreado solo se aplica en una terminal; la salida redirigida no recibe controles de color.
 El texto pasa por DataGuard; el streaming mantiene SafeStreamingText.

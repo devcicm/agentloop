@@ -21,18 +21,20 @@ internal static class ConsoleUi
             catch (Exception error) when (error is IOException or PlatformNotSupportedException) { return 96; }
         }
     }
-    public static void Styled(string text, ConsoleColor color, ConsoleColor? background = null)
+    public static void Styled(string text, ConsoleColor color, ConsoleColor? background = null, bool error = false)
     {
         lock (Gate)
         {
-            if (!ColorEnabled) { Console.Write(text); return; }
+            var writer = error ? Console.Error : Console.Out;
+            var useColor = error ? !_noColor && !Console.IsErrorRedirected : ColorEnabled;
+            if (!useColor) { writer.Write(text); return; }
             var previousForeground = Console.ForegroundColor;
             var previousBackground = Console.BackgroundColor;
             try
             {
                 Console.ForegroundColor = color;
                 if (background is {} shade) Console.BackgroundColor = shade;
-                Console.Write(text);
+                writer.Write(text);
             }
             finally { Console.ForegroundColor = previousForeground; Console.BackgroundColor = previousBackground; }
         }
@@ -57,6 +59,12 @@ internal static class ConsoleUi
                 Styled(padding + rest + Environment.NewLine, color);
             }
         }
+    }
+    public static void Error(string text)
+    {
+        lock (Gate)
+            foreach (var line in DataGuard.Display(text).Replace("\r\n", "\n").Split('\n'))
+                Styled(Margin + line + Environment.NewLine, ConsoleColor.Red, error: true);
     }
     public static void Section(string title)
     {

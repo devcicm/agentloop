@@ -129,7 +129,8 @@ internal static partial class Program
 
     private static int PrintHelp()
     {
-        Console.WriteLine(
+        ConsoleUi.Section("AYUDA  /  Comandos y opciones");
+        ConsoleUi.Text(
             """
             AgentLoop - harness dirigido por eventos sobre NVIDIA
 

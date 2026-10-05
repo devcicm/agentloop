@@ -1,0 +1,59 @@
+{
+  "profiles": {
+    "cli interactivo": {
+      "commandName": "Project",
+      "commandLineArgs": "interactive",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "ayuda": {
+      "commandName": "Project",
+      "commandLineArgs": "help",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "selftest (sin red)": {
+      "commandName": "Project",
+      "commandLineArgs": "selftest",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "chat": {
+      "commandName": "Project",
+      "commandLineArgs": "chat \"Responde solo con la palabra OK.\"",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "chat sin thinking": {
+      "commandName": "Project",
+      "commandLineArgs": "chat \"Cuanto es 17 por 23?\" --thinking off",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "chat en stream": {
+      "commandName": "Project",
+      "commandLineArgs": "chat \"Cuanto es 17 por 23? Explica corto.\" --stream",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "run en stream": {
+      "commandName": "Project",
+      "commandLineArgs": "run \"Suma 17 y 23 usando la herramienta y dime el resultado.\" --stream",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "goal (operacion por eventos)": {
+      "commandName": "Project",
+      "commandLineArgs": "goal \"Averigua cuantos ficheros .cs hay en este directorio y sus subdirectorios, y deja constancia del numero exacto.\" --deadline 240",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "goal en simulacion": {
+      "commandName": "Project",
+      "commandLineArgs": "goal \"Comprueba que version de dotnet esta instalada.\" --politica simular --deadline 180",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "discover": {
+      "commandName": "Project",
+      "commandLineArgs": "discover --target 3",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    },
+    "run (objetivo por eventos)": {
+      "commandName": "Project",
+      "commandLineArgs": "run \"Suma 17 y 23 usando la herramienta y dime el resultado.\"",
+      "workingDirectory": "$(MSBuildProjectDirectory)/../.."
+    }
+  }
+}

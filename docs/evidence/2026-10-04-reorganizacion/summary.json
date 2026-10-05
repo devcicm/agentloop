@@ -1,0 +1,39 @@
+{
+  "baseRevision": "c196ffb",
+  "branch": "feat/estructura-core-harness",
+  "projects": 7,
+  "originalSources": 139,
+  "currentSources": 315,
+  "build": {
+    "debug": {
+      "errors": 0,
+      "warnings": 0
+    },
+    "release": {
+      "errors": 0,
+      "warnings": 0
+    }
+  },
+  "tests": {
+    "debugPassed": 442,
+    "releasePassed": 442,
+    "failed": 0
+  },
+  "remote": {
+    "runId": "cd5267b990ff4f239a5acc04d9cb76a7",
+    "provider": "nvidia",
+    "model": "z-ai/glm-5.3",
+    "status": "Succeeded"
+  },
+  "fixture": {
+    "runId": "0fec46c3d68849e2b861e71dda4dc481",
+    "status": "Succeeded"
+  },
+  "recovery": {
+    "newJournalTerminal": true,
+    "uncertainActions": [],
+    "previousJournalCompatible": true
+  },
+  "f5": "profiles, startup GUID and CLI startup validated; Visual Studio UI not automated",
+  "captureFormat": "UTF-8 LF; generated sources copied as textual evidence"
+}

@@ -5,7 +5,7 @@ Rama: `feat/harness-eventos-tarjetas`.
 
 Implementacion: DTOs y admision estricta, snapshot de contrato, fixture POS,
 comando project-admit e integracion protegida en Run, runner y factory.
-Ver [guia de uso](../../goals-proyectos.md) y [plan](../../plan-goals-proyectos-pos-2026-10-02.md).
+Ver [guia de uso](../../architecture/goals-proyectos.md) y [plan](../../plans/plan-goals-proyectos-pos-2026-10-02.md).
 
 ## Registro disponible
 

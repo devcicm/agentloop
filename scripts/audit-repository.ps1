@@ -30,10 +30,14 @@ function Get-Category([string]$name) {
     switch -Regex ($name) {
         '^local-secrets/' { return 'guia-credenciales' }
         '^docs/evidence/' { return 'evidencia-historica' }
-        '^docs/historico/' { return 'informe-historico' }
-        '^docs/(analisis-|auditoria-|validacion-)' { return 'informe-historico' }
+        '^docs/archive/' { return 'informe-historico' }
+        '^docs/plans/' { return 'informe-historico' }
         '^docs/' { return 'documentacion-vigente' }
         '^scripts/' { return 'herramienta-mantenimiento' }
+        '^tests/' { return 'comprobacion-local' }
+        '^src/AgentLoop.Compatibility/' { return 'ejecutor-compatibilidad' }
+        '^src/AgentLoop.Infrastructure/' { return 'adaptador-implementacion' }
+        '^src/.*\.cs$' { return 'codigo-compilado' }
         '(SelfTest|Probe)\.cs$' { return 'comprobacion-local' }
         '^(Looping/|StateMachines/.*StateMachine|Goals/EventDrivenAgent)' { return 'ejecutor-compatibilidad' }
         '\.cs$' { return 'codigo-compilado' }

@@ -1,0 +1,90 @@
+Usando la configuración de inicio de src\AgentLoop.Cli\Properties\launchSettings.json...
+{
+  "contractHash": "E01E13660006EEF03E03ADD5DC412C1BA3DA86F33379E2125008269E974EAE68",
+  "snapshot": {
+    "version": 1,
+    "contractHash": "E01E13660006EEF03E03ADD5DC412C1BA3DA86F33379E2125008269E974EAE68",
+    "startedAt": "2026-10-05T02:09:31.6063941+00:00",
+    "modelCalls": 13,
+    "work": [
+      {
+        "id": "definition",
+        "status": 3,
+        "attempts": 1,
+        "attemptId": "a505f3195ca34211899b1c0bfd348959",
+        "corrections": 0
+      },
+      {
+        "id": "delivery",
+        "status": 3,
+        "attempts": 1,
+        "attemptId": "9a57ce98498b4d7bb330867b03e24eff",
+        "corrections": 0
+      }
+    ],
+    "results": [
+      {
+        "validationId": "definition-valid",
+        "attemptId": "integration",
+        "contractHash": "E01E13660006EEF03E03ADD5DC412C1BA3DA86F33379E2125008269E974EAE68",
+        "inputHashes": {
+          "definition": "2FD019AD65F2BCF79237F5AF93101B8AD9047B72F0FF7434699F49C136304FDC"
+        },
+        "passed": true,
+        "observations": "Entradas presentes y estructura valida.",
+        "evidenceId": "cebc977d49f84c0995c5db74396b4ba2",
+        "startedAt": "2026-10-05T02:16:56.6042676+00:00",
+        "endedAt": "2026-10-05T02:16:56.6066467+00:00",
+        "validatorVersion": "1",
+        "executionEnvironment": "artifact-host",
+        "profileHash": "4AF2195C82E89AEC2B287BB73A721171464EE4FE5ACAADAF3CA52339C172D16F"
+      },
+      {
+        "validationId": "delivery-valid",
+        "attemptId": "integration",
+        "contractHash": "E01E13660006EEF03E03ADD5DC412C1BA3DA86F33379E2125008269E974EAE68",
+        "inputHashes": {
+          "delivery": "2EAC70C18A0602E347B7B7502938DCA6BC056E3E4F2AF4D1F9D454077C9FCC72"
+        },
+        "passed": true,
+        "observations": "Entradas presentes y estructura valida.",
+        "evidenceId": "1f353da801764f7f90c9f68e14b9f369",
+        "startedAt": "2026-10-05T02:16:56.6091813+00:00",
+        "endedAt": "2026-10-05T02:16:56.6112581+00:00",
+        "validatorVersion": "1",
+        "executionEnvironment": "artifact-host",
+        "profileHash": "4AF2195C82E89AEC2B287BB73A721171464EE4FE5ACAADAF3CA52339C172D16F"
+      },
+      {
+        "validationId": "coherence",
+        "attemptId": "integration",
+        "contractHash": "E01E13660006EEF03E03ADD5DC412C1BA3DA86F33379E2125008269E974EAE68",
+        "inputHashes": {
+          "definition": "2FD019AD65F2BCF79237F5AF93101B8AD9047B72F0FF7434699F49C136304FDC",
+          "delivery": "2EAC70C18A0602E347B7B7502938DCA6BC056E3E4F2AF4D1F9D454077C9FCC72"
+        },
+        "passed": true,
+        "observations": "PASS: modulo JavaScript ejecutado; cuatro casos y documento comprobados\n",
+        "evidenceId": "1eb8ed035cda4a4c92438a1e506a911f",
+        "startedAt": "2026-10-05T02:16:56.6139248+00:00",
+        "endedAt": "2026-10-05T02:16:57.6698556+00:00",
+        "validatorVersion": "1",
+        "executionEnvironment": "docker:sha256:06b51b6ad458af6707f0e4cfff1b1cf1451ff395bf7f7bd370cb24fe6ad55b86",
+        "profileHash": "4AF2195C82E89AEC2B287BB73A721171464EE4FE5ACAADAF3CA52339C172D16F"
+      }
+    ],
+    "baseline": {
+      "definition": "missing",
+      "delivery": "missing"
+    },
+    "profileHash": "4AF2195C82E89AEC2B287BB73A721171464EE4FE5ACAADAF3CA52339C172D16F",
+    "knowledge": {
+      "artifacts": [],
+      "actionsWithoutProgress": 3,
+      "explorationReads": 0,
+      "explorationVersions": []
+    }
+  },
+  "uncertainActions": [],
+  "terminal": true
+}

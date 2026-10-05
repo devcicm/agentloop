@@ -1,5 +1,7 @@
 # AgentLoop
 
+[Reorganizacion aplicada, matriz y flujo ASCII](docs/architecture/reorganizacion-implementada.md).
+
 Consola en C# / .NET 9 para ejecutar objetivos con NVIDIA NIM, herramientas
 locales y tarjetas transaccionales. No requiere paquetes NuGet externos.
 
@@ -12,10 +14,10 @@ asincronas, incluida la puerta de pausa con `AsyncManualResetEvent`.
 
 ```powershell
 dotnet build
-dotnet run -- interactive
+dotnet run --project src/AgentLoop.Cli -- interactive
 ```
 
-F5 usa el perfil `cli interactivo` de [launchSettings.json](Properties/launchSettings.json).
+F5 usa el perfil `cli interactivo` de [launchSettings.json](src/AgentLoop.Cli/Properties/launchSettings.json).
 Credencial: [local-secrets/README.md](local-secrets/README.md).
 Endpoint predeterminado: `https://integrate.api.nvidia.com/v1`.
 Modelos configurados: `z-ai/glm-5.3` y `moonshotai/kimi-k3`; incluir un ID
@@ -38,9 +40,9 @@ siguiente operacion. Durante texto libre/`run`: `estado`, `pausa`, `reanudar`,
 `cancelar`, `aprobar` y `rechazar` publican controles independientes.
 
 ```powershell
-dotnet run -- goal "Crea y lee un poema de cuatro versos sobre Mexico en poema.txt" --artifact poema.txt --contains Mexico
-dotnet run -- goal "Crea y lee resultado.json" --artifact resultado.json --json
-dotnet run -- recuperacion ".agentloop/event-journal/<runId>.jsonl"
+dotnet run --project src/AgentLoop.Cli -- goal "Crea y lee un poema de cuatro versos sobre Mexico en poema.txt" --artifact poema.txt --contains Mexico
+dotnet run --project src/AgentLoop.Cli -- goal "Crea y lee resultado.json" --artifact resultado.json --json
+dotnet run --project src/AgentLoop.Cli -- recuperacion ".agentloop/event-journal/<runId>.jsonl"
 ```
 
 Las herramientas se componen en `GoalRunFactory` y se filtran por `Scope`:
@@ -58,7 +60,7 @@ la calidad literaria o correccion semantica requiere validadores adicionales.
 
 ## Seguridad de datos
 
-[DTOs, sanitizacion y limites de confianza](docs/seguridad-datos-harness.md).
+[DTOs, sanitizacion y limites de confianza](docs/guides/seguridad-datos-harness.md).
 Para archivos acotados: `interactive --no-shell --scope-root "C:\proyectos\demo"`.
 El modo auto con shell conserva los permisos del usuario; no es un sandbox.
 
@@ -66,23 +68,23 @@ El modo auto con shell conserva los permisos del usuario; no es un sandbox.
 
 | Ruta | Responsabilidad |
 | --- | --- |
-| `Program.cs` | CLI, sesion, controles y opciones |
-| `Goals/`, `Cards/`, `Events/` | Actor, admision, aceptacion, contratos, tarjetas y bus |
-| `Tools/`, `Terminals/`, `Concurrency/` | Tools, procesos, capacidad y reset events |
-| `Security/` | DTOs de datos, validacion, sanitizacion, secretos y recursos protegidos |
-| `Provider/`, `Parsing/`, `Discovery/`, `Configuration/` | HTTP NVIDIA, SSE, reasoning, modelos y credenciales |
-| `Harness/` | Composicion, Journey, journal, observacion y utilidades de soporte |
-| `StateMachines/`, `Looping/` | Conversacion y compatibilidad; no gobiernan operaciones principales |
-| `Prompting/` | Plantillas, variables y sanitizacion |
-| `docs/`, `scripts/` | Guias, informes, evidencia e inventario |
+| `src/AgentLoop.Kernel/` | Puertos LLM, DTOs neutrales, eventos y senales |
+| `src/AgentLoop.Core/` | Tarjetas, contratos, estado, conocimiento y criterios |
+| `src/AgentLoop.Harness/` | Actor por eventos, admision, contexto y puertos de efectos |
+| `src/AgentLoop.Infrastructure/` | NVIDIA, disco, procesos, Docker y composicion de adaptadores |
+| `src/AgentLoop.Cli/` | Comandos, consola interactiva y perfiles F5 |
+| `src/AgentLoop.Compatibility/` | Chat y ejecutores anteriores |
+| `tests/AgentLoop.SelfTests/` | Pruebas, sondas y fixtures |
+| `examples/contracts/, examples/profiles/` | Ejemplos declarativos externos al motor |
+| `docs/, scripts/` | Guias, informes, evidencia y auditorias |
 
 El puerto activo es `ILLMClient`; los detalles NVIDIA viven en
-[Provider/Nvidia](Provider/README.md). Sondas historicas requieren su revision de origen.
+[Provider/Nvidia](src/AgentLoop.Infrastructure/Providers/README.md). Sondas historicas requieren su revision de origen.
 
 ## Estado comprobado y documentacion
 
-Arquitectura vigente y flujos ASCII: [harness por eventos](docs/harness-eventos.md).
-Incidente y correccion POS: [informe](docs/incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md).
+Arquitectura vigente y flujos ASCII: [harness por eventos](docs/architecture/harness-eventos.md).
+Incidente y correccion POS: [informe](docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md).
 Validacion de recuperacion POS: [evidencia](docs/evidence/2026-10-01/README.md).
 Validacion vigente de seguridad: [evidencia](docs/evidence/2026-10-01-seguridad/README.md).
 
@@ -96,18 +98,22 @@ No equivale a una comprobacion nueva de disponibilidad remota.
 
 ## Core, Kernel y proyectos genericos
 
-[Arquitectura independiente y flujo ASCII](docs/core-kernel.md).
+[Arquitectura independiente y flujo ASCII](docs/architecture/core-kernel.md).
 `AgentLoop.Kernel` expone puertos, contratos y senales; `AgentLoop.Core` conserva
 estado y conocimiento; el ejecutable compone adaptadores y coordina por eventos.
 El ejercicio POS fue archivado localmente y retirado de la implementacion.
 
 ```powershell
 dotnet build AgentLoop.sln
-dotnet run -- project-admit --project-contract "examples/project-goals/minimal.example.json" --project-profile "examples/profiles/artifacts.example.json"
-dotnet run -- project-run --project-contract "examples/project-goals/minimal.example.json" --project-profile "examples/profiles/artifacts.example.json" --fixture --fixture-root "examples/fixtures/minimal"
+$contract = Get-Content "examples/contracts/minimal.example.json" -Raw | ConvertFrom-Json
+$contract.root = [IO.Path]::GetFullPath($contract.root)
+New-Item .agentloop -ItemType Directory -Force | Out-Null
+$contract | ConvertTo-Json -Depth 30 | Set-Content ".agentloop/minimal-contract.json" -Encoding utf8
+dotnet run --project src/AgentLoop.Cli -- project-admit --project-contract ".agentloop/minimal-contract.json" --project-profile "examples/profiles/artifacts.example.json"
+dotnet run --project src/AgentLoop.Cli -- project-run --project-contract ".agentloop/minimal-contract.json" --project-profile "examples/profiles/artifacts.example.json" --fixture --fixture-root "examples/fixtures/minimal"
 ```
 
-[Guia de perfiles, contexto y recuperacion](docs/goals-proyectos.md).
+[Guia de perfiles, contexto y recuperacion](docs/architecture/goals-proyectos.md).
 No hay perfil implicito. El host registra validadores y comandos; las instrucciones
 de dominio viven en perfiles externos. La raiz generada debe estar fuera del repo.
 El ejemplo acredita archivos/JSON; para comportamiento se instala un validador externo.
@@ -117,9 +123,9 @@ Las 415 comprobaciones y el ejercicio aislado anteriores corresponden a 5132301.
 Validacion posterior del Core/Kernel: [pruebas locales y NVIDIA con Docker](docs/evidence/2026-10-04-validacion-core-kernel/README.md).
 
 [Indice documental](docs/README.md) ·
-[Arquitectura y pendientes](docs/implementacion-coordinador-eventos-2026-09-30.md) ·
-[Inventario y limpieza](docs/limpieza-datos-repo-2026-09-30.md) ·
+[Arquitectura y pendientes](docs/architecture/implementacion-coordinador-eventos-2026-09-30.md) ·
+[Inventario y limpieza](docs/archive/limpieza-datos-repo-2026-09-30.md) ·
 [Indice de evidencia](docs/evidence/README.md)
 
-Comprobaciones existentes: `dotnet run -- selftest` o `dotnet run -- selftest-coordinator`.
+Comprobaciones existentes: `dotnet run --project src/AgentLoop.Cli -- selftest` o `dotnet run --project src/AgentLoop.Cli -- selftest-coordinator`.
 Inventario documental: `powershell -File scripts/audit-repository.ps1`.

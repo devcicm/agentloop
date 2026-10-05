@@ -1,0 +1,115 @@
+{
+  "scope": "captured build, tests, contracts, traces and generated textual example; repository audit separate",
+  "files": [
+    {
+      "path": "architecture-audit.json",
+      "bytes": 913,
+      "sha256": "83e6f92ead6b02935f15d646d6da31758c5eed98960b61f627ec7290999a29be"
+    },
+    {
+      "path": "build-debug.txt",
+      "bytes": 1220,
+      "sha256": "df9ad50fcdfd8525f1c3bc3d6228e77a47aa7f6ca0d673c5f65a2783af8b72ab"
+    },
+    {
+      "path": "build-release.txt",
+      "bytes": 1234,
+      "sha256": "4f53e342fd2b1f6776c67378d2c578941df1b100af9cda5a1575627f54048716"
+    },
+    {
+      "path": "credentials-audit.json",
+      "bytes": 1048,
+      "sha256": "053d9aa039699fc1bd5d89366833fd5c329193bd5a043dbb40f1ccef6508dbcd"
+    },
+    {
+      "path": "fixture-contract.json",
+      "bytes": 1761,
+      "sha256": "4fb6b59e9c31a3a69b5325ed086ba601d07e8f2b03796629ead7b8cfbca1e01b"
+    },
+    {
+      "path": "fixture-trace.json",
+      "bytes": 76094,
+      "sha256": "bd246c5b6bd209a67e57c5268755bcece18e7499edeec97a9f351ea701f7383c"
+    },
+    {
+      "path": "fixture.txt",
+      "bytes": 7098,
+      "sha256": "fd4db3c04bf1950a1afea87f2031ae493c8fff89c5b4bfe84fd58e99141d212b"
+    },
+    {
+      "path": "generated-example/README.txt",
+      "bytes": 564,
+      "sha256": "2eac70c18a0602e347b7b7502938dca6bc056e3e4f2af4d1f9d454077c9fcc72"
+    },
+    {
+      "path": "generated-example/src/calculator.mjs",
+      "bytes": 291,
+      "sha256": "2fd019ad65f2bcf79237f5af93101b8ad9047b72f0ff7434699f49c136304fdc"
+    },
+    {
+      "path": "help.txt",
+      "bytes": 7760,
+      "sha256": "18848c8cc029022254365750b847ac584c1e78f0ca0857fa2a7acd74f87e0eb9"
+    },
+    {
+      "path": "profile-hash-mismatch.json",
+      "bytes": 501,
+      "sha256": "ab0cf1325973b9d50730195c03d96256e2672424276e5c37eeb77dc5d018e984"
+    },
+    {
+      "path": "profile.json",
+      "bytes": 1916,
+      "sha256": "7cb4ed2815f9b5cb8c1151a78a255d35161eb30c1a3f901b3c3b5e69ba860c96"
+    },
+    {
+      "path": "README.md",
+      "bytes": 1558,
+      "sha256": "193470ce21aa6a997da2802fee3ff7619780b748be9842c8289d122411936c96"
+    },
+    {
+      "path": "recovery-before-layout.txt",
+      "bytes": 3555,
+      "sha256": "65eb516a9162475693e86a69fdca8208d73b9af36692ddf07105598fb70f4d5d"
+    },
+    {
+      "path": "recovery-new.txt",
+      "bytes": 3557,
+      "sha256": "c81e8491e8ea0eabae2ba98fb18b3a390453754940a8adb88ccf97d8e3c533dd"
+    },
+    {
+      "path": "remote-contract.json",
+      "bytes": 2167,
+      "sha256": "2700b5cb2bb2d3e93a7039ade89c42c7e6be6a9d6117b4d9bcd02032f60fd8de"
+    },
+    {
+      "path": "remote-journal.jsonl",
+      "bytes": 445933,
+      "sha256": "663cc79655bbcaf883ee9403fcc2f489e88f2285bca8d0de92abe776e1fb868e"
+    },
+    {
+      "path": "remote-trace.json",
+      "bytes": 84396,
+      "sha256": "17ec8eca52e594105b357e328277c7c9640e92f7aa8f0348a6b965abeba8b837"
+    },
+    {
+      "path": "remote.txt",
+      "bytes": 8183,
+      "sha256": "3e018db51c9608decfcc9b15bcda9a98c75bbd0b17fb072bd2f662daf8da32fa"
+    },
+    {
+      "path": "selftest-debug.txt",
+      "bytes": 27167,
+      "sha256": "d02d49d5fa0e9e8a179163de475bc17094c96b4db892638ec2fc74e35ce0cf66"
+    },
+    {
+      "path": "selftest-release.txt",
+      "bytes": 27167,
+      "sha256": "d74ec97d354465837f261c9534c09604471f1bb81b24df2e387d1d88d53db5b9"
+    },
+    {
+      "path": "summary.json",
+      "bytes": 901,
+      "sha256": "6f7bd325f95fe1cb2a7dcd827a15bea78333f53402f92d64e6b27ff8ec84971d"
+    }
+  ]
+}

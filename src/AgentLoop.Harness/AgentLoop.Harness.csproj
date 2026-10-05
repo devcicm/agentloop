@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net9.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../AgentLoop.Kernel/AgentLoop.Kernel.csproj" />
+    <ProjectReference Include="../AgentLoop.Core/AgentLoop.Core.csproj" />
+  </ItemGroup>
+</Project>

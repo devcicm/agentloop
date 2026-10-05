@@ -23,5 +23,5 @@ Los registros aqui son la ultima ejecucion de la version final de codigo.
 
 No es una prueba de inmunidad de un modelo remoto a prompt injection ni de
 contencion del sistema operativo. Alcance y pendientes en
-[seguridad de datos y DTOs](../../seguridad-datos-harness.md).
+[seguridad de datos y DTOs](../../guides/seguridad-datos-harness.md).
 Los logs se normalizan a UTF-8/LF para versionado.

@@ -1,0 +1,42 @@
+{
+  "projects": 7,
+  "sources": 315,
+  "originalSources": 139,
+  "dependencies": {
+    "AgentLoop.Cli": [
+      "AgentLoop.Kernel",
+      "AgentLoop.Core",
+      "AgentLoop.Harness",
+      "AgentLoop.Infrastructure",
+      "AgentLoop.Compatibility"
+    ],
+    "AgentLoop.Compatibility": [
+      "AgentLoop.Kernel",
+      "AgentLoop.Core",
+      "AgentLoop.Harness",
+      "AgentLoop.Infrastructure"
+    ],
+    "AgentLoop.Core": [
+      "AgentLoop.Kernel"
+    ],
+    "AgentLoop.Harness": [
+      "AgentLoop.Kernel",
+      "AgentLoop.Core"
+    ],
+    "AgentLoop.Infrastructure": [
+      "AgentLoop.Kernel",
+      "AgentLoop.Core",
+      "AgentLoop.Harness"
+    ],
+    "AgentLoop.Kernel": [],
+    "AgentLoop.SelfTests": [
+      "AgentLoop.Kernel",
+      "AgentLoop.Core",
+      "AgentLoop.Harness",
+      "AgentLoop.Infrastructure",
+      "AgentLoop.Compatibility",
+      "AgentLoop.Cli"
+    ]
+  },
+  "errors": []
+}

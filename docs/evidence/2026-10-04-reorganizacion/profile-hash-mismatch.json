@@ -1,0 +1,7 @@
+{
+  "resource": "C:\\Users\\Carlos Ivan\\Desktop\\agent loop\\docs\\evidence\\2026-10-04-validacion-core-kernel\\code-bundle\\verify.mjs",
+  "expectedByHistoricalProfile": "27cb0192538aad55801e8ed481760fec865fb1af8d66414a2bb7848ed9acae02",
+  "actualGitBytes": "d52e0a2a41848e8b1ad3f6660c5039f0b35ad511d27ba2041bdd7aec4f5461c1",
+  "withCRLF": "27cb0192538aad55801e8ed481760fec865fb1af8d66414a2bb7848ed9acae02",
+  "preflight": "rejected; historical capture unchanged; new profile hashes actual bytes"
+}

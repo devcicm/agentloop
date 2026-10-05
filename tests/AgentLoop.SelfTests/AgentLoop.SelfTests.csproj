@@ -1,0 +1,11 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup><OutputType>Exe</OutputType><AgentLoopVerification>true</AgentLoopVerification><TargetFramework>net9.0</TargetFramework><ImplicitUsings>enable</ImplicitUsings><Nullable>enable</Nullable></PropertyGroup>
+  <ItemGroup>
+    <ProjectReference Include="../../src/AgentLoop.Kernel/AgentLoop.Kernel.csproj" />
+    <ProjectReference Include="../../src/AgentLoop.Core/AgentLoop.Core.csproj" />
+    <ProjectReference Include="../../src/AgentLoop.Harness/AgentLoop.Harness.csproj" />
+    <ProjectReference Include="../../src/AgentLoop.Infrastructure/AgentLoop.Infrastructure.csproj" />
+    <ProjectReference Include="../../src/AgentLoop.Compatibility/AgentLoop.Compatibility.csproj" />
+    <ProjectReference Include="../../src/AgentLoop.Cli/AgentLoop.Cli.csproj" />
+  </ItemGroup>
+</Project>

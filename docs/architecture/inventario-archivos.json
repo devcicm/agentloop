@@ -1,0 +1,4432 @@
+[
+  {
+    "path": ".github/copilot-instructions.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": ".gitignore",
+    "nature": "recurso/evidencia"
+  },
+  {
+    "path": "AgentLoop.sln",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/architecture/core-kernel.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/architecture/estructura-propuesta.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/architecture/goals-proyectos.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/architecture/harness-eventos.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/architecture/implementacion-coordinador-eventos-2026-09-30.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/architecture/inventario-antes.txt",
+    "nature": "recurso/evidencia"
+  },
+  {
+    "path": "docs/architecture/inventario-archivos.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "docs/architecture/inventario-despues.txt",
+    "nature": "recurso/evidencia"
+  },
+  {
+    "path": "docs/architecture/matriz-archivos.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "docs/architecture/migracion-rutas.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "docs/architecture/reorganizacion-implementada.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/archive/analisis-harness-poema-2026-09-27.md",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/archive/auditoria-gaps-harness-2026-09-30.md",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/archive/diagnostico-no-cierre-previo-2026-09-30.md",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/archive/limpieza-datos-repo-2026-09-30.md",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/archive/limpieza-operaciones-2026-09-30.json",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/archive/repository-data-inventory-2026-09-30.json",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/archive/validacion-eventos-2026-09-28.md",
+    "nature": "informe historico"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/HarnessProbe.cs.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/after-fix-build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/after-fix-probe-console.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/after-fix-probe.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/after-fix-selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/audit-summary.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/before-fix-commit.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/before-fix-status.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/before-fix.patch",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/chat-nvidia-console.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/evidence-manifest.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/harness-probe.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/interactive-memo.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/nvidia-catalog-after-fix.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/nvidia-ping-after-fix.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/nvidia-poem-evidence.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/nvidia-poem-run.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/nvidia-poem-workspace/notes/poema-original.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/provider-catalog.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/remote-goal.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/run-probe.ps1",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-27/selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-30/compilacion.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-30/inspeccion-journal.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-30/nvidia-poema-eventos.jsonl",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-30/nvidia-poema-traza.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-30/poema.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-09-30/selftest-completo.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01-seguridad/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01-seguridad/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01-seguridad/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01-seguridad/selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/pos-before.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/selftest-first-attempt.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/selftest-second-attempt.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-01/selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-02-proyectos-p0/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-02-proyectos-p0/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-core-kernel/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-core-kernel/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-core-kernel/exercise-retention.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-core-kernel/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/backend-check.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/build-final.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/build-retry.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/docker-build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/fixture-final.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/fixture-first.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/nvidia-pos-resume.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/nvidia-pos.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/selftest-final.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-03-proyectos/validation-summary.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/exclusion-checks.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/history-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/scanner-checks.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/security-tests.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-credenciales/selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/architecture-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/build-debug.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/build-release.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/credentials-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/fixture-contract.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/fixture-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/fixture.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/generated-example/README.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/generated-example/src/calculator.mjs",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/help.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/manifest.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/profile-hash-mismatch.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/profile.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/recovery-before-layout.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/recovery-new.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/remote-contract.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/remote-journal.jsonl",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/remote-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/remote.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/selftest-debug.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/selftest-release.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-reorganizacion/summary.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/admission-rejection.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/admission.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/build.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/bundle/verify.mjs",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/code-bundle/verify.mjs",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/code-contract.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/code-profile.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/code-recovery.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/code-remote.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/code-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/fixture-contract.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/fixture-failure.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/fixture-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/fixture.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/fixture/README.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/fixture/definition.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/invalid-backend-profile.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/invalid-backend.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/negative-fixture-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/profile.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/projects.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/recovery.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/remote-contract.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/remote-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/remote.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/repository-audit.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/resume.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/resumed-trace.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/runs.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/selftest.txt",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/2026-10-04-validacion-core-kernel/summary.json",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/README.md",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/eventos-antes-2026-09-28.log",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/eventos-despues-2026-09-28.log",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/eventos-final-2026-09-30.log",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/eventos-nvidia-2026-09-28.log",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/eventos-regresion-antes-2026-09-28.log",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/evidence/eventos-regresion-despues-2026-09-28.log",
+    "nature": "captura historica"
+  },
+  {
+    "path": "docs/guides/contexto-y-memoria.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/guides/contexto-y-recursos.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/guides/diagnostico-no-cierre.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/guides/seguridad-datos-harness.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/plans/plan-goals-proyectos-pos-2026-10-02.md",
+    "nature": "plan historico"
+  },
+  {
+    "path": "examples/contracts/minimal.example.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "examples/fixtures/minimal/README.txt",
+    "nature": "recurso/evidencia"
+  },
+  {
+    "path": "examples/fixtures/minimal/definition.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "examples/profiles/artifacts.example.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "examples/profiles/docker.template.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "local-secrets/README.md",
+    "nature": "guia de credenciales"
+  },
+  {
+    "path": "scripts/audit-architecture.py",
+    "nature": "herramienta de mantenimiento"
+  },
+  {
+    "path": "scripts/audit-git-secrets.py",
+    "nature": "herramienta de mantenimiento"
+  },
+  {
+    "path": "scripts/audit-repository.ps1",
+    "nature": "herramienta de mantenimiento"
+  },
+  {
+    "path": "src/AgentLoop.Cli/AgentLoop.Cli.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Arguments.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "1656b0752644f14f2c4be3f40293a8d6d94f37c3cfa7678bda93a01cd9983b24",
+    "purpose": [
+      "Une todo lo posicional en un solo prompt. Sin esto, 'chat el clima de hoy' sin comillas llegaba al modelo como 'el' y la respuesta parecia culpa del LLM. Las opciones --x se saltan junto con su valor, vengan antes o despues del texto."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Chat.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "2d5095108250386f39337b384a4ad27ecade72525bf5b02275b68edf332e25eb",
+    "purpose": [
+      "Un intercambio del usuario, con el hilo y los parametros de la sesion puestos."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Diagnosis.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "f2122f3cb062a81a8eb3b0673b2450c847842f201f568c8a55ef790f6802922f",
+    "purpose": [
+      "Test honesto con el modelo real: ejecuta el goal contra GLM 5.3 (o el modelo que se pase con --model) y reporta honestamente el resultado. Sin ScriptedRunner, sin cÃƒÂ¡ntico hardcoded, sin ScriptedStep. Si el modelo cumple el protocolo de tarjetas, imprime CUMPLIDO; si no, imprime SIN CERRAR con el motivo. Uso: dotnet run --project AgentLoop.csproj -- lobos dotnet run --project AgentLoop.csproj -- lobos --model z-ai/glm-5.3-free --deadline 60"
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Discovery.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "296f2acc2ccb7294ec0ca01776b2d52a3f613309e02bd52c234ea4f09fcd792b",
+    "purpose": [
+      "Sondea el catalogo y reporta los modelos con capacidades agenticas."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Dispatch.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "882742cccba1923117886d2a90c397509c9b2b17aa3d273262cf17fc159ad1e6",
+    "purpose": [
+      "Cancelacion y traduccion de errores a codigo de salida. Vive aparte porque el modo interactivo entra aqui una vez por comando y no puede morirse en el primero."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Journey.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "a3542b044516e84e3423d0fb5ebc8e09c4b3b4c5354b331d0746251fbd1acd0e",
+    "purpose": [
+      "Comando 'journal': corre el harness via y persiste el Journey a artifacts/journeys/&lt;runId&gt;.md. Pensado para pruebas end-to-end del harness: el RunContext, StepRecorder y Durable se ejercitan de verdad sin tocar el flujo principal de 'goal'."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Operations.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "0838052bf9f15f5dec801dc6ebd41da020fc5c89254fce50ece6cda216201170",
+    "purpose": [
+      "La entrada principal del CLI publica un objetivo y ejecuta el reactor."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Presentation.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "486d4db881825860273a551d399b2ed872d96bb1dcd304f93a350f1ac7bc05a1",
+    "purpose": [
+      "Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Projects.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "78848b0e76c96add0eaa3641f29fdc14915dacb1525a4da260aad041e5735d1d",
+    "purpose": [
+      "Declaracion ClassDeclaration: Program"
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "017d7618777616eedb2f6c49c0638d995ad61454b9ba48136f3d8d55daf7d3e0",
+    "purpose": [
+      "Comprueba en vivo que el modelo responde antes de lanzar una prueba larga. Un ping minimo (una pregunta de un token, sin thinking) distingue: - disponible: el gateway devolvio 200. - sin acceso/saldo (401/402/403): la cuenta no puede usarlo. - no disponible (404 / model_not_found / no available channel): el gateway no lo sirve. - transporte (status 0): no se pudo contactar. No lanza: devuelve el veredicto para que el caller decida."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Verification.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "f433620a46f26b622dd62e0c3fa46583545feb8e7570797fde61bb833067bc78",
+    "purpose": [
+      "Declaracion ClassDeclaration: Program"
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "4de5a06621d3ec9d800b4bf8beab5f876f0b1db38b38a8a8e974227feee55997",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Interactive/Program.Interactive.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "8376b32e12d779bf91caf09b33e677327aad6a64fbf0a62155150259a83571a0",
+    "purpose": [
+      "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Presentation/CommandHeader.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "CommandHeader"
+    ],
+    "sha256": "3181a87ac2e29f984f39c319fc2c69d5613d78d8f0a3c89e6ca24dabdeedbc2d",
+    "purpose": [
+      "Banner homogeneo que imprimen los comandos del CLI al arrancar: muestra key, modelo, politica, objetivo y herramientas, sin que cada comando tenga que reinventar el formato. Asi chat, run, goal y journal se ven consistentes."
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Program.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "sha256": "66ae948bf5895786868a7d6f578cda3b1b540b481bcbc327165ef0727a9f1c20",
+    "purpose": [
+      "Declaracion ClassDeclaration: Program"
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Properties/AssemblyInfo.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "6df26644e2eba12c32a6f7d00589ffb79dd44e270d789917ab46dc01d64b998e",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Properties/launchSettings.json",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/AgentLoop.Compatibility.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Conversation/AgentLoopRunner.cs",
+    "namespace": "AgentLoop.Looping",
+    "types": [
+      "AgentLoopRunner"
+    ],
+    "sha256": "2679e2343f1989e67729bb9e2655849fb5b1fb9513a0637506d7535bc0e248fe",
+    "purpose": [
+      "CAPA 4 - el loop del harness. El bucle no tiene condicion propia: gira mientras sea false. Cada iteracion avanza un paso de la maquina de estados y luego evalua las condiciones de corte; la primera que se cumple pone la bandera en true y anota el motivo en , con lo que el while termina. Es generico a proposito: sirve para cualquier StateMachine, no solo para la del agente."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Conversation/LoopBreakReason.cs",
+    "namespace": "AgentLoop.Looping",
+    "types": [
+      "LoopBreakReason"
+    ],
+    "sha256": "79be0fce18ea039c4620d0e6ef77b74fb00970f5dd95aad2d8f9cae7fcc65be9",
+    "purpose": [
+      "Por que se levanto la bandera que rompio el loop."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Conversation/LoopContext.cs",
+    "namespace": "AgentLoop.Looping",
+    "types": [
+      "LoopContext"
+    ],
+    "sha256": "abedc2017e56c29245b610bac1a0cc3a271830b6890c78ddb2cdccc8d8fd9c14",
+    "purpose": [
+      "Foto de una iteracion, que es lo que recibe el predicado de corte."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Conversation/LoopFailureReason.cs",
+    "namespace": "AgentLoop.Looping",
+    "types": [
+      "LoopFailureReason"
+    ],
+    "sha256": "0351f5376cec9f691758f408382fd516e362b1d5f6b696420a36dc3c1292df68",
+    "purpose": [
+      "Motivo de fallo de un loop: termino con error o por una condicion no satisfecha."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Conversation/LoopOutcome.cs",
+    "namespace": "AgentLoop.Looping",
+    "types": [
+      "LoopOutcome"
+    ],
+    "sha256": "cc480d33cc313a26f8e3cbca8c550fe0eba63c2661e85ffa977467cdd93f66b5",
+    "purpose": [
+      "Outcome de un loop exitoso: por que se rompio la bandera y cuantas iteraciones llevo."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Conversation/LoopResult.cs",
+    "namespace": "AgentLoop.Looping",
+    "types": [
+      "LoopResult"
+    ],
+    "sha256": "1901c7d48055983335ba30d82e728f84880f74b1d2d4bc6cd486cba198506782",
+    "purpose": [
+      "Resultado final del loop: siempre dice por que se detuvo."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "76f486c75b870da780edeeccbd0501176378fbd364eaa794e10f66036d48bd70",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Properties/AssemblyInfo.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "6df26644e2eba12c32a6f7d00589ffb79dd44e270d789917ab46dc01d64b998e",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Reactor/LegacyEventDrivenAgent.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "LegacyEventDrivenAgent"
+    ],
+    "sha256": "7699a1917cf3075a47547caf2ea755c8c6d13b70f954a57e4b63a89a806b026a",
+    "purpose": [
+      "El agente dirigido por eventos. La diferencia con no es cosmetica: alli el ciclo lo marca la conversacion (pregunta, respuesta, herramienta, respuesta) y termina cuando el modelo deja de pedir tools. Aqui el ciclo lo marca lo que ocurre fuera - un proceso que escupe una linea, un patron que aparece, un comando que muere - y lo unico que cierra la operacion es la tarjeta de cierre del libro mayor. Se puede razonar diez veces sin que pase nada, o pasar cien cosas entre dos razonamientos; ninguna de las dos rompe nada. El estado no bloquea ningun hilo: espera sobre el reset event del bus, asi que mientras tanto los procesos hijos siguen volcando salida desde sus propios hilos de captura."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/Reactor/ReactorState.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "ReactorState"
+    ],
+    "sha256": "39db520c50e9975e5cf50697a4d3bd2709f47af21ae382b688a9612b2ae39883",
+    "purpose": [
+      "Estados del reactor. No son turnos: son fases de una reaccion a lo que pasa."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/StateMachines/AgentState.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "AgentState"
+    ],
+    "sha256": "bd1855360f0e9bb5dd74b511bb6bbad534c2c8dfe44a70fc550450023e73ac56",
+    "purpose": [
+      "Declaracion EnumDeclaration: AgentState"
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/StateMachines/AgentStateMachine.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "AgentStateMachine"
+    ],
+    "sha256": "a1c1c907cf2ba1bbc1a7d11b91ba56be498d450afbbdfacba333fc5d0519dc45",
+    "purpose": [
+      "Implementacion concreta de la CAPA 3: el ciclo tool_call -> resultado -> respuesta final, portado de tokenrouter-client/tokenrouter/agent.py."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/StateMachines/InvalidStateTransitionException.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "InvalidStateTransitionException"
+    ],
+    "sha256": "e3628ceadc5fb9f1758549223186c4a7a00a3d6294c8fddb94ad251f01868f90",
+    "purpose": [
+      "Se intento una transicion que CanTransition rechaza."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/StateMachines/StateMachine.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "StateMachine"
+    ],
+    "sha256": "fed30b4da9224c4ffb25055575c0aab070fe3a04f7896216619d24af72d90114",
+    "purpose": [
+      "CAPA 3 - maquina de estados generica pensada para heredarse. Una subclase solo esta obligada a decir tres cosas: que hace en cada estado (), cuales son terminales () y a donde va cuando algo explota (). Todo lo demas (, , , ) son puntos de extension opcionales. No contiene bucle: avanza de a un paso con . Quien itera es la CAPA 4 (AgentLoopRunner), para que el criterio de corte viva fuera."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/StateMachines/StateTransition.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "StateTransition"
+    ],
+    "sha256": "9a8242b97cdcc8bd82059894fc42a7b638b70a3f3740c3a05918a925f97c54ad",
+    "purpose": [
+      "Una transicion consumada, para trazas y depuracion."
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Compatibility/StateMachines/TickState.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "TickState"
+    ],
+    "sha256": "e7cd5977266927fd874097bfbd451240dd448fc6164cf3193989e3c1feb43798",
+    "purpose": [
+      "Declaracion EnumDeclaration: TickState"
+    ],
+    "nature": "compatibilidad"
+  },
+  {
+    "path": "src/AgentLoop.Core/AgentLoop.Core.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Core/Cards/CardDeck.cs",
+    "namespace": "AgentLoop.Cards",
+    "types": [
+      "CardDeck"
+    ],
+    "sha256": "3f7f770be10450355f8ada11a70f9a51f7090a7f5257c59a9fb9ce711318afed",
+    "purpose": [
+      "El mazo que se le entrega al agente. Es el contrato de la operacion: estas son las tarjetas que el sistema reconoce, y ninguna otra."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Cards/CardKind.cs",
+    "namespace": "AgentLoop.Cards",
+    "types": [
+      "CardKind"
+    ],
+    "sha256": "6123e5e5dd784524d763181621c890dc4c879afc88b99eec8f4a574b1ba0eb52",
+    "purpose": [
+      "Papel que cumple la tarjeta dentro de la transaccion."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Cards/CardLedger.cs",
+    "namespace": "AgentLoop.Cards",
+    "types": [
+      "CardLedger"
+    ],
+    "sha256": "45d9d10a171d25da4a88fb8801a96211b9fbc3bea3bace7485fc345a033db016",
+    "purpose": [
+      "El libro de las tarjetas: valida cada jugada, lleva la pila de operaciones abiertas y es quien decide si el objetivo esta cumplido. Las reglas son transaccionales a proposito: no hay avance sin apertura, no hay cierre sin comprobacion, y una apertura anidada obliga a cerrar de dentro hacia fuera. El objetivo solo cuenta como cumplido cuando la pila queda vacia por un cierre, nunca por agotarse el tiempo o los pasos. AdemÃ¡s hay puerta de aceptaciÃ³n (agentico): al cerrar se verifica evidencia real en cÃ³digo (archivos mencionados en el objetivo deben existir con contenido). Un cf-report.md de 0 bytes no cierra nada en verde; el rechazo dice quÃ© falta (required_evidence) para que el reintento sepa quÃ© le falta."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Cards/CardPlay.cs",
+    "namespace": "AgentLoop.Cards",
+    "types": [
+      "CardPlay"
+    ],
+    "sha256": "b005c61f6f2eabe3d18991da0315fcc923be66df1f4eccd8e67788ea71dc7d8f",
+    "purpose": [
+      "Una jugada: la tarjeta que intento el agente y que dijo el sistema."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Cards/CardTransaction.cs",
+    "namespace": "AgentLoop.Cards",
+    "types": [
+      "CardTransaction"
+    ],
+    "sha256": "a6e5ed97a276d01de7fab8b1253f729281d0a580b4b6725824de2e8efd3b1cca",
+    "purpose": [
+      "Una operacion abierta. Existe desde su tarjeta de apertura y solo desaparece cuando llega su cierre o su aborto: esa es la deuda que el sistema no deja olvidar."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Cards/StateCard.cs",
+    "namespace": "AgentLoop.Cards",
+    "types": [
+      "StateCard"
+    ],
+    "sha256": "1eb51bd8d35649ed56b4182c5f1e55abd5bff94fd26a6fdccc75d24b2f4f7c0f",
+    "purpose": [
+      "Una tarjeta de estado: el vocabulario con el que el agente declara en que punto de la operacion esta. No ejecuta nada; lo que hace es hacer explicito y verificable el avance, para que el sistema pueda exigir que toda operacion abierta termine entregando su cierre."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Context/ProjectContextBudget.cs",
+    "namespace": "AgentLoop.Harness.Context",
+    "types": [
+      "ProjectContextBudget"
+    ],
+    "sha256": "b46ce4c12e6b2f608d9cdc598e1f9672a117215b885bed681d3323090ee84ab4",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProjectContextBudget"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Context/Utf8TokenBudgetEstimator.cs",
+    "namespace": "AgentLoop.Harness.Context",
+    "types": [
+      "Utf8TokenBudgetEstimator"
+    ],
+    "sha256": "d691fcf3a473fdb74e235fd3c887e7fb1e8748f382c0a30340ea34cd70f0f7a7",
+    "purpose": [
+      "Conservative UTF-8 byte upper bound; explicitly not a tokenizer count."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Evidence/EvidenceEntry.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "EvidenceEntry"
+    ],
+    "sha256": "e9ec74ac578c5d2fb08da69b28332b21b7c5c6b2670f33ce910c897f9bb51ca7",
+    "purpose": [
+      "Una verificaciÃ³n de artefacto: quÃ© se mirÃ³, cuÃ¡nto pesaba y su hash."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Evidence/EvidenceSnapshot.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "EvidenceSnapshot"
+    ],
+    "sha256": "309b82fd83afd0ec2c6ead03f37ee117cb209fc3624e4c4888e1205eb01f37da",
+    "purpose": [
+      "Foto inmutable del manifiesto: archivos ordenados + hash agregado."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Evidence/IEvidenceManifest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "IEvidenceManifest"
+    ],
+    "sha256": "0964bd5324995f90bb7d576fc7b329235036c51b37f9113f38b684d7a3beb400",
+    "purpose": [
+      "Host observations; a ledger never reads the filesystem directly."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Evidence/UnavailableEvidenceManifest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "UnavailableEvidenceManifest"
+    ],
+    "sha256": "df6af38aed7acf3c6c6e1157c9ade19820de1744e796a6fc9b53cbe4ef9e0584",
+    "purpose": [
+      "Fail closed for file criteria when the host has installed no observer."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "24f108bf2953c6dd34ae4db2c3d4cfeb4960ae8c9208fcf66388486692b56702",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Goals/AcceptanceCriteria.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "AcceptanceCriteria"
+    ],
+    "sha256": "063d11706492f868f4972c8f2645f6c3ce12c101b46b1b8211dbb3d39e696f21",
+    "purpose": [
+      "Criterios de aceptaciÃ³n derivados del objetivo de una transacciÃ³n, al estilo agentico (TaskContract): ninguna tarea nace sin criterios; si el objetivo no los declara explÃ­citamente, se derivan de su texto. Hoy los criterios son rutas de archivo mencionadas en el objetivo (notes/informe.md, data/salida.json...). Un objetivo sin menciones de archivo no produce criterios y queda gobernado por las reglas existentes del libro mayor (apertura, comprobaciÃ³n obligatoria, cierre en orden)."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Goals/Goal.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "Goal"
+    ],
+    "sha256": "d23871ab918d67897002929e20eea90ab68be421b8defcabcd54af71d140b5b0",
+    "purpose": [
+      "Lo que se persigue y con que presupuesto. El objetivo no se da por cumplido por tiempo ni por numero de pasos: solo por la tarjeta de cierre, que es lo unico que el sistema acepta como final."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/LLM/ResponseBudgets.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ResponseBudgets"
+    ],
+    "sha256": "6efaba3c64d2191955352f3cb249cc8be09cd00bb11a2b87e03ea0e74396ccd1",
+    "purpose": [
+      "Declaracion ClassDeclaration: ResponseBudgets"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/Composable.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "Composable"
+    ],
+    "sha256": "4099a2fc1e2dd9d19fd50831b7f4312399fbc1ba8a9338e77aaa9231f322ae85",
+    "purpose": [
+      "Helpers de composicion. Compose(f, g) produce una funcion equivalente a x => f(g(x)); Then encadena dos IComposable; Lift eleva un valor a una funcion constante."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/Defer.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "Defer"
+    ],
+    "sha256": "3c7ed3b3cd8a10d1afa2108cb0ff830143e38a8ac14ae0dd214503ed0c8e802c",
+    "purpose": [
+      "Aplaza la ejecucion de una funcion hasta que el resultado se pida. Equivalente a envolver en un LazyValue pero sin estado."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/FunctionComposition.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "FunctionComposition"
+    ],
+    "sha256": "e3daeef36df549dc9269714e00df2d001d6830eb114e730991489c3128785311",
+    "purpose": [
+      "Combinadores clasicos de programacion funcional: Pipe encadena funciones unarias en orden, Bind encadena funciones que devuelven Result&lt;R, E&gt;, Tap ejecuta un side-effect observador sin alterar el valor, y Kleisli permite componer funciones que devuelven Result."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/IComposable.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "IComposable"
+    ],
+    "sha256": "24cbbdbe38de6352b91acf5309efb040d4576a2061dec0957d76f6c93de074df",
+    "purpose": [
+      "Una funcion pura que se puede componer con otras: dada una entrada, produce una salida. Es el primer pilar de la programacion funcional expresado como tipo: las funciones son valores que se pueden pasar, guardar y combinar. No es obligatorio: una funcion anonima o un delegado valen. Pero si quieres que el codigo explicite \"esto se compone con aquello\", la interfaz lo deja claro en la firma."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/Immutable.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "Immutable"
+    ],
+    "sha256": "d9e01774065f62e1c912c478a683ecd7c2e411118b127e83951815cb2aa53f45",
+    "purpose": [
+      "Helpers de inmutabilidad: convertir listas mutables en inmutables, crear records a partir de otros con campos cambiados. El objetivo no es substituir a la keyword with de C# (que ya funciona en records), sino formalizar el contrato: cualquier valor que cruza un limite (hilo, scope, async) pasa por aqui y se vuelve inmutable de verdad, no solo nominal."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/LazyValue.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "LazyValue"
+    ],
+    "sha256": "f665bf967e53bd9116c9264cae5535833b376bbf204f9b4a78602ac55b289916",
+    "purpose": [
+      "Valor perezoso: la funcion que lo produce se evalua solo cuando alguien pide . Pensado para casos donde el coste de calcular un dato es alto y a veces no se necesita (por ejemplo, serializar un Snapshot solo cuando el archivo no esta al dia). No es thread-safe: si dos hilos llaman a Force a la vez, ambos ejecutan la funcion. Para eso ya existe Lazy&lt;T&gt; del framework; este tipo es mas ligero y explicito."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/PureAttribute.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "PureAttribute"
+    ],
+    "sha256": "0bf83afc3e495fc9135cca5c65fb973c23700c7d4545bcb9383f7082463b4926",
+    "purpose": [
+      "Marca una funcion como pura: su salida depende solo de su entrada y no produce efectos observables (IO, reloj, red, estado mutable externo). El atributo es documentacion + tooling: en tiempo de ejecucion el puede comparar snapshots del bus y del reloj antes y despues para detectar impurezas accidentales durante los tests. No es un verificador formal: sirve para que las decisiones del ledger, las reducciones del reactor y los filtros del bus queden marcadas como contrato de pureza que los revisores pueden leer."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/PureFunction.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "PureFunction"
+    ],
+    "sha256": "4ec7d7d7f23ea5cf7c74f45baec385635a3318985334c08ee84652488e95fb10",
+    "purpose": [
+      "Wrapper que ejecuta una funcion capturando el estado del bus y del reloj antes y despues. Si la diferencia no es vacia, el wrapper puede lanzar (en tests) o registrar (en produccion) la impureza detectada."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/Result.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "Result"
+    ],
+    "sha256": "dd2363e88bdc9601b8cd191900f3c000f2363024a90d9cac4d608fb39f3a914d",
+    "purpose": [
+      "Tipo suma con dos casos: Ok(valor) o Fail(error). Es el reemplazo del campo nullable \"puede haber pasado algo mal\" que contamina muchos tipos del harness. Con un tipo suma el compilador obliga a PatternMatch, asi \"se me olvido comprobar el Failure\" deja de compilar. Diferencia con la version minimalista que venia en Composition.cs: aqui cada caso lleva datos reales (no E=default en Ok), soporta equality estructural completa, y expone helpers (Map, Bind, Match) que la libreria estandar no da. Convencion: T es el valor de exito, E es el motivo de fallo. Si el fallo no aporta dato (tipo unit), usar ."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/Unit.cs",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "Unit"
+    ],
+    "sha256": "1678c8d6871ecf2d495d981328e57b3c00f53d279a659f092a611c1c29f95e5c",
+    "purpose": [
+      "Tipo unitario para errores sin informacion adicional."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/ArtifactKnowledge.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ArtifactKnowledge"
+    ],
+    "sha256": "69e32f5f016b9d31615b356381c0df3ba9ee6298e1d7d2b6918dba56973853fb",
+    "purpose": [
+      "Declaracion RecordDeclaration: ArtifactKnowledge"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/AdmittedProjectContract.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "AdmittedProjectContract"
+    ],
+    "sha256": "b3584ac55b474bb06d6b8527852d0304022da10d4542589393fc62a4b0af4abd",
+    "purpose": [
+      "Immutable admitted snapshot. DTO access returns a fresh copy, never authoritative mutable state."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ArtifactSpecDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ArtifactSpecDto"
+    ],
+    "sha256": "c73b7ba8329e5e1f68711bee61768e513a99acd90312e95ce6f70180e6339174",
+    "purpose": [
+      "Declaracion RecordDeclaration: ArtifactSpecDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ProjectBudgetsDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ProjectBudgetsDto"
+    ],
+    "sha256": "01a279cf82a07e8fe44b6d2744d0a4d86fbaba7f24bc0affc9e64cf45cf9fa33",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectBudgetsDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ProjectEventDataDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ProjectEventDataDto"
+    ],
+    "sha256": "981fe36e6c1a735fb437d70d2fc5b05ea1567c48312ab101036e27fcbd31191b",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectEventDataDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ProjectGoalDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ProjectGoalDto"
+    ],
+    "sha256": "b358f597d4c5d224f94177cd967ea866af50ddf132d2741bff4b2056d5a09c9c",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectGoalDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ProjectJson.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ProjectJson"
+    ],
+    "sha256": "0d9579ac505c8a65fafec285b4ed536d2db9e859ae77f77f5bdf67816b92bc0c",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProjectJson"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ProjectSnapshotDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ProjectSnapshotDto"
+    ],
+    "sha256": "e3456e5b3fd8a6f5ff5f2cc8bb273de7d33bdacb0c78f54e36285732c8c79bdb",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectSnapshotDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ProjectWorkStatus.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ProjectWorkStatus"
+    ],
+    "sha256": "9faa78b006c8fd1c896574685dd24147c8ca1b71c4b296b55c1e690163e846ac",
+    "purpose": [
+      "Declaracion EnumDeclaration: ProjectWorkStatus"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ValidationParametersDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ValidationParametersDto"
+    ],
+    "sha256": "73664aebd14c285048f42c90f8c25f1d84f347e61e8d46166ad0c9b6d6dc8662",
+    "purpose": [
+      "Declaracion RecordDeclaration: ValidationParametersDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ValidationResultDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ValidationResultDto"
+    ],
+    "sha256": "d5e9891d6dff62875b25f34d84f8661de4e33a2e5a56aa35ac7e7c625a0af202",
+    "purpose": [
+      "Declaracion RecordDeclaration: ValidationResultDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/ValidationSpecDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "ValidationSpecDto"
+    ],
+    "sha256": "f062013bc4f17dc2c6190d4c641d68332ab756a867492e9ca69ffd0a2e98999b",
+    "purpose": [
+      "Declaracion RecordDeclaration: ValidationSpecDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/WorkItemDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "WorkItemDto"
+    ],
+    "sha256": "78e3c02b1275bed43d6e7b1e9ca64acaa83d3784e02411c5124c9681f919aa91",
+    "purpose": [
+      "Declaracion RecordDeclaration: WorkItemDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/Contracts/WorkStateDto.cs",
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "types": [
+      "WorkStateDto"
+    ],
+    "sha256": "b8d9d0e50a22694d93b0528a045adb99da7a794512d1376d235b96a8da5cdf4d",
+    "purpose": [
+      "Declaracion RecordDeclaration: WorkStateDto"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/IProjectValidator.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "IProjectValidator"
+    ],
+    "sha256": "2278311061434ae99b40b502be7de89f1624a70bc59903c6ed74cfb48da69fbd",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IProjectValidator"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/IProjectValidatorFactory.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "IProjectValidatorFactory"
+    ],
+    "sha256": "00f532cfc6dabce01b9f324869cfe5286bf5b5cfe2f43c581792f72040e10cf1",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IProjectValidatorFactory"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/ProjectKnowledge.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectKnowledge"
+    ],
+    "sha256": "a47092ed812d8327ff6f96b813c389f01e3c264f6ee30e33ddfba17a302dad7c",
+    "purpose": [
+      "Task knowledge is a bounded projection of events, independent of files, model and transport."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/ProjectKnowledgeSnapshot.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectKnowledgeSnapshot"
+    ],
+    "sha256": "d4121bb71c5d628ad9f414f176a5daaaa90b6311934882082495dca0cb53e7cc",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectKnowledgeSnapshot"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/ProjectState.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectState"
+    ],
+    "sha256": "c3da7f96716c419b14e106453f72278744479547ef1b3ffed0bcc6982533eaac",
+    "purpose": [
+      "Mutated only by the operation mailbox; dependency scheduling is triggered by events."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Projects/ValidationObservation.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ValidationObservation"
+    ],
+    "sha256": "d08308c7c038113cde96e44e7a8511a8fc71413b04253a299d6e21aeed92612f",
+    "purpose": [
+      "Declaracion RecordDeclaration: ValidationObservation"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Properties/AssemblyInfo.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "5948fe4f604645da830c4d92463c840df84126b985c780a98778336dc6025518",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Text/TextSanitizer.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "TextSanitizer"
+    ],
+    "sha256": "c19ddd0cfb50a37665f5622aef3683c0e040e4a63574d335f41841eaebe5975b",
+    "purpose": [
+      "Higiene de las cadenas que acaban dentro de un prompt o de un payload. Un valor que viene de fuera (argumentos, archivos, salida de herramientas, texto pegado por el usuario) puede traer caracteres de control o surrogates huerfanos que revientan la serializacion JSON del request, y signos &amp; &lt; &quot; que rompen los bloques XML que el prompt usa como delimitadores. Aqui se limpia antes de interpolar, no despues de que el proveedor devuelva un 400."
+    ],
+    "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Harness/AgentLoop.Harness.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Concurrency/AsyncLock.cs",
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "types": [
+      "AsyncLock"
+    ],
+    "sha256": "23be9130e88675bb16ecb5b8cc92ee7c35906d8fba154c8dd7957649558229f8",
+    "purpose": [
+      "Mutex asincrono: el equivalente async de lock. Garantiza exclusion mutua entre callers sin bloquear hilos del pool: quien pide el lock se queda en una Task hasta que el owner lo libera. Lo que el AsyncManualResetEvent hace para esperar senales, esto lo hace para exclusion mutua: serializa secciones criticas (modificar el ledger, transicionar el lifecycle del Run, escribir el Snapshot) manteniendo el modelo async de C#. Tiene dos formas de adquisicion: para contextos async (no bloquea hilo) y para contextos sync (la seccion critica no tiene awaits). Misma exclusion, distinto coste. Uso tipico: private static readonly AsyncLock _gate = new(); using var guard = await _gate.LockAsync(ct); // async using var sync = _gate.Lock(); // sync (solo dentro de secciones sin await)"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Concurrency/IdempotencyCache.cs",
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "types": [
+      "IdempotencyCache"
+    ],
+    "sha256": "9d3ac95d6b950cfd56b7665093e21d243011f76fffbffc033a340cf152e6485f",
+    "purpose": [
+      "Cache bounded para resultados de tools idempotentes. La primera llamada ejecuta el factory y cachea; las siguientes con la misma clave devuelven el resultado cacheado sin reejecutar. El tope es LRU: cuando se llega al maximo, la entrada mas vieja se descarta. Asi el cache no crece sin freno si el modelo genera miles de claves distintas por descuido. El cache vive dentro de un Run: se construye en GoalRunFactory y se invalida (vÃ­a Clear) cuando el Run termina. Asi nunca se sirven resultados de un Run anterior. Concurrencia: internamente cada entrada es un con ExecutionAndPublication, asi si N hilos llaman GetOrAdd con la misma clave al mismo tiempo solo uno ejecuta el factory; los demas esperan al Lazy y obtienen el mismo valor. Caducidad (agentico: TTL al leer): cada entrada lleva su instante de expiracion. Al leer, una entrada caducada se trata como miss: se descarta y se recrea. Sin TTL (null) las entradas no caducan."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Concurrency/IdempotencyKey.cs",
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "types": [
+      "IdempotencyKey"
+    ],
+    "sha256": "5bf2d5ba321a32dc0865deb9639c41c820ef484921e618074c4a3ea5cc3eb31b",
+    "purpose": [
+      "Hash determinista para identificar de forma unica una llamada a una tool. Mismo (tool + argumentos) = misma clave, sin importar el orden de las claves del JSON. Pensado para alimentar el : si el modelo llama dos veces a leer con los mismos argumentos, el cache devuelve la primera respuesta sin ejecutar el tool. Regla de agentico (HARNESS_CONTRACTS): fingerprint canonico, nunca serializacion cruda. JSON.stringify respeta el orden de insercion, asi que el mismo argumento reordenado esquivaria el dedup. Aqui las claves de objeto se ordenan recursivamente antes de hashear (los arrays conservan su orden: el orden de una lista de pasos es significativo). Si el texto no parsea como JSON, se hashea crudo (documentado, no silencioso: el caller ve claves distintas por formato distinto). SHA-256 sobre UTF-8: 32 bytes deterministas, sin colisiones relevantes para los pocos cientos de tools que un Run maneja en su vida."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/ChatTurnContext.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "ChatTurnContext"
+    ],
+    "sha256": "ebe5aa48bb0f117f056c07e90bf01f82bde2e9f4d2457d5d7cc4a43f3e289523",
+    "purpose": [
+      "Datos mutables de la utilidad de chat de compatibilidad. No planifica operaciones del coordinador por eventos."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/ConversationSession.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "ConversationSession"
+    ],
+    "sha256": "fab0ae524ea807165c73e5f40dae2040a19157abe3c1a1ccb31f891e962176a5",
+    "purpose": [
+      "El hilo que sobrevive entre comandos del CLI interactivo. Guarda la conversacion sin el mensaje de sistema: ese se vuelve a renderizar en cada turno para que {{hora}} y demas parametros esten frescos, en vez de quedar congelados en los que hubiera al arrancar la sesion."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/IConversationMemory.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "IConversationMemory"
+    ],
+    "sha256": "32795fd5d2208023a8f2b8c672e67867df6aa8eaa38a0a6477a3c4d388bee538",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IConversationMemory"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/IConversationSessionStore.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "IConversationSessionStore"
+    ],
+    "sha256": "d0484360ff7126fcc4a9631a91f46eac9af98c9403cc112ab41b403ffe36fbd0",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IConversationSessionStore"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/OperationContextBuilder.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationContextBuilder"
+    ],
+    "sha256": "0d00f7bc750a5ef8605b216ac5bd9c7573e9e9b739de595305ebbdd3295184e7",
+    "purpose": [
+      "Bounded user requirements; never promote assistant reasoning or tool dumps into system instructions."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/OperationContract.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationContract"
+    ],
+    "sha256": "6450eabc266270b7e1e30e70df14b4a0d35785ebbc5861039a9f155141b6774f",
+    "purpose": [
+      "Contrato compartido de tarjetas y entorno, independiente de ejecutores."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/OperationTaskContext.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationTaskContext"
+    ],
+    "sha256": "0ae77277ea028a0aaeaad86c409a67f311ff7aa3930cc4629f69740ee1101b10",
+    "purpose": [
+      "Declaracion RecordDeclaration: OperationTaskContext"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Events/AgentEventFormatting.cs",
+    "namespace": "AgentLoop.Events",
+    "types": [
+      "AgentEventFormatting"
+    ],
+    "sha256": "b164c9fd5acc4e65e9ac7b1faa08d8793791da9e5e88cb6c670d1bc619278d51",
+    "purpose": [
+      "Declaracion ClassDeclaration: AgentEventFormatting"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Events/EventBus.cs",
+    "namespace": "AgentLoop.Events",
+    "types": [
+      "EventBus"
+    ],
+    "sha256": "42f4d31047c75f7aa467ca20711eebde808b8f58f0c4e8c49ebb6ffc533763e1",
+    "purpose": [
+      "Cola de sucesos con senal. Cualquiera publica desde cualquier hilo (handlers de salida de procesos, temporizadores, herramientas) y el agente se entera esperando la senal. La senal es un reset event automatico y no un contador: quien espera no gira en vacio ni bloquea un hilo, y una publicacion no se pierde aunque llegue justo cuando nadie estaba esperando todavia."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ExecutionPolicy.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ExecutionPolicy"
+    ],
+    "sha256": "43e0765976db57c18aa98ea3bc06670b3f8d0e3a306317f1e5472b78354b7418",
+    "purpose": [
+      "El cinturon de seguridad de la ejecucion: directorio de trabajo, tope de duracion, tope de procesos vivos y una lista negra de comandos irreversibles. No es un sandbox y no pretende serlo: un agente con shell puede hacer cualquier cosa que pueda hacer el usuario que lo lanza. Lo que hace la lista negra es evitar el accidente tonto (un borrado de raiz, un formateo, un apagado), no contener a nadie decidido."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/GoalRunSetup.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "GoalRunSetup"
+    ],
+    "sha256": "3ace4c03974bd366eabfefb4abf45e2f17c0d7d12e2a9cc5f6af4698c495fb5b",
+    "purpose": [
+      "Declaracion ClassDeclaration: GoalRunSetup"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/Journey.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "Journey"
+    ],
+    "sha256": "73c751498df16aeb6a8d750e9eaa94e4e31ad629d0b87c383c957324c9e62fa6",
+    "purpose": [
+      "Narrativa legible de un Run: Run + Steps en orden + resumen estructurado + un escritor que produce markdown y json para inspeccion post-mortem. El Journey se construye al cerrar el Run y se entrega al console observer, al RunStore y a cualquier sink que quiera un resumen estable."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/JourneyDiagnosis.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "JourneyDiagnosis"
+    ],
+    "sha256": "49662ccb62ec0cb15f9ff7c1e3f278c06dd598b585a4e80aa06e074b8b95df76",
+    "purpose": [
+      "Diagnostico post-mortem de un run a partir de su snapshot persistido (artifacts/journeys/&lt;runId&gt;.json). Automatiza el procedimiento de diagnostico por etapas: clasifica el cierre, reconstruye la trayectoria de tarjetas, mide narracion vs herramientas, eficacia de los nudges, salidas de procesos con codigo distinto de cero, pausas entre pasos, archivos referenciados y recomienda la siguiente accion. Lee el JSON de forma defensiva (JsonDocument, sin deserializacion tipada): los snapshots viejos o parciales producen \"desconocido\" en vez de lanzar. Los snapshots no guardan BreakReason ni uso de tokens, asi que la clasificacion entre inanicion y otros fallos es heuristica y el informe lo dice explicitamente."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/JourneyWriter.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "JourneyWriter"
+    ],
+    "sha256": "6ca9d3930c9f9004459f858d842eebe8d7b2ec14e00641ea9fa2596fbb94ce6d",
+    "purpose": [
+      "Serializa un Journey a markdown legible o a json para tooling."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/OutputLine.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "OutputLine"
+    ],
+    "sha256": "4a037b4d1bf611c26d27a093c2909970402f59162d9ee7255a1536320c2f16b1",
+    "purpose": [
+      "Una linea de salida capturada, con su origen."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/PolicyDecision.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "PolicyDecision"
+    ],
+    "sha256": "37f54d6f8b5263b53b7731769a6358c1f2bad46f7030bab94dd365ef461bceb5",
+    "purpose": [
+      "Veredicto de la politica sobre un comando concreto."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/PolicyMode.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "PolicyMode"
+    ],
+    "sha256": "8dedebee39e952ee173ad33fb659963c04755d5def4230d7abeb095dabe363f0",
+    "purpose": [
+      "Como se tratan las ejecuciones antes de lanzarlas."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/Run.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "Run"
+    ],
+    "sha256": "560909fd390f684132a8edd4d349b8fd7b490b8b8a2726b9d820f3593ffc61ad",
+    "purpose": [
+      "Una operacion del agente como objeto de primera clase. Es la unidad que el Runner ejecuta, el Journey narra, el RunStore persiste y los observers observan. No se reusa entre Runs: cada intento es un Run nuevo, identificado por su Guid."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/RunContext.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "RunContext"
+    ],
+    "sha256": "ae43b02f21ac257c1aa50ebb244d21f5ee56bd08b5aa9cae85347850f2f31c33",
+    "purpose": [
+      "Estado vivo de una operacion dirigida por eventos, en el nivel del Run. Escribible desde el reactor; se reconstruye desde un Snapshot para reanudar; se serializa como JSON para persistir. Por ahora delega en GoalContext para el estado del modelo y del ledger; cuando el refactor del commit H cierre, GoalContext pasara a vivir dentro de RunContext y este tipo sera la unica raiz de estado."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/RunResult.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "RunResult"
+    ],
+    "sha256": "1ba57f4376ec485f110f1a10a6d9be7c73be3e12f491b704940cf58ad395a8d2",
+    "purpose": [
+      "Resultado de un Run, como tipo suma con dos casos."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/RunState.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "RunState"
+    ],
+    "sha256": "ca7241d3b2bb2ebf88b7873bf3d1190b22cfaa1355ea07690bd2cb11730551fa",
+    "purpose": [
+      "Estado de la maquina del Run en un instante dado. No es el enum crudo: incluye el pending note del reactor, el elapsed y un reason legible. Asi un Journey muestra \"Esperando (plazo agotado con procesos vivos)\" en vez de solo \"Esperando\"."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/RunStatus.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "RunStatus"
+    ],
+    "sha256": "c45ab3d1e426fb97c9e30b87c3826bbaea447c62f6b9e29b67c5949281eacea7",
+    "purpose": [
+      "Estado por el que pasa un Run durante su vida."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ShellCommand.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellCommand"
+    ],
+    "sha256": "e585d742100590710f4222422d336b55e244f0ae6200315d0db9bc1e3a500b0b",
+    "purpose": [
+      "Un comando a ejecutar en un interprete concreto."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ShellFailureReason.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellFailureReason"
+    ],
+    "sha256": "b6e2439e6e8d7a86f44253de850429b091a142b02fa3f61fabb71138fcccaa80",
+    "purpose": [
+      "Motivo de fallo de una ejecucion de shell."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ShellKind.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellKind"
+    ],
+    "sha256": "56c49459d34609762c49cfd3cebb789071ea89d197bc84db2248685bac79d8ec",
+    "purpose": [
+      "Interprete con el que se ejecuta el comando."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ShellOutcome.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellOutcome"
+    ],
+    "sha256": "b4bee2addff9ff263cf97b173aa11a42c1fa64fbf2609d9ea9696aab58c18a38",
+    "purpose": [
+      "Outcome de un comando que salio bien: su codigo de salida y la salida capturada."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Contracts/ShellResult.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellResult"
+    ],
+    "sha256": "232422a7a5ee140951e1c4a2f0be6000ad197ab30678ef10269249b34769535e",
+    "purpose": [
+      "Resultado de una ejecucion con espera."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Ports/IGoalRunSetupFactory.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "IGoalRunSetupFactory"
+    ],
+    "sha256": "0e6deaf2237e76dda5fc84a1f6ec35ee892ee40b8606e767b9f04de496178b8a",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IGoalRunSetupFactory"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Ports/IOutputWatcher.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "IOutputWatcher"
+    ],
+    "sha256": "ab4e7658ec60ad963fe3cf96263abd7317c9030eb194dd0e48889382b6b462cd",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IOutputWatcher"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Ports/IProcessHandle.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "IProcessHandle"
+    ],
+    "sha256": "221690a3fa5b4c05cfe9a0bb071b60b10da977d9c4dc250353de5c31ff9967cc",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IProcessHandle"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Execution/Ports/IProcessSupervisor.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "IProcessSupervisor"
+    ],
+    "sha256": "ec4366f90a671c5f12a8822554b5b01ae34b6186c513facb72a428084313cbc0",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IProcessSupervisor"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "59133fb034638b38bff00dd7d72387cce72b0905f7ed8f8a3d68fc0bdbc29ce4",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/HookedRecorder.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "HookedRecorder"
+    ],
+    "sha256": "776b13cb274ae93d831faa8cc962b62831442c3799ad27aa4d71e44b50712fbd",
+    "purpose": [
+      "Wrapper que permite inyectar un callback antes de delegar al recorder real. Pensado para tests que necesitan contar invocaciones concurrentes."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/ILifecycleObserver.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "ILifecycleObserver"
+    ],
+    "sha256": "821aa6978cf38388dcbcffb98567f634ce107befd527a59e74d585705dc53f8f",
+    "purpose": [
+      "Contrato de un sink de transiciones. Implementarlo no obliga a tocar el resto del harness: cualquier consumidor (consola, archivo, observabilidad) lo implementa y se suscribe."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/LifecycleEvent.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "LifecycleEvent"
+    ],
+    "sha256": "a0878be08dfc2358a1aaf8c610273b22486ed7a02cd60c01724f55ee967fac29",
+    "purpose": [
+      "Suceso publicado cuando un Run cambia de estado. Lleva el from/to, un timestamp, un motivo legible y un payload opcional para datos estructurados (ciclo en que se tomo la decision, contador al cambio, etc.)."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/LifecycleRecorder.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "LifecycleRecorder"
+    ],
+    "sha256": "f1aca0bab70682fc6c286751d8d5f5b66eaead935926aed93bf9fd5e5a279be0",
+    "purpose": [
+      "Implementacion de referencia que graba cada transicion como Step en el StepRecorder y la reenvia a los observers de Harness.Observability como un log estructurado. Asi el Journey muestra las transiciones como filas mas en la tabla de pasos."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/LifecycleTransitions.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "LifecycleTransitions"
+    ],
+    "sha256": "b5ad38728ed8afe76b575b1bbc68f2f951cbfe7270de14e9b323b8924783c2ae",
+    "purpose": [
+      "Tabla de transiciones validas. Una transicion no listada aqui se rechaza en ; asi no se publican cambios de estado incoherentes (ej. Running -> ResumedFromCheckpoint sin pasar por Suspending)."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/RunLifecycleMutex.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "RunLifecycleMutex"
+    ],
+    "sha256": "e08aa05b64be4c52f15a289f3581bbdee40c705ee6f66c35ecddb4b55bab1200",
+    "purpose": [
+      "Mutex del Run: serializa las transiciones del lifecycle para que dos publicaciones concurrentes no puedan dejar el Run en un estado incoherente. Sin el, dos transiciones racing (Running -> Succeeded y Running -> Failed a la vez) harian que la ultima publicacion gane sin validar la tabla de transiciones validas. Es un AsyncLock por Run: cada Run tiene su propio mutex, asi Runs distintos transicionan en paralelo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/RunLifecycleState.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "RunLifecycleState"
+    ],
+    "sha256": "bdbf072f7782e5f2a06e6c065aa48b68ca5fe42639712fec3e54d98acb9d595f",
+    "purpose": [
+      "Estados por los que pasa un Run durante su vida. Es la version explicita de los RunStatus que el reactor ya emite implicitamente: cuando duerme sobre el bus sin procesos vivos, esta en Paused; cuando se reactiva por una senal, transiciona a Running. Hoy eso se perdia; con lifecycle queda trazado en el Journey."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Lifecycle/TryTransitionResult.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "TryTransitionResult"
+    ],
+    "sha256": "cd4d33065d675cbd73c9638f349f5fe0924bf222d750747e43e91f4f50145460",
+    "purpose": [
+      "Resultado de TryTransitionAsync: si fue aceptada o por que se rechazo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/ConsoleObserver.cs",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "ConsoleObserver"
+    ],
+    "sha256": "9b7c0b751a5758913c1c19e5579b547dea3a499550c053c2d142b3fb1a8de24b",
+    "purpose": [
+      "Observer de consola: pinta cada Step y cada Log en stderr/stdout con colores por nivel. Es el sink por defecto para que el CLI siga teniendo la misma traza legible de siempre sin que el resto del harness sepa como se pinta. Los Steps se escriben con prefijo \" step \", los Logs segun su nivel. Para tests: usar un observer que escriba a un buffer en lugar de este."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/IRunObserver.cs",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "IRunObserver"
+    ],
+    "sha256": "5d1df5bb37a06da9e6bb8b845156c4ca219f570e395b17c799b120c9f4d4abc9",
+    "purpose": [
+      "Contrato que cualquier sink debe implementar para engancharse al harness. El bus, el runner y el reactor llaman a estos callbacks en puntos estables del ciclo de vida (cada step, cada metrica, cada log); un observer decide que hacer (pintar en consola, escribir a JSON, emitir a Prometheus, etc). Implementar este interface NO requiere tocar el resto del harness."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/LogLevel.cs",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "LogLevel"
+    ],
+    "sha256": "6c3f4e95e288d6094c0947f98a0fad6afc3df3de2d0c8b3b859630ecfee61f1c",
+    "purpose": [
+      "Niveles de severidad para el log estructurado."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/MetricsCollector.cs",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "MetricsCollector"
+    ],
+    "sha256": "986c632ef57c7c6ce0dd2f57bd0a6f4eb3cf5c767a75395d8281199d2d5f5995",
+    "purpose": [
+      "Contadores monotonos del Run. No son snapshots: solo incrementan, y se serializan al final como parte del Journey. Asi el selftest puede afirmar \"el reactor hizo 5 ciclos, 2 tools, 1 retry transitorio\" sin parsear la traza textual. Las metricas usan nombres en minuscula con puntos: \"cycles\", \"tools\", \"retries.transient\", \"processes.started\", etc. El observer decide como etiquetarlas (Prometheus prefiere \"_\"; aqui usamos \".\" por consistencia con la consola del CLI)."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/StepEnvelope.cs",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "StepEnvelope"
+    ],
+    "sha256": "38f17a5b6f1a770f1b1455ca928c626843e8e2ec07299376dad9e3758234dea2",
+    "purpose": [
+      "Sobre minimo para que un Step se mueva por el bus de observers."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/BusEventStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "BusEventStep"
+    ],
+    "sha256": "9c600fe2f09890e09c1969bf0b9b2366b403d6422cf8ffecb24d61a9b8ec10e8",
+    "purpose": [
+      "Un AgentEvent del bus convertido en Step. Asi el Journey del comando journal muestra todo lo que publico el reactor (cada ciclo de narracion, cada aviso, cada tool call) ademas del TransitionStep final."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/DecisionStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "DecisionStep"
+    ],
+    "sha256": "d98a3bc3ef978ebc7864a3b4692c60ad909ae08175f1c7dfc55363ba8181b173",
+    "purpose": [
+      "Declaracion RecordDeclaration: DecisionStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/ErrorStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "ErrorStep"
+    ],
+    "sha256": "047e7c7e554249afbe2147810faca75eb2c92ec44226c3e7c2d9443d934db52b",
+    "purpose": [
+      "Declaracion RecordDeclaration: ErrorStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/ModelStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "ModelStep"
+    ],
+    "sha256": "0a9b00cab9ef50975136b4f669a495269bc1b9d16d8c40c411fdc3e7dc3f4f18",
+    "purpose": [
+      "Declaracion RecordDeclaration: ModelStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/PatternStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "PatternStep"
+    ],
+    "sha256": "41886524d50c719f45dcaab7ab5a5e4df0c2d9b0751695b2224708f1faf53d16",
+    "purpose": [
+      "Declaracion RecordDeclaration: PatternStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/Step.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "Step"
+    ],
+    "sha256": "e229c72765f4eaafb051f99bdf3bdccc6b691336a96cee7ca872d63847d60c2b",
+    "purpose": [
+      "Unidad atomica de trabajo del harness. Cada vez que el reactor invoca al modelo, despacha una tool, transiciona de estado, espera un evento o detecta un error, se registra un Step con su Correlation para que el Journey lo muestre en orden. Se modela como jerarquia: Step base + subtipos concretos que aportan el Data especifico. Asi un ToolCall lleva el nombre y los argumentos; un ModelCall lleva el conteo de tokens; etc."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/StepKind.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "StepKind"
+    ],
+    "sha256": "83fd06d04f26bf514503d740a9a83804c0f86f35c64624788c7378e67ee2d07f",
+    "purpose": [
+      "Categorias de Step que el harness reconoce."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/StepRecorder.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "StepRecorder"
+    ],
+    "sha256": "5f26ebbefd1cf3949127fbbd35dd95cfe50eeee0014892f97aa4514938f28b06",
+    "purpose": [
+      "Graba los Steps en orden con un Sequence monotono y los publica a los observers suscritos. Thread-safe: el reactor publica desde un solo hilo pero el supervisor de procesos lo hace desde los hilos de captura. Cada Step lleva su Correlation para que el Journey pueda correlacionar con logs y metricas. Si nadie establecio Correlation, queda null y el observer cae a un identificador vacio."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/ToolStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "ToolStep"
+    ],
+    "sha256": "8a3d765725a81e6ac12d04455413cb4c98c3e63b21f5e4d352d443c7ae8770ce",
+    "purpose": [
+      "Declaracion RecordDeclaration: ToolStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/TransitionStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "TransitionStep"
+    ],
+    "sha256": "61b55c89f333fff06e6db03d2bd084a00c145d7367e46cc38d45ba9546adf537",
+    "purpose": [
+      "Declaracion RecordDeclaration: TransitionStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/Steps/WaitStep.cs",
+    "namespace": "AgentLoop.Harness.Steps",
+    "types": [
+      "WaitStep"
+    ],
+    "sha256": "42deb0692d372c69e9473f4d6d4de431cd07276766414c01d78ce7b612089f19",
+    "purpose": [
+      "Declaracion RecordDeclaration: WaitStep"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Observability/StructuredLog.cs",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "StructuredLog"
+    ],
+    "sha256": "cdc516ec023fe0ec1a15f927a9489848c81298b3841e314b7e08623f794872e8",
+    "purpose": [
+      "Linea de log estructurada: timestamp, nivel, scope, mensaje y datos opcionales. Pensada para que cualquier observer la serialice como quiera (consola, JSON, OpenTelemetry, lo que sea) sin acoplarse a un formato concreto."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/Acceptance/ArtifactCriterion.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "ArtifactCriterion"
+    ],
+    "sha256": "aaf956b30801daafa2a635d53bfc235ffd9cb8dfd32d4c74c6c4681b8b8a5578",
+    "purpose": [
+      "Declaracion RecordDeclaration: ArtifactCriterion"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/Acceptance/ObservationReceipt.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "ObservationReceipt"
+    ],
+    "sha256": "0370f507e5856a4e13ba7a5202be1be7f51a9399db80254c5bc37aa6f797aa36",
+    "purpose": [
+      "Declaracion RecordDeclaration: ObservationReceipt"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/Acceptance/OperationAcceptance.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationAcceptance"
+    ],
+    "sha256": "34762a03cc326bd9b316fc436b536c03e167ab3bfa08c3d3f878427da7b5cf6e",
+    "purpose": [
+      "Observaciones producidas por herramientas y criterios fijados al admitir el objetivo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/Admission/OperationAdmission.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationAdmission"
+    ],
+    "sha256": "eb9c68461f459a1ea3a0d95a420850c15997168a75a2c1c3ef5b6edb08ba3f64",
+    "purpose": [
+      "Puerta comun de tarjetas y politica, aplicada antes de cada herramienta."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/EventOperationCoordinator.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "EventOperationCoordinator"
+    ],
+    "sha256": "521413c97e9b9a55fbbdf78c2022c531138d5cc57e75894548ca13268d752b2a",
+    "purpose": [
+      "Un actor de operacion. Cada publicacion agenda su handler; no itera estados ni llama StepAsync. Modelo y herramientas publican resultados desde tareas independientes."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/EventOperationResult.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "EventOperationResult"
+    ],
+    "sha256": "d055ee5e7f382c17f1ef82f08b4faec4f05eda0bfbae7f4ae43b8a8c1cdf1ea8",
+    "purpose": [
+      "Declaracion RecordDeclaration: EventOperationResult"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/GoalContext.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "GoalContext"
+    ],
+    "sha256": "3cf10848e902abb2339d82de6d6e1bf21674a5c26958d4f4bd20621aebeaca3d",
+    "purpose": [
+      "Estado vivo de una operacion dirigida por eventos."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/ICompletionStream.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "ICompletionStream"
+    ],
+    "sha256": "9a8e7631a009645281f44f03f2df8445c7df45335973cb68047d2c75516a88b6",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: ICompletionStream"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/OperationServices.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationServices"
+    ],
+    "sha256": "c84be10172d5db574fec8a472b2302e5acb55929f5a585c3cba94ca19b8e31e2",
+    "purpose": [
+      "Adaptadores instalados por el host para parseo, stream, recuperacion y persistencia de operaciones."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Operations/OperationStatus.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationStatus"
+    ],
+    "sha256": "4bb0d00de1be658ed744f746506f4baf0e87bb2a951d652653c4e6d956c0ed99",
+    "purpose": [
+      "Declaracion EnumDeclaration: OperationStatus"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Persistence/Contracts/IRunStore.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "IRunStore"
+    ],
+    "sha256": "bf05f554fb525713fcd053926dfeb7a5f2357968f931fc7fe7e55ec63062042e",
+    "purpose": [
+      "Persistencia de Runs. La interfaz es minima para poder cambiar maÃ±ana el backend (SQLite, Redis, S3) sin tocar el resto del harness. SaveAsync se invoca desde el GoalRunner en checkpoints. LoadAsync se usa cuando el CLI recibe un --resume &lt;runId&gt;. ListAsync sirve para inspeccion (el comando 'journeys' podria listar los Runs recientes)."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Persistence/Contracts/JournalEntry.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "JournalEntry"
+    ],
+    "sha256": "c9fcb1b7d1c3322961fa1321fa013d69d50ad42033adeff1b471bb4587eeefe4",
+    "purpose": [
+      "Declaracion RecordDeclaration: JournalEntry"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Persistence/Contracts/RecoveryInspection.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "RecoveryInspection"
+    ],
+    "sha256": "0032a46bc9e4e8a26be4d69cd20ae1ba412bc6338d4ea516e5cde1bf5e16e85f",
+    "purpose": [
+      "Declaracion RecordDeclaration: RecoveryInspection"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Persistence/Contracts/RunSnapshot.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "RunSnapshot"
+    ],
+    "sha256": "8759b2495aca97a047323cd63c870fa3288e2fef0b705f9eadda4c208873cc15",
+    "purpose": [
+      "Foto serializable de un Run en un instante dado: lo necesario para reanudar despues de un crash o Ctrl-C. Deliberadamente guarda los Steps completos y los Metrics, no solo el estado del reactor: la inspeccion post-mortem vale mas que reanudar exactamente desde el ultimo ciclo. Versionado por si el formato cambia: si subimos Major, los snapshots viejos se rechazan en LoadAsync. Los campos opcionales con valor por defecto (como Evidence) NO suben version: los snapshots viejos que no los traen deserializan con el valor por defecto."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Persistence/Ports/IOperationEventJournal.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "IOperationEventJournal"
+    ],
+    "sha256": "efd3119060def821e3ced3c62623cf8c03ce6b7b4e4f3fc2ce38277b5aa64b86",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IOperationEventJournal"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Profiles/ProjectServices.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "ProjectServices"
+    ],
+    "sha256": "b2e3c9ec1ec76bdd7a25ca57829bf9e366f20cfbf4b79f7fe3d9bb97dbc7f9da",
+    "purpose": [
+      "Explicit host composition. An agent contract cannot install profiles or command handlers."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Projects/Ports/IProjectResources.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "IProjectResources"
+    ],
+    "sha256": "698e7d6528f5bc4266588cfc3e100a184920c3027625c77b04170145a75bdd44",
+    "purpose": [
+      "Filesystem and recovery boundary installed by the host."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Projects/ProjectRecoveryInspection.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectRecoveryInspection"
+    ],
+    "sha256": "a85a13b02f7ed07ff977c868070319d50ad9dac04bbec5749c9634627503b1ea",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectRecoveryInspection"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Projects/ProjectRuntime.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectRuntime"
+    ],
+    "sha256": "9ea8241f149676801929758e2fb07d6a681b1700bfa34a547bc60db8d3f1e96a",
+    "purpose": [
+      "Project projection owned by the existing actor. Async validators return immutable deliveries."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Projects/ProjectValidationExecutor.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectValidationExecutor"
+    ],
+    "sha256": "d5fb1f19b8f61c173cf8367ec2b752bc3d6e88bc496770031048e3addc70bbdf",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProjectValidationExecutor"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Projects/ReconciliationDto.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ReconciliationDto"
+    ],
+    "sha256": "3af5f0eb2f2c1e6d926c8b6d98068dcefd561570756fdac277cba5c3c92b772a",
+    "purpose": [
+      "Declaracion RecordDeclaration: ReconciliationDto"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/PromptEscaping.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "PromptEscaping"
+    ],
+    "sha256": "da92653b92a8f6674b7cb9efd0952b3ba982941b00c94764fe0de14d82077bf6",
+    "purpose": [
+      "Como se escapa un valor al interpolarlo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/PromptPlaceholder.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "PromptPlaceholder"
+    ],
+    "sha256": "33722f8fa3b889941b2f7ccc4f289353f752ee0b6a9d0376ca85d0fb2f86e0e5",
+    "purpose": [
+      "Declaracion RecordStructDeclaration: PromptPlaceholder"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/PromptTemplate.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "PromptTemplate"
+    ],
+    "sha256": "96efb7fe80d55f486e81f826d17bc92c64c2b8f62f39dd38430db5145f272be7",
+    "purpose": [
+      "Plantilla de prompt con interpolacion {{variable}}. El modo de escapado va en el propio hueco: {{xml:contexto}}, {{json:payload}}, {{raw:plantilla}}. Sin prefijo se asume . Lo que no encaje con la forma de un hueco se deja tal cual, para que una plantilla pueda contener JSON con llaves sin que haya que escaparlo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/PromptTemplateException.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "PromptTemplateException"
+    ],
+    "sha256": "01144c30cdea1649fc36352ceaa44d629ee4b7b8fea25cdf26d2be113a5be30e",
+    "purpose": [
+      "Se lanza cuando la plantilla pide variables que nadie definio."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/PromptVariables.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "PromptVariables"
+    ],
+    "sha256": "f98b8f167f046b5f75d085ac1f3b0d05f76340a0a6397d966e9768fbea35e138",
+    "purpose": [
+      "Bolsa de parametros del prompt. Mantiene el orden de insercion para que listarlas sea estable, e higieniza y recorta cada valor al entrar: lo que se guarda aqui es exactamente lo que vera el modelo, sin sorpresas en el render."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/SanitizationContext.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "SanitizationContext"
+    ],
+    "sha256": "072477b88652bc338ad59076be6f1f9b1c9ba6431d2c20900d2c5dfdccb08bee",
+    "purpose": [
+      "Donde va a acabar el valor que se esta sanitizando."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/SanitizationContract.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "SanitizationContract"
+    ],
+    "sha256": "df0cd0906425a8df9ffe5cf5d2a02fb2f0825018521152fcb2c72abf796ba21d",
+    "purpose": [
+      "Contrato explicito de sanitizacion: dado el contexto donde va a acabar un valor, que sanitizer aplicar. Asi el compilador no puede ayudar (los strings son strings), pero la tabla si: cualquier nueva llamada que concatena valor externo al prompt debe pasar por aqui y queda trazada en un unico sitio. Por que existe: el harness concatena con $\"...\" unas 25 veces en BuildSystemPrompt, Brief, Ledger.DescribeState, Trace, Summary, etc. Sin contrato, la mitad se acuerda de Plain() y la mitad no. Con contrato, todas pasan por ."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Prompting/SystemPrompt.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "SystemPrompt"
+    ],
+    "sha256": "7c6dce8a7f1bb6f46542fe641418780d90bdc833054dcb470720668e62fa5d7a",
+    "purpose": [
+      "Plantilla de sistema por defecto del harness."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Properties/AssemblyInfo.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "6df26644e2eba12c32a6f7d00589ffb79dd44e270d789917ab46dc01d64b998e",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/CircuitBreakerPattern.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "CircuitBreakerPattern"
+    ],
+    "sha256": "f21fa94a913f3b63ec652f259173d1948178f57ed7698f355a5e3cc41233339a",
+    "purpose": [
+      "Corta si se acumulan fallos consecutivos sin un exito entre medias. Pensado para parar el bucle cuando un proveedor se cae de verdad, en lugar de gastar reintentos."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/IPattern.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "IPattern"
+    ],
+    "sha256": "e3649df85d92424c39ddf0124606784b5ba322c2d4db65f1917ad21d4479e0c9",
+    "purpose": [
+      "Receta reutilizable que se aplica alrededor de una operacion. Una Pattern recibe un con el intento actual y devuelve la decision: dejar pasar, esperar, reintentar o cortar. Las Patterns no son middleware en el sentido de ASP.NET: cada una decide sola en funcion del contexto, sin cadena fija. Composition las combina."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/PatternAction.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "PatternAction"
+    ],
+    "sha256": "5627f69eeeb61f70fef6ae647a01e0a699282efa5702f4ac3f0056bb81c0a151",
+    "purpose": [
+      "Declaracion EnumDeclaration: PatternAction"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/PatternContext.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "PatternContext"
+    ],
+    "sha256": "d40562f60db8b1025beafaf2980975934875d8cd9081f0aad18c46e03a532e64",
+    "purpose": [
+      "Estado minimo que una Pattern observa: numero de intento, ultimo error, tiempo gastado, y si la operacion fue cancelada."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/PatternDecision.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "PatternDecision"
+    ],
+    "sha256": "c2dae0b9cbb0d55540462d6422a3265705371de9c565fc88e263907ba7d50efb",
+    "purpose": [
+      "Decision de una Pattern. Continue deja pasar el intento actual; Retry pide otro intento con el tiempo de espera indicado; Fail corta la operacion con un motivo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/ResiliencePolicyChain.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "ResiliencePolicyChain"
+    ],
+    "sha256": "3d58baa8663bf575da6ae0dc83e6f47d2ad39026dc9af99baf75cd1752a0e9c4",
+    "purpose": [
+      "Compone varias Patterns en una sola decision. Las que devuelven Fail ganan; si hay varios Retry, gana el que pida mas espera; en otro caso Continue. El orden importa: si Timeout va antes que Retry, un intento que ya excedio el tiempo se rechaza antes de gastar el reintento. En general se pone Timeout al principio y Retry al final."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/RetryPattern.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "RetryPattern"
+    ],
+    "sha256": "b8c9b5a7888907853d2716fca32ebe41a369614471c2010d16caea925feb865f",
+    "purpose": [
+      "Reintenta con backoff exponencial hasta veces. El primer reintento espera ; cada uno duplica. Si se supera el maximo, devuelve Fail con el motivo original. Es el patron que ya usa implicitamente el reactor para los 5xx/429, pero aqui esta formalizado y separado para poder reutilizarlo desde cualquier otra pieza del harness (cliente HTTP, IO a archivos, etc.)."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Resilience/TimeoutPattern.cs",
+    "namespace": "AgentLoop.Harness.Patterns",
+    "types": [
+      "TimeoutPattern"
+    ],
+    "sha256": "311dfb46fd26eda367b0addeb9e374201ca5e678a6b740dbef7cd5051c3b7e54",
+    "purpose": [
+      "Recorta cualquier espera al . Es el equivalente declarativo del ExecutionPolicy.Clamp: si el caller pidio 3 horas pero el policy dice maximo 10 minutos, aqui se aplica."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Runner/GoalRunner.cs",
+    "namespace": "AgentLoop.Harness.Runner",
+    "types": [
+      "GoalRunner"
+    ],
+    "sha256": "3d2a7147eb7de10199e9307ff63ef3728aea35ecfd4f447ae42e1d4f9ca723c4",
+    "purpose": [
+      "Implementacion de que delega el setup completo al y ejecuta el coordinador de eventos. Antes de este commit GoalRunner.RunAsync construia su propio Scope, bus, supervisor, ledger, tools, GoalContext, StepRecorder y RunContext inline (~120 lineas); ahora son ~30: pide el setup al factory, configura el reactor con la instrumentacion propia y espera su resultado terminal."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Runner/IRunner.cs",
+    "namespace": "AgentLoop.Harness.Runner",
+    "types": [
+      "IRunner"
+    ],
+    "sha256": "ce03e6a8d6bcd36863b29e93b27570842977a0f5dbe232e6228b4a4c81045095",
+    "purpose": [
+      "Contrato del ejecutor de Runs. RunAsync recibe un Run y produce un RunResult con su Journey. Hoy solo hay una implementacion (GoalRunner), pero el interface permite que maÃ±ana un ScriptRunner o un DebugRunner compartan el contrato sin que el CLI se entere."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Runner/RunnerOptions.cs",
+    "namespace": "AgentLoop.Harness.Runner",
+    "types": [
+      "RunnerOptions"
+    ],
+    "sha256": "7c8fc994d1e49de1385374bb756e261f773ef4dd40afd260520ca9bd2da048dd",
+    "purpose": [
+      "Opciones que afinan como se ejecuta un Run."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/BoundedReadStream.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "BoundedReadStream"
+    ],
+    "sha256": "cc5c57db6322aaf620402f8825b3e21956e02b154c553f42e37d8c3c7a0908fc",
+    "purpose": [
+      "Caps bytes before StreamReader/HTTP materializes an untrusted response."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Contracts/DataFindingDto.cs",
+    "namespace": "AgentLoop.Security.Contracts",
+    "types": [
+      "DataFindingDto"
+    ],
+    "sha256": "25e4231a18a5d22a26c2707fa914644fd17cc3a828fe08978351d66afacbef29",
+    "purpose": [
+      "Declaracion RecordDeclaration: DataFindingDto"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Contracts/ModelRequestDto.cs",
+    "namespace": "AgentLoop.Security.Contracts",
+    "types": [
+      "ModelRequestDto"
+    ],
+    "sha256": "949ca9671471229f0f6d764761c3f17455a47e6e6900fbaacde8c419b395693c",
+    "purpose": [
+      "Declaracion RecordDeclaration: ModelRequestDto"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Contracts/PromptDataDto.cs",
+    "namespace": "AgentLoop.Security.Contracts",
+    "types": [
+      "PromptDataDto"
+    ],
+    "sha256": "300f17c5cd03d855ddfc68b3a54a4d9f0d329c32a1c9cf5bed7e09d1aaca27c7",
+    "purpose": [
+      "Declaracion RecordDeclaration: PromptDataDto"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Contracts/ToolDataMetadataDto.cs",
+    "namespace": "AgentLoop.Security.Contracts",
+    "types": [
+      "ToolDataMetadataDto"
+    ],
+    "sha256": "f2ac660f42aec3a310f8cebd8bc722d70eb57be4e94324a8b4e6fd3b122615e6",
+    "purpose": [
+      "Declaracion RecordDeclaration: ToolDataMetadataDto"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Contracts/ToolFailureDto.cs",
+    "namespace": "AgentLoop.Security.Contracts",
+    "types": [
+      "ToolFailureDto"
+    ],
+    "sha256": "0bfa8bbf0ba3eeef0d0166767e13ff42413757dfdd1de5cded7337fbe165df68",
+    "purpose": [
+      "Declaracion RecordDeclaration: ToolFailureDto"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Contracts/ToolResultDto.cs",
+    "namespace": "AgentLoop.Security.Contracts",
+    "types": [
+      "ToolResultDto"
+    ],
+    "sha256": "6a0c67147a3177779a7a8f722808ac751bb8e41c3b699d4ba988263a4e95893a",
+    "purpose": [
+      "Reserved metadata belongs to the harness; extension fields remain external data."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/DataGuard.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "DataGuard"
+    ],
+    "sha256": "4676924770f5af7f862d3a4fcf5f913c074d9dccacaf8da9d1582abc7c86aca2",
+    "purpose": [
+      "Declaracion ClassDeclaration: DataGuard"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/DataLimits.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "DataLimits"
+    ],
+    "sha256": "74ab45aa713712521f7ea3eefd643f2127d0c370ecbc7a62fb9293115228124b",
+    "purpose": [
+      "Declaracion ClassDeclaration: DataLimits"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/ProtectedResources.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "ProtectedResources"
+    ],
+    "sha256": "59a29687315abec295eddbcb87cd2dfb6e30bbe7bbec436556e99eb962c09f04",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProtectedResources"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/SafeStreamingText.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "SafeStreamingText"
+    ],
+    "sha256": "75b509972e0b474fc46efca9eeca7f4eb066292c323c45db3a6dae39e0b5e70b",
+    "purpose": [
+      "Buffer words so a recognizable key split across deltas cannot bypass redaction."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/Scope.cs",
+    "namespace": "AgentLoop.Harness",
+    "types": [
+      "Scope"
+    ],
+    "sha256": "1a2047057c9d5bc8dcb7ecc54ff2e302c33059bb176ad18621de958e8e3383d9",
+    "purpose": [
+      "Frontera de un Run: que modelos, paths y tools estan autorizados, encima de las reglas duras de . La policy veta comandos por regex; el Scope acota que se le ofrece al modelo en el system prompt y en las tools disponibles. AllowedPaths es una whitelist de raices; cualquier comando que intente actuar fuera se rechaza antes de tocar ExecutionPolicy. AllowedModels evita que el agente cambie de modelo a algo no acordado. AllowedTools, si no esta vacio, restringe las tools que el OperationTools expone."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/StrictJson.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "StrictJson"
+    ],
+    "sha256": "abefa6d3ef1101448d223803f4eb79df2c3d6969ff3899578b7881346b0936e9",
+    "purpose": [
+      "Declaracion ClassDeclaration: StrictJson"
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Security/ToolArgumentValidator.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "ToolArgumentValidator"
+    ],
+    "sha256": "4cfff323376b49e6c570645eead49edd8401d9a7f7a34b154f211aca88f5a9d5",
+    "purpose": [
+      "Validated subset of the schemas emitted by this repository, not a general JSON Schema engine."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Tools/DelegateTool.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "DelegateTool"
+    ],
+    "sha256": "16769a158eb2937fe62834333ebbb7a7d6c735765531867ed6eba197d13591fd",
+    "purpose": [
+      "Adaptador para declarar una tool desde un delegado y un schema en texto."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Tools/IdempotentTool.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "IdempotentTool"
+    ],
+    "sha256": "7c854472c696a8681bbfe84fd672ce9a15f95e19a5437a8c35b2ef58a9ec3700",
+    "purpose": [
+      "Decorator que envuelve cualquier con cache por hash: la primera llamada ejecuta el handler y guarda el resultado; las siguientes con la misma combinacion (tool + argumentos) devuelven el resultado cacheado sin reejecutar. Pensado para tools read-only (leer, procesos, kill, observar) cuyo resultado es estable entre llamadas. NO se aplica a ejecutar ni lanzar porque tienen efectos reales y un retry legitimo del modelo debe poder reejecutarlas. La clave se calcula sobre el JSON de argumentos. Cambiar el orden de las claves produce la misma clave (el calculo ordena). El cache es bounded LRU: cuando se llena, descarta la entrada menos usada recientemente."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Tools/OperationTools.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationTools"
+    ],
+    "sha256": "5a44809e06d998c241e6001336d3deea06f8b794fdb97efebe07d0110c76a012",
+    "purpose": [
+      "Las herramientas con las que el agente opera: jugar tarjetas de estado y manejar terminales. Reparto deliberado: ejecutar es para lo corto (espera el resultado), y lanzar + esperar/leer/observar es para lo largo, que es lo que evita que el agente se quede parado delante de un proceso de diez minutos. Ninguna de las dos bloquea un hilo: la espera es sobre reset events."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Tools/ToolExecution.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "ToolExecution"
+    ],
+    "sha256": "a55643a4ecd021c338895e7586924a44807ac54e3cff790e9c19cd85cacc9757",
+    "purpose": [
+      "Resultado de ejecutar una tool call, listo para volver al modelo."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Tools/ToolRegistry.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "ToolRegistry"
+    ],
+    "sha256": "67eb178fd0baee407581aaa4e74e9190d7c3ad59b9c0b04250aa12284100f0cc",
+    "purpose": [
+      "Catalogo de herramientas: genera los schemas y despacha las llamadas."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Traceability/Correlation.cs",
+    "namespace": "AgentLoop.Harness.Traceability",
+    "types": [
+      "Correlation"
+    ],
+    "sha256": "a8d085c1154acf4799e57daf145f10a5139f00691cf0f8957eaef23fc572ae75",
+    "purpose": [
+      "Holder de basado en . El reactor, el supervisor y los tools viven en distintos hilos del pool y se cruzan con awaits profundos. Sin AsyncLocal, pasar el TraceId por parametro contaminaria cada firma; con AsyncLocal, lo de arriba establece el contexto y lo de abajo lo lee sin saber como se propago. Para no contaminar el resto del harness, este tipo es opcional: si nadie lo establece, devuelve null y el codigo que lo usa cae a un identificador vacio sin lanzar."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Traceability/CorrelationContext.cs",
+    "namespace": "AgentLoop.Harness.Traceability",
+    "types": [
+      "CorrelationContext"
+    ],
+    "sha256": "f292232423b9e16224634c9dbbeb14295e7019849db4957c8dd28e482d7020de",
+    "purpose": [
+      "Identidad de una unidad de trazabilidad. Se crea un al arrancar un Run y un nuevo cada vez que se cruza una frontera async significativa (publicar un evento, ejecutar un tool, llamar al modelo). La idea no es reproducir OpenTelemetry: con un GUID por Run y un SpanId por paso alcanza para correlacionar Steps, eventos del bus y logs sin tener que sacar librerias externas."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Traceability/CorrelationPropagator.cs",
+    "namespace": "AgentLoop.Harness.Traceability",
+    "types": [
+      "CorrelationPropagator"
+    ],
+    "sha256": "53eb8569d382c371eea2048a1e671585a92ab1d183beaeb389a6fefbcceb0df0",
+    "purpose": [
+      "Crea spans hijos al cruzar una frontera async. Pensado para envolver con y asi restaurar el contexto previo al salir. Como todavia no hay propagacion a traves del bus ni de los HttpClient, este helper solo cubre el lado del reactor: el await que viene de una llamada al modelo. El supervisor de procesos, cuando publique eventos desde sus hilos de captura, leera el contexto que estuviera vivo cuando se lanzo el proceso; si nadie lo establecio, el evento queda sin TraceId, que es el comportamiento degradado esperado."
+    ],
+    "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/AgentLoop.Infrastructure.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Composition/DefaultGoalRunSetupFactory.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "DefaultGoalRunSetupFactory"
+    ],
+    "sha256": "27b5df68fc7c412aafb7918e8c2ba735b24d77c48cc2e4e8a9146bede72f0546",
+    "purpose": [
+      "Declaracion ClassDeclaration: DefaultGoalRunSetupFactory"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Composition/GoalRunFactory.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "GoalRunFactory"
+    ],
+    "sha256": "5240f9f9c2dd54d9b7540021f1c37d78b6901f45095539606a9b57fb2d7724be",
+    "purpose": [
+      "Composicion compartida del harness de operaciones: monta bus con identidad causal, supervisor, tarjetas, registro canonical de tools filtrado por Scope, contexto y captura local de evidencia. GoalRunner usa el actor por eventos; el puerto ILLMClient separa al proveedor del motor."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Composition/OperationServiceFactory.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "OperationServiceFactory"
+    ],
+    "sha256": "0e5c3741766cc9974d2e234f2cdd34e8734f3b1154d9edebcf3125f87995be7b",
+    "purpose": [
+      "Declaracion ClassDeclaration: OperationServiceFactory"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Composition/ProjectProfileLoader.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "ProjectProfileLoader"
+    ],
+    "sha256": "1cee0688e010b35e131122530247e417b411e699a55fb5584c2886c587533282",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProjectProfileLoader"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Credentials/SecretStore.cs",
+    "namespace": "AgentLoop.Configuration",
+    "types": [
+      "SecretStore"
+    ],
+    "sha256": "108a84a3401aac196a703dfa24836486f0512e92fe48c2c1910d7212618c495b",
+    "purpose": [
+      "Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Docker/DockerEnvironmentFactory.cs",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "DockerEnvironmentFactory"
+    ],
+    "sha256": "f47d7825b2302b22efe35cc123725f90a12fecf29cd67d9ba2da9707af7908d1",
+    "purpose": [
+      "Host-selected profiles only. No shell, no host env forwarded, read-only project mount, no external network."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Docker/DockerExecutionDefinition.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "DockerExecutionDefinition"
+    ],
+    "sha256": "430f984c173a45c64601c30d31714adf7409423ddbc47526f8c3af0b7ec19743",
+    "purpose": [
+      "Declaracion RecordDeclaration: DockerExecutionDefinition"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Docker/DockerProjectEnvironment.cs",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "DockerProjectEnvironment"
+    ],
+    "sha256": "6d3328e44913e51212611137a0804d84294a7b8207e66894cbea0c83f6141859",
+    "purpose": [
+      "Declaracion ClassDeclaration: DockerProjectEnvironment"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Processes/OutputWatcher.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "OutputWatcher"
+    ],
+    "sha256": "eb1e1f65d1b1d43b720bca96e25d5d3e6c3b597b59b0c81f8bcb18f2a317cbce",
+    "purpose": [
+      "Un patron vigilado sobre la salida de los procesos. Cuando aparece, se abre su latch y se publica un evento: es la forma de que el agente diga \"avisame cuando salga X\" sin tener que quedarse leyendo."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Processes/ProcessHandle.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ProcessHandle"
+    ],
+    "sha256": "d413db3c5c76f0b489df40a1c9721bb39db0488b0accae3d6b01c763ded81d71",
+    "purpose": [
+      "Un proceso vivo o ya terminado, con su salida capturada y el latch de finalizacion. es un reset event manual a proposito: el fin de un proceso pasa una sola vez y a partir de ahi es permanente, asi que quien pregunte tarde tiene que encontrarselo abierto igual. Ademas puede haber varios esperandolo (el que lanzo el comando y un observador), y un evento manual los libera a todos."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Processes/ProcessSupervisor.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ProcessSupervisor"
+    ],
+    "sha256": "e0bba2fa2423ee4c9b82f8c9363f6b0333f4b3f3e7788d8e74f6722ddfe8ab3a",
+    "purpose": [
+      "Lanza y vigila procesos sin bloquear a quien lo llama. Nada aqui espera de forma sincrona: arrancar devuelve un handle al instante, la salida llega por eventos del propio Process (hilos del pool) y el fin del proceso se anuncia abriendo el latch del handle. El agente puede lanzar tres comandos, seguir razonando y enterarse de los tres cuando lleguen. La salida no se publica linea a linea: eso ahogaria al modelo en un build ruidoso. Se publica un aviso agrupado cada con cuantas lineas hay nuevas, y el agente decide si las lee. Lo que si se publica siempre es lo que cambia el estado: arranque, fin y patrones vigilados."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs",
+    "namespace": "AgentLoop.Terminals",
+    "types": [
+      "ShellProcessStartInfoFactory"
+    ],
+    "sha256": "749cd8ba4b05fdec610f1b244c48048adfc17bc5a891dc6b2770edad7e6dc8e9",
+    "purpose": [
+      "Los argumentos van por ArgumentList y no concatenados: asi el comando viaja como un unico argumento y no hay que pelearse con el escapado de comillas de cada interprete."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Validation/CommandProjectValidator.cs",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "CommandProjectValidator"
+    ],
+    "sha256": "8af78661864bc8a8ef8eacff4305c9e09f326d2ea295ace20aa133924399dcb8",
+    "purpose": [
+      "Declaracion ClassDeclaration: CommandProjectValidator"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Validation/CommandValidatorFactory.cs",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "CommandValidatorFactory"
+    ],
+    "sha256": "861059b5f6b34282ff0d1768cb5e861f342e377110cd71d829b7595c46287d41",
+    "purpose": [
+      "Declaracion ClassDeclaration: CommandValidatorFactory"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/EvidenceManifest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "EvidenceManifest"
+    ],
+    "sha256": "25843b799fb7ea8d6671999f1101e5849d27acf4d6ef72e27fff0f26851665a8",
+    "purpose": [
+      "Manifiesto de evidencia del run, al estilo agentico (EvidenceLedger): registra cada artefacto verificado con sus bytes y su sha256, y produce un hash agregado determinista. La puerta de aceptaciÃ³n lo consulta al cerrar; el journey lo persiste para auditorÃ­a. A diferencia de creerle al campo \"evidencia\" que escribe el modelo, aquÃ­ se mira el disco en el momento de verificar. Un cf-report.md de 0 bytes no cierra nada en verde."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "59fa11bea0262e4703aee5e9400ed41222b32f89941deee4ed543850c4e8b0a0",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Persistence/AtomicFileWriter.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "AtomicFileWriter"
+    ],
+    "sha256": "02dd196eb42b19a3bebbfd76275eabb3aa7afbb309e524850ad9b489da7ce7c4",
+    "purpose": [
+      "Declaracion ClassDeclaration: AtomicFileWriter"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Persistence/FileConversationMemory.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "FileConversationMemory"
+    ],
+    "sha256": "083c9b564c2efab4eb9953b140b1679733ac5a056b5c43ae78732eddd7405731",
+    "purpose": [
+      "Recuerdos explÃ­citos del usuario, separados del historial temporal."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Persistence/FileConversationSessionStore.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "FileConversationSessionStore"
+    ],
+    "sha256": "13b7cc2ac6e3f7765f306ea46f5f40a0a42a9db37c837629d92961430983c12a",
+    "purpose": [
+      "Declaracion ClassDeclaration: FileConversationSessionStore"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Persistence/FileRunStore.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "FileRunStore"
+    ],
+    "sha256": "53ca292b128e8fc9ccc0f1aac9efebaaa67ed1620bbfb1ccd34c0115bd6f8c4d",
+    "purpose": [
+      "Almacena cada Snapshot como un JSON en artifacts/runs/&lt;runId&gt;.json. La carpeta raiz se resuelve respecto a la raiz del repo (donde ya vive artifacts/agentic-models.json). Se ignora el contenido si la version del snapshot no coincide con la actual. Single writer (agentico): cada run escribe solo su propio &lt;runId&gt;.json y los RunId son Guid unicos por run, asi que dos runs nunca compiten por el mismo archivo. Dentro de un proceso, un solo GoalRunner escribe por run. No hay lock global porque no hay recurso compartido que proteger; si manana dos procesos escribieran el mismo directorio haria falta un lock por directorio (InstanceLock). El listado es eager (recorre el directorio) porque se espera que el numero de Runs por sesion sea bajo; si crece, se puede cambiar a un indice o a SQLite sin tocar la interfaz."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Persistence/OperationEventJournal.cs",
+    "namespace": "AgentLoop.Harness.Durable",
+    "types": [
+      "OperationEventJournal"
+    ],
+    "sha256": "1613354b634a71b4ced747e634f62581388b9ed968f617e63b62543a51ec3916",
+    "purpose": [
+      "Registro incremental antes de admitir efectos y despues de aplicar eventos."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Projects/FileProjectResources.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "FileProjectResources"
+    ],
+    "sha256": "1a76ca739c3602dc9e7a1beda63949e40d5bf73aebe186e914fef9a92d69ef64",
+    "purpose": [
+      "Declaracion ClassDeclaration: FileProjectResources"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Projects/ProjectContractAdmission.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectContractAdmission"
+    ],
+    "sha256": "e9f79f1c397ea0d15593246ab7738872bdd6b93872bb2685e16ca8ba53f4e058",
+    "purpose": [
+      "Pure admission: reads a bounded contract, validates references and paths, creates no project or process."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Projects/ProjectRecovery.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectRecovery"
+    ],
+    "sha256": "cad3045b6a84dcba5b74f433d86e776cafbcb6c6fc5f627c9bef980d222913a7",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProjectRecovery"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Contracts/ChatPayloadSerializer.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ChatPayloadSerializer"
+    ],
+    "sha256": "37704607c18e5156ef38e9f6836a310806db0656b7f6b19275fbe34727b6bf2f",
+    "purpose": [
+      "Wire serialization belongs to the provider adapter, outside neutral kernel contracts."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Contracts/LLMException.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "LLMException"
+    ],
+    "sha256": "40e461918e01781e750fd52ee9edc429cd5ef87c3cfceaa84b6f5e65c30a2664",
+    "purpose": [
+      "Cualquier respuesta no-2xx del gateway o fallo de transporte."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Contracts/TransportOptions.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "TransportOptions"
+    ],
+    "sha256": "313740895679c0c9349c1cd3d4b97c47ec94bc875617c9e190dae21488620b5c",
+    "purpose": [
+      "Reintentos solo para 5xx y 429 transitorios. El backoff exponencial puede acumular segundos facilmente: 3 reintentos con base 1 y tope 5 dan 1+2+4 = 7s de espera + los timeouts de cada intento. Con 6 reintentos y base 2 (el valor anterior) se llegaba a 34s de espera solo en backoff, y con timeouts largos eso era el doble. 3 reintentos cubre el caso habitual del gateway sin que un solo timeout se convierta en minutos de espera."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Discovery/CapabilityNames.cs",
+    "namespace": "AgentLoop.Discovery",
+    "types": [
+      "CapabilityNames"
+    ],
+    "sha256": "78efb9dabed68a4e846699b8f2baf203e4e0bbaf3e4a5ce468c8d8d97264cf80",
+    "purpose": [
+      "Nombres de las sondas, estables para que el JSON de salida sea comparable entre corridas."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Discovery/CapabilityProbe.cs",
+    "namespace": "AgentLoop.Discovery",
+    "types": [
+      "CapabilityProbe"
+    ],
+    "sha256": "49fc411cc6f984b3b27587fb97f2fcd6a018b76a49587e393f28e786804e70d5",
+    "purpose": [
+      "Resultado de una sonda individual."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Discovery/CapabilityProbeTools.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "CapabilityProbeTools"
+    ],
+    "sha256": "7f7c233e70e0a25f4c3dbd33c0064037ce1b790c16545a5e408bfb073f4b8e18",
+    "purpose": [
+      "Tool de sondeo: su unico proposito es ver si el modelo emite una tool call."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Discovery/ModelCapabilityProbe.cs",
+    "namespace": "AgentLoop.Discovery",
+    "types": [
+      "ModelCapabilityProbe"
+    ],
+    "sha256": "1ed9095038e8dfc706641a3c86e89242e91bca8aabad93c6500c827ff57df3be",
+    "purpose": [
+      "Descubre modelos con capacidades agenticas sondeandolos en vivo. Puerto reducido de tokenrouter-client/tokenrouter/probe.py. Un modelo cuenta como agentico si pasa accessible + chat + tool_calling; json_mode y system_message se sondean como informacion adicional."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Discovery/ModelCapabilityReport.cs",
+    "namespace": "AgentLoop.Discovery",
+    "types": [
+      "ModelCapabilityReport"
+    ],
+    "sha256": "347f63d8f8d4a5f1d259119bdece648f6218c62cbe983e29a395d88f1060a39e",
+    "purpose": [
+      "Reporte de capacidades de un modelo."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Discovery/SelectionResult.cs",
+    "namespace": "AgentLoop.Discovery",
+    "types": [
+      "SelectionResult"
+    ],
+    "sha256": "26e3c67e085c3394ac3e53cae1c1cc1e761e1685ad7e54f89c7a4a4a4beb8753",
+    "purpose": [
+      "Salida del sondeo: los modelos agenticos encontrados y todo lo que se probo."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaClient.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "NvidiaClient"
+    ],
+    "sha256": "7d19dc93757afe3d747ef782a2832dfba6c1ec58d2d1cd8a70ade906d7526189",
+    "purpose": [
+      "CAPA 1 - cliente asincrono OpenAI-compatible para NVIDIA NIM. Adaptacion y parseo del protocolo NVIDIA NIM."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaModelCatalog.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "NvidiaModelCatalog"
+    ],
+    "sha256": "6ef801b1223bc0dc9a46ea500ab337ef73333fc9c46bb85f6e3a55f50f1d0873",
+    "purpose": [
+      "Declaracion ClassDeclaration: NvidiaModelCatalog"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaOptions.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "NvidiaOptions"
+    ],
+    "sha256": "822d151156f64f24da94606b2522e37eb4380ebca02414c598ecc68623049792",
+    "purpose": [
+      "Configuracion del cliente HTTP contra el gateway."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaRequestAdapter.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "NvidiaRequestAdapter"
+    ],
+    "sha256": "5e4b1c4aa437e63a164c60818c122924f328fb07b717ff9fc8fc77e9f142913b",
+    "purpose": [
+      "Model controls are explicit; a numeric thinking budget is not a GLM 5.3 limit."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Parsing/CompletionParser.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "CompletionParser"
+    ],
+    "sha256": "fb6a1ad44bd533ac329fd8682fdb41e8483218f0fa507ecc77a734a8efba3303",
+    "purpose": [
+      "CAPA 2 - traduce el JSON crudo del proveedor a tipos del harness. Sin estado y sin red: se puede probar con fixtures. Puerto de tokenrouter/parsers.py."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Parsing/StreamAccumulator.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "StreamAccumulator"
+    ],
+    "sha256": "04fc4321992ac0158baf9deedc35a72259e596046b4e57b0cb72cb68b3bb13c9",
+    "purpose": [
+      "Junta los chunks de un stream en una respuesta con la misma forma que la no-streaming. La gracia es que no reimplementa el parseo: arma el JSON equivalente y se lo pasa a . Asi el thinking, las tool calls y el consumo salen tipados igual vengan de un stream o de una llamada normal, y el bloque de tool_calls se puede reenviar al proveedor tal como espera en el turno siguiente."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Transport/ChatCompletionsTransport.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ChatCompletionsTransport"
+    ],
+    "sha256": "63a18ce757e58e5999cc30039975b055788d5a86a451605f9d3a4e955544bb43",
+    "purpose": [
+      "Shared cancellable HTTP retries; no model-specific payload decisions."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Transport/TransientErrorClassifier.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "TransientErrorClassifier"
+    ],
+    "sha256": "64df82ef3cdea5c8e6eccf37d812f21aaff79dd6deb554c2ddb1d3a470a2b298",
+    "purpose": [
+      "Declaracion ClassDeclaration: TransientErrorClassifier"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Tools/ArithmeticTools.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "ArithmeticTools"
+    ],
+    "sha256": "f2c8aa81978b97b09995cac5b225d37af6913ecf8b622a696bc4bd0859710497",
+    "purpose": [
+      "Declaracion ClassDeclaration: ArithmeticTools"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Tools/BuiltInTools.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "BuiltInTools"
+    ],
+    "sha256": "19d8445f096a552cb4b7a0b03c3b23d6779f1eb683230ec5ca35ef201f21a753",
+    "purpose": [
+      "Set por defecto para chat, run e interactive."
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Tools/FileTools.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "FileTools"
+    ],
+    "sha256": "e082741cb936c01be9432909fa7973c9584781992f3c2c7092b3f3e859039b7d",
+    "purpose": [
+      "Declaracion ClassDeclaration: FileTools"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Tools/SystemTools.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "SystemTools"
+    ],
+    "sha256": "ecdd9f36ee8d8aacd0f0a62611a85c53ee98fcbfc62464986de789326195e2c4",
+    "purpose": [
+      "Declaracion ClassDeclaration: SystemTools"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Tools/ToolArguments.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "ToolArguments"
+    ],
+    "sha256": "1829fe231e1d03cf2c3f804884a211907ec0aa690855db323f31f18d448456a7",
+    "purpose": [
+      "Declaracion ClassDeclaration: ToolArguments"
+    ],
+    "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/AgentLoop.Kernel.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Concurrency/AsyncAutoResetEvent.cs",
+    "namespace": "AgentLoop.Concurrency",
+    "types": [
+      "AsyncAutoResetEvent"
+    ],
+    "sha256": "2cf8779cb3696fbcbf6282b9d9125bef75836414843c86f25974c811aff6e3ce",
+    "purpose": [
+      "Reset event automatico: cada libera exactamente a un esperador y la senal se consume. Si nadie espera, queda una senal pendiente (no se pierde el aviso). Es lo que despierta al agente cuando entra algo al bus: una senal, un ciclo de reaccion."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Concurrency/AsyncManualResetEvent.cs",
+    "namespace": "AgentLoop.Concurrency",
+    "types": [
+      "AsyncManualResetEvent"
+    ],
+    "sha256": "018d22f3779b32f2ff550bfa1bbed0da17f5e3e4ef33b52a7033317bd5169286",
+    "purpose": [
+      "Reset event manual en version asincrona: una vez senalado se queda senalado hasta que alguien lo baja con , y todos los que esperan pasan a la vez. Es el equivalente a ManualResetEventSlim, pero esperar aqui no bloquea un hilo: devuelve una Task. Esa diferencia es la que permite que el agente espere a un proceso sin dejar tieso su hilo, que es justo lo que necesita para seguir atendiendo eventos. Usos en el harness: el cierre de un proceso (latch: muchos esperan, se queda abierto) y la puerta de ejecucion (abierta = pasa; cerrada = las ejecuciones se encolan)."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Events/AgentEvent.cs",
+    "namespace": "AgentLoop.Events",
+    "types": [
+      "AgentEvent"
+    ],
+    "sha256": "c44e5d86a9453b379a622fdf6d7dd0340eb016fd54537c72987bc39f2c438a4c",
+    "purpose": [
+      "Un suceso del sistema. Es la unidad que mueve el harness: el agente despierta con eventos, no porque a alguien le toque hablar."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Events/AgentEventKind.cs",
+    "namespace": "AgentLoop.Events",
+    "types": [
+      "AgentEventKind"
+    ],
+    "sha256": "ec7c69d4f66a899605484325a36b43adba65138060d962e3292a2b4d37cbb9f8",
+    "purpose": [
+      "Que clase de suceso es. El agente reacciona a esto, no a turnos de conversacion."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "62a2865f3f0d796724e34789825e086e14353ba716a4ffefc4915a1fe97e1110",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ChatMessage.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ChatMessage"
+    ],
+    "sha256": "757f99f5a6d33bc0ced385e0217f8014c1a008619c7b8bd69c80cf5bcf7f8d8a",
+    "purpose": [
+      "Mensaje neutral de la conversacion; el proveedor adapta su representacion wire."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ChatRequest.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ChatRequest"
+    ],
+    "sha256": "48b372b8e3e4099ad8483c0d92e59089805d8aaabfc3a732dcb2f20ea8b9558b",
+    "purpose": [
+      "Solicitud neutral del agente. El adaptador del proveedor decide los nombres y campos del payload. Es un record para poder derivar variantes con 'with' (stream on/off, thinking fuera) sin volver a copiar campo a campo y olvidarse de uno."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ChatRoles.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ChatRoles"
+    ],
+    "sha256": "6b539dfc713de2cb4de19924ae117ea226156b73b5db7c1c9754d236add07d05",
+    "purpose": [
+      "Roles del protocolo OpenAI-compatible."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ILLMClient.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ILLMClient"
+    ],
+    "sha256": "1e27cd40ba9d87bb3f1724208884b7ca7464a78e8819474998b1250217f180e5",
+    "purpose": [
+      "Port for model requests. Implementations own provider transport and dialect adaptation."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ModelInfo.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ModelInfo"
+    ],
+    "sha256": "9aca0a67a9e986d2d961a05094c3168e4bad5e5b9ddb19ac9fae9243c8b72cd8",
+    "purpose": [
+      "Entrada de GET /models."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ResponseFormat.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ResponseFormat"
+    ],
+    "sha256": "1d04683ad36e5632f3ef508abd3dd6ce5fd1a590327bd6dbd074fd9437284574",
+    "purpose": [
+      "Declaracion ClassDeclaration: ResponseFormat"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ParsedCompletion.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ParsedCompletion"
+    ],
+    "sha256": "d6974f46ffa89c2f38eeea79f99b06611d2db49b4ae0758779bb1edb69c6ef54",
+    "purpose": [
+      "Resultado de parsear una respuesta cruda de /chat/completions."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ParsedToolCall.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ParsedToolCall"
+    ],
+    "sha256": "95b7601d1cbfb39bad4009a02fcfd0946fc373692e24bc166a54d427fa9e1078",
+    "purpose": [
+      "Una tool call ya normalizada. viene deserializado desde el string JSON que manda el proveedor; si ese string estaba roto, queda en true y conserva el texto original."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ProviderError.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ProviderError"
+    ],
+    "sha256": "10ec0dc0e03dc53d454dae272da60795af4c2298e379a112877620b5be92b2bb",
+    "purpose": [
+      "Error estructurado devuelto por el gateway."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/StreamDelta.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "StreamDelta"
+    ],
+    "sha256": "eb350fb81ef38b327e4c6f28d4d24688ea9de9d11aa0e83664047a8cfb7677ff",
+    "purpose": [
+      "Un delta de streaming ya normalizado."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ThinkingBlock.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ThinkingBlock"
+    ],
+    "sha256": "e2e4589d673b016bd6551a4864123695165be521d769f547d4f43bd26e54aff6",
+    "purpose": [
+      "Un bloque suelto de razonamiento."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ThinkingBlockKind.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ThinkingBlockKind"
+    ],
+    "sha256": "6fc7374933cdcc3497f68e64e006fa38e1f6360c7aac498a9ccfbe451bd56f05",
+    "purpose": [
+      "Tipo de bloque de razonamiento devuelto por el modelo."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ThinkingSource.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ThinkingSource"
+    ],
+    "sha256": "c7dde299d11ba2b076bb0eff16fe76ec79bb2ad5e17465331d9dbfe938c651b1",
+    "purpose": [
+      "De donde salio la traza. Sirve para saber si el modelo soporta thinking de verdad."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/ThinkingTrace.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "ThinkingTrace"
+    ],
+    "sha256": "a2f257c63eef1b70fff0623186cae190cd5cc2769d1be8c499f1eb82140f597f",
+    "purpose": [
+      "El razonamiento de una respuesta, tipado. Antes era un string? suelto llamado Reasoning, que no distinguia \"no penso\" de \"penso y no me dejan verlo\", ni decia cuantos tokens costo."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/Responses/TokenUsage.cs",
+    "namespace": "AgentLoop.Parsing",
+    "types": [
+      "TokenUsage"
+    ],
+    "sha256": "67837dda0191ad87f487990db7362603f0ee4af73ce0367f4cd7dc996a780a49",
+    "purpose": [
+      "Consumo de tokens de una llamada; se acumula a lo largo del loop. es la parte de completion que se fue en razonar: sale de usage.completion_tokens_details.reasoning_tokens y ya viene incluida en CompletionTokens."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/StreamOptions.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "StreamOptions"
+    ],
+    "sha256": "0681d1a4583bac865826dde6988811fe89a438a3932c0e3f3e6df3e668dd3131",
+    "purpose": [
+      "Ajustes del modo streaming. include_usage hace que llegue un ultimo chunk con el consumo de tokens: sin el, una respuesta en streaming no se puede contabilizar."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ThinkingMode.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ThinkingMode"
+    ],
+    "sha256": "71cac66a9b3a169a1a87b684e33481a0f21ac389992149630f89138b4f8a2000",
+    "purpose": [
+      "Estado del razonamiento explicito que se le pide al modelo."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ThinkingOptions.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ThinkingOptions"
+    ],
+    "sha256": "72ba3377249198c9c88d8ab6fac450cfae3ade3740dad293bf86a953789f8fd6",
+    "purpose": [
+      "Preferencia de razonamiento y presupuesto. Su representacion wire pertenece al adaptador del proveedor."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ThinkingPolicy.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ThinkingPolicy"
+    ],
+    "sha256": "b2aa05be8a7047cabfe006f19508a5af20037139f85ca9b92cc9c0c7c238cd18",
+    "purpose": [
+      "Decide si una peticion lleva thinking segun el modelo. Es mutable a proposito: cuando el gateway rechaza el parametro con un 400 se apunta el modelo aqui y las siguientes peticiones de la sesion salen ya sin el, en vez de pagar el reintento cada vez."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ThinkingPreference.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ThinkingPreference"
+    ],
+    "sha256": "5a7b990a701b2d4fafe6e2a9afa709ac65db85c1fcf4474d61993f869d202b3d",
+    "purpose": [
+      "Que hacer con el thinking cuando no se dice explicitamente por modelo."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ToolDefinition.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ToolDefinition"
+    ],
+    "sha256": "e9bcc5625f9d1fc1b4274983b8c49f3875eb1b318e8620bf836fd67ff598fb53",
+    "purpose": [
+      "Declaracion ClassDeclaration: ToolDefinition"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/ToolFunction.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ToolFunction"
+    ],
+    "sha256": "6628014b4b8cb8bee6233919b969df7e29f0aa154ec58bfcbb36a847ecef1ef1",
+    "purpose": [
+      "Esquema de una funcion expuesta al modelo."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/IProjectEnvironmentFactory.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "IProjectEnvironmentFactory"
+    ],
+    "sha256": "2e1b8748b0aca1ce971681462cdbf04d4ef37cd5d8fa2259ede6a76daa6ffa23",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IProjectEnvironmentFactory"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/IProjectExecutionEnvironment.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "IProjectExecutionEnvironment"
+    ],
+    "sha256": "7db6a1e5ae250fc8f50c26a81c02dda1c8afb05f66b219726b72e147a12ecab8",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: IProjectExecutionEnvironment"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/ITokenBudgetEstimator.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ITokenBudgetEstimator"
+    ],
+    "sha256": "2272e13b7f049c0f41c8f24d8ed03b24cd082f061b681220f9807486ea97e5dc",
+    "purpose": [
+      "Declaracion InterfaceDeclaration: ITokenBudgetEstimator"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/Profiles/ProjectCommandDefinition.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectCommandDefinition"
+    ],
+    "sha256": "89212e1b219d747c03ef04fe6fbe99347a3fa14dc99c14e6d0893400de7bd54d",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectCommandDefinition"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/Profiles/ProjectExecutionDefinition.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectExecutionDefinition"
+    ],
+    "sha256": "d720d6cf75982e3db539b5dd21294a5e9c516a3deb65bf03736eb8de2d978448",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectExecutionDefinition"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/Profiles/ProjectProfileDto.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectProfileDto"
+    ],
+    "sha256": "5c5b2fb6c0026313f6d66be8a0f015fa72d6a50642e6b54f1e2d58183f5b711e",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectProfileDto"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/Profiles/ProjectRuntimePolicy.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectRuntimePolicy"
+    ],
+    "sha256": "2fb7f24c88ea8dbbfb8fcdf94ffb07b121a2502334e84d32609637f27a736588",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectRuntimePolicy"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/Profiles/ProjectValidatorDefinition.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectValidatorDefinition"
+    ],
+    "sha256": "4bbc832451c5c2fb8b61e0a393d92824b57203365e8215379274e014f876589b",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectValidatorDefinition"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/ProjectCommandResult.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectCommandResult"
+    ],
+    "sha256": "201fbd36d978d889335cbc32ebf1a9b73c5d007ece51e2ab560da1567175aa7c",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectCommandResult"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/ProjectProcessNotice.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectProcessNotice"
+    ],
+    "sha256": "28e8630caae459e8040cabdd264008c9e85cddba94bcc2ea1be35feb77b98bc4",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectProcessNotice"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Projects/ProjectRecoveryPolicy.cs",
+    "namespace": "AgentLoop.Kernel.Projects",
+    "types": [
+      "ProjectRecoveryPolicy"
+    ],
+    "sha256": "38afb95302ac5ef8040a086fdcb261a11908f620cd8a9197cfd54f05c8286e1e",
+    "purpose": [
+      "Declaracion RecordDeclaration: ProjectRecoveryPolicy"
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Tools/ITool.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "ITool"
+    ],
+    "sha256": "e03afeded6b70babc83d43c24ab012224fc23e364574cc77df81769f75ec77b3",
+    "purpose": [
+      "Una funcion que el modelo puede invocar."
+    ],
+    "nature": "contrato/primitiva"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/AgentLoop.SelfTests.csproj",
+    "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Context/SessionPersistenceSelfTest.cs",
+    "namespace": "AgentLoop.Verification",
+    "types": [
+      "SessionPersistenceSelfTest"
+    ],
+    "sha256": "6989ba12d24ade49ea62d133e744fea02e3fab666eb4e2a3613963b846f7cef3",
+    "purpose": [
+      "Declaracion ClassDeclaration: SessionPersistenceSelfTest"
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Events/EventArchitectureSelfTest.cs",
+    "namespace": "AgentLoop.Events",
+    "types": [
+      "EventArchitectureSelfTest"
+    ],
+    "sha256": "9255a0dc6c4840d33b7dc3d2fc18e937405068a24e0851afece435106cbcbd7b",
+    "purpose": [
+      "Contratos de activacion del reactor, sin proveedor remoto."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Fixtures/FakeLLMClient.cs",
+    "namespace": "AgentLoop.Harness.Testing",
+    "types": [
+      "FakeLLMClient"
+    ],
+    "sha256": "3e0e134e0d6ed5a3efe018d56f25194ace7fb8fabe969a31f24b6b401a9e5964",
+    "purpose": [
+      "Cliente fake del puerto LLM que no hace red: devuelve una respuesta JSON vacia (sin tool_calls, sin contenido) para que el self-test del Composition Root pueda ejercitar el cableado sin depender del proveedor. Vive en AgentLoop.Harness.Testing para que su naturaleza de fixture de test sea evidente desde el namespace. Si alguien desde codigo de produccion lo importa, ya esta senializando que esta usando un mock."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Fixtures/ProjectFixtureClient.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectFixtureClient"
+    ],
+    "sha256": "b8af8b8e9bfc3ae47c6af87eedd78ad9c040f0c2bf7f38af148e94553c2794ac",
+    "purpose": [
+      "Explicit deterministic fixture, never selected for normal model runs."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Fixtures/TickCounter.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "TickCounter"
+    ],
+    "sha256": "d1188a36a99fafe4efe690c8bd0ce5c34a69c509ffad923b2a36ba44ff4da181",
+    "purpose": [
+      "Declaracion ClassDeclaration: TickCounter"
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Fixtures/TickStateMachine.cs",
+    "namespace": "AgentLoop.StateMachines",
+    "types": [
+      "TickStateMachine"
+    ],
+    "sha256": "ac7057ea5e772a226c92bf16e05b71b19011dc537c1f15f7af6700853a259b26",
+    "purpose": [
+      "Subclase minima de que nunca termina sola: alterna Tick/Tock indefinidamente. Sirve para probar, sin red, que el corte del loop depende solo de la bandera de la CAPA 4."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/GlobalUsings.cs",
+    "namespace": null,
+    "types": [],
+    "sha256": "8e5bf55cc29a32bf40eb91d60c22474132cba85abb6c642609b9aaa5134cfb3a",
+    "purpose": [
+      "Imports y metadatos del assembly"
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Goals/DispatcherPipelineProbe.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "DispatcherPipelineProbe"
+    ],
+    "sha256": "197875398cfeaa897866a986b5fbfe43711ce9c030c22850faaadeb37496a8e4",
+    "purpose": [
+      "Verifica directamente que el path fake-client -> parser -> dispatcher -> ledger funciona para un caso simple. Sin reactor, sin loop: el fake devuelve tool_calls, el reactor las extrae, las ejecuta, el ledger.Play registra. Si el ledger no tiene plays, el bug esta en ese path; si tiene, el bug esta en el loop o en el reactor (que se prueba con selftest regular)."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Goals/DispatcherStressSelfTest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "DispatcherStressSelfTest"
+    ],
+    "sha256": "7b7627ead48629dbcd07bdf5a0c9f01ef536874e7edbc0f1efb61749508b9099",
+    "purpose": [
+      "Stress test del dispatcher: corre N harnesses completos (secuencial y paralelo) y verifica que el pipeline entero termina consistente: - El loop avanzo al menos un ciclo (no se quedo en Arranque). - El primer mensaje es System (contrato del prompt de sistema). - Hay mensajes Assistant (el modelo respondio). - Cada ToolResult va precedido de un Assistant (sin tool results huerfanos que harian rechazar el siguiente request al gateway). - El bus no pierde eventos (History.Count == Published). - El ledger avanzo: el modelo jugo \"abrir\" en algun momento. Sin red ni disco (el FakeLLMClient no toca nada). El MultiToolFakeClient devuelve una respuesta con N tool_calls por llamada: alterna \"tarjeta\" (abrir en el primer batch, avanzar despues) y \"ejecutar\" (comando trivial que retorna 0). Asi se ejercitan los dos caminos del dispatcher."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Goals/EventCoordinatorSelfTest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "EventCoordinatorSelfTest"
+    ],
+    "sha256": "369fb2c11a1b2f3c41addc9b322f31a1ab90f9e86082d93e55ad4dd849cff558",
+    "purpose": [
+      "Pruebas de contratos observables del coordinador de eventos, sin red."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Goals/Projects/ProjectSelfTest.cs",
+    "namespace": "AgentLoop.Goals.Projects",
+    "types": [
+      "ProjectSelfTest"
+    ],
+    "sha256": "aeaf3936ea190f2ff1460f600f83c5496cdde6df64345187ba9654fabf9d9eb7",
+    "purpose": [
+      "Declaracion ClassDeclaration: ProjectSelfTest"
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Goals/TruncationRecoverySelfTest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "TruncationRecoverySelfTest"
+    ],
+    "sha256": "2db9d762daff8b0ccc58906e56ab4bfd841f2c46420e17c1eabc39197653e9d9",
+    "purpose": [
+      "Verifica el camino de recuperacion de truncamiento: si la primera respuesta del modelo se corta por max_tokens (finish_reason=length, sin tool calls), el reactor sube el presupuesto de tokens y le pide actuar. El fake registra el MaxTokens de cada request: la segunda llamada debe pedir mas tokens que la primera, y el ledger debe acabar con el abrir que el modelo emite al recuperarse. Sin red: el fake responde con una fixture distinta en cada llamada."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Goals/WatchdogSelfTest.cs",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "WatchdogSelfTest"
+    ],
+    "sha256": "7338f6722686a0dbb090de077804f1f283e853266993e93542d639c8d9ca9701",
+    "purpose": [
+      "Self-test del watchdog del deadline. Lo que se valida: - Un goal con deadline de 1s y un cliente que se cuelga 10s termina en menos de 5s con Fallido (no se queda esperando 10s). - El DeadlineReached flag queda en true. - El catch de cancelacion por usuario (externo) NO marca DeadlineReached (es cancelacion, no timeout)."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Harness/Composition/CompositionSelfTest.cs",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "CompositionSelfTest"
+    ],
+    "sha256": "582abbaec8b74f866e11341300ddc2d039c5aedfd65729ac2aacf9139cf0f938",
+    "purpose": [
+      "Self-test del Composition Root: verifica que el setup que produce la factory tiene los componentes esperados, que estan cableados entre si, y que las tres consumidores hipoteticos (Program.cs::GoalAsync, Program.cs::JournalAsync, GoalRunner.RunAsync) producen resultados equivalentes en su SelfTest ya existente."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Harness/Concurrency/ConcurrencySelfTest.cs",
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "types": [
+      "ConcurrencySelfTest"
+    ],
+    "sha256": "c09e017d96f40206d05bc9aa73bc3d83edc371720f34d2c3140f4d704c0bab7b",
+    "purpose": [
+      "Verifica que las primitivas de concurrencia e idempotencia aguantan el uso real: 64 hilos compitiendo por el mismo lock, la misma clave de cache, o calculando el mismo hash. Lo que se valida: - AsyncLock serializa N callers: solo uno dentro a la vez, los demas esperan, y todos acaban sin perdida ni duplicacion. - IdempotencyCache con 256 entradas: 1000 claves distintas caben y cada TryGet devuelve su valor; la eviction LRU descarta las mas viejas cuando se llena. - IdempotencyKey.ComputeKey es determinista: el mismo input produce la misma clave aunque el orden de los argumentos cambie. - CardLedger.Play desde 64 hilos: la cuenta de jugadas aceptadas cuadra exactamente, sin perdidas ni duplicadas."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Harness/Diagnostics/JourneyDiagnosisSelfTest.cs",
+    "namespace": "AgentLoop.Harness.Core",
+    "types": [
+      "JourneyDiagnosisSelfTest"
+    ],
+    "sha256": "88e7579d082759e0d624561cc6008f604290b43616b65d2c5a9351cf592759eb",
+    "purpose": [
+      "Self-test sin red ni disco (salvo File.Exists sobre una raiz inexistente): fixtures sinteticas que cubren cerrado, inanicion estilo lobos, watchdog, presupuesto, rechazos, eficacia de nudges, salidas con codigo != 0, pausas entre pasos, archivos referenciados y JSON ilegible."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Harness/Lifecycle/LifecycleAndBusDedupSelfTest.cs",
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "types": [
+      "LifecycleAndBusDedupSelfTest"
+    ],
+    "sha256": "013a128a511c07fafcd441c955d740abadfa46d80fb447b596980751080fab1c",
+    "purpose": [
+      "Self-test del RunLifecycleMutex y de la deduplicacion del bus."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Legacy/BuiltInSelfTests.cs",
+    "namespace": "AgentLoop.Verification",
+    "types": [
+      "BuiltInSelfTests"
+    ],
+    "sha256": "bdce02e9df8a38197ba0c7d7581ef042205cb669633aa0d4630c3d5b827f484c",
+    "purpose": [
+      "Verifica sin red la mecanica de la operacion dirigida por eventos: los reset events, el bus, las reglas transaccionales del libro mayor y el supervisor de procesos. Lo que se comprueba aqui no son literales sino propiedades: que una espera sin senal caduca y con senal no, que una tarjeta fuera de orden se rechaza, que cerrar la transaccion anidada no cierra la operacion. Esos son los invariantes que sostienen todo lo demas, y son justo los que se rompen en silencio."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Program.cs",
+    "namespace": "AgentLoop.Verification",
+    "types": [
+      "VerificationProgram"
+    ],
+    "sha256": "b9551a1dd5a67922464eaab7e98ea38684efd5d727693c4f3d96017123fd24d4",
+    "purpose": [
+      "Declaracion ClassDeclaration: VerificationProgram"
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Prompting/SanitizationSelfTest.cs",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "SanitizationSelfTest"
+    ],
+    "sha256": "00ba7d682bf4f12838a76d962d9206767981cfaa89ee76e1090dc23c1a79df67",
+    "purpose": [
+      "Tests duros de los sanitizadores. Reemplazan los dos asserts blandos de PromptSelfTest (en Program.cs) por ~30 asserts que cubren los casos que rompen en silencio: lone surrogates, control chars en mitad de string, arrays JSON, primitivos, paths con caracteres de control, roundtrip con JsonDocument.Parse, etc. Se llama desde SelfTestAsync en Program.cs: el resultado se suma al veredicto final con la misma forma que el resto de SelfTests."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Provider/Nvidia/ProviderContractSelfTest.cs",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ProviderContractSelfTest"
+    ],
+    "sha256": "6e1180c2dfd707d264b4b39b9707aa63c748e948e8a224c537d1a66185042c55",
+    "purpose": [
+      "Offline payload tests through the real HTTP client and SSE path."
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Security/SecuritySelfTest.cs",
+    "namespace": "AgentLoop.Security",
+    "types": [
+      "SecuritySelfTest"
+    ],
+    "sha256": "78b67e671f21be073f17c6e436e2f449e2e837c5b01b544681cf30dfe616e8f4",
+    "purpose": [
+      "Declaracion ClassDeclaration: SecuritySelfTest"
+    ],
+    "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Tools/IdempotentToolSelfTest.cs",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "IdempotentToolSelfTest"
+    ],
+    "sha256": "c2a74904a156444619bc22edc743df50a8346fc952c60d25bf0d6eef09d0a1ab",
+    "purpose": [
+      "Self-test del IdempotentTool: cachea por hash, sirve cache sin reejecutar, mantiene contador de hits/misses, y maneja correctamente el caso de fallo (no cachea errores)."
+    ],
+    "nature": "prueba/fixture"
+  }
+]

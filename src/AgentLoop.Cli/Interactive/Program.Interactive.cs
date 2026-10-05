@@ -1,0 +1,541 @@
+using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Xml.Linq;
+namespace AgentLoop;
+
+internal static partial class Program
+{
+
+    /// <summary>
+    /// Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no
+    /// hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de
+    /// verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir.
+    /// Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre.
+    /// </summary>
+    private static bool ShouldRunInteractive(string[] args)
+    {
+        if (args.Length >= 1 && args[0].ToLowerInvariant() is "interactive" or "interactivo" or "repl")
+        {
+            return true;
+        }
+
+        return args.Length == 0 && !Console.IsInputRedirected;
+    }
+
+
+    /// <summary>
+    /// Entrada de objetivos al reactor. ConversationSession conserva antecedentes y
+    /// recuerdos; no determina el ciclo de ejecucion de las operaciones.
+    /// </summary>
+    private static async Task<int> InteractiveAsync(string[] args)
+    {
+        if (HasFlag(args, "--project-contract")) return Fail("Usa project-run --project-contract <json> desde el CLI; interactive no admite un contrato de arranque.");
+        var thread = new ConversationSession { SessionStore = new FileConversationSessionStore() };
+        var tools = BuiltInTools.DefaultRegistry();
+        var maxIterations = IntOption(args, "--max-iterations", 24);
+        string model;
+        ThinkingPolicy policy;
+        ExecutionPolicy sessionPolicy;
+
+        try
+        {
+            thread.Memory = new FileConversationMemory(Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop"));
+            ApplyPromptOptions(thread, args);
+            model = ResolveModel(args);
+            policy = ResolveThinkingPolicy(args);
+            sessionPolicy = new ExecutionPolicy
+            {
+                Mode = ParsePolicyMode(StringOption(args, "--politica")),
+                AllowShell = !HasFlag(args, "--no-shell"),
+                AllowedPaths = StringOption(args, "--scope-root") is { } scopeRoot ? [Path.GetFullPath(scopeRoot)] : [],
+                DefaultShell = ShellCommand.ParseShell(StringOption(args, "--shell")),
+                WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
+                MaxConcurrent = IntOption(args, "--max-procesos", 4),
+            };
+            thread.Variables.WithDefaults(model, tools.Names);
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or IOException or JsonException or UnauthorizedAccessException or ArgumentException)
+        {
+            Console.Error.WriteLine($"ERROR: {ex.Message}");
+            return 64;
+        }
+
+        var settings = new SessionSettings
+        {
+            Thinking = policy,
+            Model = model,
+            Stream = ResolveStreaming(args, fallback: true),
+            Policy = sessionPolicy,
+        };
+
+        PrintInteractiveBanner(tools, settings);
+
+        // Un solo cliente para toda la sesion: reusar el HttpClient evita agotar
+        // sockets y se crea perezosamente para que 'ayuda' funcione sin key.
+        NvidiaClient? client = null;
+        var lastExitCode = 0;
+        Task<int>? activeOperation = null;
+        EventOperationCoordinator? activeCoordinator = null;
+        settings.OnCoordinator = coordinator => Interlocked.Exchange(ref activeCoordinator, coordinator);
+
+        async Task<int> RunOperationAsync(string prompt)
+        {
+            var code = await GuardedAsync(async cancellationToken =>
+            {
+                if (client is null) client = BuildClient(out _, policy);
+                return await AgentOperationAsync(client, thread, prompt, settings,
+                    IntOption(args, "--max-ciclos", 80), IntOption(args, "--deadline", 300), cancellationToken);
+            });
+            lastExitCode = code;
+            Console.WriteLine($"\n[operacion terminada, codigo {code}]\n");
+            return code;
+        }
+
+        try
+        {
+            while (true)
+            {
+                Console.Write($"agentloop[{thread.Exchanges}]> ");
+                var line = Console.ReadLine();
+
+                if (line is null)
+                {
+                    // stdin cerrado: no queda nada que leer, salir es lo unico sensato.
+                    Console.WriteLine();
+                    return activeOperation is null ? lastExitCode : await activeOperation;
+                }
+
+                line = line.Trim();
+                if (line.Length == 0)
+                {
+                    continue;
+                }
+
+                var tokens = SplitArguments(line);
+                if (tokens.Length == 0)
+                {
+                    continue;
+                }
+
+                var verb = tokens[0].ToLowerInvariant();
+                var rest = string.Join(' ', tokens.Skip(1));
+
+                if (verb is "salir" or "exit" or "quit" or "q")
+                {
+                    Volatile.Read(ref activeCoordinator)?.Control(AgentEventKind.Cancelacion);
+                    return activeOperation is null ? lastExitCode : await activeOperation;
+                }
+
+                if (verb is "pausa" or "reanudar" or "estado" or "cancelar" or "aprobar" or "rechazar")
+                {
+                    var coordinator = Volatile.Read(ref activeCoordinator);
+                    if (coordinator is null) Console.WriteLine("No hay operacion activa.");
+                    else if (verb is "aprobar" or "rechazar") coordinator.Approve(verb == "aprobar");
+                    else coordinator.Control(verb switch
+                    {
+                        "pausa" => AgentEventKind.Pausa, "reanudar" => AgentEventKind.Reanudacion,
+                        "estado" => AgentEventKind.ConsultaEstado, _ => AgentEventKind.Cancelacion,
+                    });
+                    continue;
+                }
+                if (activeOperation is { IsCompleted: false })
+                {
+                    Console.WriteLine("Operacion activa. Usa estado, pausa, reanudar, cancelar o aprobar/rechazar.");
+                    continue;
+                }
+
+                if (TryHandleSessionCommand(thread, settings, verb, rest))
+                {
+                    continue;
+                }
+
+                Console.WriteLine();
+
+                // Las utilidades sueltas no tocan el hilo; el agente si.
+                if (verb is "project-check-backend" or "selftest-projects" or "project-run" or "project-inspect" or "project-reconcile" or "project-admit" or "discover" or "selftest" or "selftest-events" or "selftest-coordinator" or "recuperacion" or "goal" or "objetivo" or "journal" or "diario" or "lobos" or "diagnostico" or "help" or "--help" or "-h" or "ayuda")
+                {
+                    lastExitCode = await ExecuteAsync(tokens);
+                }
+                else
+                {
+                    var prompt = verb is "run" or "chat" ? rest : line;
+                    if (prompt.Length == 0)
+                    {
+                        Console.WriteLine("Escribe el texto despues de 'run'.");
+                        continue;
+                    }
+
+                    if (!UsesConversationLoop(verb))
+                    {
+                        activeOperation = RunOperationAsync(prompt);
+                        continue;
+                    }
+
+                    lastExitCode = await GuardedAsync(async cancellationToken =>
+                    {
+                        if (client is null)
+                        {
+                            // Un solo cliente y una sola politica para la sesion: lo que aprenda
+                            // sobre el thinking de un modelo vale para los turnos siguientes.
+                            client = BuildClient(out var keySource, policy);
+                            Console.WriteLine($"key: {keySource}");
+                            Console.WriteLine();
+                        }
+
+                        return UsesConversationLoop(verb)
+                            ? await AgentTurnAsync(client, thread, prompt, tools, settings, maxIterations, cancellationToken)
+                            : await AgentOperationAsync(client, thread, prompt, settings,
+                                IntOption(args, "--max-ciclos", 80), IntOption(args, "--deadline", 300), cancellationToken);
+                    });
+                }
+
+                Console.WriteLine();
+                Console.WriteLine($"[codigo de salida {lastExitCode}]");
+                Console.WriteLine();
+            }
+        }
+        finally
+        {
+            client?.Dispose();
+        }
+    }
+
+
+    /// <summary>
+    /// Lo que la sesion interactiva puede cambiar en caliente. Va por referencia para que
+    /// 'pensar' y 'stream' afecten al turno siguiente sin rearrancar el CLI.
+    /// </summary>
+    internal sealed class SessionSettings
+    {
+        public required ThinkingPolicy Thinking { get; init; }
+
+        public required string Model { get; set; }
+
+        public bool Stream { get; set; }
+        public ExecutionPolicy Policy { get; init; } = new();
+        public Action<EventOperationCoordinator?>? OnCoordinator { get; set; }
+    }
+
+
+    /// <summary>Comandos que solo existen dentro de la sesion. Devuelve true si consumio la linea.</summary>
+    private static bool TryHandleSessionCommand(
+        ConversationSession thread,
+        SessionSettings settings,
+        string verb,
+        string rest)
+    {
+        var policy = settings.Thinking;
+        var model = settings.Model;
+
+        switch (verb)
+        {
+            case "memoria":
+                if (thread.Memory is null || thread.Memory.Notes.Count == 0) Console.WriteLine("  (sin recuerdos guardados)");
+                else foreach (var note in thread.Memory.Notes) Console.WriteLine($"  {note.Key} = {note.Value}");
+                return true;
+
+            case "recordar":
+                RunSessionEdit(() =>
+                {
+                    if (thread.Memory is null) throw new InvalidOperationException("Memoria no inicializada.");
+                    thread.Memory.Remember(rest);
+                    Console.WriteLine("  Recuerdo guardado para las siguientes sesiones.");
+                });
+                return true;
+
+            case "olvidar":
+                RunSessionEdit(() => Console.WriteLine(thread.Memory?.Forget(rest) == true ? "  Recuerdo eliminado." : "  No existe esa clave."));
+                return true;
+
+            case "contexto":
+                RunSessionEdit(() =>
+                {
+                    if (rest.Equals("compactar", StringComparison.OrdinalIgnoreCase)) thread.Compact();
+                    else if (rest.StartsWith("limite ", StringComparison.OrdinalIgnoreCase) && int.TryParse(rest[7..].Trim(), out var limit)) thread.SetHistoryLimit(limit);
+                    else if (rest.Length > 0) throw new InvalidOperationException("Usa contexto, contexto compactar o contexto limite <caracteres>.");
+                    Console.WriteLine($"  Historial: {thread.Messages.Count}/{thread.MaxMessages} mensajes, {thread.HistoryCharacters}/{thread.MaxHistoryCharacters} caracteres JSON; descartados: {thread.DroppedMessages} mensajes.");
+                    Console.WriteLine($"  Memoria: {thread.Memory?.Notes.Count ?? 0} recuerdos. Compactar conserva el ultimo intercambio; nuevo limpia el historial.");
+                });
+                return true;
+
+            case "sesion":
+                RunSessionEdit(() =>
+                {
+                    var path = Path.Combine(SecretStore.ResolveRepositoryRoot(), ".agentloop", "session.json");
+                    if (rest.Equals("guardar", StringComparison.OrdinalIgnoreCase)) thread.SaveSession(path);
+                    else if (rest.Equals("cargar", StringComparison.OrdinalIgnoreCase)) thread.LoadSession(path);
+                    else throw new InvalidOperationException("Usa sesion guardar o sesion cargar.");
+                    Console.WriteLine($"  Sesion {rest}: {path} ({thread.Messages.Count} mensajes).");
+                });
+                return true;
+
+            case "modelos" or "models":
+                Console.WriteLine("  modelos NVIDIA disponibles:");
+                foreach (var available in NvidiaOptions.SupportedModels)
+                {
+                    Console.WriteLine($"    {(string.Equals(available, settings.Model, StringComparison.OrdinalIgnoreCase) ? "*" : " ")} {available}");
+                }
+                return true;
+
+            case "modelo" or "model":
+                RunSessionEdit(() =>
+                {
+                    var requested = rest.Trim();
+                    if (requested.Length == 0)
+                    {
+                        Console.WriteLine($"  modelo actual: {settings.Model}");
+                        return;
+                    }
+
+                    var selected = NvidiaOptions.SupportedModels.FirstOrDefault(m =>
+                        string.Equals(m, requested, StringComparison.OrdinalIgnoreCase)
+                        || (requested.Equals("glm", StringComparison.OrdinalIgnoreCase) && m == NvidiaOptions.FallbackModelId)
+                        || (requested.Equals("kimi", StringComparison.OrdinalIgnoreCase) && m == NvidiaOptions.KimiK3ModelId));
+
+                    if (selected is null)
+                    {
+                        throw new InvalidOperationException($"modelo no reconocido: '{requested}'. Usa 'modelos'.");
+                    }
+
+                    settings.Model = selected;
+                    thread.Variables.Set("modelo", selected);
+                    Console.WriteLine($"  modelo cambiado a: {selected}");
+                });
+                return true;
+
+            case "stream" or "vivo":
+                RunSessionEdit(() =>
+                {
+                    var value = rest.Trim();
+                    if (value.Length > 0)
+                    {
+                        settings.Stream = value.ToLowerInvariant() switch
+                        {
+                            "on" or "si" or "true" or "1" => true,
+                            "off" or "no" or "false" or "0" => false,
+                            _ => throw new InvalidOperationException($"stream: valor no reconocido '{value}' (usa on u off)."),
+                        };
+                    }
+
+                    Console.WriteLine($"  stream: {(settings.Stream ? "activo (se pinta segun llega)" : "apagado (respuesta completa)")}");
+                });
+                return true;
+
+            case "pensar" or "thinking":
+                RunSessionEdit(() =>
+                {
+                    var value = rest.Trim();
+                    if (value.Length > 0)
+                    {
+                        // El presupuesto se acepta pegado: 'pensar on 512'.
+                        var parts = value.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+                        policy.Preference = ThinkingPolicy.ParsePreference(parts[0]);
+                        if (parts.Length > 1 && int.TryParse(parts[1], out var budget))
+                        {
+                            policy.BudgetTokens = budget;
+                        }
+                    }
+
+                    Console.WriteLine($"  thinking: {DescribeThinking(policy, model)}");
+                });
+                return true;
+
+            case "nuevo" or "reset":
+                thread.Clear();
+                Console.WriteLine("Hilo reiniciado; las variables y la plantilla se mantienen.");
+                return true;
+
+            case "historial":
+                PrintThread(thread);
+                return true;
+
+            case "vars":
+                PrintVariables(thread);
+                return true;
+
+            case "sistema":
+                PrintSystemPrompt(thread);
+                return true;
+
+            case "set":
+                RunSessionEdit(() =>
+                {
+                    thread.Variables.SetAssignment(rest);
+                    Console.WriteLine($"  {rest[..rest.IndexOf('=')].Trim()} = {thread.Variables[rest[..rest.IndexOf('=')].Trim()]}");
+                });
+                return true;
+
+            case "unset":
+                Console.WriteLine(thread.Variables.Remove(rest.Trim())
+                    ? $"  {rest.Trim()} eliminada."
+                    : $"  {rest.Trim()} no estaba definida.");
+                return true;
+
+            case "plantilla":
+                RunSessionEdit(() =>
+                {
+                    var template = File.Exists(rest)
+                        ? PromptTemplate.Parse(File.ReadAllText(rest))
+                        : PromptTemplate.Parse(rest);
+
+                    thread.UseSystemTemplate(template);
+                    Console.WriteLine($"  plantilla cargada ({template.Placeholders.Count} variables).");
+                    PrintSystemPrompt(thread);
+                });
+                return true;
+
+            default:
+                return false;
+        }
+    }
+
+
+    /// <summary>Los errores de plantilla no deben tumbar la sesion, solo el comando.</summary>
+    private static void RunSessionEdit(Action edit)
+    {
+        try
+        {
+            edit();
+        }
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentOutOfRangeException or IOException or JsonException or UnauthorizedAccessException)
+        {
+            Console.Error.WriteLine($"  ERROR: {ex.Message}");
+        }
+    }
+
+
+    private static void PrintInteractiveBanner(ToolRegistry tools, SessionSettings settings)
+    {
+        Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
+        Console.WriteLine($"modelo: {settings.Model} | recursos: {string.Join(", ", tools.Names)}");
+        Console.WriteLine("operaciones: tarjeta, ejecutar, lanzar, esperar, leer, procesos, matar, observar, flujo");
+        Console.WriteLine($"modelos NVIDIA: {string.Join(", ", NvidiaOptions.SupportedModels)}");
+        Console.WriteLine($"thinking: {DescribeThinking(settings.Thinking, settings.Model)}");
+        Console.WriteLine($"stream: {(settings.Stream ? "activo" : "apagado")}");
+        Console.WriteLine();
+        Console.WriteLine("Motor principal: eventos, procesos y tarjetas; el cierre exige comprobacion.");
+        Console.WriteLine("  <texto libre>        publica un objetivo al reactor con memoria y antecedentes");
+        Console.WriteLine("  run <texto>          igual, explicito; guarda evidencia local de la operacion");
+        Console.WriteLine("  modelos              lista glm-5.3 y kimi-k3");
+        Console.WriteLine("  modelo <glm|kimi|id> cambia el modelo para la siguiente operacion");
+        Console.WriteLine("  nuevo                olvida la conversacion (mantiene variables y plantilla)");
+        Console.WriteLine("  historial            muestra los mensajes vivos del hilo");
+        Console.WriteLine("  contexto [compactar|limite N]   consulta o limita el historial en caracteres");
+        Console.WriteLine("  recordar clave=valor | memoria | olvidar clave   recuerdos por proyecto");
+        Console.WriteLine("  sesion guardar|cargar   guarda o recupera el historial local");
+        Console.WriteLine("  vars                 lista los parametros del prompt");
+        Console.WriteLine("  set clave=valor      define un parametro (p.ej. set idioma=ingles)");
+        Console.WriteLine("  unset clave          lo quita");
+        Console.WriteLine("  sistema              muestra el prompt de sistema ya interpolado");
+        Console.WriteLine("  plantilla <texto|archivo>   cambia la plantilla de sistema");
+        Console.WriteLine("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
+        Console.WriteLine("  stream on|off        pinta la respuesta segun llega o de golpe");
+        Console.WriteLine("  estado | pausa | reanudar | cancelar   controles de la operacion activa");
+        Console.WriteLine("  aprobar | rechazar   responde a una solicitud de autorizacion");
+        Console.WriteLine("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
+        Console.WriteLine("  discover | selftest | ayuda   utilidades sueltas");
+        Console.WriteLine("  salir                cierra");
+        Console.WriteLine();
+    }
+
+
+    private static void PrintThread(ConversationSession thread)
+    {
+        if (thread.Messages.Count == 0)
+        {
+            Console.WriteLine("  (hilo vacio)");
+            return;
+        }
+
+        foreach (var message in thread.Messages)
+        {
+            // Un assistant que solo pide herramientas llega con content vacio, no nulo.
+            var body = string.IsNullOrWhiteSpace(message.Content)
+                ? (message.ToolCalls is not null ? "(tool_calls)" : "(vacio)")
+                : message.Content;
+            Console.WriteLine($"  {message.Role,-9} {Shorten(body.Replace('\n', ' '), 90)}");
+        }
+
+        Console.WriteLine($"  -- {thread.Messages.Count} mensajes, tope {thread.MaxMessages}");
+    }
+
+
+    private static void PrintVariables(ConversationSession thread)
+    {
+        foreach (var name in thread.Variables.Names)
+        {
+            Console.WriteLine(DataGuard.Display($"  {name,-14} = {Shorten(thread.Variables[name].Replace('\n', ' '), 80)}"));
+        }
+
+        var missing = thread.SystemTemplate.MissingVariables(thread.Variables);
+        if (missing.Count > 0)
+        {
+            Console.WriteLine($"  FALTAN: {string.Join(", ", missing)}");
+        }
+    }
+
+
+    private static void PrintSystemPrompt(ConversationSession thread)
+    {
+        try
+        {
+            Console.WriteLine("  --- prompt de sistema ---");
+            foreach (var line in thread.RenderSystemPrompt().Split('\n'))
+            {
+                Console.WriteLine(DataGuard.Display($"  {line}"));
+            }
+        }
+        catch (PromptTemplateException ex)
+        {
+            Console.Error.WriteLine($"  ERROR: {ex.Message}");
+        }
+    }
+
+
+    /// <summary>
+    /// Trocea una linea en argumentos respetando comillas dobles, para que
+    /// run "Suma 17 y 23" llegue como un solo argumento igual que desde la shell.
+    /// </summary>
+    private static string[] SplitArguments(string line)
+    {
+        var tokens = new List<string>();
+        var current = new StringBuilder();
+        var inQuotes = false;
+        var hasToken = false;
+
+        foreach (var ch in line)
+        {
+            if (ch == '"')
+            {
+                inQuotes = !inQuotes;
+                hasToken = true; // "" es un argumento vacio deliberado, no ruido
+                continue;
+            }
+
+            if (!inQuotes && char.IsWhiteSpace(ch))
+            {
+                if (hasToken)
+                {
+                    tokens.Add(current.ToString());
+                    current.Clear();
+                    hasToken = false;
+                }
+
+                continue;
+            }
+
+            current.Append(ch);
+            hasToken = true;
+        }
+
+        if (hasToken)
+        {
+            tokens.Add(current.ToString());
+        }
+
+        return [.. tokens];
+    }
+
+}

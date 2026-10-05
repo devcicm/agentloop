@@ -23,5 +23,5 @@ Las rutas temporales de los logs son ubicaciones de fixtures; no se promete su
 retencion permanente. La evidencia original POS permanece en .agentloop ignorado;
 el extracto permite identificarla por hash. No hubo nueva inferencia NVIDIA.
 
-Descripcion: [incidente](../../incidentes/pos-planeacion-sin-ejecucion-2026-10-01.md)
-y [arquitectura vigente](../../harness-eventos.md).
+Descripcion: [incidente](../../incidents/pos-planeacion-sin-ejecucion-2026-10-01.md)
+y [arquitectura vigente](../../architecture/harness-eventos.md).

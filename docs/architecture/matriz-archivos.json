@@ -1,0 +1,2711 @@
+[
+  {
+    "source": "Cards/CardLedger.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Cards/CardLedger.cs",
+      "src/AgentLoop.Core/Cards/CardPlay.cs",
+      "src/AgentLoop.Core/Cards/CardTransaction.cs"
+    ],
+    "types": [
+      "CardPlay",
+      "CardTransaction",
+      "CardLedger"
+    ],
+    "namespace": "AgentLoop.Cards",
+    "imports": [
+      "System.Text"
+    ],
+    "purpose": "Una jugada: la tarjeta que intento el agente y que dijo el sistema.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Cards/StateCard.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Cards/CardDeck.cs",
+      "src/AgentLoop.Core/Cards/CardKind.cs",
+      "src/AgentLoop.Core/Cards/StateCard.cs"
+    ],
+    "types": [
+      "CardKind",
+      "StateCard",
+      "CardDeck"
+    ],
+    "namespace": "AgentLoop.Cards",
+    "imports": [
+      "System.Text"
+    ],
+    "purpose": "Papel que cumple la tarjeta dentro de la transaccion.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Cli/ProjectCommands.cs",
+    "destinations": [
+      "src/AgentLoop.Cli/Commands/Program.Arguments.cs",
+      "src/AgentLoop.Cli/Commands/Program.Chat.cs",
+      "src/AgentLoop.Cli/Commands/Program.Diagnosis.cs",
+      "src/AgentLoop.Cli/Commands/Program.Discovery.cs",
+      "src/AgentLoop.Cli/Commands/Program.Dispatch.cs",
+      "src/AgentLoop.Cli/Commands/Program.Journey.cs",
+      "src/AgentLoop.Cli/Commands/Program.Operations.cs",
+      "src/AgentLoop.Cli/Commands/Program.Presentation.cs",
+      "src/AgentLoop.Cli/Commands/Program.Projects.cs",
+      "src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs",
+      "src/AgentLoop.Cli/Commands/Program.Verification.cs",
+      "src/AgentLoop.Cli/Interactive/Program.Interactive.cs",
+      "src/AgentLoop.Cli/Program.cs",
+      "tests/AgentLoop.SelfTests/Legacy/BuiltInSelfTests.cs",
+      "tests/AgentLoop.SelfTests/Program.cs"
+    ],
+    "types": [
+      "Program"
+    ],
+    "namespace": "AgentLoop",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Provider",
+      "AgentLoop.Goals.Projects",
+      "AgentLoop.Configuration",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Program",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Configuration/SecretStore.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Credentials/SecretStore.cs"
+    ],
+    "types": [
+      "SecretStore"
+    ],
+    "namespace": "AgentLoop.Configuration",
+    "imports": [],
+    "purpose": "Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Core/Context/ProjectContextBudget.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Context/ProjectContextBudget.cs",
+      "src/AgentLoop.Core/Context/Utf8TokenBudgetEstimator.cs"
+    ],
+    "types": [
+      "Utf8TokenBudgetEstimator",
+      "ProjectContextBudget"
+    ],
+    "namespace": "AgentLoop.Harness.Context",
+    "imports": [
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Provider",
+      "AgentLoop.Kernel.Projects"
+    ],
+    "purpose": "Conservative UTF-8 byte upper bound; explicitly not a tokenizer count.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Core/LLM/ResponseBudgets.cs",
+    "destinations": [
+      "src/AgentLoop.Core/LLM/ResponseBudgets.cs"
+    ],
+    "types": [
+      "ResponseBudgets"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "ResponseBudgets",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Core/Projects/Contracts/ProjectExecutionDtos.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Projects/Contracts/ProjectEventDataDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ProjectSnapshotDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ProjectWorkStatus.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ValidationResultDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/WorkStateDto.cs"
+    ],
+    "types": [
+      "ProjectWorkStatus",
+      "WorkStateDto",
+      "ValidationResultDto",
+      "ProjectSnapshotDto",
+      "ProjectEventDataDto"
+    ],
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "imports": [],
+    "purpose": "ProjectWorkStatus, WorkStateDto, ValidationResultDto, ProjectSnapshotDto, ProjectEventDataDto",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Core/Projects/Contracts/ProjectGoalDto.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Projects/Contracts/ArtifactSpecDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ProjectBudgetsDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ProjectGoalDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ProjectJson.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ValidationParametersDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/ValidationSpecDto.cs",
+      "src/AgentLoop.Core/Projects/Contracts/WorkItemDto.cs"
+    ],
+    "types": [
+      "ProjectGoalDto",
+      "WorkItemDto",
+      "ArtifactSpecDto",
+      "ValidationSpecDto",
+      "ValidationParametersDto",
+      "ProjectBudgetsDto",
+      "ProjectJson"
+    ],
+    "namespace": "AgentLoop.Goals.Projects.Contracts",
+    "imports": [
+      "System.Text.Json.Serialization"
+    ],
+    "purpose": "ProjectGoalDto, WorkItemDto, ArtifactSpecDto, ValidationSpecDto, ValidationParametersDto, ProjectBudgetsDto, ProjectJson",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Core/Projects/ProjectKnowledge.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Projects/ArtifactKnowledge.cs",
+      "src/AgentLoop.Core/Projects/ProjectKnowledge.cs",
+      "src/AgentLoop.Core/Projects/ProjectKnowledgeSnapshot.cs"
+    ],
+    "types": [
+      "ArtifactKnowledge",
+      "ProjectKnowledgeSnapshot",
+      "ProjectKnowledge"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [],
+    "purpose": "ArtifactKnowledge, ProjectKnowledgeSnapshot, ProjectKnowledge",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Core/Projects/ProjectState.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Projects/ProjectState.cs"
+    ],
+    "types": [
+      "ProjectState"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "AgentLoop.Goals.Projects.Contracts"
+    ],
+    "purpose": "Mutated only by the operation mailbox; dependency scheduling is triggered by events.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Core/Projects/ProjectValidatorPort.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Projects/IProjectValidator.cs",
+      "src/AgentLoop.Core/Projects/IProjectValidatorFactory.cs",
+      "src/AgentLoop.Core/Projects/ValidationObservation.cs"
+    ],
+    "types": [
+      "ValidationObservation",
+      "IProjectValidator",
+      "IProjectValidatorFactory"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Kernel.Projects"
+    ],
+    "purpose": "ValidationObservation, IProjectValidator, IProjectValidatorFactory",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Discovery/AgenticModelSelector.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Discovery/ModelCapabilityProbe.cs",
+      "src/AgentLoop.Infrastructure/Providers/Discovery/SelectionResult.cs"
+    ],
+    "types": [
+      "SelectionResult",
+      "AgenticModelSelector"
+    ],
+    "namespace": "AgentLoop.Discovery",
+    "imports": [
+      "System.Diagnostics",
+      "System.Text.Json",
+      "AgentLoop.Parsing",
+      "AgentLoop.Provider",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Salida del sondeo: los modelos agenticos encontrados y todo lo que se probo.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Discovery/ModelCapabilityReport.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Discovery/CapabilityNames.cs",
+      "src/AgentLoop.Infrastructure/Providers/Discovery/CapabilityProbe.cs",
+      "src/AgentLoop.Infrastructure/Providers/Discovery/ModelCapabilityReport.cs"
+    ],
+    "types": [
+      "CapabilityNames",
+      "CapabilityProbe",
+      "ModelCapabilityReport"
+    ],
+    "namespace": "AgentLoop.Discovery",
+    "imports": [],
+    "purpose": "Nombres de las sondas, estables para que el JSON de salida sea comparable entre corridas.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Events/AgentEvent.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/Events/AgentEvent.cs"
+    ],
+    "types": [
+      "AgentEvent"
+    ],
+    "namespace": "AgentLoop.Events",
+    "imports": [
+      "AgentLoop.Security",
+      "AgentLoop.Prompting"
+    ],
+    "purpose": "Un suceso del sistema. Es la unidad que mueve el harness: el agente despierta con eventos, no porque a alguien le toque hablar.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Events/EventArchitectureSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Events/EventArchitectureSelfTest.cs"
+    ],
+    "types": [
+      "EventArchitectureSelfTest"
+    ],
+    "namespace": "AgentLoop.Events",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Concurrency",
+      "AgentLoop.Goals",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools",
+      "AgentLoop.StateMachines"
+    ],
+    "purpose": "Contratos de activacion del reactor, sin proveedor remoto.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Events/EventBus.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Events/EventBus.cs"
+    ],
+    "types": [
+      "EventBus"
+    ],
+    "namespace": "AgentLoop.Events",
+    "imports": [
+      "System.Collections.Concurrent",
+      "System.Diagnostics",
+      "System.Text.Json",
+      "AgentLoop.Concurrency"
+    ],
+    "purpose": "Cola de sucesos con senal. Cualquiera publica desde cualquier hilo (handlers de salida de procesos, temporizadores, herramientas) y el agente se entera esperando la senal. La senal es un reset event automatico y no un contador: quien espera no gira en vacio ni bloquea un hilo, y una publicacion no se pierde aunque llegue justo cuando nadie estaba esperando todavia.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/AcceptanceCriteria.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Goals/AcceptanceCriteria.cs"
+    ],
+    "types": [
+      "AcceptanceCriteria"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.RegularExpressions"
+    ],
+    "purpose": "Criterios de aceptación derivados del objetivo de una transacción, al estilo agentico (TaskContract): ninguna tarea nace sin criterios; si el objetivo no los declara explícitamente, se derivan de su texto. Hoy los criterios son rutas de archivo mencionadas en el objetivo (notes/informe.md, data/salida.json...). Un objetivo sin menciones de archivo no produce criterios y queda gobernado por las reglas existentes del libro mayor (apertura, comprobación obligatoria, cierre en orden).",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/DispatcherPipelineProbe.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Goals/DispatcherPipelineProbe.cs"
+    ],
+    "types": [
+      "DispatcherPipelineProbe"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Steps",
+      "AgentLoop.Harness.Testing",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Verifica directamente que el path fake-client -> parser -> dispatcher -> ledger funciona para un caso simple. Sin reactor, sin loop: el fake devuelve tool_calls, el reactor las extrae, las ejecuta, el ledger.Play registra. Si el ledger no tiene plays, el bug esta en ese path; si tiene, el bug esta en el loop o en el reactor (que se prueba con selftest regular).",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/DispatcherStressSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Goals/DispatcherStressSelfTest.cs"
+    ],
+    "types": [
+      "DispatcherStressSelfTest"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Collections.Concurrent",
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Steps",
+      "AgentLoop.Harness.Testing",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Stress test del dispatcher: corre N harnesses completos (secuencial y paralelo) y verifica que el pipeline entero termina consistente: - El loop avanzo al menos un ciclo (no se quedo en Arranque). - El primer mensaje es System (contrato del prompt de sistema). - Hay mensajes Assistant (el modelo respondio). - Cada ToolResult va precedido de un Assistant (sin tool results huerfanos que harian rechazar el siguiente request al gateway). - El bus no pierde eventos (History.Count == Published). - El ledger avanzo: el modelo jugo \"abrir\" en algun momento. Sin red ni disco (el FakeLLMClient no toca nada). El MultiToolFakeClient devuelve una respuesta con N tool_calls por llamada: alterna \"tarjeta\" (abrir en el primer batch, avanzar despues) y \"ejecutar\" (comando trivial que retorna 0). Asi se ejercitan los dos caminos del dispatcher.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/EventCoordinatorSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Goals/EventCoordinatorSelfTest.cs"
+    ],
+    "types": [
+      "EventCoordinatorSelfTest"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Harness",
+      "AgentLoop.Harness.Durable",
+      "AgentLoop.Parsing",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Pruebas de contratos observables del coordinador de eventos, sin red.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/EventDrivenAgent.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/Reactor/LegacyEventDrivenAgent.cs",
+      "src/AgentLoop.Compatibility/Reactor/ReactorState.cs"
+    ],
+    "types": [
+      "ReactorState",
+      "EventDrivenAgent"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text",
+      "System.Text.Json",
+      "System.Diagnostics",
+      "AgentLoop.Events",
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "AgentLoop.StateMachines",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Estados del reactor. No son turnos: son fases de una reaccion a lo que pasa.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/EventOperationCoordinator.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Operations/EventOperationCoordinator.cs",
+      "src/AgentLoop.Harness/Operations/EventOperationResult.cs",
+      "src/AgentLoop.Harness/Operations/OperationStatus.cs"
+    ],
+    "types": [
+      "OperationStatus",
+      "EventOperationResult",
+      "EventOperationCoordinator"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Collections.Concurrent",
+      "System.Diagnostics",
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Harness",
+      "AgentLoop.Harness.Durable",
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "AgentLoop.Tools",
+      "AgentLoop.Security",
+      "AgentLoop.Security.Contracts",
+      "AgentLoop.Goals.Projects",
+      "AgentLoop.Harness.Context"
+    ],
+    "purpose": "OperationStatus, EventOperationResult, EventOperationCoordinator",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/EvidenceManifest.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Evidence/EvidenceEntry.cs",
+      "src/AgentLoop.Core/Evidence/EvidenceSnapshot.cs",
+      "src/AgentLoop.Infrastructure/Files/EvidenceManifest.cs"
+    ],
+    "types": [
+      "EvidenceEntry",
+      "EvidenceSnapshot",
+      "EvidenceManifest"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text"
+    ],
+    "purpose": "Una verificación de artefacto: qué se miró, cuánto pesaba y su hash.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/GoalContext.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Goals/Goal.cs",
+      "src/AgentLoop.Harness/Operations/GoalContext.cs"
+    ],
+    "types": [
+      "Goal",
+      "GoalContext"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Lo que se persigue y con que presupuesto. El objetivo no se da por cumplido por tiempo ni por numero de pasos: solo por la tarjeta de cierre, que es lo unico que el sistema acepta como final.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/OperationAcceptance.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Operations/Acceptance/ArtifactCriterion.cs",
+      "src/AgentLoop.Harness/Operations/Acceptance/ObservationReceipt.cs",
+      "src/AgentLoop.Harness/Operations/Acceptance/OperationAcceptance.cs"
+    ],
+    "types": [
+      "ArtifactCriterion",
+      "ObservationReceipt",
+      "OperationAcceptance"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "ArtifactCriterion, ObservationReceipt, OperationAcceptance",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/OperationAdmission.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Operations/Admission/OperationAdmission.cs"
+    ],
+    "types": [
+      "OperationAdmission"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Harness",
+      "AgentLoop.Parsing",
+      "AgentLoop.Terminals",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Puerta comun de tarjetas y politica, aplicada antes de cada herramienta.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/OperationContextBuilder.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Context/OperationContextBuilder.cs",
+      "src/AgentLoop.Harness/Context/OperationTaskContext.cs"
+    ],
+    "types": [
+      "OperationTaskContext",
+      "OperationContextBuilder"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.RegularExpressions",
+      "AgentLoop.Provider",
+      "AgentLoop.Security"
+    ],
+    "purpose": "OperationTaskContext, OperationContextBuilder",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/OperationContract.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Context/OperationContract.cs"
+    ],
+    "types": [
+      "OperationContract"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text",
+      "AgentLoop.Prompting",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Contrato compartido de tarjetas y entorno, independiente de ejecutores.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/OperationTools.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Tools/OperationTools.cs"
+    ],
+    "types": [
+      "OperationTools"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Las herramientas con las que el agente opera: jugar tarjetas de estado y manejar terminales. Reparto deliberado: ejecutar es para lo corto (espera el resultado), y lanzar + esperar / leer / observar es para lo largo, que es lo que evita que el agente se quede parado delante de un proceso de diez minutos. Ninguna de las dos bloquea un hilo: la espera es sobre reset events.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/Projects/ProjectContractAdmission.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Projects/Contracts/AdmittedProjectContract.cs",
+      "src/AgentLoop.Infrastructure/Projects/ProjectContractAdmission.cs"
+    ],
+    "types": [
+      "AdmittedProjectContract",
+      "ProjectContractAdmission"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Immutable admitted snapshot. DTO access returns a fresh copy, never authoritative mutable state.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/Projects/ProjectRecovery.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Projects/ProjectRecoveryInspection.cs",
+      "src/AgentLoop.Harness/Projects/ReconciliationDto.cs",
+      "src/AgentLoop.Infrastructure/Projects/ProjectRecovery.cs"
+    ],
+    "types": [
+      "ProjectRecoveryInspection",
+      "ReconciliationDto",
+      "ProjectRecovery"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text.Json",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Security",
+      "AgentLoop.Kernel.Projects"
+    ],
+    "purpose": "ProjectRecoveryInspection, ReconciliationDto, ProjectRecovery",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Goals/Projects/ProjectRuntime.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Projects/ProjectRuntime.cs"
+    ],
+    "types": [
+      "ProjectRuntime"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "System.Collections.Concurrent",
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Kernel.Projects",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Parsing",
+      "AgentLoop.Security",
+      "AgentLoop.Tools",
+      "AgentLoop.Concurrency"
+    ],
+    "purpose": "Project projection owned by the existing actor. Async validators return immutable deliveries.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/Projects/ProjectScriptClient.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Fixtures/ProjectFixtureClient.cs"
+    ],
+    "types": [
+      "ProjectScriptClient"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Explicit deterministic fixture, never selected for normal model runs.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/Projects/ProjectSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Goals/Projects/ProjectSelfTest.cs"
+    ],
+    "types": [
+      "ProjectSelfTest"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "System.Text.Json",
+      "System.Text.Json.Nodes",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Harness",
+      "AgentLoop.Harness.Context",
+      "AgentLoop.Harness.Execution",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Kernel.Projects",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "ProjectSelfTest",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/Projects/ProjectValidationExecutor.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Projects/ProjectValidationExecutor.cs"
+    ],
+    "types": [
+      "ProjectValidationExecutor"
+    ],
+    "namespace": "AgentLoop.Goals.Projects",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text.Json",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Kernel.Projects",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Security",
+      "AgentLoop.Concurrency"
+    ],
+    "purpose": "ProjectValidationExecutor",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/TruncationRecoverySelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Goals/TruncationRecoverySelfTest.cs"
+    ],
+    "types": [
+      "TruncationRecoverySelfTest"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Verifica el camino de recuperacion de truncamiento: si la primera respuesta del modelo se corta por max_tokens (finish_reason=length, sin tool calls), el reactor sube el presupuesto de tokens y le pide actuar. El fake registra el MaxTokens de cada request: la segunda llamada debe pedir mas tokens que la primera, y el ledger debe acabar con el abrir que el modelo emite al recuperarse. Sin red: el fake responde con una fixture distinta en cada llamada.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Goals/WatchdogSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Goals/WatchdogSelfTest.cs"
+    ],
+    "types": [
+      "WatchdogSelfTest"
+    ],
+    "namespace": "AgentLoop.Goals",
+    "imports": [
+      "System.Diagnostics",
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Self-test del watchdog del deadline. Lo que se valida: - Un goal con deadline de 1s y un cliente que se cuelga 10s termina en menos de 5s con Fallido (no se queda esperando 10s). - El DeadlineReached flag queda en true. - El catch de cancelacion por usuario (externo) NO marca DeadlineReached (es cancelacion, no timeout).",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Composition/CommandHeader.cs",
+    "destinations": [
+      "src/AgentLoop.Cli/Presentation/CommandHeader.cs"
+    ],
+    "types": [
+      "CommandHeader"
+    ],
+    "namespace": "AgentLoop.Harness.Composition",
+    "imports": [],
+    "purpose": "Banner homogeneo que imprimen los comandos del CLI al arrancar: muestra key, modelo, politica, objetivo y herramientas, sin que cada comando tenga que reinventar el formato. Asi chat, run, goal y journal se ven consistentes.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Composition/CompositionSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Harness/Composition/CompositionSelfTest.cs"
+    ],
+    "types": [
+      "CompositionSelfTest"
+    ],
+    "namespace": "AgentLoop.Harness.Composition",
+    "imports": [
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Harness.Core",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Steps",
+      "AgentLoop.Harness.Testing",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Self-test del Composition Root: verifica que el setup que produce la factory tiene los componentes esperados, que estan cableados entre si, y que las tres consumidores hipoteticos (Program.cs::GoalAsync, Program.cs::JournalAsync, GoalRunner.RunAsync) producen resultados equivalentes en su SelfTest ya existente.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Composition/GoalRunFactory.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Composition/GoalRunFactory.cs"
+    ],
+    "types": [
+      "GoalRunFactory"
+    ],
+    "namespace": "AgentLoop.Harness.Composition",
+    "imports": [
+      "AgentLoop.Cards",
+      "AgentLoop.Configuration",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Core",
+      "AgentLoop.Harness.Durable",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Runner",
+      "AgentLoop.Harness.Steps",
+      "AgentLoop.Harness.Traceability",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Composicion compartida del harness de operaciones: monta bus con identidad causal, supervisor, tarjetas, registro canonical de tools filtrado por Scope, contexto y captura local de evidencia. GoalRunner usa el actor por eventos; el puerto ILLMClient separa al proveedor del motor.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Composition/ProjectServices.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Profiles/ProjectServices.cs",
+      "src/AgentLoop.Infrastructure/Composition/ProjectProfileLoader.cs"
+    ],
+    "types": [
+      "ProjectServices",
+      "ProjectProfileLoader"
+    ],
+    "namespace": "AgentLoop.Harness.Composition",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Goals.Projects",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Harness.Execution",
+      "AgentLoop.Kernel.Projects",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Explicit host composition. An agent contract cannot install profiles or command handlers.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Concurrency/AsyncLock.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Concurrency/AsyncLock.cs"
+    ],
+    "types": [
+      "AsyncLock"
+    ],
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "imports": [],
+    "purpose": "Mutex asincrono: el equivalente async de lock . Garantiza exclusion mutua entre callers sin bloquear hilos del pool: quien pide el lock se queda en una Task hasta que el owner lo libera. Lo que el AsyncManualResetEvent hace para esperar senales, esto lo hace para exclusion mutua: serializa secciones criticas (modificar el ledger, transicionar el lifecycle del Run, escribir el Snapshot) manteniendo el modelo async de C#. Tiene dos formas de adquisicion: para contextos async (no bloquea hilo) y para contextos sync (la seccion critica no tiene awaits). Misma exclusion, distinto coste. Uso tipico: private static readonly AsyncLock _gate = new(); using var guard = await _gate.LockAsync(ct); // async using var sync = _gate.Lock(); // sync (solo dentro de secciones sin await)",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Concurrency/ConcurrencySelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Harness/Concurrency/ConcurrencySelfTest.cs"
+    ],
+    "types": [
+      "ConcurrencySelfTest"
+    ],
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "imports": [],
+    "purpose": "Verifica que las primitivas de concurrencia e idempotencia aguantan el uso real: 64 hilos compitiendo por el mismo lock, la misma clave de cache, o calculando el mismo hash. Lo que se valida: - AsyncLock serializa N callers: solo uno dentro a la vez, los demas esperan, y todos acaban sin perdida ni duplicacion. - IdempotencyCache con 256 entradas: 1000 claves distintas caben y cada TryGet devuelve su valor; la eviction LRU descarta las mas viejas cuando se llena. - IdempotencyKey.ComputeKey es determinista: el mismo input produce la misma clave aunque el orden de los argumentos cambie. - CardLedger.Play desde 64 hilos: la cuenta de jugadas aceptadas cuadra exactamente, sin perdidas ni duplicadas.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Concurrency/IdempotencyCache.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Concurrency/IdempotencyCache.cs"
+    ],
+    "types": [
+      "IdempotencyCache"
+    ],
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "imports": [
+      "System.Collections.Concurrent"
+    ],
+    "purpose": "Cache bounded para resultados de tools idempotentes. La primera llamada ejecuta el factory y cachea; las siguientes con la misma clave devuelven el resultado cacheado sin reejecutar. El tope es LRU: cuando se llega al maximo, la entrada mas vieja se descarta. Asi el cache no crece sin freno si el modelo genera miles de claves distintas por descuido. El cache vive dentro de un Run: se construye en GoalRunFactory y se invalida (vía Clear) cuando el Run termina. Asi nunca se sirven resultados de un Run anterior. Concurrencia: internamente cada entrada es un con ExecutionAndPublication , asi si N hilos llaman GetOrAdd con la misma clave al mismo tiempo solo uno ejecuta el factory; los demas esperan al Lazy y obtienen el mismo valor. Caducidad (agentico: TTL al leer): cada entrada lleva su instante de expiracion. Al leer, una entrada caducada se trata como miss: se descarta y se recrea. Sin TTL (null) las entradas no caducan.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Concurrency/IdempotencyKey.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Concurrency/IdempotencyKey.cs"
+    ],
+    "types": [
+      "IdempotencyKey"
+    ],
+    "namespace": "AgentLoop.Harness.Concurrency",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text"
+    ],
+    "purpose": "Hash determinista para identificar de forma unica una llamada a una tool. Mismo (tool + argumentos) = misma clave, sin importar el orden de las claves del JSON. Pensado para alimentar el : si el modelo llama dos veces a leer con los mismos argumentos, el cache devuelve la primera respuesta sin ejecutar el tool. Regla de agentico (HARNESS_CONTRACTS): fingerprint canonico, nunca serializacion cruda. JSON.stringify respeta el orden de insercion, asi que el mismo argumento reordenado esquivaria el dedup. Aqui las claves de objeto se ordenan recursivamente antes de hashear (los arrays conservan su orden: el orden de una lista de pasos es significativo). Si el texto no parsea como JSON, se hashea crudo (documentado, no silencioso: el caller ve claves distintas por formato distinto). SHA-256 sobre UTF-8: 32 bytes deterministas, sin colisiones relevantes para los pocos cientos de tools que un Run maneja en su vida.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Core/Journey.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/Journey.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/JourneyWriter.cs"
+    ],
+    "types": [
+      "Journey",
+      "JourneyWriter"
+    ],
+    "namespace": "AgentLoop.Harness.Core",
+    "imports": [
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Steps"
+    ],
+    "purpose": "Narrativa legible de un Run: Run + Steps en orden + resumen estructurado + un escritor que produce markdown y json para inspeccion post-mortem. El Journey se construye al cerrar el Run y se entrega al console observer, al RunStore y a cualquier sink que quiera un resumen estable.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Core/JourneyDiagnosis.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/JourneyDiagnosis.cs"
+    ],
+    "types": [
+      "JourneyDiagnosis"
+    ],
+    "namespace": "AgentLoop.Harness.Core",
+    "imports": [
+      "System.Text.Json",
+      "System.Text.RegularExpressions"
+    ],
+    "purpose": "Diagnostico post-mortem de un run a partir de su snapshot persistido (artifacts/journeys/&lt;runId&gt;.json). Automatiza el procedimiento de diagnostico por etapas: clasifica el cierre, reconstruye la trayectoria de tarjetas, mide narracion vs herramientas, eficacia de los nudges, salidas de procesos con codigo distinto de cero, pausas entre pasos, archivos referenciados y recomienda la siguiente accion. Lee el JSON de forma defensiva (JsonDocument, sin deserializacion tipada): los snapshots viejos o parciales producen \"desconocido\" en vez de lanzar. Los snapshots no guardan BreakReason ni uso de tokens, asi que la clasificacion entre inanicion y otros fallos es heuristica y el informe lo dice explicitamente.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Core/MachineState.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/RunState.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/RunStatus.cs"
+    ],
+    "types": [
+      "RunStatus",
+      "MachineState"
+    ],
+    "namespace": "AgentLoop.Harness.Core",
+    "imports": [],
+    "purpose": "Estado por el que pasa un Run durante su vida.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Core/Run.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/Run.cs"
+    ],
+    "types": [
+      "Run"
+    ],
+    "namespace": "AgentLoop.Harness.Core",
+    "imports": [
+      "AgentLoop.Goals"
+    ],
+    "purpose": "Una operacion del agente como objeto de primera clase. Es la unidad que el Runner ejecuta, el Journey narra, el RunStore persiste y los observers observan. No se reusa entre Runs: cada intento es un Run nuevo, identificado por su Guid.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Core/RunContext.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/RunContext.cs"
+    ],
+    "types": [
+      "RunContext"
+    ],
+    "namespace": "AgentLoop.Harness.Core",
+    "imports": [
+      "AgentLoop.Goals"
+    ],
+    "purpose": "Estado vivo de una operacion dirigida por eventos, en el nivel del Run. Escribible desde el reactor; se reconstruye desde un Snapshot para reanudar; se serializa como JSON para persistir. Por ahora delega en GoalContext para el estado del modelo y del ledger; cuando el refactor del commit H cierre, GoalContext pasara a vivir dentro de RunContext y este tipo sera la unica raiz de estado.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Core/RunResult.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/RunResult.cs"
+    ],
+    "types": [
+      "RunResult"
+    ],
+    "namespace": "AgentLoop.Harness.Core",
+    "imports": [],
+    "purpose": "Resultado de un Run, como tipo suma con dos casos.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Durable/FileRunStore.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Persistence/FileRunStore.cs"
+    ],
+    "types": [
+      "FileRunStore"
+    ],
+    "namespace": "AgentLoop.Harness.Durable",
+    "imports": [
+      "System.Runtime.CompilerServices",
+      "System.Text.Json",
+      "AgentLoop.Harness.Core"
+    ],
+    "purpose": "Almacena cada Snapshot como un JSON en artifacts/runs/&lt;runId&gt;.json. La carpeta raiz se resuelve respecto a la raiz del repo (donde ya vive artifacts/agentic-models.json). Se ignora el contenido si la version del snapshot no coincide con la actual. Single writer (agentico): cada run escribe solo su propio &lt;runId&gt;.json y los RunId son Guid unicos por run, asi que dos runs nunca compiten por el mismo archivo. Dentro de un proceso, un solo GoalRunner escribe por run. No hay lock global porque no hay recurso compartido que proteger; si manana dos procesos escribieran el mismo directorio haria falta un lock por directorio (InstanceLock). El listado es eager (recorre el directorio) porque se espera que el numero de Runs por sesion sea bajo; si crece, se puede cambiar a un indice o a SQLite sin tocar la interfaz.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Durable/IRunStore.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Persistence/Contracts/IRunStore.cs"
+    ],
+    "types": [
+      "IRunStore"
+    ],
+    "namespace": "AgentLoop.Harness.Durable",
+    "imports": [],
+    "purpose": "Persistencia de Runs. La interfaz es minima para poder cambiar mañana el backend (SQLite, Redis, S3) sin tocar el resto del harness. SaveAsync se invoca desde el GoalRunner en checkpoints. LoadAsync se usa cuando el CLI recibe un --resume &lt;runId&gt;. ListAsync sirve para inspeccion (el comando 'journeys' podria listar los Runs recientes).",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Durable/OperationEventJournal.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Persistence/Contracts/JournalEntry.cs",
+      "src/AgentLoop.Harness/Persistence/Contracts/RecoveryInspection.cs",
+      "src/AgentLoop.Infrastructure/Persistence/OperationEventJournal.cs"
+    ],
+    "types": [
+      "JournalEntry",
+      "RecoveryInspection",
+      "OperationEventJournal"
+    ],
+    "namespace": "AgentLoop.Harness.Durable",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Events",
+      "AgentLoop.Security"
+    ],
+    "purpose": "JournalEntry, RecoveryInspection, OperationEventJournal",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Durable/RunSnapshot.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Persistence/Contracts/RunSnapshot.cs"
+    ],
+    "types": [
+      "RunSnapshot"
+    ],
+    "namespace": "AgentLoop.Harness.Durable",
+    "imports": [
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Core",
+      "AgentLoop.Harness.Steps"
+    ],
+    "purpose": "Foto serializable de un Run en un instante dado: lo necesario para reanudar despues de un crash o Ctrl-C. Deliberadamente guarda los Steps completos y los Metrics, no solo el estado del reactor: la inspeccion post-mortem vale mas que reanudar exactamente desde el ultimo ciclo. Versionado por si el formato cambia: si subimos Major, los snapshots viejos se rechazan en LoadAsync. Los campos opcionales con valor por defecto (como Evidence) NO suben version: los snapshots viejos que no los traen deserializan con el valor por defecto.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Execution/ArtifactProjectEnvironment.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactEnvironmentFactory.cs",
+      "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectEnvironment.cs"
+    ],
+    "types": [
+      "ArtifactEnvironmentFactory",
+      "ArtifactProjectEnvironment"
+    ],
+    "namespace": "AgentLoop.Harness.Execution",
+    "imports": [
+      "AgentLoop.Kernel.Projects"
+    ],
+    "purpose": "ArtifactEnvironmentFactory, ArtifactProjectEnvironment",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Execution/DockerProjectEnvironment.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Execution/Docker/DockerEnvironmentFactory.cs",
+      "src/AgentLoop.Infrastructure/Execution/Docker/DockerProjectEnvironment.cs"
+    ],
+    "types": [
+      "DockerEnvironmentFactory",
+      "DockerProjectEnvironment"
+    ],
+    "namespace": "AgentLoop.Harness.Execution",
+    "imports": [
+      "System.Diagnostics",
+      "System.Text",
+      "System.Security.Cryptography",
+      "AgentLoop.Kernel.Projects",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Host-selected profiles only. No shell, no host env forwarded, read-only project mount, no external network.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Execution/ProjectValidators.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectValidator.cs",
+      "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactValidatorFactory.cs",
+      "src/AgentLoop.Infrastructure/Execution/Validation/CommandProjectValidator.cs",
+      "src/AgentLoop.Infrastructure/Execution/Validation/CommandValidatorFactory.cs"
+    ],
+    "types": [
+      "ArtifactValidatorFactory",
+      "CommandValidatorFactory",
+      "ArtifactProjectValidator",
+      "CommandProjectValidator"
+    ],
+    "namespace": "AgentLoop.Harness.Execution",
+    "imports": [
+      "AgentLoop.Goals.Projects",
+      "AgentLoop.Goals.Projects.Contracts",
+      "AgentLoop.Kernel.Projects",
+      "AgentLoop.Security"
+    ],
+    "purpose": "ArtifactValidatorFactory, CommandValidatorFactory, ArtifactProjectValidator, CommandProjectValidator",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Functional/Composable.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Primitives/Composable.cs",
+      "src/AgentLoop.Core/Primitives/IComposable.cs"
+    ],
+    "types": [
+      "IComposable",
+      "Composable"
+    ],
+    "namespace": "AgentLoop.Harness.Functional",
+    "imports": [],
+    "purpose": "Una funcion pura que se puede componer con otras: dada una entrada, produce una salida. Es el primer pilar de la programacion funcional expresado como tipo: las funciones son valores que se pueden pasar, guardar y combinar. No es obligatorio: una funcion anonima o un delegado valen. Pero si quieres que el codigo explicite \"esto se compone con aquello\", la interfaz lo deja claro en la firma.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Functional/Composition.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Primitives/FunctionComposition.cs"
+    ],
+    "types": [
+      "Composition"
+    ],
+    "namespace": "AgentLoop.Harness.Functional",
+    "imports": [],
+    "purpose": "Combinadores clasicos de programacion funcional: Pipe encadena funciones unarias en orden, Bind encadena funciones que devuelven Result&lt;R, E&gt;, Tap ejecuta un side-effect observador sin alterar el valor, y Kleisli permite componer funciones que devuelven Result.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Functional/Immutable.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Primitives/Immutable.cs"
+    ],
+    "types": [
+      "Immutable"
+    ],
+    "namespace": "AgentLoop.Harness.Functional",
+    "imports": [
+      "System.Collections.Immutable"
+    ],
+    "purpose": "Helpers de inmutabilidad: convertir listas mutables en inmutables, crear records a partir de otros con campos cambiados. El objetivo no es substituir a la keyword with de C# (que ya funciona en records), sino formalizar el contrato: cualquier valor que cruza un limite (hilo, scope, async) pasa por aqui y se vuelve inmutable de verdad, no solo nominal.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Functional/Lazy.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Primitives/Defer.cs",
+      "src/AgentLoop.Core/Primitives/LazyValue.cs"
+    ],
+    "types": [
+      "LazyValue",
+      "Defer"
+    ],
+    "namespace": "AgentLoop.Harness.Functional",
+    "imports": [],
+    "purpose": "Valor perezoso: la funcion que lo produce se evalua solo cuando alguien pide . Pensado para casos donde el coste de calcular un dato es alto y a veces no se necesita (por ejemplo, serializar un Snapshot solo cuando el archivo no esta al dia). No es thread-safe: si dos hilos llaman a Force a la vez, ambos ejecutan la funcion. Para eso ya existe Lazy&lt;T&gt; del framework; este tipo es mas ligero y explicito.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Functional/Pure.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Primitives/PureAttribute.cs",
+      "src/AgentLoop.Core/Primitives/PureFunction.cs"
+    ],
+    "types": [
+      "PureAttribute",
+      "PureFunction"
+    ],
+    "namespace": "AgentLoop.Harness.Functional",
+    "imports": [],
+    "purpose": "Marca una funcion como pura: su salida depende solo de su entrada y no produce efectos observables (IO, reloj, red, estado mutable externo). El atributo es documentacion + tooling: en tiempo de ejecucion el puede comparar snapshots del bus y del reloj antes y despues para detectar impurezas accidentales durante los tests. No es un verificador formal: sirve para que las decisiones del ledger, las reducciones del reactor y los filtros del bus queden marcadas como contrato de pureza que los revisores pueden leer.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Functional/Result.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Primitives/Result.cs",
+      "src/AgentLoop.Core/Primitives/Unit.cs"
+    ],
+    "types": [
+      "Result",
+      "Unit"
+    ],
+    "namespace": "AgentLoop.Harness.Functional",
+    "imports": [],
+    "purpose": "Tipo suma con dos casos: Ok(valor) o Fail(error). Es el reemplazo del campo nullable \"puede haber pasado algo mal\" que contamina muchos tipos del harness. Con un tipo suma el compilador obliga a PatternMatch, asi \"se me olvido comprobar el Failure\" deja de compilar. Diferencia con la version minimalista que venia en Composition.cs: aqui cada caso lleva datos reales (no E=default en Ok), soporta equality estructural completa, y expone helpers (Map, Bind, Match) que la libreria estandar no da. Convencion: T es el valor de exito, E es el motivo de fallo. Si el fallo no aporta dato (tipo unit), usar .",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Lifecycle/LifecycleAndBusDedupSelfTest.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Lifecycle/HookedRecorder.cs",
+      "tests/AgentLoop.SelfTests/Harness/Lifecycle/LifecycleAndBusDedupSelfTest.cs"
+    ],
+    "types": [
+      "HookedRecorder",
+      "LifecycleAndBusDedupSelfTest"
+    ],
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "imports": [
+      "AgentLoop.Events",
+      "AgentLoop.Harness.Lifecycle",
+      "AgentLoop.Harness.Steps"
+    ],
+    "purpose": "Wrapper que permite inyectar un callback antes de delegar al recorder real. Pensado para tests que necesitan contar invocaciones concurrentes.",
+    "nature": "prueba/fixture",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Lifecycle/LifecycleRecorder.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Lifecycle/ILifecycleObserver.cs",
+      "src/AgentLoop.Harness/Lifecycle/LifecycleRecorder.cs"
+    ],
+    "types": [
+      "ILifecycleObserver",
+      "LifecycleRecorder"
+    ],
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "imports": [
+      "AgentLoop.Harness.Core",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Steps"
+    ],
+    "purpose": "Contrato de un sink de transiciones. Implementarlo no obliga a tocar el resto del harness: cualquier consumidor (consola, archivo, observabilidad) lo implementa y se suscribe.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Lifecycle/RunLifecycle.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Lifecycle/LifecycleEvent.cs",
+      "src/AgentLoop.Harness/Lifecycle/LifecycleTransitions.cs",
+      "src/AgentLoop.Harness/Lifecycle/RunLifecycleState.cs"
+    ],
+    "types": [
+      "RunLifecycleState",
+      "LifecycleTransitions",
+      "LifecycleEvent"
+    ],
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "imports": [
+      "AgentLoop.Harness.Core"
+    ],
+    "purpose": "Estados por los que pasa un Run durante su vida. Es la version explicita de los RunStatus que el reactor ya emite implicitamente: cuando duerme sobre el bus sin procesos vivos, esta en Paused; cuando se reactiva por una senal, transiciona a Running. Hoy eso se perdia; con lifecycle queda trazado en el Journey.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Lifecycle/RunLifecycleMutex.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Lifecycle/RunLifecycleMutex.cs",
+      "src/AgentLoop.Harness/Lifecycle/TryTransitionResult.cs"
+    ],
+    "types": [
+      "RunLifecycleMutex",
+      "TryTransitionResult"
+    ],
+    "namespace": "AgentLoop.Harness.Lifecycle",
+    "imports": [
+      "AgentLoop.Harness.Concurrency"
+    ],
+    "purpose": "Mutex del Run: serializa las transiciones del lifecycle para que dos publicaciones concurrentes no puedan dejar el Run en un estado incoherente. Sin el, dos transiciones racing (Running -> Succeeded y Running -> Failed a la vez) harian que la ultima publicacion gane sin validar la tabla de transiciones validas. Es un AsyncLock por Run: cada Run tiene su propio mutex, asi Runs distintos transicionan en paralelo.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Observability/ConsoleObserver.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Observability/ConsoleObserver.cs"
+    ],
+    "types": [
+      "ConsoleObserver"
+    ],
+    "namespace": "AgentLoop.Harness.Observability",
+    "imports": [],
+    "purpose": "Observer de consola: pinta cada Step y cada Log en stderr/stdout con colores por nivel. Es el sink por defecto para que el CLI siga teniendo la misma traza legible de siempre sin que el resto del harness sepa como se pinta. Los Steps se escriben con prefijo \" step \", los Logs segun su nivel. Para tests: usar un observer que escriba a un buffer en lugar de este.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Observability/IRunObserver.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Observability/IRunObserver.cs",
+      "src/AgentLoop.Harness/Observability/StepEnvelope.cs"
+    ],
+    "types": [
+      "IRunObserver",
+      "StepEnvelope"
+    ],
+    "namespace": "AgentLoop.Harness.Observability",
+    "imports": [
+      "AgentLoop.Harness.Traceability"
+    ],
+    "purpose": "Contrato que cualquier sink debe implementar para engancharse al harness. El bus, el runner y el reactor llaman a estos callbacks en puntos estables del ciclo de vida (cada step, cada metrica, cada log); un observer decide que hacer (pintar en consola, escribir a JSON, emitir a Prometheus, etc). Implementar este interface NO requiere tocar el resto del harness.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Observability/MetricsCollector.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Observability/MetricsCollector.cs"
+    ],
+    "types": [
+      "MetricsCollector"
+    ],
+    "namespace": "AgentLoop.Harness.Observability",
+    "imports": [
+      "System.Collections.Concurrent"
+    ],
+    "purpose": "Contadores monotonos del Run. No son snapshots: solo incrementan, y se serializan al final como parte del Journey. Asi el selftest puede afirmar \"el reactor hizo 5 ciclos, 2 tools, 1 retry transitorio\" sin parsear la traza textual. Las metricas usan nombres en minuscula con puntos: \"cycles\", \"tools\", \"retries.transient\", \"processes.started\", etc. El observer decide como etiquetarlas (Prometheus prefiere \"_\"; aqui usamos \".\" por consistencia con la consola del CLI).",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Observability/StructuredLog.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Observability/LogLevel.cs",
+      "src/AgentLoop.Harness/Observability/StructuredLog.cs"
+    ],
+    "types": [
+      "LogLevel",
+      "StructuredLog"
+    ],
+    "namespace": "AgentLoop.Harness.Observability",
+    "imports": [],
+    "purpose": "Niveles de severidad para el log estructurado.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Patterns/CircuitBreakerPattern.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Resilience/CircuitBreakerPattern.cs"
+    ],
+    "types": [
+      "CircuitBreakerPattern"
+    ],
+    "namespace": "AgentLoop.Harness.Patterns",
+    "imports": [],
+    "purpose": "Corta si se acumulan fallos consecutivos sin un exito entre medias. Pensado para parar el bucle cuando un proveedor se cae de verdad, en lugar de gastar reintentos.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Patterns/Composition.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Resilience/ResiliencePolicyChain.cs"
+    ],
+    "types": [
+      "Composition"
+    ],
+    "namespace": "AgentLoop.Harness.Patterns",
+    "imports": [],
+    "purpose": "Compone varias Patterns en una sola decision. Las que devuelven Fail ganan; si hay varios Retry, gana el que pida mas espera; en otro caso Continue. El orden importa: si Timeout va antes que Retry, un intento que ya excedio el tiempo se rechaza antes de gastar el reintento. En general se pone Timeout al principio y Retry al final.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Patterns/IPattern.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Resilience/IPattern.cs",
+      "src/AgentLoop.Harness/Resilience/PatternAction.cs",
+      "src/AgentLoop.Harness/Resilience/PatternContext.cs",
+      "src/AgentLoop.Harness/Resilience/PatternDecision.cs"
+    ],
+    "types": [
+      "IPattern",
+      "PatternContext",
+      "PatternDecision",
+      "PatternAction"
+    ],
+    "namespace": "AgentLoop.Harness.Patterns",
+    "imports": [],
+    "purpose": "Receta reutilizable que se aplica alrededor de una operacion. Una Pattern recibe un con el intento actual y devuelve la decision: dejar pasar, esperar, reintentar o cortar. Las Patterns no son middleware en el sentido de ASP.NET: cada una decide sola en funcion del contexto, sin cadena fija. Composition las combina.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Patterns/RetryPattern.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Resilience/RetryPattern.cs"
+    ],
+    "types": [
+      "RetryPattern"
+    ],
+    "namespace": "AgentLoop.Harness.Patterns",
+    "imports": [],
+    "purpose": "Reintenta con backoff exponencial hasta veces. El primer reintento espera ; cada uno duplica. Si se supera el maximo, devuelve Fail con el motivo original. Es el patron que ya usa implicitamente el reactor para los 5xx/429, pero aqui esta formalizado y separado para poder reutilizarlo desde cualquier otra pieza del harness (cliente HTTP, IO a archivos, etc.).",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Patterns/TimeoutPattern.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Resilience/TimeoutPattern.cs"
+    ],
+    "types": [
+      "TimeoutPattern"
+    ],
+    "namespace": "AgentLoop.Harness.Patterns",
+    "imports": [],
+    "purpose": "Recorta cualquier espera al . Es el equivalente declarativo del ExecutionPolicy.Clamp : si el caller pidio 3 horas pero el policy dice maximo 10 minutos, aqui se aplica.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Runner/GoalRunner.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Runner/GoalRunner.cs"
+    ],
+    "types": [
+      "GoalRunner"
+    ],
+    "namespace": "AgentLoop.Harness.Runner",
+    "imports": [
+      "AgentLoop.Cards",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness.Composition",
+      "AgentLoop.Harness.Core",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Steps",
+      "AgentLoop.Harness.Traceability",
+      "AgentLoop.Provider",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Implementacion de que delega el setup completo al y ejecuta el coordinador de eventos. Antes de este commit GoalRunner.RunAsync construia su propio Scope, bus, supervisor, ledger, tools, GoalContext, StepRecorder y RunContext inline (~120 lineas); ahora son ~30: pide el setup al factory, configura el reactor con la instrumentacion propia y espera su resultado terminal.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Runner/IRunner.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Runner/IRunner.cs"
+    ],
+    "types": [
+      "IRunner"
+    ],
+    "namespace": "AgentLoop.Harness.Runner",
+    "imports": [
+      "AgentLoop.Harness.Core"
+    ],
+    "purpose": "Contrato del ejecutor de Runs. RunAsync recibe un Run y produce un RunResult con su Journey. Hoy solo hay una implementacion (GoalRunner), pero el interface permite que mañana un ScriptRunner o un DebugRunner compartan el contrato sin que el CLI se entere.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Runner/RunnerOptions.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Runner/RunnerOptions.cs"
+    ],
+    "types": [
+      "RunnerOptions"
+    ],
+    "namespace": "AgentLoop.Harness.Runner",
+    "imports": [
+      "AgentLoop.Harness.Core",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Opciones que afinan como se ejecuta un Run.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Scope.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/Scope.cs"
+    ],
+    "types": [
+      "Scope"
+    ],
+    "namespace": "AgentLoop.Harness",
+    "imports": [
+      "AgentLoop.Terminals"
+    ],
+    "purpose": "Frontera de un Run: que modelos, paths y tools estan autorizados, encima de las reglas duras de . La policy veta comandos por regex; el Scope acota que se le ofrece al modelo en el system prompt y en las tools disponibles. AllowedPaths es una whitelist de raices; cualquier comando que intente actuar fuera se rechaza antes de tocar ExecutionPolicy. AllowedModels evita que el agente cambie de modelo a algo no acordado. AllowedTools, si no esta vacio, restringe las tools que el OperationTools expone.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Steps/Step.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Observability/Steps/BusEventStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/DecisionStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/ErrorStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/ModelStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/PatternStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/Step.cs",
+      "src/AgentLoop.Harness/Observability/Steps/StepKind.cs",
+      "src/AgentLoop.Harness/Observability/Steps/ToolStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/TransitionStep.cs",
+      "src/AgentLoop.Harness/Observability/Steps/WaitStep.cs"
+    ],
+    "types": [
+      "StepKind",
+      "Step",
+      "ModelStep",
+      "ToolStep",
+      "WaitStep",
+      "TransitionStep",
+      "PatternStep",
+      "ErrorStep",
+      "DecisionStep",
+      "BusEventStep"
+    ],
+    "namespace": "AgentLoop.Harness.Steps",
+    "imports": [],
+    "purpose": "Categorias de Step que el harness reconoce.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Harness/Steps/StepRecorder.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Observability/Steps/StepRecorder.cs"
+    ],
+    "types": [
+      "StepRecorder"
+    ],
+    "namespace": "AgentLoop.Harness.Steps",
+    "imports": [
+      "System.Collections.Concurrent",
+      "AgentLoop.Harness.Observability",
+      "AgentLoop.Harness.Traceability"
+    ],
+    "purpose": "Graba los Steps en orden con un Sequence monotono y los publica a los observers suscritos. Thread-safe: el reactor publica desde un solo hilo pero el supervisor de procesos lo hace desde los hilos de captura. Cada Step lleva su Correlation para que el Journey pueda correlacionar con logs y metricas. Si nadie establecio Correlation, queda null y el observer cae a un identificador vacio.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Testing/FakeLLMClient.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Fixtures/FakeLLMClient.cs"
+    ],
+    "types": [
+      "FakeLLMClient"
+    ],
+    "namespace": "AgentLoop.Harness.Testing",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Cliente fake del puerto LLM que no hace red: devuelve una respuesta JSON vacia (sin tool_calls, sin contenido) para que el self-test del Composition Root pueda ejercitar el cableado sin depender del proveedor. Vive en AgentLoop.Harness.Testing para que su naturaleza de fixture de test sea evidente desde el namespace. Si alguien desde codigo de produccion lo importa, ya esta senializando que esta usando un mock.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Traceability/Correlation.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Traceability/Correlation.cs"
+    ],
+    "types": [
+      "Correlation"
+    ],
+    "namespace": "AgentLoop.Harness.Traceability",
+    "imports": [],
+    "purpose": "Holder de basado en . El reactor, el supervisor y los tools viven en distintos hilos del pool y se cruzan con awaits profundos. Sin AsyncLocal, pasar el TraceId por parametro contaminaria cada firma; con AsyncLocal, lo de arriba establece el contexto y lo de abajo lo lee sin saber como se propago. Para no contaminar el resto del harness, este tipo es opcional: si nadie lo establece, devuelve null y el codigo que lo usa cae a un identificador vacio sin lanzar.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Traceability/CorrelationContext.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Traceability/CorrelationContext.cs"
+    ],
+    "types": [
+      "CorrelationContext"
+    ],
+    "namespace": "AgentLoop.Harness.Traceability",
+    "imports": [],
+    "purpose": "Identidad de una unidad de trazabilidad. Se crea un al arrancar un Run y un nuevo cada vez que se cruza una frontera async significativa (publicar un evento, ejecutar un tool, llamar al modelo). La idea no es reproducir OpenTelemetry: con un GUID por Run y un SpanId por paso alcanza para correlacionar Steps, eventos del bus y logs sin tener que sacar librerias externas.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Harness/Traceability/CorrelationPropagator.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Traceability/CorrelationPropagator.cs"
+    ],
+    "types": [
+      "CorrelationPropagator"
+    ],
+    "namespace": "AgentLoop.Harness.Traceability",
+    "imports": [],
+    "purpose": "Crea spans hijos al cruzar una frontera async. Pensado para envolver con y asi restaurar el contexto previo al salir. Como todavia no hay propagacion a traves del bus ni de los HttpClient, este helper solo cubre el lado del reactor: el await que viene de una llamada al modelo. El supervisor de procesos, cuando publique eventos desde sus hilos de captura, leera el contexto que estuviera vivo cuando se lanzo el proceso; si nadie lo establecio, el evento queda sin TraceId, que es el comportamiento degradado esperado.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Kernel/Concurrency/ResetEvents.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/Concurrency/AsyncAutoResetEvent.cs",
+      "src/AgentLoop.Kernel/Concurrency/AsyncManualResetEvent.cs"
+    ],
+    "types": [
+      "AsyncManualResetEvent",
+      "AsyncAutoResetEvent"
+    ],
+    "namespace": "AgentLoop.Concurrency",
+    "imports": [],
+    "purpose": "Reset event manual en version asincrona: una vez senalado se queda senalado hasta que alguien lo baja con , y todos los que esperan pasan a la vez. Es el equivalente a ManualResetEventSlim, pero esperar aqui no bloquea un hilo: devuelve una Task. Esa diferencia es la que permite que el agente espere a un proceso sin dejar tieso su hilo, que es justo lo que necesita para seguir atendiendo eventos. Usos en el harness: el cierre de un proceso (latch: muchos esperan, se queda abierto) y la puerta de ejecucion (abierta = pasa; cerrada = las ejecuciones se encolan).",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Kernel/Events/AgentEventKind.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/Events/AgentEventKind.cs"
+    ],
+    "types": [
+      "AgentEventKind"
+    ],
+    "namespace": "AgentLoop.Events",
+    "imports": [],
+    "purpose": "Que clase de suceso es. El agente reacciona a esto, no a turnos de conversacion.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Kernel/LLM/ChatContracts.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/LLM/ChatMessage.cs",
+      "src/AgentLoop.Kernel/LLM/ChatRequest.cs",
+      "src/AgentLoop.Kernel/LLM/ChatRoles.cs",
+      "src/AgentLoop.Kernel/LLM/ModelInfo.cs",
+      "src/AgentLoop.Kernel/LLM/ResponseFormat.cs",
+      "src/AgentLoop.Kernel/LLM/StreamOptions.cs",
+      "src/AgentLoop.Kernel/LLM/ToolDefinition.cs",
+      "src/AgentLoop.Kernel/LLM/ToolFunction.cs"
+    ],
+    "types": [
+      "ChatRoles",
+      "ChatMessage",
+      "ToolFunction",
+      "ToolDefinition",
+      "ResponseFormat",
+      "StreamOptions",
+      "ChatRequest",
+      "ModelInfo"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [
+      "System.Text.Json",
+      "System.Text.Json.Serialization"
+    ],
+    "purpose": "Roles del protocolo OpenAI-compatible.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Kernel/LLM/ILLMClient.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/LLM/ILLMClient.cs"
+    ],
+    "types": [
+      "ILLMClient"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [
+      "System.Text.Json"
+    ],
+    "purpose": "Port for model requests. Implementations own provider transport and dialect adaptation.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Kernel/LLM/ThinkingPolicy.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/LLM/ThinkingMode.cs",
+      "src/AgentLoop.Kernel/LLM/ThinkingOptions.cs",
+      "src/AgentLoop.Kernel/LLM/ThinkingPolicy.cs",
+      "src/AgentLoop.Kernel/LLM/ThinkingPreference.cs"
+    ],
+    "types": [
+      "ThinkingMode",
+      "ThinkingOptions",
+      "ThinkingPreference",
+      "ThinkingPolicy"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [
+      "System.Text.Json.Serialization"
+    ],
+    "purpose": "Estado del razonamiento explicito que se le pide al modelo.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Kernel/Projects/ProjectPorts.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Execution/Docker/DockerExecutionDefinition.cs",
+      "src/AgentLoop.Kernel/Projects/IProjectEnvironmentFactory.cs",
+      "src/AgentLoop.Kernel/Projects/IProjectExecutionEnvironment.cs",
+      "src/AgentLoop.Kernel/Projects/ITokenBudgetEstimator.cs",
+      "src/AgentLoop.Kernel/Projects/Profiles/ProjectCommandDefinition.cs",
+      "src/AgentLoop.Kernel/Projects/Profiles/ProjectExecutionDefinition.cs",
+      "src/AgentLoop.Kernel/Projects/Profiles/ProjectProfileDto.cs",
+      "src/AgentLoop.Kernel/Projects/Profiles/ProjectRuntimePolicy.cs",
+      "src/AgentLoop.Kernel/Projects/Profiles/ProjectValidatorDefinition.cs",
+      "src/AgentLoop.Kernel/Projects/ProjectCommandResult.cs",
+      "src/AgentLoop.Kernel/Projects/ProjectProcessNotice.cs",
+      "src/AgentLoop.Kernel/Projects/ProjectRecoveryPolicy.cs"
+    ],
+    "types": [
+      "ProjectCommandResult",
+      "IProjectExecutionEnvironment",
+      "IProjectEnvironmentFactory",
+      "ProjectProfileDto",
+      "ProjectValidatorDefinition",
+      "ProjectCommandDefinition",
+      "ProjectExecutionDefinition",
+      "DockerExecutionDefinition",
+      "ProjectRuntimePolicy",
+      "ITokenBudgetEstimator",
+      "ProjectProcessNotice",
+      "ProjectRecoveryPolicy"
+    ],
+    "namespace": "AgentLoop.Kernel.Projects",
+    "imports": [],
+    "purpose": "ProjectCommandResult, IProjectExecutionEnvironment, IProjectEnvironmentFactory, ProjectProfileDto, ProjectValidatorDefinition, ProjectCommandDefinition, ProjectExecutionDefinition, DockerExecutionDefinition, ProjectRuntimePolicy, ITokenBudgetEstimator, ProjectProcessNotice, ProjectRecoveryPolicy",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Looping/AgentLoopRunner.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/Conversation/AgentLoopRunner.cs"
+    ],
+    "types": [
+      "AgentLoopRunner"
+    ],
+    "namespace": "AgentLoop.Looping",
+    "imports": [
+      "AgentLoop.StateMachines"
+    ],
+    "purpose": "CAPA 4 - el loop del harness. El bucle no tiene condicion propia: gira mientras sea false. Cada iteracion avanza un paso de la maquina de estados y luego evalua las condiciones de corte; la primera que se cumple pone la bandera en true y anota el motivo en , con lo que el while termina. Es generico a proposito: sirve para cualquier StateMachine, no solo para la del agente.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Looping/LoopContext.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/Conversation/LoopBreakReason.cs",
+      "src/AgentLoop.Compatibility/Conversation/LoopContext.cs",
+      "src/AgentLoop.Compatibility/Conversation/LoopFailureReason.cs",
+      "src/AgentLoop.Compatibility/Conversation/LoopOutcome.cs",
+      "src/AgentLoop.Compatibility/Conversation/LoopResult.cs"
+    ],
+    "types": [
+      "LoopBreakReason",
+      "LoopContext",
+      "LoopFailureReason",
+      "LoopOutcome",
+      "LoopResult"
+    ],
+    "namespace": "AgentLoop.Looping",
+    "imports": [
+      "AgentLoop.StateMachines"
+    ],
+    "purpose": "Por que se levanto la bandera que rompio el loop.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Parsing/CompletionParser.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Parsing/CompletionParser.cs"
+    ],
+    "types": [
+      "CompletionParser"
+    ],
+    "namespace": "AgentLoop.Parsing",
+    "imports": [
+      "System.Text.Json",
+      "System.Text.RegularExpressions"
+    ],
+    "purpose": "CAPA 2 - traduce el JSON crudo del proveedor a tipos del harness. Sin estado y sin red: se puede probar con fixtures. Puerto de tokenrouter/parsers.py.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Parsing/ParsedCompletion.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/LLM/Responses/ParsedCompletion.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/ParsedToolCall.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/ProviderError.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/StreamDelta.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/TokenUsage.cs"
+    ],
+    "types": [
+      "TokenUsage",
+      "ParsedToolCall",
+      "ProviderError",
+      "ParsedCompletion",
+      "StreamDelta"
+    ],
+    "namespace": "AgentLoop.Parsing",
+    "imports": [
+      "System.Text.Json"
+    ],
+    "purpose": "Consumo de tokens de una llamada; se acumula a lo largo del loop. es la parte de completion que se fue en razonar: sale de usage.completion_tokens_details.reasoning_tokens y ya viene incluida en CompletionTokens.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Parsing/StreamAccumulator.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Parsing/StreamAccumulator.cs"
+    ],
+    "types": [
+      "StreamAccumulator"
+    ],
+    "namespace": "AgentLoop.Parsing",
+    "imports": [
+      "System.Text",
+      "System.Text.Json",
+      "System.Text.Json.Nodes"
+    ],
+    "purpose": "Junta los chunks de un stream en una respuesta con la misma forma que la no-streaming. La gracia es que no reimplementa el parseo: arma el JSON equivalente y se lo pasa a . Asi el thinking, las tool calls y el consumo salen tipados igual vengan de un stream o de una llamada normal, y el bloque de tool_calls se puede reenviar al proveedor tal como espera en el turno siguiente.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Parsing/ThinkingTrace.cs",
+    "destinations": [
+      "src/AgentLoop.Kernel/LLM/Responses/ThinkingBlock.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/ThinkingBlockKind.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/ThinkingSource.cs",
+      "src/AgentLoop.Kernel/LLM/Responses/ThinkingTrace.cs"
+    ],
+    "types": [
+      "ThinkingBlockKind",
+      "ThinkingSource",
+      "ThinkingBlock",
+      "ThinkingTrace"
+    ],
+    "namespace": "AgentLoop.Parsing",
+    "imports": [],
+    "purpose": "Tipo de bloque de razonamiento devuelto por el modelo.",
+    "nature": "contrato/estado",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Program.cs",
+    "destinations": [
+      "src/AgentLoop.Cli/Commands/Program.Arguments.cs",
+      "src/AgentLoop.Cli/Commands/Program.Chat.cs",
+      "src/AgentLoop.Cli/Commands/Program.Diagnosis.cs",
+      "src/AgentLoop.Cli/Commands/Program.Discovery.cs",
+      "src/AgentLoop.Cli/Commands/Program.Dispatch.cs",
+      "src/AgentLoop.Cli/Commands/Program.Journey.cs",
+      "src/AgentLoop.Cli/Commands/Program.Operations.cs",
+      "src/AgentLoop.Cli/Commands/Program.Presentation.cs",
+      "src/AgentLoop.Cli/Commands/Program.Projects.cs",
+      "src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs",
+      "src/AgentLoop.Cli/Commands/Program.Verification.cs",
+      "src/AgentLoop.Cli/Interactive/Program.Interactive.cs",
+      "src/AgentLoop.Cli/Program.cs",
+      "tests/AgentLoop.SelfTests/Legacy/BuiltInSelfTests.cs",
+      "tests/AgentLoop.SelfTests/Program.cs"
+    ],
+    "types": [
+      "Program"
+    ],
+    "namespace": "AgentLoop",
+    "imports": [
+      "System.Diagnostics",
+      "System.Text",
+      "System.Text.Json",
+      "System.Text.Json.Serialization",
+      "System.Xml.Linq",
+      "AgentLoop.Cards",
+      "AgentLoop.Concurrency",
+      "AgentLoop.Configuration",
+      "AgentLoop.Discovery",
+      "AgentLoop.Events",
+      "AgentLoop.Goals",
+      "AgentLoop.Harness",
+      "AgentLoop.Looping",
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "AgentLoop.StateMachines",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools",
+      "AgentLoop.Security",
+      "AgentLoop.Goals.Projects"
+    ],
+    "purpose": "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Prompting/PromptTemplate.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Prompting/PromptEscaping.cs",
+      "src/AgentLoop.Harness/Prompting/PromptPlaceholder.cs",
+      "src/AgentLoop.Harness/Prompting/PromptTemplate.cs",
+      "src/AgentLoop.Harness/Prompting/PromptTemplateException.cs"
+    ],
+    "types": [
+      "PromptEscaping",
+      "PromptPlaceholder",
+      "PromptTemplateException",
+      "PromptTemplate"
+    ],
+    "namespace": "AgentLoop.Prompting",
+    "imports": [
+      "System.Text.RegularExpressions"
+    ],
+    "purpose": "Como se escapa un valor al interpolarlo.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Prompting/PromptVariables.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Prompting/PromptVariables.cs"
+    ],
+    "types": [
+      "PromptVariables"
+    ],
+    "namespace": "AgentLoop.Prompting",
+    "imports": [
+      "System.Text.RegularExpressions"
+    ],
+    "purpose": "Bolsa de parametros del prompt. Mantiene el orden de insercion para que listarlas sea estable, e higieniza y recorta cada valor al entrar: lo que se guarda aqui es exactamente lo que vera el modelo, sin sorpresas en el render.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Prompting/SanitizationContract.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Prompting/SanitizationContext.cs",
+      "src/AgentLoop.Harness/Prompting/SanitizationContract.cs"
+    ],
+    "types": [
+      "SanitizationContext",
+      "SanitizationContract"
+    ],
+    "namespace": "AgentLoop.Prompting",
+    "imports": [],
+    "purpose": "Donde va a acabar el valor que se esta sanitizando.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Prompting/SanitizationSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Prompting/SanitizationSelfTest.cs"
+    ],
+    "types": [
+      "SanitizationSelfTest"
+    ],
+    "namespace": "AgentLoop.Prompting",
+    "imports": [
+      "System.Text",
+      "System.Text.Json"
+    ],
+    "purpose": "Tests duros de los sanitizadores. Reemplazan los dos asserts blandos de PromptSelfTest (en Program.cs) por ~30 asserts que cubren los casos que rompen en silencio: lone surrogates, control chars en mitad de string, arrays JSON, primitivos, paths con caracteres de control, roundtrip con JsonDocument.Parse, etc. Se llama desde SelfTestAsync en Program.cs: el resultado se suma al veredicto final con la misma forma que el resto de SelfTests.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Prompting/SystemPrompt.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Prompting/SystemPrompt.cs"
+    ],
+    "types": [
+      "SystemPrompt"
+    ],
+    "namespace": "AgentLoop.Prompting",
+    "imports": [],
+    "purpose": "Plantilla de sistema por defecto del harness.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Prompting/TextSanitizer.cs",
+    "destinations": [
+      "src/AgentLoop.Core/Text/TextSanitizer.cs"
+    ],
+    "types": [
+      "TextSanitizer"
+    ],
+    "namespace": "AgentLoop.Prompting",
+    "imports": [
+      "System.Text",
+      "System.Text.Json"
+    ],
+    "purpose": "Higiene de las cadenas que acaban dentro de un prompt o de un payload. Un valor que viene de fuera (argumentos, archivos, salida de herramientas, texto pegado por el usuario) puede traer caracteres de control o surrogates huerfanos que revientan la serializacion JSON del request, y signos &amp; &lt; &quot; que rompen los bloques XML que el prompt usa como delimitadores. Aqui se limpia antes de interpolar, no despues de que el proveedor devuelva un 400.",
+    "nature": "contrato/estado",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Contracts/LLMException.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Contracts/LLMException.cs"
+    ],
+    "types": [
+      "LLMException"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [
+      "AgentLoop.Security"
+    ],
+    "purpose": "Cualquier respuesta no-2xx del gateway o fallo de transporte.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Contracts/TransportOptions.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Contracts/TransportOptions.cs"
+    ],
+    "types": [
+      "TransportOptions"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "Reintentos solo para 5xx y 429 transitorios. El backoff exponencial puede acumular segundos facilmente: 3 reintentos con base 1 y tope 5 dan 1+2+4 = 7s de espera + los timeouts de cada intento. Con 6 reintentos y base 2 (el valor anterior) se llegaba a 34s de espera solo en backoff, y con timeouts largos eso era el doble. 3 reintentos cubre el caso habitual del gateway sin que un solo timeout se convierta en minutos de espera.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Helpers/TransientErrors.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Transport/TransientErrorClassifier.cs"
+    ],
+    "types": [
+      "TransientErrors"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "TransientErrors",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Nvidia/NvidiaClient.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaClient.cs"
+    ],
+    "types": [
+      "NvidiaClient"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [
+      "System.Net.Http.Headers",
+      "System.Runtime.CompilerServices",
+      "System.Text",
+      "System.Text.Encodings.Web",
+      "System.Text.Json",
+      "System.Text.Json.Serialization",
+      "AgentLoop.Security"
+    ],
+    "purpose": "CAPA 1 - cliente asincrono OpenAI-compatible para NVIDIA NIM. Adaptacion y parseo del protocolo NVIDIA NIM.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Nvidia/NvidiaModelCatalog.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaModelCatalog.cs"
+    ],
+    "types": [
+      "NvidiaModelCatalog"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "NvidiaModelCatalog",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Nvidia/NvidiaOptions.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaOptions.cs"
+    ],
+    "types": [
+      "NvidiaOptions"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "Configuracion del cliente HTTP contra el gateway.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Nvidia/NvidiaRequestAdapter.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaRequestAdapter.cs"
+    ],
+    "types": [
+      "NvidiaRequestAdapter"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "Model controls are explicit; a numeric thinking budget is not a GLM 5.3 limit.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Nvidia/ProviderContractSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Provider/Nvidia/ProviderContractSelfTest.cs"
+    ],
+    "types": [
+      "ProviderContractSelfTest"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [
+      "System.Net",
+      "System.Text",
+      "System.Text.Json"
+    ],
+    "purpose": "Offline payload tests through the real HTTP client and SSE path.",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Provider/Transport/ChatCompletionsTransport.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Transport/ChatCompletionsTransport.cs"
+    ],
+    "types": [
+      "ChatCompletionsTransport"
+    ],
+    "namespace": "AgentLoop.Provider",
+    "imports": [],
+    "purpose": "Shared cancellable HTTP retries; no model-specific payload decisions.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/BoundedReadStream.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/BoundedReadStream.cs"
+    ],
+    "types": [
+      "BoundedReadStream"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [],
+    "purpose": "Caps bytes before StreamReader/HTTP materializes an untrusted response.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/Contracts/HarnessDataDtos.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/Contracts/DataFindingDto.cs",
+      "src/AgentLoop.Harness/Security/Contracts/ModelRequestDto.cs",
+      "src/AgentLoop.Harness/Security/Contracts/PromptDataDto.cs",
+      "src/AgentLoop.Harness/Security/Contracts/ToolDataMetadataDto.cs",
+      "src/AgentLoop.Harness/Security/Contracts/ToolFailureDto.cs",
+      "src/AgentLoop.Harness/Security/Contracts/ToolResultDto.cs"
+    ],
+    "types": [
+      "DataFindingDto",
+      "ToolDataMetadataDto",
+      "ToolResultDto",
+      "PromptDataDto",
+      "ToolFailureDto",
+      "ModelRequestDto"
+    ],
+    "namespace": "AgentLoop.Security.Contracts",
+    "imports": [
+      "System.Text.Json",
+      "System.Text.Json.Serialization"
+    ],
+    "purpose": "DataFindingDto, ToolDataMetadataDto, ToolResultDto, PromptDataDto, ToolFailureDto, ModelRequestDto",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Security/DataGuard.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/DataGuard.cs"
+    ],
+    "types": [
+      "DataGuard"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [
+      "System.Security.Cryptography",
+      "System.Text",
+      "System.Text.Json",
+      "System.Text.RegularExpressions",
+      "AgentLoop.Prompting",
+      "AgentLoop.Security.Contracts"
+    ],
+    "purpose": "DataGuard",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/DataLimits.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/DataLimits.cs"
+    ],
+    "types": [
+      "DataLimits"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [],
+    "purpose": "DataLimits",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/ProtectedResources.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/ProtectedResources.cs"
+    ],
+    "types": [
+      "ProtectedResources"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [],
+    "purpose": "ProtectedResources",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/SafeStreamingText.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/SafeStreamingText.cs"
+    ],
+    "types": [
+      "SafeStreamingText"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [
+      "System.Text"
+    ],
+    "purpose": "Buffer words so a recognizable key split across deltas cannot bypass redaction.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/SecuritySelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Security/SecuritySelfTest.cs"
+    ],
+    "types": [
+      "SecuritySelfTest"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [
+      "System.Text",
+      "System.Text.Json",
+      "AgentLoop.Harness",
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "AgentLoop.StateMachines",
+      "AgentLoop.Terminals",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "SecuritySelfTest",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/StrictJson.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/StrictJson.cs"
+    ],
+    "types": [
+      "StrictJson"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [
+      "System.Text.Json"
+    ],
+    "purpose": "StrictJson",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Security/ToolArgumentValidator.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Security/ToolArgumentValidator.cs"
+    ],
+    "types": [
+      "ToolArgumentValidator"
+    ],
+    "namespace": "AgentLoop.Security",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Parsing"
+    ],
+    "purpose": "Validated subset of the schemas emitted by this repository, not a general JSON Schema engine.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "StateMachines/AgentContext.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Context/ChatTurnContext.cs"
+    ],
+    "types": [
+      "AgentContext"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [
+      "AgentLoop.Parsing",
+      "AgentLoop.Provider",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Estado mutable que la maquina de estados va llenando a lo largo del loop.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "StateMachines/AgentStateMachine.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/StateMachines/AgentState.cs",
+      "src/AgentLoop.Compatibility/StateMachines/AgentStateMachine.cs"
+    ],
+    "types": [
+      "AgentState",
+      "AgentStateMachine"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "AgentLoop.Tools",
+      "AgentLoop.Security"
+    ],
+    "purpose": "AgentState, AgentStateMachine",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "StateMachines/ConversationMemory.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Context/IConversationMemory.cs",
+      "src/AgentLoop.Infrastructure/Persistence/AtomicFileWriter.cs",
+      "src/AgentLoop.Infrastructure/Persistence/FileConversationMemory.cs"
+    ],
+    "types": [
+      "ConversationMemory"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Recuerdos explícitos del usuario, separados del historial temporal.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "StateMachines/ConversationThread.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Context/ConversationSession.cs",
+      "src/AgentLoop.Harness/Context/IConversationSessionStore.cs",
+      "src/AgentLoop.Infrastructure/Persistence/FileConversationSessionStore.cs"
+    ],
+    "types": [
+      "ConversationThread"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [
+      "AgentLoop.Parsing",
+      "AgentLoop.Prompting",
+      "AgentLoop.Provider",
+      "System.Text.Json",
+      "AgentLoop.Security"
+    ],
+    "purpose": "El hilo que sobrevive entre comandos del CLI interactivo. Guarda la conversacion sin el mensaje de sistema: ese se vuelve a renderizar en cada turno para que {{hora}} y demas parametros esten frescos, en vez de quedar congelados en los que hubiera al arrancar la sesion.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "StateMachines/StateMachine.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/StateMachines/StateMachine.cs"
+    ],
+    "types": [
+      "StateMachine"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [],
+    "purpose": "CAPA 3 - maquina de estados generica pensada para heredarse. Una subclase solo esta obligada a decir tres cosas: que hace en cada estado ( ), cuales son terminales ( ) y a donde va cuando algo explota ( ). Todo lo demas ( , , , ) son puntos de extension opcionales. No contiene bucle: avanza de a un paso con . Quien itera es la CAPA 4 (AgentLoopRunner), para que el criterio de corte viva fuera.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "StateMachines/StateTransition.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/StateMachines/InvalidStateTransitionException.cs",
+      "src/AgentLoop.Compatibility/StateMachines/StateTransition.cs"
+    ],
+    "types": [
+      "StateTransition",
+      "InvalidStateTransitionException"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [],
+    "purpose": "Una transicion consumada, para trazas y depuracion.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "StateMachines/TickStateMachine.cs",
+    "destinations": [
+      "src/AgentLoop.Compatibility/StateMachines/TickState.cs",
+      "tests/AgentLoop.SelfTests/Fixtures/TickCounter.cs",
+      "tests/AgentLoop.SelfTests/Fixtures/TickStateMachine.cs"
+    ],
+    "types": [
+      "TickState",
+      "TickStateMachine",
+      "TickCounter"
+    ],
+    "namespace": "AgentLoop.StateMachines",
+    "imports": [],
+    "purpose": "TickState, TickStateMachine, TickCounter",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Terminals/ProcessHandle.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/OutputLine.cs",
+      "src/AgentLoop.Infrastructure/Execution/Processes/ProcessHandle.cs"
+    ],
+    "types": [
+      "OutputLine",
+      "ProcessHandle"
+    ],
+    "namespace": "AgentLoop.Terminals",
+    "imports": [
+      "System.Diagnostics",
+      "System.Text",
+      "AgentLoop.Concurrency"
+    ],
+    "purpose": "Una linea de salida capturada, con su origen.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Terminals/ProcessSupervisor.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/ShellFailureReason.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/ShellOutcome.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/ShellResult.cs",
+      "src/AgentLoop.Infrastructure/Execution/Processes/OutputWatcher.cs",
+      "src/AgentLoop.Infrastructure/Execution/Processes/ProcessSupervisor.cs"
+    ],
+    "types": [
+      "OutputWatcher",
+      "ShellFailureReason",
+      "ShellOutcome",
+      "ShellResult",
+      "ProcessSupervisor"
+    ],
+    "namespace": "AgentLoop.Terminals",
+    "imports": [
+      "System.Collections.Concurrent",
+      "System.Diagnostics",
+      "System.Text.RegularExpressions",
+      "AgentLoop.Concurrency",
+      "AgentLoop.Events"
+    ],
+    "purpose": "Un patron vigilado sobre la salida de los procesos. Cuando aparece, se abre su latch y se publica un evento: es la forma de que el agente diga \"avisame cuando salga X\" sin tener que quedarse leyendo.",
+    "nature": "adaptador",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Terminals/ShellCommand.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Execution/Contracts/ExecutionPolicy.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/PolicyDecision.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/PolicyMode.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/ShellCommand.cs",
+      "src/AgentLoop.Harness/Execution/Contracts/ShellKind.cs",
+      "src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs"
+    ],
+    "types": [
+      "ShellKind",
+      "ShellCommand",
+      "PolicyMode",
+      "PolicyDecision",
+      "ExecutionPolicy"
+    ],
+    "namespace": "AgentLoop.Terminals",
+    "imports": [
+      "System.Diagnostics",
+      "System.Text.RegularExpressions"
+    ],
+    "purpose": "Interprete con el que se ejecuta el comando.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Tools/BuiltInTools.cs",
+    "destinations": [
+      "src/AgentLoop.Infrastructure/Providers/Discovery/CapabilityProbeTools.cs",
+      "src/AgentLoop.Infrastructure/Tools/ArithmeticTools.cs",
+      "src/AgentLoop.Infrastructure/Tools/BuiltInTools.cs",
+      "src/AgentLoop.Infrastructure/Tools/FileTools.cs",
+      "src/AgentLoop.Infrastructure/Tools/SystemTools.cs",
+      "src/AgentLoop.Infrastructure/Tools/ToolArguments.cs"
+    ],
+    "types": [
+      "BuiltInTools"
+    ],
+    "namespace": "AgentLoop.Tools",
+    "imports": [
+      "System.Globalization",
+      "System.Diagnostics",
+      "System.Text.Json"
+    ],
+    "purpose": "Herramientas deterministas para ejercitar el loop sin depender de servicios externos.",
+    "nature": "adaptador",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Tools/ITool.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Tools/DelegateTool.cs",
+      "src/AgentLoop.Kernel/Tools/ITool.cs"
+    ],
+    "types": [
+      "ITool",
+      "DelegateTool"
+    ],
+    "namespace": "AgentLoop.Tools",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Provider",
+      "AgentLoop.Security"
+    ],
+    "purpose": "Una funcion que el modelo puede invocar.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  },
+  {
+    "source": "Tools/IdempotentTool.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Tools/IdempotentTool.cs"
+    ],
+    "types": [
+      "IdempotentTool"
+    ],
+    "namespace": "AgentLoop.Tools",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Harness.Concurrency",
+      "AgentLoop.Provider"
+    ],
+    "purpose": "Decorator que envuelve cualquier con cache por hash: la primera llamada ejecuta el handler y guarda el resultado; las siguientes con la misma combinacion (tool + argumentos) devuelven el resultado cacheado sin reejecutar. Pensado para tools read-only (leer, procesos, kill, observar) cuyo resultado es estable entre llamadas. NO se aplica a ejecutar ni lanzar porque tienen efectos reales y un retry legitimo del modelo debe poder reejecutarlas. La clave se calcula sobre el JSON de argumentos. Cambiar el orden de las claves produce la misma clave (el calculo ordena). El cache es bounded LRU: cuando se llena, descarta la entrada menos usada recientemente.",
+    "nature": "coordinacion/politica",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Tools/IdempotentToolSelfTest.cs",
+    "destinations": [
+      "tests/AgentLoop.SelfTests/Tools/IdempotentToolSelfTest.cs"
+    ],
+    "types": [
+      "IdempotentToolSelfTest"
+    ],
+    "namespace": "AgentLoop.Tools",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Harness.Concurrency",
+      "AgentLoop.Tools"
+    ],
+    "purpose": "Self-test del IdempotentTool: cachea por hash, sirve cache sin reejecutar, mantiene contador de hits/misses, y maneja correctamente el caso de fallo (no cachea errores).",
+    "nature": "prueba/fixture",
+    "action": "mover/renombrar"
+  },
+  {
+    "source": "Tools/ToolRegistry.cs",
+    "destinations": [
+      "src/AgentLoop.Harness/Tools/ToolExecution.cs",
+      "src/AgentLoop.Harness/Tools/ToolRegistry.cs"
+    ],
+    "types": [
+      "ToolExecution",
+      "ToolRegistry"
+    ],
+    "namespace": "AgentLoop.Tools",
+    "imports": [
+      "System.Text.Json",
+      "AgentLoop.Parsing",
+      "AgentLoop.Provider",
+      "AgentLoop.Security",
+      "AgentLoop.Security.Contracts",
+      "AgentLoop.Harness"
+    ],
+    "purpose": "Resultado de ejecutar una tool call, listo para volver al modelo.",
+    "nature": "coordinacion/politica",
+    "action": "dividir y mover"
+  }
+]

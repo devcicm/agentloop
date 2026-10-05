@@ -3,7 +3,7 @@
 `local-secrets/` esta excluido de Git, salvo este README. El archivo dedicado
 es `nvidia-api-key.txt`: una sola linea con la clave NVIDIA, sin comillas.
 
-La resolucion efectiva en [SecretStore.cs](../Configuration/SecretStore.cs) es:
+La resolucion efectiva en [SecretStore.cs](../src/AgentLoop.Infrastructure/Credentials/SecretStore.cs) es:
 
 1. Variable `NVIDIA_API_KEY`, si contiene un valor.
 2. Archivo `nvidia-api-key.txt`; si no existe, archivo legado `tokenrouter-api-key.txt`.

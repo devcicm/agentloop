@@ -22,11 +22,11 @@ no describen necesariamente el codigo actual. No se regeneran sobre el original.
   352 comprobaciones locales correctas. Ver [evidencia actual](2026-10-01/README.md).
 
 - 2026-09-27: fallo TokenRouter, sondas deterministas, correcciones iniciales,
-  catalogos, migracion NVIDIA, chat y poema posterior. Ver el [informe](../analisis-harness-poema-2026-09-27.md).
+  catalogos, migracion NVIDIA, chat y poema posterior. Ver el [informe](../archive/analisis-harness-poema-2026-09-27.md).
 - 2026-09-28 y `eventos-final-2026-09-30.log`: entradas del CLI sobre el reactor
-  anterior. Ver la [validacion historica](../validacion-eventos-2026-09-28.md).
+  anterior. Ver la [validacion historica](../archive/validacion-eventos-2026-09-28.md).
 - 2026-09-30: actor nuevo, compilacion, suite de 340 comprobaciones y prueba
-  real NVIDIA. Ver la [implementacion](../implementacion-coordinador-eventos-2026-09-30.md).
+  real NVIDIA. Ver la [implementacion](../architecture/implementacion-coordinador-eventos-2026-09-30.md).
 
 El manifiesto del 27 describe los bytes capturados entonces: el informe enlazado
 ha recibido aclaraciones posteriores, por lo que su hash actual cambia. La

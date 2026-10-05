@@ -1,0 +1,13 @@
+global using AgentLoop.Cards;
+global using AgentLoop.Concurrency;
+global using AgentLoop.Events;
+global using AgentLoop.Goals;
+global using AgentLoop.Goals.Projects;
+global using AgentLoop.Goals.Projects.Contracts;
+global using AgentLoop.Harness.Context;
+global using AgentLoop.Harness.Functional;
+global using AgentLoop.Kernel.Projects;
+global using AgentLoop.Parsing;
+global using AgentLoop.Prompting;
+global using AgentLoop.Provider;
+global using AgentLoop.Tools;

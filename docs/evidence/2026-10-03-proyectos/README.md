@@ -109,7 +109,7 @@ de SQLite. El POS minimo no incluye fiscalidad, usuarios o despliegue. El backen
 es offline y requiere toolchain/dependencias preparados. El checkpoint es derivado,
 el journal autoritativo. Este perfil aislado no cambia los goals textuales generales.
 
-[Guia, ASCII y recuperacion](../../goals-proyectos.md).
+[Guia, ASCII y recuperacion](../../architecture/goals-proyectos.md).
 
 [Inventario final del repositorio](repository-audit.json): archivos versionables,
 enlaces y JSON comprobados; sin errores ni duplicados exactos. Los datos operativos

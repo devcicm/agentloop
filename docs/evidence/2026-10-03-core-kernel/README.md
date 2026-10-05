@@ -25,4 +25,4 @@ optimizada. No se mide aun el impacto remoto de notas/paginacion. El ejemplo de
 archivos no certifica funcionalidad de aplicaciones. La plantilla Docker necesita
 valores y assets externos reales; no tiene imagen o validador preparado por defecto.
 
-[Arquitectura y migracion](../../core-kernel.md).
+[Arquitectura y migracion](../../architecture/core-kernel.md).

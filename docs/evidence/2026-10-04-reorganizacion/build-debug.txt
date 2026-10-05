@@ -1,0 +1,17 @@
+  Determinando los proyectos que se van a restaurar...
+  Todos los proyectos están actualizados para la restauración.
+  AgentLoop.Kernel -> C:\Users\Carlos Ivan\Desktop\agent loop\src\AgentLoop.Kernel\bin\Debug\net9.0\AgentLoop.Kernel.dll
+  AgentLoop.Core -> C:\Users\Carlos Ivan\Desktop\agent loop\src\AgentLoop.Core\bin\Debug\net9.0\AgentLoop.Core.dll
+  AgentLoop.Harness -> C:\Users\Carlos Ivan\Desktop\agent loop\src\AgentLoop.Harness\bin\Debug\net9.0\AgentLoop.Harness.dll
+  AgentLoop.Infrastructure -> C:\Users\Carlos Ivan\Desktop\agent loop\src\AgentLoop.Infrastructure\bin\Debug\net9.0\AgentLoop.Infrastructure.dll
+  AgentLoop.Compatibility -> C:\Users\Carlos Ivan\Desktop\agent loop\src\AgentLoop.Compatibility\bin\Debug\net9.0\AgentLoop.Compatibility.dll
+  AgentLoop.Cli -> C:\Users\Carlos Ivan\Desktop\agent loop\src\AgentLoop.Cli\bin\Debug\net9.0\AgentLoop.Cli.dll
+  AgentLoop.SelfTests -> C:\Users\Carlos Ivan\Desktop\agent loop\tests\AgentLoop.SelfTests\bin\Debug\net9.0\AgentLoop.SelfTests.dll
+
+Compilación correcta.
+    0 Advertencia(s)
+    0 Errores
+
+Tiempo transcurrido 00:00:03.43
+
+Hay actualizaciones de carga de trabajo disponibles. Ejecute "dotnet workload list" para obtener más información.

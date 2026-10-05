@@ -98,8 +98,8 @@ public static class EventArchitectureSelfTest
         await processEnd.Task.WaitAsync(TimeSpan.FromSeconds(3), token);
         Check("fin del proceso publica ProcesoFin", supervisor.Running == 0 && reactorBus.History.Any(e => e.Kind == AgentEventKind.ProcesoFin));
 
-        Check("CLI: texto libre y run usan reactor; solo chat usa conversacion",
-            !Program.UsesConversationLoop("run") && !Program.UsesConversationLoop("crea") && Program.UsesConversationLoop("chat"));
+        Check("CLI: texto libre, run y chat usan reactor; run-chat conserva conversacion",
+            !Program.UsesConversationLoop("run") && !Program.UsesConversationLoop("crea") && !Program.UsesConversationLoop("chat") && Program.UsesConversationLoop("run-chat"));
         var thread = new ConversationSession();
         var previous = new ChatTurnContext("Suma 17 y 23 con herramienta y comprueba el resultado; marca_contexto_eventos", "");
         previous.Messages.Add(ChatMessage.FromAssistant("plan_privado_no_heredar"));

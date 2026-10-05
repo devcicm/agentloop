@@ -2,6 +2,29 @@
 
 Implementacion: 2026-10-05. Motor principal: `EventOperationCoordinator`.
 
+## Entrada correcta para usar terminal
+
+En `interactive`, texto libre, `run <texto>` y `chat <texto>` usan el mismo
+reactor y catalogo de operaciones. `ejecutar` sirve para comandos cortos;
+`lanzar` para procesos largos. Se conservan tarjetas, permisos y evidencia.
+`run-chat` conserva el ejecutor conversacional anterior y no ofrece terminal.
+`chat` independiente sigue siendo una llamada remota sin tools; la consola
+lo indica. La disponibilidad de shell depende de `--no-shell` y del scope.
+
+El incidente reportado mostraba `chat` con solo tools de archivos/contexto:
+el modelo reconocio correctamente que no podia ejecutar y ofrecio escribir
+un script. La correccion unifica la ruta del chat interactivo con `run`;
+no cambia al proveedor ni instala herramientas particulares para ping/IP.
+
+```text
+Antes: chat --> ejecutor conversacional --> tools basicas --> sin terminal
+Ahora: chat/run/texto --> reactor --> admision/permisos --> ejecutar/lanzar
+                                                       --> resultado/evidencia
+```
+
+Ejemplo en interactive: `chat usa un here-string de PowerShell para ejecutar
+un ping acotado a google.com.mx e informa el codigo y la salida observada`.
+
 ## Scripts con varias lineas
 
 `ejecutar` y `lanzar` reciben un script completo en `comando`. En el JSON,

@@ -185,7 +185,7 @@ internal static partial class Program
                 }
                 else
                 {
-                    var prompt = verb is "run" or "chat" ? rest : line;
+                    var prompt = verb is "run" or "chat" or "run-chat" ? rest : line;
                     if (prompt.Length == 0)
                     {
                         Console.WriteLine("Escribe el texto despues de 'run'.");
@@ -445,7 +445,11 @@ internal static partial class Program
         ConsoleUi.Field("Razonamiento", DescribeThinking(settings.Thinking, settings.Model));
         ConsoleUi.Field("Stream", settings.Stream ? "activo" : "apagado");
         ConsoleUi.Field("Directorio", settings.Policy.WorkingDirectory);
-        ConsoleUi.Field("Herramientas", string.Join(", ", tools.Names));
+        ConsoleUi.Field("Tools base", string.Join(", ", tools.Names));
+        ConsoleUi.Field("Terminal", settings.Policy.AllowShell && settings.Policy.AllowedPaths.Count == 0
+            ? "run/chat: ejecutar para comandos cortos; lanzar para procesos largos"
+            : "Shell deshabilitado por politica o scope de rutas");
+        ConsoleUi.Text("Cada operacion muestra su catalogo efectivo de herramientas.", ConsoleColor.DarkGray);
         ConsoleUi.Text("Motor por eventos y tarjetas. El cierre exige evidencia comprobada.", ConsoleColor.DarkGray);
         ConsoleUi.Section("COMANDOS  /  Objetivos, contexto y control");
         ConsoleUi.Text("  <texto libre>        publica un objetivo al reactor con memoria y antecedentes");
@@ -467,7 +471,8 @@ internal static partial class Program
         ConsoleUi.Text("  estado | pausa | reanudar | cancelar   controles de la operacion activa");
         ConsoleUi.Text("  aprobar [id] [continuo] | rechazar [id]   autorizacion del operador");
         ConsoleUi.Text("  permisos | permisos revocar   consulta o revoca permisos de sesion");
-        ConsoleUi.Text("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
+        ConsoleUi.Text("  chat <texto>          alias de run: reactor, terminal y evidencia local");
+        ConsoleUi.Text("  run-chat <texto>      utilidad conversacional anterior, sin terminal");
         ConsoleUi.Text("  discover | selftest | ayuda   utilidades sueltas");
         ConsoleUi.Text("  salir                cierra");
         ConsoleUi.Text();

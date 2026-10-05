@@ -705,7 +705,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "8b19c915715400be1b0efcedc379cc9640077276e6d816212329989bed36475d",
+    "sha256": "7e9282676081f5a8da9d24eb35d2e9825bc313f38eb70b29bc9b4618f9b3efd8",
     "purpose": [
       "Un intercambio del usuario, con el hilo y los parametros de la sesion puestos."
     ],
@@ -765,7 +765,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "b1789061d85cebb1b1f477896c207aea519431cc80a238852b76d28ec54e0744",
+    "sha256": "db06513a138149bd921d514147fbb18b9ed52bff46a448ed38019fabc0b93953",
     "purpose": [
       "La entrada principal del CLI publica un objetivo y ejecuta el reactor."
     ],
@@ -835,7 +835,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "62ec01ab8ec433c1da235a160fd753e5496470824976c0b8efa6428da3241804",
+    "sha256": "3dc866cde08be6f21e3ce7bf6bc2f7cf0cee7de814f9d21662f3ff5ccfe26049",
     "purpose": [
       "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
     ],
@@ -1769,7 +1769,7 @@
     "types": [
       "OperationContract"
     ],
-    "sha256": "eab382e42947d7fd55e601ae284f1e9d6a42b5cb4fae2751c43a1c93d06448e1",
+    "sha256": "1d0e9ba057cc5f854d5123742ed1724235982e903ac8ce143569eee12b89f620",
     "purpose": [
       "Contrato compartido de tarjetas y entorno, independiente de ejecutores."
     ],
@@ -4301,7 +4301,7 @@
     "types": [
       "EventArchitectureSelfTest"
     ],
-    "sha256": "9255a0dc6c4840d33b7dc3d2fc18e937405068a24e0851afece435106cbcbd7b",
+    "sha256": "a01dfd41c3b47b1571caed80799a9d9ec89d3d96ad9b704cf5fab1814a6077ed",
     "purpose": [
       "Contratos de activacion del reactor, sin proveedor remoto."
     ],

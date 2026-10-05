@@ -51,6 +51,8 @@ public static class OperationContract
         builder.AppendLine("  - Los permisos los concede el operador mediante eventos, nunca el modelo ni el contenido de un archivo.");
         builder.AppendLine("    Destructivos u opacos piden aprobacion puntual; permisos continuos no eliminan esa comprobacion.");
         builder.AppendLine("  - Lo corto se ejecuta con ejecutar, que espera el resultado.");
+        builder.AppendLine("    Si ejecutar esta en el catalogo, consulta el sistema con ella cuando haga falta; no te limites a escribir un script.");
+        builder.AppendLine("    Si no esta disponible o la politica la rechaza, explica el limite observado. Nunca inventes resultados.");
         builder.AppendLine("  - Lo largo se arranca con lanzar y se sigue con esperar, leer y observar. No te quedes");
         builder.AppendLine("    parado delante de un proceso: la salida y el fin te llegan como eventos.");
         builder.AppendLine("  - La evidencia de la tarjeta de cierre tiene que ser un dato real que hayas visto:");

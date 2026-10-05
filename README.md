@@ -30,11 +30,11 @@ en la lista no garantiza acceso o disponibilidad del proveedor.
 
 | Entrada | Ejecutor y alcance | Evidencia |
 | --- | --- | --- |
-| Texto libre / `run` en `interactive` | Actor por eventos, 19 tools, tarjetas, memoria | Journal y resumen de operacion en `.agentloop/` |
+| Texto libre / `run` / `chat` en `interactive` | Actor por eventos, 19 tools, tarjetas, memoria | Journal y resumen de operacion en `.agentloop/` |
 | `run`, `goal`, `lobos` independientes | Actor por eventos, archivos y procesos | Journal en `.agentloop/event-journal/` |
 | `journal` | `GoalRunner` sobre el actor | Journal y snapshot/Journey en `artifacts/journeys/` |
 | `chat` independiente | Una llamada sin herramientas | Consola |
-| `chat` dentro de `interactive`, `run-chat` independiente | Utilidad conversacional anterior con tools basicas | Hilo del chat interactivo; no acredita tarjetas |
+| `run-chat` interactivo o independiente | Utilidad conversacional anterior con tools basicas, sin terminal | Hilo del chat interactivo; no acredita tarjetas |
 | `discover` | Sondeo remoto de capacidades | Cache `artifacts/agentic-models.json` |
 | `diagnostico`, `recuperacion` | Lectura de evidencia | Informe; no repiten efectos |
 

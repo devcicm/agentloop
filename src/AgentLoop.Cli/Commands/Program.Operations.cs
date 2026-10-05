@@ -9,7 +9,7 @@ internal static partial class Program
 {
 
     /// <summary>La entrada principal del CLI publica un objetivo y ejecuta el reactor.</summary>
-    internal static bool UsesConversationLoop(string verb) => verb == "chat";
+    internal static bool UsesConversationLoop(string verb) => verb == "run-chat";
 
 
     internal static async Task<int> AgentOperationAsync(

@@ -106,6 +106,7 @@ internal static partial class Program
         ConsoleUi.Field("thinking", $"{DescribeThinking(policy, model)}");
         ConsoleUi.Field("modo", $"{(stream ? "stream" : "respuesta completa")}");
         ConsoleUi.Field("prompt", $"{prompt}");
+        ConsoleUi.Text("Esta entrada chat independiente no ofrece herramientas locales. Usa interactive y chat/run para terminal y permisos.", ConsoleColor.Yellow);
         Console.WriteLine();
 
         var request = new ChatRequest

@@ -23,6 +23,8 @@ Endpoint predeterminado: `https://integrate.api.nvidia.com/v1`.
 Modelos configurados: `z-ai/glm-5.3` y `moonshotai/kimi-k3`; incluir un ID
 en la lista no garantiza acceso o disponibilidad del proveedor.
 
+[Presentacion de consola y opciones visuales](docs/guides/consola-ui.md).
+
 ## Entradas y capacidades
 
 | Entrada | Ejecutor y alcance | Evidencia |

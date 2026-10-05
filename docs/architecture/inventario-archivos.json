@@ -616,6 +616,10 @@
     "nature": "captura historica"
   },
   {
+    "path": "docs/guides/consola-ui.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/guides/contexto-y-memoria.md",
     "nature": "documentacion"
   },
@@ -697,7 +701,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "2d5095108250386f39337b384a4ad27ecade72525bf5b02275b68edf332e25eb",
+    "sha256": "8b19c915715400be1b0efcedc379cc9640077276e6d816212329989bed36475d",
     "purpose": [
       "Un intercambio del usuario, con el hilo y los parametros de la sesion puestos."
     ],
@@ -711,7 +715,7 @@
     ],
     "sha256": "f2122f3cb062a81a8eb3b0673b2450c847842f201f568c8a55ef790f6802922f",
     "purpose": [
-      "Test honesto con el modelo real: ejecuta el goal contra GLM 5.3 (o el modelo que se pase con --model) y reporta honestamente el resultado. Sin ScriptedRunner, sin cÃƒÂ¡ntico hardcoded, sin ScriptedStep. Si el modelo cumple el protocolo de tarjetas, imprime CUMPLIDO; si no, imprime SIN CERRAR con el motivo. Uso: dotnet run --project AgentLoop.csproj -- lobos dotnet run --project AgentLoop.csproj -- lobos --model z-ai/glm-5.3-free --deadline 60"
+      "Test honesto con el modelo real: ejecuta el goal contra GLM 5.3 (o el modelo que se pase con --model) y reporta honestamente el resultado. Sin ScriptedRunner, sin cÃƒÆ’Ã‚Â¡ntico hardcoded, sin ScriptedStep. Si el modelo cumple el protocolo de tarjetas, imprime CUMPLIDO; si no, imprime SIN CERRAR con el motivo. Uso: dotnet run --project AgentLoop.csproj -- lobos dotnet run --project AgentLoop.csproj -- lobos --model z-ai/glm-5.3-free --deadline 60"
     ],
     "nature": "comando/host"
   },
@@ -757,7 +761,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "0838052bf9f15f5dec801dc6ebd41da020fc5c89254fce50ece6cda216201170",
+    "sha256": "c769fe35efb83599c3a9cf2b6c59d6dc98b967f5b9eb6e2a9e85641da1a92f19",
     "purpose": [
       "La entrada principal del CLI publica un objetivo y ejecuta el reactor."
     ],
@@ -769,7 +773,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "486d4db881825860273a551d399b2ed872d96bb1dcd304f93a350f1ac7bc05a1",
+    "sha256": "85a77f0417865499ba313ae56039d2d4b70ad17139d0f67e671914b92fe7c1a3",
     "purpose": [
       "Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts."
     ],
@@ -827,7 +831,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "8376b32e12d779bf91caf09b33e677327aad6a64fbf0a62155150259a83571a0",
+    "sha256": "28552663f69754c73dfb3a97a9193a511224b228d450ad7139d513155984cc17",
     "purpose": [
       "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
     ],
@@ -846,12 +850,24 @@
     "nature": "comando/host"
   },
   {
+    "path": "src/AgentLoop.Cli/Presentation/ConsoleUi.cs",
+    "namespace": "AgentLoop",
+    "types": [
+      "ConsoleUi"
+    ],
+    "sha256": "2deac0142704a1a99667ce08b5f834634116c1e4584d1131a82f4c73272c8807",
+    "purpose": [
+      "Presentacion del host: paneles, colores, margenes, sangrias y ajuste de texto."
+    ],
+    "nature": "presentacion/host"
+  },
+  {
     "path": "src/AgentLoop.Cli/Program.cs",
     "namespace": "AgentLoop",
     "types": [
       "Program"
     ],
-    "sha256": "66ae948bf5895786868a7d6f578cda3b1b540b481bcbc327165ef0727a9f1c20",
+    "sha256": "1ddd1d2f26edccffd11e969de2e15775d477aac52714e17207d260362ffb9f60",
     "purpose": [
       "Declaracion ClassDeclaration: Program"
     ],
@@ -1099,7 +1115,7 @@
     ],
     "sha256": "45d9d10a171d25da4a88fb8801a96211b9fbc3bea3bace7485fc345a033db016",
     "purpose": [
-      "El libro de las tarjetas: valida cada jugada, lleva la pila de operaciones abiertas y es quien decide si el objetivo esta cumplido. Las reglas son transaccionales a proposito: no hay avance sin apertura, no hay cierre sin comprobacion, y una apertura anidada obliga a cerrar de dentro hacia fuera. El objetivo solo cuenta como cumplido cuando la pila queda vacia por un cierre, nunca por agotarse el tiempo o los pasos. AdemÃ¡s hay puerta de aceptaciÃ³n (agentico): al cerrar se verifica evidencia real en cÃ³digo (archivos mencionados en el objetivo deben existir con contenido). Un cf-report.md de 0 bytes no cierra nada en verde; el rechazo dice quÃ© falta (required_evidence) para que el reintento sepa quÃ© le falta."
+      "El libro de las tarjetas: valida cada jugada, lleva la pila de operaciones abiertas y es quien decide si el objetivo esta cumplido. Las reglas son transaccionales a proposito: no hay avance sin apertura, no hay cierre sin comprobacion, y una apertura anidada obliga a cerrar de dentro hacia fuera. El objetivo solo cuenta como cumplido cuando la pila queda vacia por un cierre, nunca por agotarse el tiempo o los pasos. AdemÃƒÂ¡s hay puerta de aceptaciÃƒÂ³n (agentico): al cerrar se verifica evidencia real en cÃƒÂ³digo (archivos mencionados en el objetivo deben existir con contenido). Un cf-report.md de 0 bytes no cierra nada en verde; el rechazo dice quÃƒÂ© falta (required_evidence) para que el reintento sepa quÃƒÂ© le falta."
     ],
     "nature": "regla/estado"
   },
@@ -1171,7 +1187,7 @@
     ],
     "sha256": "e9ec74ac578c5d2fb08da69b28332b21b7c5c6b2670f33ce910c897f9bb51ca7",
     "purpose": [
-      "Una verificaciÃ³n de artefacto: quÃ© se mirÃ³, cuÃ¡nto pesaba y su hash."
+      "Una verificaciÃƒÂ³n de artefacto: quÃƒÂ© se mirÃƒÂ³, cuÃƒÂ¡nto pesaba y su hash."
     ],
     "nature": "regla/estado"
   },
@@ -1229,7 +1245,7 @@
     ],
     "sha256": "063d11706492f868f4972c8f2645f6c3ce12c101b46b1b8211dbb3d39e696f21",
     "purpose": [
-      "Criterios de aceptaciÃ³n derivados del objetivo de una transacciÃ³n, al estilo agentico (TaskContract): ninguna tarea nace sin criterios; si el objetivo no los declara explÃ­citamente, se derivan de su texto. Hoy los criterios son rutas de archivo mencionadas en el objetivo (notes/informe.md, data/salida.json...). Un objetivo sin menciones de archivo no produce criterios y queda gobernado por las reglas existentes del libro mayor (apertura, comprobaciÃ³n obligatoria, cierre en orden)."
+      "Criterios de aceptaciÃƒÂ³n derivados del objetivo de una transacciÃƒÂ³n, al estilo agentico (TaskContract): ninguna tarea nace sin criterios; si el objetivo no los declara explÃƒÂ­citamente, se derivan de su texto. Hoy los criterios son rutas de archivo mencionadas en el objetivo (notes/informe.md, data/salida.json...). Un objetivo sin menciones de archivo no produce criterios y queda gobernado por las reglas existentes del libro mayor (apertura, comprobaciÃƒÂ³n obligatoria, cierre en orden)."
     ],
     "nature": "regla/estado"
   },
@@ -1667,7 +1683,7 @@
     ],
     "sha256": "9d3ac95d6b950cfd56b7665093e21d243011f76fffbffc033a340cf152e6485f",
     "purpose": [
-      "Cache bounded para resultados de tools idempotentes. La primera llamada ejecuta el factory y cachea; las siguientes con la misma clave devuelven el resultado cacheado sin reejecutar. El tope es LRU: cuando se llega al maximo, la entrada mas vieja se descarta. Asi el cache no crece sin freno si el modelo genera miles de claves distintas por descuido. El cache vive dentro de un Run: se construye en GoalRunFactory y se invalida (vÃ­a Clear) cuando el Run termina. Asi nunca se sirven resultados de un Run anterior. Concurrencia: internamente cada entrada es un con ExecutionAndPublication, asi si N hilos llaman GetOrAdd con la misma clave al mismo tiempo solo uno ejecuta el factory; los demas esperan al Lazy y obtienen el mismo valor. Caducidad (agentico: TTL al leer): cada entrada lleva su instante de expiracion. Al leer, una entrada caducada se trata como miss: se descarta y se recrea. Sin TTL (null) las entradas no caducan."
+      "Cache bounded para resultados de tools idempotentes. La primera llamada ejecuta el factory y cachea; las siguientes con la misma clave devuelven el resultado cacheado sin reejecutar. El tope es LRU: cuando se llega al maximo, la entrada mas vieja se descarta. Asi el cache no crece sin freno si el modelo genera miles de claves distintas por descuido. El cache vive dentro de un Run: se construye en GoalRunFactory y se invalida (vÃƒÂ­a Clear) cuando el Run termina. Asi nunca se sirven resultados de un Run anterior. Concurrencia: internamente cada entrada es un con ExecutionAndPublication, asi si N hilos llaman GetOrAdd con la misma clave al mismo tiempo solo uno ejecuta el factory; los demas esperan al Lazy y obtienen el mismo valor. Caducidad (agentico: TTL al leer): cada entrada lleva su instante de expiracion. Al leer, una entrada caducada se trata como miss: se descarta y se recrea. Sin TTL (null) las entradas no caducan."
     ],
     "nature": "orquestacion/puerto"
   },
@@ -2493,7 +2509,7 @@
     ],
     "sha256": "bf05f554fb525713fcd053926dfeb7a5f2357968f931fc7fe7e55ec63062042e",
     "purpose": [
-      "Persistencia de Runs. La interfaz es minima para poder cambiar maÃ±ana el backend (SQLite, Redis, S3) sin tocar el resto del harness. SaveAsync se invoca desde el GoalRunner en checkpoints. LoadAsync se usa cuando el CLI recibe un --resume &lt;runId&gt;. ListAsync sirve para inspeccion (el comando 'journeys' podria listar los Runs recientes)."
+      "Persistencia de Runs. La interfaz es minima para poder cambiar maÃƒÂ±ana el backend (SQLite, Redis, S3) sin tocar el resto del harness. SaveAsync se invoca desde el GoalRunner en checkpoints. LoadAsync se usa cuando el CLI recibe un --resume &lt;runId&gt;. ListAsync sirve para inspeccion (el comando 'journeys' podria listar los Runs recientes)."
     ],
     "nature": "orquestacion/puerto"
   },
@@ -2839,7 +2855,7 @@
     ],
     "sha256": "ce03e6a8d6bcd36863b29e93b27570842977a0f5dbe232e6228b4a4c81045095",
     "purpose": [
-      "Contrato del ejecutor de Runs. RunAsync recibe un Run y produce un RunResult con su Journey. Hoy solo hay una implementacion (GoalRunner), pero el interface permite que maÃ±ana un ScriptRunner o un DebugRunner compartan el contrato sin que el CLI se entere."
+      "Contrato del ejecutor de Runs. RunAsync recibe un Run y produce un RunResult con su Journey. Hoy solo hay una implementacion (GoalRunner), pero el interface permite que maÃƒÂ±ana un ScriptRunner o un DebugRunner compartan el contrato sin que el CLI se entere."
     ],
     "nature": "orquestacion/puerto"
   },
@@ -3299,7 +3315,7 @@
     ],
     "sha256": "25843b799fb7ea8d6671999f1101e5849d27acf4d6ef72e27fff0f26851665a8",
     "purpose": [
-      "Manifiesto de evidencia del run, al estilo agentico (EvidenceLedger): registra cada artefacto verificado con sus bytes y su sha256, y produce un hash agregado determinista. La puerta de aceptaciÃ³n lo consulta al cerrar; el journey lo persiste para auditorÃ­a. A diferencia de creerle al campo \"evidencia\" que escribe el modelo, aquÃ­ se mira el disco en el momento de verificar. Un cf-report.md de 0 bytes no cierra nada en verde."
+      "Manifiesto de evidencia del run, al estilo agentico (EvidenceLedger): registra cada artefacto verificado con sus bytes y su sha256, y produce un hash agregado determinista. La puerta de aceptaciÃƒÂ³n lo consulta al cerrar; el journey lo persiste para auditorÃƒÂ­a. A diferencia de creerle al campo \"evidencia\" que escribe el modelo, aquÃƒÂ­ se mira el disco en el momento de verificar. Un cf-report.md de 0 bytes no cierra nada en verde."
     ],
     "nature": "adaptador/efecto"
   },
@@ -3333,7 +3349,7 @@
     ],
     "sha256": "083c9b564c2efab4eb9953b140b1679733ac5a056b5c43ae78732eddd7405731",
     "purpose": [
-      "Recuerdos explÃ­citos del usuario, separados del historial temporal."
+      "Recuerdos explÃƒÂ­citos del usuario, separados del historial temporal."
     ],
     "nature": "adaptador/efecto"
   },

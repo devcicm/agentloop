@@ -70,7 +70,8 @@ internal static partial class Program
             Console.WriteLine("(turno no completado: se descarta del hilo para no corromperlo)");
         }
 
-        Console.WriteLine(DataGuard.Display(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)"));
+        ConsoleUi.Section("RESPUESTA");
+        ConsoleUi.Text(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)");
         Console.WriteLine();
 
         if (context.ThinkingObserved)
@@ -99,11 +100,12 @@ internal static partial class Program
         ApplyPromptOptions(thread, args);
         thread.Variables.WithDefaults(model, []);
 
-        Console.WriteLine($"key: {source}");
-        Console.WriteLine($"modelo: {model}");
-        Console.WriteLine($"thinking: {DescribeThinking(policy, model)}");
-        Console.WriteLine($"modo: {(stream ? "stream" : "respuesta completa")}");
-        Console.WriteLine(DataGuard.Display($"prompt: {prompt}"));
+        ConsoleUi.Section("CHAT  /  Solicitud al proveedor");
+        ConsoleUi.Field("key", $"{source}");
+        ConsoleUi.Field("modelo", $"{model}");
+        ConsoleUi.Field("thinking", $"{DescribeThinking(policy, model)}");
+        ConsoleUi.Field("modo", $"{(stream ? "stream" : "respuesta completa")}");
+        ConsoleUi.Field("prompt", $"{prompt}");
         Console.WriteLine();
 
         var request = new ChatRequest
@@ -155,23 +157,25 @@ internal static partial class Program
             parsed = CompletionParser.Parse(await client.CreateChatCompletionAsync(request, cancellationToken));
         }
 
-        Console.WriteLine(DataGuard.Display($"finish_reason : {parsed.FinishReason}"));
-        Console.WriteLine(DataGuard.Display($"backend       : {parsed.Model}"));
-        Console.WriteLine($"usage         : {parsed.Usage}");
-        Console.WriteLine($"thinking      : {parsed.Thinking}");
+        ConsoleUi.Section("METRICAS  /  Respuesta del proveedor");
+        ConsoleUi.Field("Finalizacion", parsed.FinishReason);
+        ConsoleUi.Field("Modelo", parsed.Model);
+        ConsoleUi.Field("Tokens", parsed.Usage);
+        ConsoleUi.Field("Razonamiento", parsed.Thinking);
         if (!stream && parsed.Thinking.Text is { Length: > 0 } thought)
         {
-            Console.WriteLine(DataGuard.Display($"  {Shorten(thought, 200)}"));
+            ConsoleUi.Text(Shorten(thought, 200), ConsoleColor.DarkGray, 2);
         }
 
         if (stream)
         {
-            Console.WriteLine($"stream        : {streamNote}");
+            ConsoleUi.Field("Stream", streamNote);
             return 0;
         }
 
         Console.WriteLine();
-        Console.WriteLine(DataGuard.Display(parsed.Content ?? "(content vacio)"));
+        ConsoleUi.Section("RESPUESTA");
+        ConsoleUi.Text(parsed.Content ?? "(content vacio)");
         return 0;
     }
 
@@ -193,12 +197,13 @@ internal static partial class Program
             WorkingDirectory = Path.GetFullPath(StringOption(args, "--cwd") ?? Environment.CurrentDirectory),
         }));
 
-        Console.WriteLine($"key      : {source}");
-        Console.WriteLine($"modelo   : {model}");
-        Console.WriteLine($"tools    : {string.Join(", ", tools.Names)}");
-        Console.WriteLine($"thinking : {DescribeThinking(policy, model)}");
-        Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
-        Console.WriteLine(DataGuard.Display($"prompt   : {prompt}"));
+        ConsoleUi.Section("CHAT  /  Solicitud al proveedor");
+        ConsoleUi.Field("key", $"{source}");
+        ConsoleUi.Field("modelo", $"{model}");
+        ConsoleUi.Field("tools", $"{string.Join(", ", tools.Names)}");
+        ConsoleUi.Field("thinking", $"{DescribeThinking(policy, model)}");
+        ConsoleUi.Field("modo", $"{(stream ? "stream" : "respuesta completa")}");
+        ConsoleUi.Field("prompt", $"{prompt}");
         Console.WriteLine();
 
         // Un solo renderer para todo el loop: cierra el bloque abierto antes de cada traza
@@ -258,7 +263,8 @@ internal static partial class Program
 
         Console.WriteLine();
         Console.WriteLine("--- respuesta ----------------------------------------");
-        Console.WriteLine(DataGuard.Display(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)"));
+        ConsoleUi.Section("RESPUESTA");
+        ConsoleUi.Text(context.FinalContent ?? context.FailureReason ?? "(sin respuesta)");
         return result.Result.IsOk ? 0 : 1;
     }
 

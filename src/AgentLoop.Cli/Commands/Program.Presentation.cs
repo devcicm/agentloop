@@ -37,6 +37,7 @@ internal static partial class Program
         private readonly SafeStreamingText _contentText = new();
         private bool _thinkingOpen;
         private bool _contentOpen;
+        private bool _lineStart = true;
 
         public void Render(StreamDelta delta)
         {
@@ -60,7 +61,7 @@ internal static partial class Program
                     _contentOpen = true;
                 }
 
-                _contentText.Write(delta.Content, Console.Write);
+                _contentText.Write(delta.Content, text => Write(text, ConsoleColor.Gray));
             }
 
             foreach (var toolDelta in delta.ToolCallDeltas)
@@ -97,11 +98,12 @@ internal static partial class Program
 
             _thinkingOpen = false;
             Console.WriteLine();
+            _lineStart = true;
         }
 
         private void CloseContent()
         {
-            _contentText.Flush(Console.Write);
+            _contentText.Flush(text => Write(text, ConsoleColor.Gray));
             if (!_contentOpen)
             {
                 return;
@@ -109,14 +111,18 @@ internal static partial class Program
 
             _contentOpen = false;
             Console.WriteLine();
+            _lineStart = true;
         }
 
-        private static void Write(string text, ConsoleColor color)
+        private void Write(string text, ConsoleColor color)
         {
-            var previous = Console.ForegroundColor;
-            Console.ForegroundColor = color;
-            Console.Write(text);
-            Console.ForegroundColor = previous;
+            foreach (var piece in text.Split('\n').Select((value, index) => (value, index)))
+            {
+                if (piece.index > 0) { Console.WriteLine(); _lineStart = true; }
+                if (piece.value.Length == 0) continue;
+                if (_lineStart) { ConsoleUi.Styled(ConsoleUi.StreamMargin, color); _lineStart = false; }
+                ConsoleUi.Styled(piece.value, color);
+            }
         }
     }
 
@@ -154,6 +160,8 @@ internal static partial class Program
                                     sistema, plantilla, pensar, stream, salir.
 
             Opciones:
+              --no-color            Desactiva colores y sombreado; tambien respeta NO_COLOR.
+              --plain-ui            Presentacion sin paneles ni colores.
               --model <id>          Modelo a usar (por defecto: el primero de artifacts/agentic-models.json).
               --target <n>          discover: cuantos modelos agenticos buscar (3).
               --max-candidates <n>  discover: cuantos modelos sondear como maximo (30).

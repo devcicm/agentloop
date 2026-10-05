@@ -1962,6 +1962,7 @@
       "src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs",
       "src/AgentLoop.Cli/Commands/Program.Verification.cs",
       "src/AgentLoop.Cli/Interactive/Program.Interactive.cs",
+      "src/AgentLoop.Cli/Presentation/ConsoleUi.cs",
       "src/AgentLoop.Cli/Program.cs",
       "tests/AgentLoop.SelfTests/Legacy/BuiltInSelfTests.cs",
       "tests/AgentLoop.SelfTests/Program.cs"

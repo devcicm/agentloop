@@ -152,6 +152,7 @@ docs/evidence/eventos-final-2026-09-30.log
 docs/evidence/eventos-nvidia-2026-09-28.log
 docs/evidence/eventos-regresion-antes-2026-09-28.log
 docs/evidence/eventos-regresion-despues-2026-09-28.log
+docs/guides/consola-ui.md
 docs/guides/contexto-y-memoria.md
 docs/guides/contexto-y-recursos.md
 docs/guides/diagnostico-no-cierre.md
@@ -182,6 +183,7 @@ src/AgentLoop.Cli/Commands/Program.Verification.cs
 src/AgentLoop.Cli/GlobalUsings.cs
 src/AgentLoop.Cli/Interactive/Program.Interactive.cs
 src/AgentLoop.Cli/Presentation/CommandHeader.cs
+src/AgentLoop.Cli/Presentation/ConsoleUi.cs
 src/AgentLoop.Cli/Program.cs
 src/AgentLoop.Cli/Properties/AssemblyInfo.cs
 src/AgentLoop.Cli/Properties/launchSettings.json

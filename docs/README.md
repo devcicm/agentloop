@@ -10,6 +10,8 @@ Validacion posterior: [suite e inferencia NVIDIA con Docker](evidence/2026-10-04
 [Auditoria de credenciales y almacenes](evidence/2026-10-04-credenciales/README.md).
 Los informes fechados conservan su revision de origen.
 
+[Formato de la consola: colores, sombreado y opciones](guides/consola-ui.md).
+
 ## Guias vigentes
 
 | Documento | Alcance |

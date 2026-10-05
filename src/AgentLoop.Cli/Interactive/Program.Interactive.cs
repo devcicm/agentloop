@@ -89,7 +89,7 @@ internal static partial class Program
                     IntOption(args, "--max-ciclos", 80), IntOption(args, "--deadline", 300), cancellationToken);
             });
             lastExitCode = code;
-            Console.WriteLine($"\n[operacion terminada, codigo {code}]\n");
+            ConsoleUi.Status($"Operacion terminada | codigo {code}", code == 0);
             return code;
         }
 
@@ -97,7 +97,7 @@ internal static partial class Program
         {
             while (true)
             {
-                Console.Write($"agentloop[{thread.Exchanges}]> ");
+                ConsoleUi.Prompt(thread.Exchanges);
                 var line = Console.ReadLine();
 
                 if (line is null)
@@ -408,41 +408,44 @@ internal static partial class Program
 
     private static void PrintInteractiveBanner(ToolRegistry tools, SessionSettings settings)
     {
-        Console.WriteLine("AgentLoop - CLI interactivo (el modo util al arrancar con F5 desde Visual Studio).");
-        Console.WriteLine($"modelo: {settings.Model} | recursos: {string.Join(", ", tools.Names)}");
-        Console.WriteLine("operaciones: tarjeta, ejecutar, lanzar, esperar, leer, procesos, matar, observar, flujo");
-        Console.WriteLine($"modelos NVIDIA: {string.Join(", ", NvidiaOptions.SupportedModels)}");
-        Console.WriteLine($"thinking: {DescribeThinking(settings.Thinking, settings.Model)}");
-        Console.WriteLine($"stream: {(settings.Stream ? "activo" : "apagado")}");
-        Console.WriteLine();
-        Console.WriteLine("Motor principal: eventos, procesos y tarjetas; el cierre exige comprobacion.");
-        Console.WriteLine("  <texto libre>        publica un objetivo al reactor con memoria y antecedentes");
-        Console.WriteLine("  run <texto>          igual, explicito; guarda evidencia local de la operacion");
-        Console.WriteLine("  modelos              lista glm-5.3 y kimi-k3");
-        Console.WriteLine("  modelo <glm|kimi|id> cambia el modelo para la siguiente operacion");
-        Console.WriteLine("  nuevo                olvida la conversacion (mantiene variables y plantilla)");
-        Console.WriteLine("  historial            muestra los mensajes vivos del hilo");
-        Console.WriteLine("  contexto [compactar|limite N]   consulta o limita el historial en caracteres");
-        Console.WriteLine("  recordar clave=valor | memoria | olvidar clave   recuerdos por proyecto");
-        Console.WriteLine("  sesion guardar|cargar   guarda o recupera el historial local");
-        Console.WriteLine("  vars                 lista los parametros del prompt");
-        Console.WriteLine("  set clave=valor      define un parametro (p.ej. set idioma=ingles)");
-        Console.WriteLine("  unset clave          lo quita");
-        Console.WriteLine("  sistema              muestra el prompt de sistema ya interpolado");
-        Console.WriteLine("  plantilla <texto|archivo>   cambia la plantilla de sistema");
-        Console.WriteLine("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
-        Console.WriteLine("  stream on|off        pinta la respuesta segun llega o de golpe");
-        Console.WriteLine("  estado | pausa | reanudar | cancelar   controles de la operacion activa");
-        Console.WriteLine("  aprobar | rechazar   responde a una solicitud de autorizacion");
-        Console.WriteLine("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
-        Console.WriteLine("  discover | selftest | ayuda   utilidades sueltas");
-        Console.WriteLine("  salir                cierra");
-        Console.WriteLine();
+        ConsoleUi.Section("AGENTLOOP  /  Consola de operaciones");
+        ConsoleUi.Field("Modelo", settings.Model);
+        ConsoleUi.Field("Proveedor", "NVIDIA NIM");
+        ConsoleUi.Field("Modelos", string.Join(", ", NvidiaOptions.SupportedModels));
+        ConsoleUi.Field("Razonamiento", DescribeThinking(settings.Thinking, settings.Model));
+        ConsoleUi.Field("Stream", settings.Stream ? "activo" : "apagado");
+        ConsoleUi.Field("Directorio", settings.Policy.WorkingDirectory);
+        ConsoleUi.Field("Herramientas", string.Join(", ", tools.Names));
+        ConsoleUi.Text("Motor por eventos y tarjetas. El cierre exige evidencia comprobada.", ConsoleColor.DarkGray);
+        ConsoleUi.Section("COMANDOS  /  Objetivos, contexto y control");
+        ConsoleUi.Text("  <texto libre>        publica un objetivo al reactor con memoria y antecedentes");
+        ConsoleUi.Text("  run <texto>          igual, explicito; guarda evidencia local de la operacion");
+        ConsoleUi.Text("  modelos              lista glm-5.3 y kimi-k3");
+        ConsoleUi.Text("  modelo <glm|kimi|id> cambia el modelo para la siguiente operacion");
+        ConsoleUi.Text("  nuevo                olvida la conversacion (mantiene variables y plantilla)");
+        ConsoleUi.Text("  historial            muestra los mensajes vivos del hilo");
+        ConsoleUi.Text("  contexto [compactar|limite N]   consulta o limita el historial en caracteres");
+        ConsoleUi.Text("  recordar clave=valor | memoria | olvidar clave   recuerdos por proyecto");
+        ConsoleUi.Text("  sesion guardar|cargar   guarda o recupera el historial local");
+        ConsoleUi.Text("  vars                 lista los parametros del prompt");
+        ConsoleUi.Text("  set clave=valor      define un parametro (p.ej. set idioma=ingles)");
+        ConsoleUi.Text("  unset clave          lo quita");
+        ConsoleUi.Text("  sistema              muestra el prompt de sistema ya interpolado");
+        ConsoleUi.Text("  plantilla <texto|archivo>   cambia la plantilla de sistema");
+        ConsoleUi.Text("  pensar on|off|auto [budget] activa o apaga el razonamiento del modelo");
+        ConsoleUi.Text("  stream on|off        pinta la respuesta segun llega o de golpe");
+        ConsoleUi.Text("  estado | pausa | reanudar | cancelar   controles de la operacion activa");
+        ConsoleUi.Text("  aprobar | rechazar   responde a una solicitud de autorizacion");
+        ConsoleUi.Text("  chat <texto>          utilidad conversacional por turnos, conserva el hilo");
+        ConsoleUi.Text("  discover | selftest | ayuda   utilidades sueltas");
+        ConsoleUi.Text("  salir                cierra");
+        ConsoleUi.Text();
     }
 
 
     private static void PrintThread(ConversationSession thread)
     {
+        ConsoleUi.Section("HISTORIAL  /  Mensajes de la sesion");
         if (thread.Messages.Count == 0)
         {
             Console.WriteLine("  (hilo vacio)");
@@ -455,18 +458,19 @@ internal static partial class Program
             var body = string.IsNullOrWhiteSpace(message.Content)
                 ? (message.ToolCalls is not null ? "(tool_calls)" : "(vacio)")
                 : message.Content;
-            Console.WriteLine($"  {message.Role,-9} {Shorten(body.Replace('\n', ' '), 90)}");
+            ConsoleUi.Field(message.Role, Shorten(body.Replace('\n', ' '), 90));
         }
 
-        Console.WriteLine($"  -- {thread.Messages.Count} mensajes, tope {thread.MaxMessages}");
+        ConsoleUi.Text($"{thread.Messages.Count} mensajes | limite {thread.MaxMessages}", ConsoleColor.DarkGray);
     }
 
 
     private static void PrintVariables(ConversationSession thread)
     {
+        ConsoleUi.Section("VARIABLES  /  Parametros de la plantilla");
         foreach (var name in thread.Variables.Names)
         {
-            Console.WriteLine(DataGuard.Display($"  {name,-14} = {Shorten(thread.Variables[name].Replace('\n', ' '), 80)}"));
+            ConsoleUi.Field(name, Shorten(thread.Variables[name].Replace('\n', ' '), 80));
         }
 
         var missing = thread.SystemTemplate.MissingVariables(thread.Variables);
@@ -481,10 +485,10 @@ internal static partial class Program
     {
         try
         {
-            Console.WriteLine("  --- prompt de sistema ---");
+            ConsoleUi.Section("SISTEMA  /  Prompt interpolado");
             foreach (var line in thread.RenderSystemPrompt().Split('\n'))
             {
-                Console.WriteLine(DataGuard.Display($"  {line}"));
+                ConsoleUi.Text(line, indent: 2);
             }
         }
         catch (PromptTemplateException ex)

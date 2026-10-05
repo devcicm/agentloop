@@ -24,7 +24,7 @@ internal static partial class Program
         var consoleGate = new object();
         void Log(string text)
         {
-            lock (consoleGate) { renderer?.Close(); Console.WriteLine(DataGuard.Display(text)); }
+            lock (consoleGate) { renderer?.Close(); ConsoleUi.Log(text); }
         }
         var setup = Harness.Composition.GoalRunFactory.BuildWithBusHook(
             run, Scope.Minimal(policy), client, [], item => Log($"  evento {item.Format()}"));
@@ -45,8 +45,9 @@ internal static partial class Program
             OnDelta = renderer is null ? null : delta => { lock (consoleGate) renderer.Render(delta); },
             Trace = line => Log($"    {line}"),
         };
-        Console.WriteLine($"motor: eventos | objetivo: {objective}");
-        Console.WriteLine($"tools: {string.Join(", ", tools.Names)}");
+        ConsoleUi.Section("OPERACION  /  Objetivo por eventos");
+        ConsoleUi.Field("Objetivo", objective);
+        ConsoleUi.Field("Herramientas", string.Join(", ", tools.Names));
         settings.OnCoordinator?.Invoke(coordinator);
         EventOperationResult result;
         try { result = await coordinator.RunAsync(context, cancellationToken); }
@@ -129,14 +130,7 @@ internal static partial class Program
             lock (console)
             {
                 renderer?.Close();
-                var previous = Console.ForegroundColor;
-                if (color is not null)
-                {
-                    Console.ForegroundColor = color.Value;
-                }
-
-                Console.WriteLine(DataGuard.Display(line));
-                Console.ForegroundColor = previous;
+                ConsoleUi.Log(line, color);
             }
         }
 
@@ -160,14 +154,14 @@ internal static partial class Program
             });
         using var supervisor = setup.Supervisor;
 
-        Console.WriteLine($"key      : {source}");
-        Console.WriteLine($"modelo   : {model}");
-        Console.WriteLine($"tools    : {string.Join(", ", setup.Tools.Names)}");
-        Console.WriteLine($"tarjetas : {string.Join(", ", setup.Ledger.Deck.Names)} (cierra: {setup.Ledger.Deck.Final.Name})");
-        Console.WriteLine($"thinking : {DescribeThinking(thinking, model)}");
-        Console.WriteLine($"modo     : {(stream ? "stream" : "respuesta completa")}");
-        Console.WriteLine($"politica : {policy}");
-        Console.WriteLine($"objetivo : {objective}");
+        ConsoleUi.Field("key", $"{source}");
+        ConsoleUi.Field("modelo", $"{model}");
+        ConsoleUi.Field("tools", $"{string.Join(", ", setup.Tools.Names)}");
+        ConsoleUi.Field("tarjetas", $"{string.Join(", ", setup.Ledger.Deck.Names)} (cierra: {setup.Ledger.Deck.Final.Name})");
+        ConsoleUi.Field("thinking", $"{DescribeThinking(thinking, model)}");
+        ConsoleUi.Field("modo", $"{(stream ? "stream" : "respuesta completa")}");
+        ConsoleUi.Field("politica", $"{policy}");
+        ConsoleUi.Field("objetivo", $"{objective}");
         Console.WriteLine();
 
         var coordinator = new EventOperationCoordinator(client, model, setup.Tools, scope, OperationServiceFactory.Create())
@@ -192,39 +186,39 @@ internal static partial class Program
         var context = setup.GoalContext;
 
         Console.WriteLine();
-        Console.WriteLine("--- operacion ----------------------------------------");
-        Console.WriteLine($"Coordinador : eventos y handlers");
-        Console.WriteLine($"Resultado   : {operationResult.Reason}");
-        Console.WriteLine($"Estado final: {operationResult.Status}");
-        Console.WriteLine($"Registro    : {coordinator.JournalPath}");
-        Console.WriteLine($"Resumen     : {context.Summary()}");
-        Console.WriteLine($"Thinking    : {(context.ThinkingObserved ? "observado" : "no observado")}");
+        ConsoleUi.Section("OPERACION");
+        ConsoleUi.Field("Coordinador", $"eventos y handlers");
+        ConsoleUi.Field("Resultado", $"{operationResult.Reason}");
+        ConsoleUi.Field("Estado final", $"{operationResult.Status}");
+        ConsoleUi.Field("Registro", $"{coordinator.JournalPath}");
+        ConsoleUi.Field("Resumen", $"{context.Summary()}");
+        ConsoleUi.Field("Thinking", $"{(context.ThinkingObserved ? "observado" : "no observado")}");
 
         if (operationResult.Error is not null && !ledger.GoalMet)
         {
-            Console.WriteLine($"Error       : {operationResult.Error.Message}");
+            ConsoleUi.Field("Error", $"{operationResult.Error.Message}");
         }
 
         Console.WriteLine();
-        Console.WriteLine("--- libro mayor --------------------------------------");
-        Console.WriteLine(ledger.DescribeState());
+        ConsoleUi.Section("LIBRO MAYOR");
+        ConsoleUi.Text(ledger.DescribeState(), indent: 2);
         foreach (var play in ledger.Plays)
         {
-            Console.WriteLine($"  {play}");
+            ConsoleUi.Log($"{play}");
         }
 
         Console.WriteLine();
         if (ledger.GoalMet && operationResult.IsSuccess)
         {
-            Console.WriteLine($"CUMPLIDO: {ledger.Outcome}");
+            ConsoleUi.Status($"CUMPLIDO: {ledger.Outcome}", true);
             return 0;
         }
 
-        Console.WriteLine($"SIN CERRAR: {context.FailureReason ?? ledger.Outcome ?? ledger.PendingDebt() ?? "la tarjeta de cierre nunca se jugo"}");
+        ConsoleUi.Status($"SIN CERRAR: {context.FailureReason ?? ledger.Outcome ?? ledger.PendingDebt() ?? "la tarjeta de cierre nunca se jugo"}", false);
         var faltante = ledger.RequiredEvidence();
         if (!ledger.GoalMet && faltante.Count > 0)
         {
-            Console.WriteLine($"Evidencia faltante: {string.Join("; ", faltante)}");
+            ConsoleUi.Text($"Evidencia faltante: {string.Join("; ", faltante)}", ConsoleColor.Yellow, 2);
         }
 
         return 1;
@@ -248,12 +242,9 @@ internal static partial class Program
             return false;
         }
 
-        var previous = Console.ForegroundColor;
-        Console.ForegroundColor = ConsoleColor.Yellow;
-        Console.WriteLine();
-        Console.WriteLine($"  ejecutar? {command}");
-        Console.Write("  [s/N] ");
-        Console.ForegroundColor = previous;
+        ConsoleUi.Section("APROBACION  /  Efecto pendiente");
+        ConsoleUi.Text($"Ejecutar: {command}", ConsoleColor.Yellow);
+        ConsoleUi.Styled(ConsoleUi.Margin + "[s/N] ", ConsoleColor.Yellow);
 
         var answer = Console.ReadLine()?.Trim().ToLowerInvariant();
         return answer is "s" or "si" or "y" or "yes";

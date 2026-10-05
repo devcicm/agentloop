@@ -10,7 +10,7 @@ namespace AgentLoop.Security;
 public static class DataGuard
 {
     private static readonly Regex Secrets = new(
-        @"\b(?:nvapi-|sk-)[A-Za-z0-9_-]{16,}|\bBearer\s+[A-Za-z0-9._~+/-]{16,}",
+        @"\b(?:nvapi-|sk-)[A-Za-z0-9_-]{16,}|\bgh[pousr]_[A-Za-z0-9]{16,}|\bgithub_pat_[A-Za-z0-9_]{16,}|\bBearer\s+[A-Za-z0-9._~+/-]{16,}",
         RegexOptions.IgnoreCase | RegexOptions.CultureInvariant, TimeSpan.FromMilliseconds(100));
     private static readonly Regex Injection = new(
         @"ignore\s+(?:all\s+)?(?:previous|prior)\s+instructions|ignora\s+(?:todas\s+)?(?:las\s+)?instrucciones|<\s*/?\s*(?:system|developer)\b|\[INST\]|<\|(?:im_start|system)\|>",

@@ -4,6 +4,7 @@ Documentacion actualizada al 4 de octubre de 2026: [Core/Kernel y perfiles exter
 [Compilacion de separacion](evidence/2026-10-03-core-kernel/README.md). Las 415 comprobaciones
 y el POS anteriores corresponden a 5132301.
 Validacion posterior: [suite e inferencia NVIDIA con Docker](evidence/2026-10-04-validacion-core-kernel/README.md).
+[Auditoria de credenciales y almacenes](evidence/2026-10-04-credenciales/README.md).
 Los informes fechados conservan su revision de origen.
 
 ## Guias vigentes

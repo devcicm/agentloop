@@ -1,0 +1,8 @@
+{
+  "token_pattern_detected": true,
+  "mask_classified_not_secret": true,
+  "known_mask_still_detected": true,
+  "utf16_detected": true,
+  "opaque_exact_detected": true,
+  "assignment_detected": true
+}

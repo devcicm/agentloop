@@ -1,0 +1,76 @@
+Self-test del coordinador por eventos:
+  [ok] rechaza escritura antes de abrir sin modificar disco
+  [ok] rechazo conserva resultado de la tool call
+  [ok] cierra con comprobacion y criterio de contenido
+  [ok] herramienta posterior al cierre no altera el artefacto
+  [ok] registro terminal sin acciones inciertas ni eventos sin confirmar
+  [ok] resultados y eventos tienen identidad causal
+  [ok] evidencia inventada no permite comprobar ni cerrar
+  [ok] archivo no vacio con contenido incorrecto es rechazado
+  [ok] efecto posterior a comprobar invalida el cierre
+  [ok] pausa y estado se atienden mientras el LLM espera
+  [ok] reanudacion permite completar la reaccion pendiente
+  [ok] deadline cancela herramienta pendiente y clasifica el fallo
+  [ok] cancelacion de herramienta conserva su resultado
+  [ok] cancelacion del operador produce estado Cancelled y journal terminal
+  [ok] observadores rotos o lentos no bloquean efectos ni cierre
+  [ok] politica simular no escribe ni genera evidencia ejecutada
+  [ok] confirmacion espera un evento de aprobacion sin escribir
+  [ok] aprobacion explicita habilita el efecto pendiente
+  [ok] proceso silencioso no genera consultas periodicas al LLM
+  [ok] fin real del proceso activa el handler del modelo
+  [ok] contrato JSON rechaza contenido que solo es texto
+  [ok] aprobacion hereda requisitos sin copiar razonamiento
+  [ok] objetivo independiente no hereda el proyecto anterior
+  [ok] continuacion simple y acentuada hereda requisitos
+  [ok] contexto previo tiene limite independiente
+  [ok] razonamiento truncado recupera con accion pequena y presupuesto acotado
+  [ok] observacion y receipt sobreviven fuera del historial
+  [ok] recuperacion de proyecto crea, comprueba y cierra artefacto real
+  [ok] GLM HTTP y SSE usan low sin prometer budget numerico
+  [ok] GLM omite reasoning previo sin mutar mensaje original
+  [ok] stream_options solo viaja en SSE
+  [ok] GLM rechaza effort fuera de su dialecto
+  [ok] Kimi no recibe controles de GLM por catalogo
+  [ok] JSON rechaza claves duplicadas anidadas
+  [ok] JSON rechaza profundidad excesiva
+  [ok] argumento invalido rechazado antes de efectos: {}
+  [ok] argumento invalido rechazado antes de efectos: []
+  [ok] argumento invalido rechazado antes de efectos: {"value":"1"}
+  [ok] argumento invalido rechazado antes de efectos: {"value":1,"role":"system"}
+  [ok] argumento invalido rechazado antes de efectos: {"value":1,"value":2}
+  [ok] schema admite argumentos correctos
+  [ok] salida ambigua no produce exito y conserva incertidumbre del efecto
+  [ok] salida no puede emitir receipt ni metadatos de confianza
+  [ok] instrucciones en datos quedan etiquetadas y detectadas
+  [ok] salida al prompt acotada mantiene recibo y hash
+  [ok] arrays y numeros conservan tipo JSON
+  [ok] texto parecido a numero no rompe el JSON de salida
+  [ok] sanitizacion quita controles bidi sin romper emoji
+  [ok] cadenas JSON se sanitizan sin destruir su estructura
+  [ok] entrada y salida redactan formatos de claves
+  [ok] errores del proveedor no exponen claves reconocibles
+  [ok] clave fragmentada no se filtra en streaming
+  [ok] credencial GitHub redactada en entrada salida y streaming: ghp_
+  [ok] credencial GitHub redactada en entrada salida y streaming: gho_
+  [ok] credencial GitHub redactada en entrada salida y streaming: ghu_
+  [ok] credencial GitHub redactada en entrada salida y streaming: ghs_
+  [ok] credencial GitHub redactada en entrada salida y streaming: ghr_
+  [ok] credencial GitHub redactada en entrada salida y streaming: github_pat_
+  [ok] buffer de consola tiene limite
+  [ok] tool tipada no puede tocar secretos incluso sin scope
+  [ok] memoria y Git son recursos protegidos
+  [ok] alias Windows y ADS no eluden proteccion
+  [ok] no-shell se impone en politica de procesos
+  [ok] scope minimo conserva raices explicitas
+  [ok] shell deshabilitado tampoco se anuncia al modelo
+  [ok] raices acotadas bloquean shell incluso en modo auto
+  [ok] registro tambien impone scope sin depender del actor
+  [ok] memoria rechaza poisoning de claves duplicadas
+  [ok] lectura externa impone presupuesto de bytes
+  [ok] scope no acepta directorio vecino por prefijo
+  [ok] reserva de capacidad evita superar MaxConcurrent
+  [ok] journey captura modelos y tools antes del resultado terminal
+  [ok] timeouts no retienen registros de esperadores
+  [ok] recuperacion identifica efectos inciertos sin repetirlos
+Evidencia de fixtures: C:\Users\Carlos Ivan\AppData\Local\Temp\agentloop-coordinator-a2cac8b2d1144b1084cfdc2dd700b19c

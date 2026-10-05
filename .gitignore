@@ -5,6 +5,9 @@
 
 # dotenv files
 .env
+.env.*
+!.env.example
+!.env.template
 
 # User-specific files
 *.rsuser
@@ -485,7 +488,7 @@ $RECYCLE.BIN/
 
 ##### Harness AgentLoop #####
 # Secretos locales: NUNCA se versionan (excepto el README explicativo)
-local-secrets/*
+local-secrets/**
 .agentloop/
 !local-secrets/README.md
 

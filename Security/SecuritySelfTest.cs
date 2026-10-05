@@ -61,6 +61,17 @@ public static class SecuritySelfTest
         filter.Write(new string('A', 44) + " listo", s => streamed.Append(s));
         filter.Flush(s => streamed.Append(s));
         check("clave fragmentada no se filtra en streaming", !streamed.ToString().Contains(secret) && streamed.ToString().Contains("[SECRET REDACTED]") && streamed.ToString().Contains("listo"));
+        foreach (var prefix in new[] { "ghp_", "gho_", "ghu_", "ghs_", "ghr_", "github_pat_" })
+        {
+            var githubSecret = prefix + new string('A', 36);
+            filter = new(); streamed.Clear();
+            filter.Write(githubSecret[..2], s => streamed.Append(s));
+            filter.Write(githubSecret[2..] + " listo", s => streamed.Append(s));
+            filter.Flush(s => streamed.Append(s));
+            check("credencial GitHub redactada en entrada salida y streaming: " + prefix,
+                !DataGuard.Input(githubSecret).Contains(githubSecret) && !DataGuard.Display(githubSecret).Contains(githubSecret)
+                && !streamed.ToString().Contains(githubSecret) && streamed.ToString().Contains("[SECRET REDACTED]"));
+        }
         filter = new(); streamed.Clear(); filter.Write(new string('x', 10000), s => streamed.Append(s)); filter.Flush(s => streamed.Append(s));
         check("buffer de consola tiene limite", streamed.Length < 100);
 

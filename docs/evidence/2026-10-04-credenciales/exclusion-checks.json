@@ -1,0 +1,15 @@
+{
+  "ignoredPaths": {
+    "local-secrets/nvidia-api-key.txt": true,
+    "local-secrets/subfolder/credential.json": true,
+    ".env": true,
+    ".env.production": true,
+    ".agentloop/security-history-report.json": true
+  },
+  "trackedSecretDirectoryFiles": [
+    "local-secrets/README.md"
+  ],
+  "llmCredentialSource": "Configuration/SecretStore.cs, injected by host composition",
+  "githubCredentialSource": "OS keyring (gh auth status confirmed devcicm)",
+  "coreKernelCredentialResolution": false
+}

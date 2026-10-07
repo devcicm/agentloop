@@ -6,6 +6,10 @@ no describen necesariamente el codigo actual. No se regeneran sobre el original.
 
 ## Capturas y alcance
 
+- 2026-10-07, candidato local: build en clon aislado, 474 comprobaciones,
+  ZIP Windows/runtime 9.0.20, auditorias y prueba NVIDIA desde el paquete.
+  Sin tag ni publicacion. Ver [evidencia](2026-10-07-candidato-local/README.md).
+
 - 2026-10-04, credenciales: historial completo y objetos locales, almacenes dedicados,
   exclusiones y redaccion GitHub. Ver [auditoria](2026-10-04-credenciales/README.md).
 

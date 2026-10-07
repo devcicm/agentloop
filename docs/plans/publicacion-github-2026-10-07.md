@@ -22,8 +22,12 @@ de estable. El workflow release.yml prepara assets de Actions; no crea borradore
 ni releases. Activarlo en GitHub, conectar remoto, push, merge remoto y tag
 siguen pendientes de una instruccion posterior de publicacion.
 
-Los resultados finales se registraran en evidencia del candidato; no usar el
-estado observado inicial de abajo como si fuese su estado posterior.
+Resultados locales: [evidencia del candidato](../evidence/2026-10-07-candidato-local/README.md).
+Build del clon aislado sin errores/advertencias, 474 comprobaciones, ZIP auditado
+y probado fuera del repo, y prueba NVIDIA con cierre comprobado. Se corrigio
+el bloqueo de cuatro fuentes ignoradas por artifacts/. El commit del paquete
+queda identificado en el manifiesto y la evidencia; no usar el estado inicial
+de abajo como si fuese el estado posterior.
 
 ## 1. Estado observado
 

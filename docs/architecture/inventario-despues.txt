@@ -153,6 +153,8 @@ docs/evidence/2026-10-04-validacion-core-kernel/resumed-trace.json
 docs/evidence/2026-10-04-validacion-core-kernel/runs.json
 docs/evidence/2026-10-04-validacion-core-kernel/selftest.txt
 docs/evidence/2026-10-04-validacion-core-kernel/summary.json
+docs/evidence/2026-10-07-candidato-local/README.md
+docs/evidence/2026-10-07-candidato-local/summary.json
 docs/evidence/README.md
 docs/evidence/eventos-antes-2026-09-28.log
 docs/evidence/eventos-despues-2026-09-28.log

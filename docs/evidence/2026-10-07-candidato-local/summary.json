@@ -1,0 +1,152 @@
+{
+  "schemaVersion": 1,
+  "date": "2026-10-07",
+  "branch": "release/0.1.0-alpha.1",
+  "candidateSourceCommit": "2c940130c746781c56309a2f5a6c911cf8008914",
+  "version": "0.1.0-alpha.1",
+  "sdk": "9.0.316",
+  "runtimeVersion": "9.0.20",
+  "runtimeIdentifier": "win-x64",
+  "published": false,
+  "licenseStatus": "pending",
+  "build": {
+    "isolatedLocalClone": true,
+    "configuration": "Release",
+    "errors": 0,
+    "warnings": 0
+  },
+  "selftest": {
+    "passed": true,
+    "checks": 474,
+    "distributionChecks": 27
+  },
+  "architecture": {
+    "projects": 7,
+    "sources": 327,
+    "originalSources": 139,
+    "dependencies": {
+      "AgentLoop.Cli": [
+        "AgentLoop.Kernel",
+        "AgentLoop.Core",
+        "AgentLoop.Harness",
+        "AgentLoop.Infrastructure",
+        "AgentLoop.Compatibility"
+      ],
+      "AgentLoop.Compatibility": [
+        "AgentLoop.Kernel",
+        "AgentLoop.Core",
+        "AgentLoop.Harness",
+        "AgentLoop.Infrastructure"
+      ],
+      "AgentLoop.Core": [
+        "AgentLoop.Kernel"
+      ],
+      "AgentLoop.Harness": [
+        "AgentLoop.Kernel",
+        "AgentLoop.Core"
+      ],
+      "AgentLoop.Infrastructure": [
+        "AgentLoop.Kernel",
+        "AgentLoop.Core",
+        "AgentLoop.Harness"
+      ],
+      "AgentLoop.Kernel": [],
+      "AgentLoop.SelfTests": [
+        "AgentLoop.Kernel",
+        "AgentLoop.Core",
+        "AgentLoop.Harness",
+        "AgentLoop.Infrastructure",
+        "AgentLoop.Compatibility",
+        "AgentLoop.Cli"
+      ]
+    },
+    "errors": []
+  },
+  "secrets": {
+    "head": "2c940130c746781c56309a2f5a6c911cf8008914",
+    "objectsScanned": {
+      "blob": 1201,
+      "tree": 573,
+      "commit": 85
+    },
+    "objectCandidates": 0,
+    "worktreeCandidates": 0,
+    "limitations": "Pattern and exact-value scan; does not prove arbitrary opaque secrets absent. Ignored runtime files are not scanned."
+  },
+  "workflows": {
+    "staticValidation": [
+      {
+        "file": ".github\\workflows\\ci.yml",
+        "jobs": [
+          "windows"
+        ],
+        "permissions": {
+          "contents": "read"
+        },
+        "unpinned": []
+      },
+      {
+        "file": ".github\\workflows\\release.yml",
+        "jobs": [
+          "prepare"
+        ],
+        "permissions": {
+          "contents": "read"
+        },
+        "unpinned": []
+      }
+    ],
+    "executedOnGitHub": false
+  },
+  "artifact": {
+    "file": "AgentLoop-v0.1.0-alpha.1-win-x64.zip",
+    "bytes": 35423348,
+    "sha256": "5f6278d232b297b2dafa488d9fcba68d0d9d0657be32e269376971d711a4694c",
+    "localDirectory": ".agentloop/release/staging-0a9217b2d8b44ddcb86e4e009cae4720",
+    "files": 217,
+    "auditErrors": 0,
+    "externalChecksumsVerified": true,
+    "runtimeMatchesManifest": true
+  },
+  "smoke": {
+    "outsideRepository": true,
+    "pathWithSpaces": true,
+    "versionPassed": true,
+    "helpPassedWithoutCredential": true,
+    "verificationMissingSourcesDiagnosticPassed": true
+  },
+  "remote": {
+    "provider": "NVIDIA NIM",
+    "model": "z-ai/glm-5.3",
+    "status": "Succeeded",
+    "modelCalls": 4,
+    "scenario": "ejecutar dotnet --version, observar, comprobar y cerrar con tarjetas",
+    "observed": "9.0.316",
+    "sourceCommit": "2c940130c746781c56309a2f5a6c911cf8008914",
+    "secretsExported": false,
+    "finalDeadlineSeconds": 180,
+    "priorFinalPackageProbe": {
+      "deadlineSeconds": 60,
+      "status": "Failed",
+      "reason": "deadline del objetivo agotado"
+    }
+  },
+  "distributionGuard": {
+    "licenseRequiredByDefault": true,
+    "unlicensedInternalPreviewExplicit": true
+  },
+  "pending": [
+    "Licencia/titular",
+    "Destino y visibilidad GitHub",
+    "Canal privado de seguridad",
+    "Activar CI real/rulesets",
+    "Revision final y autorizacion de publicacion",
+    "Migracion .NET 10 antes de estable"
+  ],
+  "limitations": [
+    "Sin firma de autor",
+    "Windows x64 solamente",
+    "No certifica comportamiento de negocio general",
+    "Auditorias por patrones no prueban ausencia de secretos opacos"
+  ]
+}

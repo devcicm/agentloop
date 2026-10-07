@@ -42,6 +42,9 @@ asincronas, incluida la puerta de pausa con `AsyncManualResetEvent`.
 
 ## Arranque
 
+[Evidencia del candidato local](docs/evidence/2026-10-07-candidato-local/README.md):
+build en clon aislado, 474 comprobaciones, ZIP auditado y prueba NVIDIA.
+
 ```powershell
 dotnet build
 dotnet run --project src/AgentLoop.Cli -- interactive

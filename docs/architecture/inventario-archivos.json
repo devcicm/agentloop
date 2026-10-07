@@ -620,6 +620,14 @@
     "nature": "captura historica"
   },
   {
+    "path": "docs/evidence/2026-10-07-candidato-local/README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/evidence/2026-10-07-candidato-local/summary.json",
+    "nature": "recurso/evidencia"
+  },
+  {
     "path": "docs/evidence/README.md",
     "nature": "captura historica"
   },

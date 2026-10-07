@@ -33,6 +33,7 @@ Los informes fechados conservan su revision de origen.
 
 | Documento | Estado |
 | --- | --- |
+| [Publicacion en GitHub](plans/publicacion-github-2026-10-07.md) | Plan de primera prerelease, gaps, CI, empaquetado y criterios de salida; sin publicacion |
 | [Goals verificables para proyectos y POS](plans/plan-goals-proyectos-pos-2026-10-02.md) | Informe de la revision 5132301; ejercicio retirado del producto actual |
 
 ## Informes historicos

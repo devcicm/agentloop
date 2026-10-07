@@ -648,6 +648,10 @@
     "nature": "plan historico"
   },
   {
+    "path": "docs/plans/publicacion-github-2026-10-07.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "examples/contracts/minimal.example.json",
     "nature": "configuracion/ejemplo"
   },

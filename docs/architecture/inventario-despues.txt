@@ -160,6 +160,7 @@ docs/guides/diagnostico-no-cierre.md
 docs/guides/seguridad-datos-harness.md
 docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md
 docs/plans/plan-goals-proyectos-pos-2026-10-02.md
+docs/plans/publicacion-github-2026-10-07.md
 examples/contracts/minimal.example.json
 examples/fixtures/minimal/README.txt
 examples/fixtures/minimal/definition.json

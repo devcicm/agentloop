@@ -5,6 +5,18 @@
 Consola en C# / .NET 9 para ejecutar objetivos con NVIDIA NIM, herramientas
 locales y tarjetas transaccionales. No requiere paquetes NuGet externos.
 
+## Proposito
+
+Este repo construye un harness reutilizable para coordinar agentes, herramientas,
+procesos, contexto y evidencia mediante eventos. El modelo propone acciones;
+el host valida y ejecuta, y las tarjetas exigen comprobacion antes del cierre.
+Core/Kernel conservan contratos y estado independientes del proveedor y del
+dominio. Los proyectos de negocio se definen mediante contratos y perfiles externos.
+
+[Proposito, alcance y limites](docs/proposito-y-alcance.md) ·
+[Diagramas de flujo operativos](docs/architecture/flujos-operativos.md) ·
+[Plan de publicacion](docs/plans/publicacion-github-2026-10-07.md).
+
 El motor principal es `EventOperationCoordinator`: los eventos habilitan
 handlers; el modelo propone acciones; el sistema admite cada herramienta y
 comprueba la evidencia antes de aceptar el cierre. Las esperas usan senales

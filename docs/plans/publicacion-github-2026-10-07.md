@@ -227,6 +227,25 @@ Archivos nuevos propuestos, todavia no implementados:
 
 ## 6. Criterio para aprobar la primera publicacion
 
+### Documentacion de la entrega
+
+Base documental creada: [proposito y alcance](../proposito-y-alcance.md),
+[flujos ASCII actuales](../architecture/flujos-operativos.md), README e indice.
+Antes de publicar, revisar que reflejen el commit del tag. El flujo de release
+se identifica como propuesto y no como funcionalidad ya publicada.
+
+| Documento | Contenido requerido |
+| --- | --- |
+| README | Que es, para quien, requisitos, arranque, capacidades y enlaces |
+| Proposito/alcance | Harness reutilizable, independencia Core/Kernel, dominio externo, limites |
+| Diagramas | Dependencias, eventos, permisos, archivos, proyecto/recuperacion y release |
+| Instalacion | ZIP fuera del repo, configuracion, credenciales dedicadas y diagnostico |
+| CHANGELOG/notas | Cambios, compatibilidad, limitaciones y evidencia del candidato |
+| SECURITY/CONTRIBUTING/LICENSE | Seguridad, colaboracion y licencia elegida |
+
+La guia de instalacion del ZIP y los documentos de distribucion pendientes se
+completan al preparar el paquete; no prometer comandos o plataformas no validados.
+
 - Destino, visibilidad, licencia y alcance de plataformas resueltos.
 - Commit/tag/version concuerdan; main incorpora el candidato validado.
 - SDK fijado; soporte de runtime documentado y migracion decidida.

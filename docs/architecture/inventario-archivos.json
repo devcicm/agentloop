@@ -28,6 +28,10 @@
     "nature": "documentacion"
   },
   {
+    "path": "docs/architecture/flujos-operativos.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/architecture/goals-proyectos.md",
     "nature": "documentacion"
   },
@@ -649,6 +653,10 @@
   },
   {
     "path": "docs/plans/publicacion-github-2026-10-07.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/proposito-y-alcance.md",
     "nature": "documentacion"
   },
   {

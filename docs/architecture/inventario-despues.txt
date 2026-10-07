@@ -5,6 +5,7 @@ README.md
 docs/README.md
 docs/architecture/core-kernel.md
 docs/architecture/estructura-propuesta.md
+docs/architecture/flujos-operativos.md
 docs/architecture/goals-proyectos.md
 docs/architecture/harness-eventos.md
 docs/architecture/implementacion-coordinador-eventos-2026-09-30.md
@@ -161,6 +162,7 @@ docs/guides/seguridad-datos-harness.md
 docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md
 docs/plans/plan-goals-proyectos-pos-2026-10-02.md
 docs/plans/publicacion-github-2026-10-07.md
+docs/proposito-y-alcance.md
 examples/contracts/minimal.example.json
 examples/fixtures/minimal/README.txt
 examples/fixtures/minimal/definition.json

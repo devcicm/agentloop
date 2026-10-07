@@ -1,5 +1,12 @@
 # Indice de documentacion
 
+## Empezar aqui
+
+1. [Proposito, alcance y limites del repo](proposito-y-alcance.md).
+2. [Diagramas de flujo y responsabilidades](architecture/flujos-operativos.md).
+3. [Arranque y capacidades actuales](../README.md).
+4. [Plan de publicacion en GitHub](plans/publicacion-github-2026-10-07.md).
+
 [Reorganizacion aplicada: estructura, nombres, dependencias y validacion](architecture/reorganizacion-implementada.md).
 
 

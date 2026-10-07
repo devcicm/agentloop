@@ -20,6 +20,7 @@ internal static class VerificationProgram
         }
         return command switch
         {
+            "selftest-release" => await ReleaseReadinessSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,
             "selftest" => await BuiltInSelfTests.RunAsync(CancellationToken.None),
             "selftest-projects" => await ProjectSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,
             "selftest-events" => await EventArchitectureSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,

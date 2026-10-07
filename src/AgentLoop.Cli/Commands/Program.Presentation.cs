@@ -139,6 +139,7 @@ internal static partial class Program
               dotnet run --project src/AgentLoop.Cli (sin argumentos: abre el CLI interactivo)
 
             Comandos:
+              version               Version informativa del ejecutable (sin red ni credencial).
               chat "<prompt>"       Una llamada suelta. Verifica capa de comunicacion + capa de parseo.
               discover              Sondea el catalogo y reporta 3 modelos con capacidades agenticas.
               run "<objetivo>"      Alias de goal: reactor por eventos con tarjetas y herramientas.

@@ -15,10 +15,10 @@ public static class EventCoordinatorSelfTest
         object Call(string name, object args, string id) => new { id, type = "function", function = new { name, arguments = JsonSerializer.Serialize(args) } };
         object Open(string id = "open") => Call("tarjeta", new { nombre = "abrir", objetivo = "contrato de prueba", plan = "ejecutar y comprobar" }, id);
         object Abort(string id = "abort") => Call("tarjeta", new { nombre = "abortar", motivo = "fin controlado de prueba" }, id);
-        string Receipt(ChatRequest request, string tool)
+        string Receipt(ChatRequest request, string tool, string field = "receipt_id")
         {
             using var output = JsonDocument.Parse(request.Messages.Last(m => m.Role == ChatRoles.Tool && m.Name == tool).Content!);
-            return output.RootElement.GetProperty("receipt_id").GetString()!;
+            return output.RootElement.GetProperty(field).GetString()!;
         }
         object CheckCard(string receipt, string id = "check") => Call("tarjeta", new { nombre = "comprobar", comprobacion = "resultado observado", resultado = "40", evidencia = "herramienta", evidencia_id = receipt }, id);
         object Close(string id = "close") => Call("tarjeta", new { nombre = "cerrar", resultado = "40", evidencia = "resultado comprobado por sistema" }, id);
@@ -73,8 +73,8 @@ public static class EventCoordinatorSelfTest
             var path = Path.Combine(root, "vigencia.txt");
             var fake = new ScriptClient((request, number, ct) => Task.FromResult(number switch
             {
-                1 => Response(Open(), Call("write_text_file", new { path, content = "40" }, "write")),
-                2 => Response(CheckCard(Receipt(request, "write_text_file")), Call("write_text_file", new { path, content = "41" }, "change"), Close()),
+                1 => Response(Open(), Call("write_text_file", new { path, content = "40" }, "write"), Call("read_text_file", new {path}, "read")),
+                2 => Response(CheckCard(Receipt(request, "read_text_file")), Call("write_text_file", new { path, content = "41", read_receipt = Receipt(request,"read_text_file","read_receipt") }, "change"), Close()),
                 _ => Response(Abort()),
             }));
             var result = await fixture.Coordinator(fake, criteria: [new(path)]).RunAsync(fixture.Context, token);
@@ -178,6 +178,44 @@ public static class EventCoordinatorSelfTest
             Check("aprobacion explicita habilita el efecto pendiente", File.Exists(path));
         }
 
+        using (var fixture = new Fixture(root, "rechazar", mode: PolicyMode.Confirmar))
+        {
+            var path = Path.Combine(root,"rechazado.txt");
+            var pending = new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            using var subscription = fixture.Bus.Subscribe(e => {
+                if(e.Kind != AgentEventKind.AprobacionSolicitada) return;
+                using var data=JsonDocument.Parse(e.Data!);pending.TrySetResult(data.RootElement.GetProperty("approval_id").GetString()!);
+            });
+            var fake=new ScriptClient((request,number,ct)=>Task.FromResult(number==1 ? Response(Open(),Call("write_text_file",new {path,content="no autorizado"},"denied")) : Response(Abort())));
+            var engine=fixture.Coordinator(fake);var run=engine.RunAsync(fixture.Context,token);
+            var id=await pending.Task.WaitAsync(TimeSpan.FromSeconds(3),token);
+            Check("ID incorrecto no aprueba otra solicitud",!engine.Approve(true,approvalId:Guid.NewGuid().ToString()));
+            Check("rechazo ligado al ID pendiente",engine.Approve(false,approvalId:id));
+            await run.WaitAsync(TimeSpan.FromSeconds(3),token);
+            Check("rechazo no escribe ni acredita efecto incierto",!File.Exists(path) && OperationEventJournal.Inspect(engine.JournalPath).UnresolvedActions.Count==0);
+        }
+        using (var fixture = new Fixture(root, "continuo", mode: PolicyMode.Confirmar))
+        {
+            var first=Path.Combine(root,"continuo-1.txt");var second=Path.Combine(root,"continuo-2.txt");
+            var pending=new TaskCompletionSource<string>(TaskCreationOptions.RunContinuationsAsynchronously);
+            using var subscription=fixture.Bus.Subscribe(e=>{
+                if(e.Kind!=AgentEventKind.AprobacionSolicitada)return;
+                using var data=JsonDocument.Parse(e.Data!);pending.TrySetResult(data.RootElement.GetProperty("approval_id").GetString()!);
+            });
+            var fake=new ScriptClient((request,number,ct)=>Task.FromResult(Response(Open(),Call("write_text_file",new {path=first,content="primero"},"first"),Call("write_text_file",new {path=second,content="segundo"},"second"),Abort())));
+            var engine=fixture.Coordinator(fake);var run=engine.RunAsync(fixture.Context,token);
+            var id=await pending.Task.WaitAsync(TimeSpan.FromSeconds(3),token);engine.Approve(true,true,id);
+            await run.WaitAsync(TimeSpan.FromSeconds(3),token);
+            Check("evento continuo autoriza efectos ordinarios de sesion",File.Exists(first) && File.Exists(second) && fixture.Bus.History.Count(e=>e.Kind==AgentEventKind.AprobacionSolicitada)==1 && fixture.Scope.Policy.ContinuousPermissions.Count==1);
+        }
+        using (var fixture = new Fixture(root, "deadline-aprobacion", seconds:1, mode:PolicyMode.Confirmar))
+        {
+            var path=Path.Combine(root,"deadline-aprobacion.txt");
+            var fake=new ScriptClient((request,number,ct)=>Task.FromResult(Response(Open(),Call("write_text_file",new {path,content="pendiente"},"pending"))));
+            var engine=fixture.Coordinator(fake);
+            var result=await engine.RunAsync(fixture.Context,token).WaitAsync(TimeSpan.FromSeconds(4),token);
+            Check("deadline libera aprobacion pendiente sin escribir",result.Status==OperationStatus.Failed && !File.Exists(path));
+        }
         using (var fixture = new Fixture(root, "silencio"))
         {
             var idle = new TaskCompletionSource(TaskCreationOptions.RunContinuationsAsynchronously);

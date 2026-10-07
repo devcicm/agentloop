@@ -17,6 +17,24 @@ dominio. Los proyectos de negocio se definen mediante contratos y perfiles exter
 [Diagramas de flujo operativos](docs/architecture/flujos-operativos.md) ·
 [Plan de publicacion](docs/plans/publicacion-github-2026-10-07.md).
 
+## Candidato de version
+
+`0.1.0-alpha.1`: preparacion local, sin publicacion en GitHub. SDK fijado en
+global.json; version comun en Directory.Build.props. Licencia pendiente de
+eleccion y migracion a .NET 10 antes de una entrega estable.
+
+[Instalacion y uso desde ZIP](docs/guides/instalacion.md) ·
+[Changelog](CHANGELOG.md) · [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md).
+
+```powershell
+dotnet run --project src/AgentLoop.Cli -- version
+```
+
+El empaquetado requiere fuentes registradas en Git. `scripts/package-release.ps1`
+genera solo archivos locales, sin tags/push/releases. Con licencia pendiente,
+`-AllowUnlicensedPreview` permite preparar un candidato interno; la preparacion
+normal de distribucion queda bloqueada. Los workflows no publican releases.
+
 El motor principal es `EventOperationCoordinator`: los eventos habilitan
 handlers; el modelo propone acciones; el sistema admite cada herramienta y
 comprueba la evidencia antes de aceptar el cierre. Las esperas usan senales

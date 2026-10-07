@@ -1,0 +1,45 @@
+name: Prepare local release assets (no publication)
+on:
+  workflow_dispatch:
+permissions:
+  contents: read
+concurrency:
+  group: prepare-release-${{ github.ref }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    runs-on: windows-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: actions/setup-dotnet@a98b56852c35b8e3190ac28c8c2271da59106c68 # v6.0.0
+        with:
+          global-json-file: global.json
+      - name: Validate candidate
+        shell: pwsh
+        run: |
+          dotnet build AgentLoop.sln -c Release
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          dotnet run --project tests/AgentLoop.SelfTests -c Release --no-build -- selftest
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/audit-architecture.py
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
+          python scripts/audit-git-secrets.py --output .agentloop/release-secrets.json
+          exit $LASTEXITCODE
+      - name: Prepare assets; license required
+        shell: pwsh
+        run: ./scripts/package-release.ps1
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        with:
+          name: release-candidate-${{ github.sha }}
+          path: |
+            .agentloop/release/staging-*/*.zip
+            .agentloop/release/staging-*/SHA256SUMS.txt
+            .agentloop/release/staging-*/release-manifest.json
+            .agentloop/release/staging-*/release-notes.md
+            .agentloop/release/staging-*/package-audit.json
+          if-no-files-found: error
+          retention-days: 7

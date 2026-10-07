@@ -3,6 +3,28 @@
 Fecha: 2026-10-07. Revision inspeccionada: `544a647`.
 Estado: plan; no se crearon remotos, repositorios, tags ni releases.
 
+## Aplicacion local del plan (7 de octubre)
+
+La rama `release/0.1.0-alpha.1` prepara el candidato sin publicar. Implementados:
+version central `0.1.0-alpha.1`, SDK 9.0.316 fijado, comando version, diagnostico
+de selftest fuera del checkout, CHANGELOG, CONTRIBUTING, SECURITY, guia ZIP,
+plantilla PR, CI local, workflow manual sin publicacion y scripts de empaquetado
+y auditoria de ZIP. Actions estan fijadas por SHA; no se copia el token personal.
+
+La suite incluye nuevas regresiones de permisos, here-strings y edicion, y
+casos de aprobacion por ID, rechazo, continuo y deadline. Los casos anteriores
+se adaptaron al contrato de lectura previa y clasificador instalado.
+
+La licencia sigue pendiente de eleccion: el script normal bloquea distribucion
+sin LICENSE. Se permite solo el candidato interno con opcion explicita. SDK 10
+no esta instalado localmente; la preview usa .NET 9, con migracion pendiente antes
+de estable. El workflow release.yml prepara assets de Actions; no crea borradores
+ni releases. Activarlo en GitHub, conectar remoto, push, merge remoto y tag
+siguen pendientes de una instruccion posterior de publicacion.
+
+Los resultados finales se registraran en evidencia del candidato; no usar el
+estado observado inicial de abajo como si fuese su estado posterior.
+
 ## 1. Estado observado
 
 | Elemento | Resultado |

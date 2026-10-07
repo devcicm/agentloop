@@ -145,7 +145,7 @@ public static class BuiltInSelfTests
         results.Add(("abortar cierra la operacion sin cumplirla", abortado.Aborted && !abortado.GoalMet));
 
         // --- politica -----------------------------------------------------
-        var policy = new ExecutionPolicy { WorkingDirectory = Environment.CurrentDirectory };
+        var policy = new ExecutionPolicy { WorkingDirectory = Environment.CurrentDirectory, RiskClassifier = new ShellCommandRiskClassifier() };
         results.Add(("la politica veta un borrado de raiz",
             !policy.Evaluate(new ShellCommand(ShellKind.Bash, "rm -rf / --no-preserve-root")).Allowed));
         results.Add(("y deja pasar lo inocente",
@@ -342,7 +342,8 @@ public static class BuiltInSelfTests
 
         var projectsOk = await ProjectSelfTest.RunAsync(cancellationToken);
         var sessionOk = SessionPersistenceSelfTest.Run();
-        var ok = sessionOk && projectsOk && loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk && coordinatorOk;
+        var releaseOk = await ReleaseReadinessSelfTest.RunAsync(cancellationToken);
+        var ok = releaseOk && sessionOk && projectsOk && loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk && coordinatorOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

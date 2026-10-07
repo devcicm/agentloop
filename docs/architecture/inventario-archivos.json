@@ -4,6 +4,18 @@
     "nature": "documentacion"
   },
   {
+    "path": ".github/pull_request_template.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": ".github/workflows/ci.yml",
+    "nature": "recurso/evidencia"
+  },
+  {
+    "path": ".github/workflows/release.yml",
+    "nature": "recurso/evidencia"
+  },
+  {
     "path": ".gitignore",
     "nature": "recurso/evidencia"
   },
@@ -12,7 +24,23 @@
     "nature": "configuracion/ejemplo"
   },
   {
+    "path": "CHANGELOG.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "CONTRIBUTING.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "Directory.Build.props",
+    "nature": "recurso/evidencia"
+  },
+  {
     "path": "README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "SECURITY.md",
     "nature": "documentacion"
   },
   {
@@ -640,6 +668,10 @@
     "nature": "documentacion"
   },
   {
+    "path": "docs/guides/instalacion.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/guides/seguridad-datos-harness.md",
     "nature": "documentacion"
   },
@@ -680,6 +712,10 @@
     "nature": "configuracion/ejemplo"
   },
   {
+    "path": "global.json",
+    "nature": "recurso/evidencia"
+  },
+  {
     "path": "local-secrets/README.md",
     "nature": "guia de credenciales"
   },
@@ -692,8 +728,16 @@
     "nature": "herramienta de mantenimiento"
   },
   {
+    "path": "scripts/audit-release.py",
+    "nature": "recurso/evidencia"
+  },
+  {
     "path": "scripts/audit-repository.ps1",
     "nature": "herramienta de mantenimiento"
+  },
+  {
+    "path": "scripts/package-release.ps1",
+    "nature": "recurso/evidencia"
   },
   {
     "path": "src/AgentLoop.Cli/AgentLoop.Cli.csproj",
@@ -753,7 +797,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "2cad0c76fa1837a3216e20619a758937bf6644627d8385cced7726538806e39a",
+    "sha256": "9f3d7f2311f6d5a67e52fa963bd0bb96fc28661924ac355a5aeaf1ce6c75c703",
     "purpose": [
       "Cancelacion y traduccion de errores a codigo de salida. Vive aparte porque el modo interactivo entra aqui una vez por comando y no puede morirse en el primero."
     ],
@@ -789,7 +833,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "217c9340fdad91c5f5f26af6968bb5f1636aebc60b26b53249f262e429f74f8f",
+    "sha256": "310d1bd1ebab65807b558e45709c004521df01619e8ab71df6533ed231a1446e",
     "purpose": [
       "Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts."
     ],
@@ -825,11 +869,23 @@
     "types": [
       "Program"
     ],
-    "sha256": "f433620a46f26b622dd62e0c3fa46583545feb8e7570797fde61bb833067bc78",
+    "sha256": "2f54224acaffe3bfcfc72890e49237daf9387f462820ab209ff7a52587674aab",
     "purpose": [
       "Declaracion ClassDeclaration: Program"
     ],
     "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Version.cs",
+    "sha256": "421bd7ba6725ae131952294b4609807cd227428d7cb1a4c367fc3d82704957c9",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "purpose": [
+      "Contrato o estructura: Program.Version"
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Cli/GlobalUsings.cs",
@@ -4308,6 +4364,18 @@
     "nature": "prueba/fixture"
   },
   {
+    "path": "tests/AgentLoop.SelfTests/Distribution/ReleaseReadinessSelfTest.cs",
+    "sha256": "d6c05cc668e61bb882a9ad168bf4b38a44a52203f417f3709712a419fa59615a",
+    "namespace": "AgentLoop.Verification",
+    "types": [
+      "ReleaseReadinessSelfTest"
+    ],
+    "purpose": [
+      "Regresion local de distribucion: permisos, transporte multilinea y editor con lectura previa."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "tests/AgentLoop.SelfTests/Events/EventArchitectureSelfTest.cs",
     "namespace": "AgentLoop.Events",
     "types": [
@@ -4407,7 +4475,7 @@
     "types": [
       "EventCoordinatorSelfTest"
     ],
-    "sha256": "369fb2c11a1b2f3c41addc9b322f31a1ab90f9e86082d93e55ad4dd849cff558",
+    "sha256": "8fcc1847dfc5d0a3a4c952e763b055bfbe51eb6a808eef552243e9385e6dc42f",
     "purpose": [
       "Pruebas de contratos observables del coordinador de eventos, sin red."
     ],
@@ -4503,7 +4571,7 @@
     "types": [
       "BuiltInSelfTests"
     ],
-    "sha256": "bdce02e9df8a38197ba0c7d7581ef042205cb669633aa0d4630c3d5b827f484c",
+    "sha256": "bc501daf9d24b5913f3d790cc5e0d37b452a335b8edabf1b8200b717d4cf53bf",
     "purpose": [
       "Verifica sin red la mecanica de la operacion dirigida por eventos: los reset events, el bus, las reglas transaccionales del libro mayor y el supervisor de procesos. Lo que se comprueba aqui no son literales sino propiedades: que una espera sin senal caduca y con senal no, que una tarjeta fuera de orden se rechaza, que cerrar la transaccion anidada no cierra la operacion. Esos son los invariantes que sostienen todo lo demas, y son justo los que se rompen en silencio."
     ],
@@ -4515,7 +4583,7 @@
     "types": [
       "VerificationProgram"
     ],
-    "sha256": "b9551a1dd5a67922464eaab7e98ea38684efd5d727693c4f3d96017123fd24d4",
+    "sha256": "bef2345efa1dbf1c35db493d863e1ca903a4c75b6ede98d8ca674d5687b299fa",
     "purpose": [
       "Declaracion ClassDeclaration: VerificationProgram"
     ],

@@ -7,6 +7,8 @@ internal static partial class Program
     {
         var root = SecretStore.ResolveRepositoryRoot();
         var configured = StringOption(args, "--verification-project");
+        if (configured is null && !Directory.Exists(Path.Combine(root,"tests")))
+            throw new InvalidOperationException("selftest requiere fuentes, SDK y el proyecto tests/. El ZIP del CLI no incluye el verificador; usa el checkout de desarrollo o --verification-project.");
         var projects = configured is null ? Directory.EnumerateFiles(Path.Combine(root,"tests"), "*.csproj", SearchOption.AllDirectories)
             .Where(path => XDocument.Load(path).Descendants("AgentLoopVerification").Any(x => x.Value == "true")).ToArray()
             : [Path.GetFullPath(configured,root)];

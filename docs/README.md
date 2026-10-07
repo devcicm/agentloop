@@ -6,6 +6,7 @@
 2. [Diagramas de flujo y responsabilidades](architecture/flujos-operativos.md).
 3. [Arranque y capacidades actuales](../README.md).
 4. [Plan de publicacion en GitHub](plans/publicacion-github-2026-10-07.md).
+5. [Instalacion desde fuentes o ZIP local](guides/instalacion.md).
 
 [Reorganizacion aplicada: estructura, nombres, dependencias y validacion](architecture/reorganizacion-implementada.md).
 

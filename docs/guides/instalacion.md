@@ -31,6 +31,9 @@ dotnet run --project src/AgentLoop.Cli -c Release --no-build -- interactive --po
 
 El ZIP contiene el runtime y no necesita SDK. La compatibilidad de tu sistema
 con ese runtime debe confirmarse; Windows x64 es el unico RID del candidato inicial.
+El runtime autocontenido se fija separadamente en ReleaseRuntimeVersion de
+Directory.Build.props (9.0.20); el manifiesto y auditor de ZIP comprueban esa version.
+Referencia de mantenimiento: [politica oficial .NET](https://dotnet.microsoft.com/en-us/platform/support/policy/dotnet-core).
 
 ## Configurar NVIDIA
 

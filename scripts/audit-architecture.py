@@ -2,10 +2,12 @@
 import json
 import re
 import sys
+import subprocess
 from pathlib import Path
 import xml.etree.ElementTree as ET
 
 root = Path(__file__).resolve().parent.parent
+tracked_sources = set(subprocess.check_output(['git', '-C', str(root), 'ls-files', '-z']).decode('utf-8').strip('\0').split('\0'))
 errors = []
 projects = list(root.glob("src/*/*.csproj")) + list(root.glob("tests/*/*.csproj"))
 graph = {}
@@ -30,6 +32,8 @@ for folder in [root / "src", root / "tests"]:
         checked += 1
         source = path.read_text(encoding="utf-8-sig")
         relative = path.relative_to(root).as_posix()
+        if relative not in tracked_sources:
+            errors.append("Source missing from Git: " + relative)
         if "AgentLoop.Kernel" in relative or "AgentLoop.Core" in relative:
             if re.search(r"\b(?:File|Directory|Process|HttpClient)\.", source):
                 errors.append("I/O in neutral layer: " + relative)

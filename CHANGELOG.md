@@ -11,6 +11,7 @@
 - Documentacion de proposito, arquitectura, flujos y preparacion de releases.
 - Version/SDK fijados; empaquetado Windows x64 y workflows de validacion local.
 - Corregida regla artifacts/ que ocultaba cuatro implementaciones de Infrastructure al clonar.
+- Runtime autocontenido fijado en 9.0.20; auditoria compara version real del ZIP y manifiesto.
 
 ### Limites de la preview
 

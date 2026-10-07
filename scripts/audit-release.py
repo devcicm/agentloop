@@ -41,6 +41,10 @@ with zipfile.ZipFile(args.zip) as archive:
             errors.append({'path': name, 'reason': 'missing-entry'})
     if 'AgentLoop.Cli.exe' not in names:
         errors.append({'reason': 'missing-executable'})
+    deps = json.loads(archive.read('AgentLoop.Cli.deps.json'))
+    expected_runtime = 'runtimepack.Microsoft.NETCore.App.Runtime.' + manifest['runtimeIdentifier'] + '/' + manifest['runtimeVersion']
+    if expected_runtime not in deps['libraries']:
+        errors.append({'reason': 'runtime-version-mismatch'})
 report = {'files': files, 'commit': manifest['commit'], 'version': manifest['version'],
           'published': False, 'errors': errors,
           'limitations': 'Pattern scan and manifest comparison; does not prove absence of arbitrary opaque secrets or certify authorship.'}

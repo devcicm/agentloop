@@ -404,6 +404,10 @@ src/AgentLoop.Infrastructure/Composition/GoalRunFactory.cs
 src/AgentLoop.Infrastructure/Composition/OperationServiceFactory.cs
 src/AgentLoop.Infrastructure/Composition/ProjectProfileLoader.cs
 src/AgentLoop.Infrastructure/Credentials/SecretStore.cs
+src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactEnvironmentFactory.cs
+src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectEnvironment.cs
+src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectValidator.cs
+src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactValidatorFactory.cs
 src/AgentLoop.Infrastructure/Execution/Docker/DockerEnvironmentFactory.cs
 src/AgentLoop.Infrastructure/Execution/Docker/DockerExecutionDefinition.cs
 src/AgentLoop.Infrastructure/Execution/Docker/DockerProjectEnvironment.cs

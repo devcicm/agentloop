@@ -3320,6 +3320,54 @@
     "nature": "adaptador/efecto"
   },
   {
+    "path": "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactEnvironmentFactory.cs",
+    "sha256": "e96db1ee964e64b61e3d114f7de560fe069d95a242099ed8c3dbf7a7c1ec63c7",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "ArtifactEnvironmentFactory"
+    ],
+    "purpose": [
+      "Contrato o estructura: ArtifactEnvironmentFactory"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectEnvironment.cs",
+    "sha256": "3139da4d6adf5ee0f1c270c43bf2efcbadf5bc29c22e31d3df9dc7db41b0f982",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "ArtifactProjectEnvironment"
+    ],
+    "purpose": [
+      "Contrato o estructura: ArtifactProjectEnvironment"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectValidator.cs",
+    "sha256": "96e4c0259c5cf4d737c2d07369be161fc80ee0cb1da249d118d8e10e2ba614ee",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "ArtifactProjectValidator"
+    ],
+    "purpose": [
+      "Contrato o estructura: ArtifactProjectValidator"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactValidatorFactory.cs",
+    "sha256": "e32aca24258c2d33c494bca1e90a41ea13b4cb7518516d60228ebaeb31a33755",
+    "namespace": "AgentLoop.Harness.Execution",
+    "types": [
+      "ArtifactValidatorFactory"
+    ],
+    "purpose": [
+      "Contrato o estructura: ArtifactValidatorFactory"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Infrastructure/Execution/Docker/DockerEnvironmentFactory.cs",
     "namespace": "AgentLoop.Harness.Execution",
     "types": [

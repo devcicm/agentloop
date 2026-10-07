@@ -10,6 +10,7 @@
 - Code view y edicion de texto/palabras/lineas/parrafos con lectura previa.
 - Documentacion de proposito, arquitectura, flujos y preparacion de releases.
 - Version/SDK fijados; empaquetado Windows x64 y workflows de validacion local.
+- Corregida regla artifacts/ que ocultaba cuatro implementaciones de Infrastructure al clonar.
 
 ### Limites de la preview
 

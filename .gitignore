@@ -66,7 +66,7 @@ BenchmarkDotNet.Artifacts/
 # .NET
 project.lock.json
 project.fragment.lock.json
-artifacts/
+/artifacts/
 
 # Tye
 .tye/
@@ -493,4 +493,4 @@ local-secrets/**
 !local-secrets/README.md
 
 # Salidas del sondeo de modelos
-artifacts/
+/artifacts/

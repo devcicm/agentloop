@@ -139,6 +139,7 @@ internal static partial class Program
               dotnet run --project src/AgentLoop.Cli (sin argumentos: abre el CLI interactivo)
 
             Comandos:
+              setup [--status]      Wizard local con entrada oculta; nunca acepta claves como argumentos.
               version               Version informativa del ejecutable (sin red ni credencial).
               chat "<prompt>"       Una llamada suelta. Verifica capa de comunicacion + capa de parseo.
               discover              Sondea el catalogo y reporta 3 modelos con capacidades agenticas.

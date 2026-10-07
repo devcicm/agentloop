@@ -169,7 +169,9 @@ docs/guides/contexto-y-recursos.md
 docs/guides/diagnostico-no-cierre.md
 docs/guides/instalacion.md
 docs/guides/seguridad-datos-harness.md
+docs/guides/setup-credenciales.md
 docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md
+docs/plans/mejoras-agenticas-2026-10-07.md
 docs/plans/plan-goals-proyectos-pos-2026-10-02.md
 docs/plans/publicacion-github-2026-10-07.md
 docs/proposito-y-alcance.md
@@ -196,6 +198,7 @@ src/AgentLoop.Cli/Commands/Program.Operations.cs
 src/AgentLoop.Cli/Commands/Program.Presentation.cs
 src/AgentLoop.Cli/Commands/Program.Projects.cs
 src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs
+src/AgentLoop.Cli/Commands/Program.Setup.cs
 src/AgentLoop.Cli/Commands/Program.Verification.cs
 src/AgentLoop.Cli/Commands/Program.Version.cs
 src/AgentLoop.Cli/GlobalUsings.cs
@@ -405,6 +408,7 @@ src/AgentLoop.Infrastructure/Composition/DefaultGoalRunSetupFactory.cs
 src/AgentLoop.Infrastructure/Composition/GoalRunFactory.cs
 src/AgentLoop.Infrastructure/Composition/OperationServiceFactory.cs
 src/AgentLoop.Infrastructure/Composition/ProjectProfileLoader.cs
+src/AgentLoop.Infrastructure/Credentials/LocalCredentialWriter.cs
 src/AgentLoop.Infrastructure/Credentials/SecretStore.cs
 src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactEnvironmentFactory.cs
 src/AgentLoop.Infrastructure/Execution/Artifacts/ArtifactProjectEnvironment.cs

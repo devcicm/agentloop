@@ -79,6 +79,7 @@ internal static partial class Program
         return command switch
         {
             "version" or "--version" => PrintVersion(),
+            "setup" => SetupCredentials(args),
             "project-admit" => ProjectAdmissionCommand(args),
             "project-run" => await ProjectRunAsync(args, cancellationToken),
             "project-inspect" or "project-reconcile" => ProjectRecoveryCommand(args, command),

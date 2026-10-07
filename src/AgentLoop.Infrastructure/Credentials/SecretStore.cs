@@ -3,17 +3,15 @@ namespace AgentLoop.Configuration;
 
 
 /// <summary>
-/// Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada.
+/// Resuelve secretos locales. Prioridad: NVIDIA_API_KEY y archivo NVIDIA. No mezcla credenciales de proveedores.
 /// </summary>
 public static class SecretStore
 {
     public const string ApiKeyFileName = "nvidia-api-key.txt";
     public const string ApiKeyEnvVar = "NVIDIA_API_KEY";
-    private const string LegacyApiKeyFileName = "tokenrouter-api-key.txt";
-    private const string LegacyApiKeyEnvVar = "TOKENROUTER_API_KEY";
     private const string SecretsDirName = "local-secrets";
 
-    /// <summary>Devuelve la credencial del proveedor NVIDIA, con fallback legado. </summary>
+    /// <summary>Devuelve la credencial del proveedor NVIDIA, sin fallback entre proveedores. </summary>
     public static string GetLLMApiKey()
         => TryGetLLMApiKey(out var key, out var reason)
             ? key!
@@ -29,9 +27,10 @@ public static class SecretStore
             return true;
         }
 
-        var path = FindSecretsFile(ApiKeyFileName) ?? FindSecretsFile(LegacyApiKeyFileName);
+        var path = FindSecretsFile(ApiKeyFileName);
         if (path is not null)
         {
+            if (new FileInfo(path).Length > 4096) throw new InvalidOperationException("Archivo de credencial demasiado grande.");
             var fromFile = File.ReadAllText(path).Trim();
             if (fromFile.Length > 0)
             {
@@ -39,14 +38,6 @@ public static class SecretStore
                 reason = $"archivo {path}";
                 return true;
             }
-        }
-
-        fromEnv = Environment.GetEnvironmentVariable(LegacyApiKeyEnvVar)?.Trim();
-        if (!string.IsNullOrEmpty(fromEnv))
-        {
-            apiKey = fromEnv;
-            reason = $"variable de entorno {LegacyApiKeyEnvVar}";
-            return true;
         }
 
         apiKey = null;
@@ -112,8 +103,6 @@ public static class SecretStore
             return "(vacio)";
         }
 
-        return secret.Length <= 10
-            ? new string('*', secret.Length)
-            : $"{secret[..6]}...{secret[^4..]}";
+        return "[configurada; valor oculto]";
     }
 }

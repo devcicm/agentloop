@@ -22,3 +22,10 @@
 - Selftest requiere fuentes y SDK; no viene incluido en el ZIP del CLI.
 - Linux/macOS, NuGet, firma de binarios y actualizaciones automaticas pendientes.
 - Evidencia del candidato: consultar docs/evidence y el manifiesto del paquete.
+
+### Preparacion local posterior al candidato
+
+- Wizard `setup` con entrada oculta, consulta de estado y escritura local restringida.
+- Comprobacion de exclusion Git y rechazo de enlaces antes de guardar credenciales.
+- Retirado el fallback de claves entre proveedores; salida sin fragmentos del secreto.
+- Documentados limites y pendientes agenticos. El ZIP anterior no incluye estos cambios.

@@ -61,7 +61,7 @@ Kimi K3 conserva el dialecto anterior y su fallback de parametros opcionales.
 No se le aplican automaticamente controles GLM ni se afirma soporte remoto
 verificado en esta entrega. Su presencia en el catalogo local no garantiza acceso.
 
-Secretos: NVIDIA_API_KEY o local-secrets/nvidia-api-key.txt, con fallback legado
+Secretos: NVIDIA_API_KEY o local-secrets/nvidia-api-key.txt, sin fallback entre proveedores
 documentado en [la guia](../../../local-secrets/README.md). Nunca versionar la clave.
 Los nombres activos TokenRouter fueron sustituidos; sondas historicas congeladas
 requieren su commit de origen. El transporte comparte envio/retry; framing SSE,

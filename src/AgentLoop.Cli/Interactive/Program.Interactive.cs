@@ -171,6 +171,14 @@ internal static partial class Program
                     continue;
                 }
 
+                if (verb == "setup")
+                {
+                    lastExitCode = await ExecuteAsync(tokens);
+                    client?.Dispose();
+                    client = null;
+                    continue;
+                }
+
                 if (TryHandleSessionCommand(thread, settings, verb, rest))
                 {
                     continue;
@@ -473,6 +481,7 @@ internal static partial class Program
         ConsoleUi.Text("  permisos | permisos revocar   consulta o revoca permisos de sesion");
         ConsoleUi.Text("  chat <texto>          alias de run: reactor, terminal y evidencia local");
         ConsoleUi.Text("  run-chat <texto>      utilidad conversacional anterior, sin terminal");
+        ConsoleUi.Text("  setup [--status]     configura credenciales con entrada oculta");
         ConsoleUi.Text("  discover | selftest | ayuda   utilidades sueltas");
         ConsoleUi.Text("  salir                cierra");
         ConsoleUi.Text();

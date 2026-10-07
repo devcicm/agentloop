@@ -165,3 +165,9 @@ Validacion posterior del Core/Kernel: [pruebas locales y NVIDIA con Docker](docs
 
 Comprobaciones existentes: `dotnet run --project src/AgentLoop.Cli -- selftest` o `dotnet run --project src/AgentLoop.Cli -- selftest-coordinator`.
 Inventario documental: `powershell -File scripts/audit-repository.ps1`.
+
+## Configuracion segura
+
+Usa `setup` (entrada oculta) y `setup --status` en la consola. Nunca pegues claves
+en el chat ni en argumentos. [Wizard y limites](docs/guides/setup-credenciales.md).
+[Pendientes agenticos priorizados](docs/plans/mejoras-agenticas-2026-10-07.md).

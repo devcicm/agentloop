@@ -6,17 +6,21 @@ es `nvidia-api-key.txt`: una sola linea con la clave NVIDIA, sin comillas.
 La resolucion efectiva en [SecretStore.cs](../src/AgentLoop.Infrastructure/Credentials/SecretStore.cs) es:
 
 1. Variable `NVIDIA_API_KEY`, si contiene un valor.
-2. Archivo `nvidia-api-key.txt`; si no existe, archivo legado `tokenrouter-api-key.txt`.
-3. Variable legada `TOKENROUTER_API_KEY`.
+2. Archivo `nvidia-api-key.txt`.
 
-Se busca `local-secrets/` desde el directorio del binario y el directorio actual,
-subiendo por sus ancestros. El fallback legado conserva compatibilidad;
-una clave de otro proveedor no acredita acceso a NVIDIA. Si el archivo NVIDIA
-existe pero esta vacio, no se utiliza el archivo legado como reemplazo.
+No se reutilizan claves TokenRouter para NVIDIA. Se busca `local-secrets/` desde
+el binario y el directorio actual, subiendo por sus ancestros.
 
-El endpoint esta en `Provider/Nvidia/NvidiaOptions.cs`. La consola enmascara la
-clave al informar su procedencia. No crear una segunda copia del secreto ni
-incluir una clave real en documentacion, prompts o evidencia versionada.
+Configura con `setup` en la consola o `dotnet run --project src/AgentLoop.Cli -- setup`.
+Consulta `setup --status`. La entrada es oculta; no pases secretos como argumentos.
+El wizard comprueba que el archivo no este versionado y este ignorado, rechaza
+redirecciones de rutas y guarda con acceso limitado al usuario. El archivo sigue
+siendo texto plano: no es un almacen cifrado. Los archivos creados manualmente no
+reciben automaticamente esos permisos. No se envia la clave al LLM.
+
+El endpoint vive en `src/AgentLoop.Infrastructure/Providers/Nvidia/NvidiaOptions.cs`.
+La consola muestra estado y procedencia, nunca fragmentos de la clave.
+No crear otra copia ni incluir secretos en prompts, documentacion o evidencia.
 
 GitHub CLI guarda su token en el keyring del sistema operativo. Usar `gh auth
 login` y `gh auth status`; no copiar su token al codigo ni a un archivo del repo.

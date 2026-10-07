@@ -684,7 +684,15 @@
     "nature": "documentacion"
   },
   {
+    "path": "docs/guides/setup-credenciales.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/plans/mejoras-agenticas-2026-10-07.md",
     "nature": "documentacion"
   },
   {
@@ -805,7 +813,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "9f3d7f2311f6d5a67e52fa963bd0bb96fc28661924ac355a5aeaf1ce6c75c703",
+    "sha256": "327a0f2a834a93a698a0a5d200f9fdb4f3a59f7d0cee2c59f1e69910987b86fb",
     "purpose": [
       "Cancelacion y traduccion de errores a codigo de salida. Vive aparte porque el modo interactivo entra aqui una vez por comando y no puede morirse en el primero."
     ],
@@ -841,7 +849,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "310d1bd1ebab65807b558e45709c004521df01619e8ab71df6533ed231a1446e",
+    "sha256": "ec92896a15643f2bac42a064c5fb9e3aa9d0328c5eb2106ba2b8fd359da559c3",
     "purpose": [
       "Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts."
     ],
@@ -870,6 +878,18 @@
       "Comprueba en vivo que el modelo responde antes de lanzar una prueba larga. Un ping minimo (una pregunta de un token, sin thinking) distingue: - disponible: el gateway devolvio 200. - sin acceso/saldo (401/402/403): la cuenta no puede usarlo. - no disponible (404 / model_not_found / no available channel): el gateway no lo sirve. - transporte (status 0): no se pudo contactar. No lanza: devuelve el veredicto para que el caller decida."
     ],
     "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Setup.cs",
+    "sha256": "7ceb7f94ac6aba695ffa5a27756d1014a9b6cc1f29a2efb8e9fa86d13cc925de",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "purpose": [
+      "Wizard del operador para configurar credenciales sin eco ni contexto LLM."
+    ],
+    "nature": "comando del host"
   },
   {
     "path": "src/AgentLoop.Cli/Commands/Program.Verification.cs",
@@ -911,7 +931,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "3dc866cde08be6f21e3ce7bf6bc2f7cf0cee7de814f9d21662f3ff5ccfe26049",
+    "sha256": "da536f99a293fb350ff15b8ee2b9ac35a4d244d679b53442d20ab0e0689c9c0b",
     "purpose": [
       "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
     ],
@@ -3316,12 +3336,24 @@
     "nature": "adaptador/efecto"
   },
   {
+    "path": "src/AgentLoop.Infrastructure/Credentials/LocalCredentialWriter.cs",
+    "sha256": "6be1f3d68354dab78201b2a10dde0e48670878015fe6fd8a62d5a3d8735f4ce5",
+    "namespace": "AgentLoop.Configuration",
+    "types": [
+      "LocalCredentialWriter"
+    ],
+    "purpose": [
+      "Persistencia local de secretos; no pertenece al kernel ni se expone como herramienta."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Infrastructure/Credentials/SecretStore.cs",
     "namespace": "AgentLoop.Configuration",
     "types": [
       "SecretStore"
     ],
-    "sha256": "108a84a3401aac196a703dfa24836486f0512e92fe48c2c1910d7212618c495b",
+    "sha256": "be95939dc65368b59eccda3e561c5a342d6dd33f50af8d289f3a36ae618577ab",
     "purpose": [
       "Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada."
     ],

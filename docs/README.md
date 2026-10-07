@@ -57,3 +57,6 @@ El manifiesto del 27 de septiembre es una foto historica. El inventario actual
 se genera con [audit-repository.ps1](../scripts/audit-repository.ps1).
 Las sondas antiguas requieren su revision de origen: no son especificacion
 del actor nuevo ni deben sobrescribir la evidencia original.
+
+- [Wizard de credenciales](guides/setup-credenciales.md).
+- [Pendientes agenticos y prioridades](plans/mejoras-agenticas-2026-10-07.md).

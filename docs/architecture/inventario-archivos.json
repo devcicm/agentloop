@@ -680,6 +680,10 @@
     "nature": "documentacion"
   },
   {
+    "path": "docs/guides/resultados-observabilidad.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/guides/seguridad-datos-harness.md",
     "nature": "documentacion"
   },
@@ -813,7 +817,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "327a0f2a834a93a698a0a5d200f9fdb4f3a59f7d0cee2c59f1e69910987b86fb",
+    "sha256": "89e68fea4db1b57e7ca24567e76d0724938b4ea0f71bb87726ec53b106458fc6",
     "purpose": [
       "Cancelacion y traduccion de errores a codigo de salida. Vive aparte porque el modo interactivo entra aqui una vez por comando y no puede morirse en el primero."
     ],
@@ -837,7 +841,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "db06513a138149bd921d514147fbb18b9ed52bff46a448ed38019fabc0b93953",
+    "sha256": "dc1043f50a1d7ac880e73c39f40104a11c3cdad281ea238ba3899aafdf4fe96c",
     "purpose": [
       "La entrada principal del CLI publica un objetivo y ejecuta el reactor."
     ],
@@ -849,7 +853,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "ec92896a15643f2bac42a064c5fb9e3aa9d0328c5eb2106ba2b8fd359da559c3",
+    "sha256": "5a2015680196a05457e358d077dd1932fc9e217ba0965548bc1b7571cc46c094",
     "purpose": [
       "Con F5, Visual Studio cierra la ventana en cuanto termina la depuracion y el resultado se pierde. Solo se pausa si hay depurador enganchado: desde la terminal no lo hay y el proceso sale limpio, que es lo que necesitan tuberias y scripts."
     ],
@@ -873,15 +877,27 @@
     "types": [
       "Program"
     ],
-    "sha256": "017d7618777616eedb2f6c49c0638d995ad61454b9ba48136f3d8d55daf7d3e0",
+    "sha256": "c9fd337309647d222c23eca5c99b751b5263bb43edf3aa21b6152849e5076fa8",
     "purpose": [
       "Comprueba en vivo que el modelo responde antes de lanzar una prueba larga. Un ping minimo (una pregunta de un token, sin thinking) distingue: - disponible: el gateway devolvio 200. - sin acceso/saldo (401/402/403): la cuenta no puede usarlo. - no disponible (404 / model_not_found / no available channel): el gateway no lo sirve. - transporte (status 0): no se pudo contactar. No lanza: devuelve el veredicto para que el caller decida."
     ],
     "nature": "comando/host"
   },
   {
+    "path": "src/AgentLoop.Cli/Commands/Program.Results.cs",
+    "sha256": "918f206bab229068bf7f435e4902b1ff28d7db8ea83e65e494f4b1e60ec75c23",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "purpose": [
+      "Contrato o estructura: Program.Results"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Cli/Commands/Program.Setup.cs",
-    "sha256": "7ceb7f94ac6aba695ffa5a27756d1014a9b6cc1f29a2efb8e9fa86d13cc925de",
+    "sha256": "b116a222becbe0905e8104b3e280a4cb22ffb798a5b95e571e403d820194a538",
     "namespace": "AgentLoop",
     "types": [
       "Program"
@@ -931,7 +947,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "da536f99a293fb350ff15b8ee2b9ac35a4d244d679b53442d20ab0e0689c9c0b",
+    "sha256": "398fa6f3fd4a77d2a81a365009ebce19fad7267f82b4ad43d119637215bdbd77",
     "purpose": [
       "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
     ],
@@ -967,7 +983,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "1ddd1d2f26edccffd11e969de2e15775d477aac52714e17207d260362ffb9f60",
+    "sha256": "c31d8a6bfba824b7acaf0c931d31942bff76d3c53c9f0efc63f506b08405d22c",
     "purpose": [
       "Declaracion ClassDeclaration: Program"
     ],
@@ -1398,6 +1414,21 @@
     "nature": "regla/estado"
   },
   {
+    "path": "src/AgentLoop.Core/Primitives/Failure.cs",
+    "sha256": "c0398c795aa494b2c37d34897d820d40afbcb440abd120a0fc67ecafddb54235",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "Failure",
+      "IFailureSource",
+      "FailureException",
+      "Failures"
+    ],
+    "purpose": [
+      "Error seguro para transporte, observabilidad y decisiones; nunca contiene payloads o secretos."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Core/Primitives/FunctionComposition.cs",
     "namespace": "AgentLoop.Harness.Functional",
     "types": [
@@ -1475,7 +1506,7 @@
     "types": [
       "Result"
     ],
-    "sha256": "dd2363e88bdc9601b8cd191900f3c000f2363024a90d9cac4d608fb39f3a914d",
+    "sha256": "777eb88bd42b0833482407e6cea6a5effbb245ecff78878e47e5ffed512bf18b",
     "purpose": [
       "Tipo suma con dos casos: Ok(valor) o Fail(error). Es el reemplazo del campo nullable \"puede haber pasado algo mal\" que contamina muchos tipos del harness. Con un tipo suma el compilador obliga a PatternMatch, asi \"se me olvido comprobar el Failure\" deja de compilar. Diferencia con la version minimalista que venia en Composition.cs: aqui cada caso lleva datos reales (no E=default en Ok), soporta equality estructural completa, y expone helpers (Map, Bind, Match) que la libreria estandar no da. Convencion: T es el valor de exito, E es el motivo de fallo. Si el fallo no aporta dato (tipo unit), usar ."
     ],
@@ -2583,7 +2614,7 @@
     "types": [
       "EventOperationCoordinator"
     ],
-    "sha256": "d71d3cc1e8b07d598d776a377b022a0e78ac10f07883b878b9dddb587f6d5420",
+    "sha256": "421fb09d5b26d4778d67cb62fe9418237977c0b319a36555e6a0185007209840",
     "purpose": [
       "Un actor de operacion. Cada publicacion agenda su handler; no itera estados ni llama StepAsync. Modelo y herramientas publican resultados desde tareas independientes."
     ],
@@ -2595,7 +2626,7 @@
     "types": [
       "EventOperationResult"
     ],
-    "sha256": "d055ee5e7f382c17f1ef82f08b4faec4f05eda0bfbae7f4ae43b8a8c1cdf1ea8",
+    "sha256": "aed3041a8597f8faa5f3b059eefede770846605b0fced01f979271b7ae47b639",
     "purpose": [
       "Declaracion RecordDeclaration: EventOperationResult"
     ],
@@ -3337,7 +3368,7 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Credentials/LocalCredentialWriter.cs",
-    "sha256": "6be1f3d68354dab78201b2a10dde0e48670878015fe6fd8a62d5a3d8735f4ce5",
+    "sha256": "95287fd4e8f89052ec295c0b60eb72ecbc30a3ec3e5eaef00ea080e6b7850f9a",
     "namespace": "AgentLoop.Configuration",
     "types": [
       "LocalCredentialWriter"
@@ -3353,7 +3384,7 @@
     "types": [
       "SecretStore"
     ],
-    "sha256": "be95939dc65368b59eccda3e561c5a342d6dd33f50af8d289f3a36ae618577ab",
+    "sha256": "64bce07ea0670bcc5dd2fef6c0d5494008edf412543b68a9451c9ae1168a8bc8",
     "purpose": [
       "Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada."
     ],
@@ -3598,6 +3629,19 @@
     "nature": "adaptador/efecto"
   },
   {
+    "path": "src/AgentLoop.Infrastructure/Observability/ResultBoundary.cs",
+    "sha256": "18060bbd4097e7fdf9514090281cf6f0024252919069bba578736d7ac2ff8dcf",
+    "namespace": "AgentLoop.Observability",
+    "types": [
+      "ResultBoundary",
+      "BoundaryObservation"
+    ],
+    "purpose": [
+      "Frontera de captura con trazas sin argumentos, resultados, excepciones ni datos sensibles."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Infrastructure/Persistence/AtomicFileWriter.cs",
     "namespace": "AgentLoop.StateMachines",
     "types": [
@@ -3711,7 +3755,7 @@
     "types": [
       "LLMException"
     ],
-    "sha256": "40e461918e01781e750fd52ee9edc429cd5ef87c3cfceaa84b6f5e65c30a2664",
+    "sha256": "1d7aae4c33864bb0ec944500b2c6f6405c7b1bf47f65893883ca36c2ba25772f",
     "purpose": [
       "Cualquier respuesta no-2xx del gateway o fallo de transporte."
     ],

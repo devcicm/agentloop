@@ -1,3 +1,4 @@
+using AgentLoop.Harness.Functional;
 using System.Diagnostics;
 using System.Security.AccessControl;
 using System.Security.Principal;
@@ -9,6 +10,12 @@ namespace AgentLoop.Configuration;
 public static class LocalCredentialWriter
 {
     public static string Destination => Path.Combine(SecretStore.ResolveRepositoryRoot(), "local-secrets", SecretStore.ApiKeyFileName);
+
+    public static Result<Unit, Failure> SaveResult(string value, bool replace)
+    {
+        try { Save(value, replace); return Result<Unit, Failure>.Ok(Unit.Value); }
+        catch (Exception error) { return Result<Unit, Failure>.Fail(Failures.FromException(error, Guid.NewGuid().ToString("N"))); }
+    }
 
     public static void Save(string value, bool replace)
     {

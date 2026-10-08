@@ -1,8 +1,9 @@
+using AgentLoop.Harness.Functional;
 namespace AgentLoop.Provider;
 
 
 /// <summary>Cualquier respuesta no-2xx del gateway o fallo de transporte.</summary>
-public sealed class LLMException : Exception
+public sealed class LLMException : Exception, IFailureSource
 {
     public LLMException(int statusCode, string message, string? rawPayload = null, Exception? inner = null)
         : base(DataGuard.Display($"[{statusCode}] {message}"), inner)
@@ -11,6 +12,14 @@ public sealed class LLMException : Exception
         ProviderMessage = DataGuard.Display(message);
         RawPayload = rawPayload is null ? null : DataGuard.Redact(rawPayload);
     }
+
+    public Failure ToFailure(string correlationId) => StatusCode switch
+    {
+        401 => new("credentials.rejected", "El proveedor rechazo la credencial. Usa setup para revisarla.", correlationId, false, StatusCode),
+        403 => new("provider.forbidden", "El proveedor denego acceso; revisa permisos de cuenta y modelo.", correlationId, false, StatusCode),
+        402 => new("provider.quota", "El proveedor requiere saldo o acceso adicional.", correlationId, false, StatusCode),
+        _ => new("provider.request", "Fallo de solicitud al proveedor.", correlationId, IsTransient, StatusCode),
+    };
 
     /// <summary>Codigo HTTP, o 0 si el fallo fue de transporte.</summary>
     public int StatusCode { get; }

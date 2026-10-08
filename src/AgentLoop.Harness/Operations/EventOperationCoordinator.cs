@@ -1,3 +1,4 @@
+using AgentLoop.Harness.Functional;
 using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Text.Json;
@@ -31,6 +32,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     private bool _stopGraceScheduled;
     private readonly ConcurrentDictionary<Guid, PendingApproval> _approvals = new();
     private EventOperationResult? _finish;
+    private readonly string _correlationId = Activity.Current?.TraceId.ToString() ?? Guid.NewGuid().ToString("N");
+    private Failure? _terminalFailure;
     private string? _stopReason;
     private OperationStatus _stopStatus;
     private int _textOnly, _failures, _adaptiveTokens;
@@ -238,12 +241,12 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         }
         catch (Exception error)
         {
-            _context.FailureReason = error.Message;
+            _context.FailureReason = Failures.FromException(error, _correlationId).Message;
             _lifetime.Cancel();
             _terminal = true;
             Status = OperationStatus.Failed;
             foreach (var handle in _context.Supervisor.Handles.Where(h => h.Running)) handle.Kill();
-            _finish = new(OperationStatus.Failed, "fallo estructural o de registro: " + error.Message, error);
+            _finish = new(OperationStatus.Failed, "fallo estructural o de registro", error) { CorrelationId = _correlationId, FailureInfo = Failures.FromException(error, _correlationId) };
         }
         finally
         {
@@ -338,7 +341,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
     {
         if (!_models.TryRemove(DeliveryId(item), out var delivery)) return;
         _modelActive = false;
-        _journal.Append("resolved", item, new { response = delivery.Completion?.Raw, error = delivery.Error?.Message });
+        _journal.Append("resolved", item, new { response = delivery.Completion?.Raw, failure = delivery.Error is null ? null : Failures.FromException(delivery.Error, _correlationId) });
         if (_stopReason is not null) { TryFinishStop(); return; }
         if (delivery.Error is { } error)
         {
@@ -348,7 +351,8 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                 _ = RecoveryAsync(TimeSpan.FromSeconds(Math.Min(15, 3 * Math.Pow(2, _failures - 1))), "reintento por fallo transitorio");
                 return;
             }
-            Stop(OperationStatus.Failed, error.Message);
+            _terminalFailure = Failures.FromException(error, _correlationId);
+            Stop(OperationStatus.Failed, _terminalFailure.Code + ": " + _terminalFailure.Message);
             return;
         }
         _failures = 0;
@@ -439,7 +443,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
                     execution = await tools.ExecuteAsync(admission.Call, _lifetime.Token).ConfigureAwait(false);
                 }
             }
-            catch (Exception error) { execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = error.Message }), true) { EffectsMayHaveOccurred = effectsInvoked }; }
+            catch (Exception error) { execution = new(call.Id, call.Name, JsonSerializer.Serialize(new { error = Failures.FromException(error, _correlationId) }), true) { EffectsMayHaveOccurred = effectsInvoked }; }
             _actions[actionId] = new(execution, transactionId, clock.Elapsed, call);
             _context.Bus.Publish(AgentEventKind.HerramientaResultado, "tool", call.Name,
                 new { action_id = actionId.ToString("N"), call_id = call.Id, tool = call.Name }, admitted.EventId);
@@ -465,7 +469,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         _context.RememberObservation(execution.ToolName, output, execution.Failed);
         string? projectError = null;
         try { if (_project is not null) _project.Observe(execution, delivery.Call); }
-        catch (Exception error) { projectError = error.Message; }
+        catch (Exception error) { _terminalFailure = Failures.FromException(error, _correlationId); projectError = _terminalFailure.Message; }
         _journal.Append("resolved", item, new { execution.ToolCallId, execution.ToolName, output, execution.Failed, execution.EffectsMayHaveOccurred, receipt,
             projectSnapshot = _project is null ? (JsonElement?)null : JsonSerializer.SerializeToElement(_project.Snapshot(), AgentLoop.Goals.Projects.Contracts.ProjectJson.Options) });
         if (projectError is not null) { Stop(OperationStatus.Failed, projectError); return; }
@@ -541,9 +545,9 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         Status = status;
         var item = Publish(status == OperationStatus.Succeeded ? AgentEventKind.ObjetivoCumplido : AgentEventKind.ObjetivoFallido,
             reason, new { status = status.ToString() });
-        _journal.Append("terminal", item, new { status = status.ToString(), reason, cards = _context.Ledger.Plays.Select(p => new { p.Name, p.Accepted, p.Fields }), evidence = _context.Ledger.Evidence.Snapshot() });
+        _journal.Append("terminal", item, new { status = status.ToString(), reason, correlationId = _correlationId, failure = _terminalFailure, cards = _context.Ledger.Plays.Select(p => new { p.Name, p.Accepted, p.Fields }), evidence = _context.Ledger.Evidence.Snapshot() });
         _terminal = true;
-        _finish = new(status, reason);
+        _finish = new(status, reason) { CorrelationId = _correlationId, FailureInfo = _terminalFailure };
     }
 
     private void Observe(Action action)

@@ -56,6 +56,7 @@ internal static partial class Program
         EventOperationResult result;
         try { result = await coordinator.RunAsync(context, cancellationToken); }
         finally { settings.OnCoordinator?.Invoke(null); }
+        ObserveOperationResult(result);
         renderer?.Close();
         var succeeded = context.Ledger.GoalMet && result.IsSuccess;
         var summary = (succeeded ? "CUMPLIDO: " : "SIN CERRAR: ")
@@ -65,7 +66,7 @@ internal static partial class Program
         AtomicFileWriter.Write(evidencePath, JsonSerializer.Serialize(new
         {
             objective, taskContext, model = settings.Model, succeeded, summary, context.Cycles, context.EventsSeen,
-            state = result.Status.ToString(), stop = result.Reason, journal = coordinator.JournalPath,
+            state = result.Status.ToString(), stop = result.Reason, result.CorrelationId, failure = result.Outcome.Error, journal = coordinator.JournalPath,
             events = context.Bus.History,
             cards = context.Ledger.Plays.Select(p => new { p.Name, p.Fields, p.Accepted, p.Rejection, p.Depth, p.At }),
             messages = context.Messages,
@@ -148,7 +149,7 @@ internal static partial class Program
             run, scope, client, [],
             item =>
             {
-                Log($"  Â· {item.Format()}", EventColor(item.Kind));
+                Log($"  Ã‚Â· {item.Format()}", EventColor(item.Kind));
                 if (item.Kind == AgentEventKind.AprobacionSolicitada)
                 {
                     ConsoleUi.Approval(item);
@@ -190,6 +191,7 @@ internal static partial class Program
 
         approvalTarget = coordinator;
         var operationResult = await coordinator.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
+        ObserveOperationResult(operationResult);
         renderer?.Close();
 
         var ledger = setup.Ledger;
@@ -206,7 +208,7 @@ internal static partial class Program
 
         if (operationResult.Error is not null && !ledger.GoalMet)
         {
-            ConsoleUi.Field("Error", $"{operationResult.Error.Message}");
+            ConsoleUi.Field("Error", operationResult.Outcome.Error?.Code);
         }
 
         Console.WriteLine();

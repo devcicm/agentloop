@@ -60,3 +60,5 @@ del actor nuevo ni deben sobrescribir la evidencia original.
 
 - [Wizard de credenciales](guides/setup-credenciales.md).
 - [Pendientes agenticos y prioridades](plans/mejoras-agenticas-2026-10-07.md).
+
+- [Resultados, errores y observabilidad](guides/resultados-observabilidad.md).

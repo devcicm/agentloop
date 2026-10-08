@@ -12,12 +12,10 @@ internal static partial class Program
 
     private static NvidiaClient BuildClient(out string keySource, ThinkingPolicy? thinking = null)
     {
-        if (!SecretStore.TryGetLLMApiKey(out var apiKey, out var reason))
-        {
-            throw new InvalidOperationException(reason);
-        }
-
-        keySource = $"{SecretStore.Mask(apiKey!)} (desde {reason})";
+        var credential = SecretStore.ResolveCredential();
+        if (!credential.IsOk) throw new FailureException(credential.Error!);
+        var apiKey = credential.Value!.Value;
+        keySource = $"[configurada; valor oculto] (desde {credential.Value.Source})";
         return new NvidiaClient(new NvidiaOptions
         {
             ApiKey = apiKey!,

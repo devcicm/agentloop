@@ -171,3 +171,7 @@ Inventario documental: `powershell -File scripts/audit-repository.ps1`.
 Usa `setup` (entrada oculta) y `setup --status` en la consola. Nunca pegues claves
 en el chat ni en argumentos. [Wizard y limites](docs/guides/setup-credenciales.md).
 [Pendientes agenticos priorizados](docs/plans/mejoras-agenticas-2026-10-07.md).
+
+Arranque interactivo: comprueba credenciales locales y catalogo remoto (20 s);
+`--offline` omite red. Consulta `credenciales verificar`.
+[Errores y trazabilidad](docs/guides/resultados-observabilidad.md).

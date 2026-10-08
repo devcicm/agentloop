@@ -52,3 +52,15 @@ La implementacion compilo en Release sin errores ni advertencias. No se ejecuto
 el wizard para sustituir la clave real, ni nuevas pruebas de escritura o de red.
 El candidato ZIP anterior conserva su evidencia original; requiere regenerarse
 para incluir esta implementacion. No se publico ningun cambio.
+
+## Arranque y errores estructurados (8 de octubre)
+
+Al arrancar la consola se comprueba ausencia y formato local. Si existe una clave
+con formato aceptable, se consulta el catalogo del proveedor con limite de 20 s.
+`--offline` omite red. El operador puede repetir `credenciales verificar`.
+El HTTP 401 se informa como `credentials.rejected`; 403 como `provider.forbidden`,
+no como prueba de clave invalida. Una caida de red tampoco demuestra invalidez.
+Aceptar el catalogo no demuestra acceso al modelo seleccionado.
+El fallo no impide abrir la consola y ejecutar `setup` o ayuda; los objetivos
+siguen pasando por la admision y el proveedor vuelve a validar cada solicitud.
+Ver [resultados y observabilidad](resultados-observabilidad.md).

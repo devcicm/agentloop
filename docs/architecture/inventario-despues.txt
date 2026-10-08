@@ -168,6 +168,7 @@ docs/guides/contexto-y-memoria.md
 docs/guides/contexto-y-recursos.md
 docs/guides/diagnostico-no-cierre.md
 docs/guides/instalacion.md
+docs/guides/resultados-observabilidad.md
 docs/guides/seguridad-datos-harness.md
 docs/guides/setup-credenciales.md
 docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md
@@ -198,6 +199,7 @@ src/AgentLoop.Cli/Commands/Program.Operations.cs
 src/AgentLoop.Cli/Commands/Program.Presentation.cs
 src/AgentLoop.Cli/Commands/Program.Projects.cs
 src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs
+src/AgentLoop.Cli/Commands/Program.Results.cs
 src/AgentLoop.Cli/Commands/Program.Setup.cs
 src/AgentLoop.Cli/Commands/Program.Verification.cs
 src/AgentLoop.Cli/Commands/Program.Version.cs
@@ -244,6 +246,7 @@ src/AgentLoop.Core/Goals/Goal.cs
 src/AgentLoop.Core/LLM/ResponseBudgets.cs
 src/AgentLoop.Core/Primitives/Composable.cs
 src/AgentLoop.Core/Primitives/Defer.cs
+src/AgentLoop.Core/Primitives/Failure.cs
 src/AgentLoop.Core/Primitives/FunctionComposition.cs
 src/AgentLoop.Core/Primitives/IComposable.cs
 src/AgentLoop.Core/Primitives/Immutable.cs
@@ -430,6 +433,7 @@ src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs
 src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs
 src/AgentLoop.Infrastructure/Files/EvidenceManifest.cs
 src/AgentLoop.Infrastructure/GlobalUsings.cs
+src/AgentLoop.Infrastructure/Observability/ResultBoundary.cs
 src/AgentLoop.Infrastructure/Persistence/AtomicFileWriter.cs
 src/AgentLoop.Infrastructure/Persistence/FileConversationMemory.cs
 src/AgentLoop.Infrastructure/Persistence/FileConversationSessionStore.cs

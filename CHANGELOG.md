@@ -29,3 +29,10 @@
 - Comprobacion de exclusion Git y rechazo de enlaces antes de guardar credenciales.
 - Retirado el fallback de claves entre proveedores; salida sin fragmentos del secreto.
 - Documentados limites y pendientes agenticos. El ZIP anterior no incluye estos cambios.
+
+### Resultados y credenciales (8 de octubre)
+
+- Result y Failure en fronteras de comandos, credenciales y cierre del reactor.
+- Errores del proveedor codificados sin persistir cuerpos ni mensajes externos.
+- Actividades de trazabilidad y registro local de metadatos con rotacion.
+- Arranque detecta ausencia/formato y consulta aceptacion del catalogo; opcion offline.

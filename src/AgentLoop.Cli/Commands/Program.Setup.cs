@@ -13,9 +13,11 @@ internal static partial class Program
         try
         {
             ConsoleUi.Section("SETUP / Credenciales locales");
-            var configured = SecretStore.TryGetLLMApiKey(out _, out var source);
+            var state = SecretStore.ResolveCredential();
+            var configured = state.IsOk;
             ConsoleUi.Field("NVIDIA", configured ? "configurada; valor oculto" : "sin configurar");
-            if (configured) ConsoleUi.Field("Origen", source);
+            if (configured) ConsoleUi.Field("Origen", state.Value!.Source);
+            else ReportFailure(state.Error!);
             ConsoleUi.Field("Destino", LocalCredentialWriter.Destination);
             ConsoleUi.Text("GitHub usa gh auth login y su almacen del sistema; no copies el token a este proyecto.");
             if (args.Length == 2) return 0;
@@ -41,7 +43,8 @@ internal static partial class Program
                     if (secret.Length >= 4096) return Fail("Credencial demasiado larga; sin cambios.");
                     secret.Append(key.KeyChar);
                 }
-                LocalCredentialWriter.Save(secret.ToString(), replace);
+                var saved = LocalCredentialWriter.SaveResult(secret.ToString(), replace);
+                if (!saved.IsOk) return ReportFailure(saved.Error!);
             }
             finally { secret.Clear(); }
             ConsoleUi.Status("Credencial guardada. El siguiente objetivo usa un cliente nuevo. Consulta setup --status.", true);

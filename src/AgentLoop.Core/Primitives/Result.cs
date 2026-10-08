@@ -54,5 +54,5 @@ public readonly record struct Result<T, E>
         return IsOk ? onOk(Value!) : onFail(Error!);
     }
 
-    public override string ToString() => IsOk ? $"ok({Value})" : $"fail({Error})";
+    public override string ToString() => IsOk ? "ok" : "fail";
 }

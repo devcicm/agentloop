@@ -1,3 +1,4 @@
+using AgentLoop.Harness.Functional;
 
 namespace AgentLoop.Configuration;
 
@@ -30,7 +31,7 @@ public static class SecretStore
         var path = FindSecretsFile(ApiKeyFileName);
         if (path is not null)
         {
-            if (new FileInfo(path).Length > 4096) throw new InvalidOperationException("Archivo de credencial demasiado grande.");
+            if (new FileInfo(path).Length > 4096) throw new FailureException(new("credentials.malformed", "Archivo de credencial demasiado grande. Usa setup.", Guid.NewGuid().ToString("N")));
             var fromFile = File.ReadAllText(path).Trim();
             if (fromFile.Length > 0)
             {
@@ -47,6 +48,21 @@ public static class SecretStore
             (path is not null ? $" (el archivo existe pero esta vacio: {path})" : " (el archivo no existe)") +
             $"{Environment.NewLine}  2) O define la variable de entorno {ApiKeyEnvVar}";
         return false;
+    }
+
+    /// <summary>Resultado local sin lanzar por fallos esperados. El valor sensible nunca se registra.</summary>
+    public static Result<ResolvedCredential, Failure> ResolveCredential()
+    {
+        var correlation = Guid.NewGuid().ToString("N");
+        try
+        {
+            if (!TryGetLLMApiKey(out var key, out var source))
+                return Result<ResolvedCredential, Failure>.Fail(new("credentials.missing", "Falta la credencial NVIDIA. Usa setup o NVIDIA_API_KEY.", correlation));
+            if (key!.Length is < 16 or > 4096 || key.Any(char.IsWhiteSpace) || key.Any(char.IsControl))
+                return Result<ResolvedCredential, Failure>.Fail(new("credentials.malformed", "La credencial tiene formato local invalido. Usa setup.", correlation));
+            return Result<ResolvedCredential, Failure>.Ok(new(key, source));
+        }
+        catch (Exception error) { return Result<ResolvedCredential, Failure>.Fail(Failures.FromException(error, correlation)); }
     }
 
     /// <summary>Ruta del archivo de secreto, o null si no existe en ningun ancestro.</summary>
@@ -105,4 +121,13 @@ public static class SecretStore
 
         return "[configurada; valor oculto]";
     }
+}
+
+/// <summary>Dato sensible solo para composicion; no serializar ni incluir en evidencia.</summary>
+public sealed class ResolvedCredential(string value, string source)
+{
+    [System.Text.Json.Serialization.JsonIgnore]
+    public string Value { get; } = value;
+    public string Source { get; } = source;
+    public override string ToString() => "[credencial oculta]";
 }

@@ -13,7 +13,7 @@ internal static partial class Program
         ConsoleUi.Configure(args);
         if (ShouldRunInteractive(args))
         {
-            return await InteractiveAsync(args);
+            return await GuardedAsync(token => InteractiveAsync(args, token));
         }
 
         var exitCode = await ExecuteAsync(args);

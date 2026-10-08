@@ -33,27 +33,9 @@ internal static partial class Program
 
         try
         {
-            return await action(cancellation.Token);
-        }
-        catch (OperationCanceledException)
-        {
-            Console.WriteLine("Interrumpido por el usuario.");
-            return 130;
-        }
-        catch (LLMException ex)
-        {
-            ConsoleUi.Error($"ERROR del proveedor: {ex.Message}");
-            if (ex.IsQuotaOrAccess)
-            {
-                ConsoleUi.Error("La clave no tiene acceso a ese modelo en NVIDIA. Revisa la credencial y los permisos del proveedor.");
-            }
-
-            return 1;
-        }
-        catch (InvalidOperationException ex)
-        {
-            ConsoleUi.Error($"ERROR: {ex.Message}");
-            return 1;
+            var result = await AgentLoop.Observability.ResultBoundary.CaptureAsync("cli.command", action,
+                cancellation.Token, ObserveBoundary, code => code == 0);
+            return result.Match(code => code, ReportFailure);
         }
         finally
         {
@@ -80,6 +62,8 @@ internal static partial class Program
         {
             "version" or "--version" => PrintVersion(),
             "setup" => SetupCredentials(args),
+            "credenciales" => args.Length == 2 && args[1] == "verificar"
+                ? await VerifyCredentialsAsync(cancellationToken) : Fail("Uso: credenciales verificar"),
             "project-admit" => ProjectAdmissionCommand(args),
             "project-run" => await ProjectRunAsync(args, cancellationToken),
             "project-inspect" or "project-reconcile" => ProjectRecoveryCommand(args, command),
@@ -97,7 +81,7 @@ internal static partial class Program
             "diagnostico" or "diagnosis" => await DiagnosticoAsync(args),
             "selftest" => await VerificationCommandAsync(args, cancellationToken),
             "help" or "--help" or "-h" or "ayuda" => PrintHelp(),
-            "interactive" or "interactivo" or "repl" => await InteractiveAsync(args),
+            "interactive" or "interactivo" or "repl" => await InteractiveAsync(args, cancellationToken),
             _ => Fail($"Comando desconocido: '{command}'"),
         };
     }

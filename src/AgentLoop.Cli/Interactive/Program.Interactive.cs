@@ -29,7 +29,7 @@ internal static partial class Program
     /// Entrada de objetivos al reactor. ConversationSession conserva antecedentes y
     /// recuerdos; no determina el ciclo de ejecucion de las operaciones.
     /// </summary>
-    private static async Task<int> InteractiveAsync(string[] args)
+    private static async Task<int> InteractiveAsync(string[] args, CancellationToken startupToken = default)
     {
         if (HasFlag(args, "--project-contract")) return Fail("Usa project-run --project-contract <json> desde el CLI; interactive no admite un contrato de arranque.");
         var thread = new ConversationSession { SessionStore = new FileConversationSessionStore() };
@@ -71,6 +71,11 @@ internal static partial class Program
         };
 
         PrintInteractiveBanner(tools, settings);
+        var credentialState = SecretStore.ResolveCredential();
+        if (!credentialState.IsOk) ReportFailure(credentialState.Error!);
+        else ConsoleUi.Text("Credencial: formato local valido; aceptacion remota pendiente de comprobacion.", ConsoleColor.DarkGray);
+        if (credentialState.IsOk && !HasFlag(args, "--offline")) await VerifyCredentialsAsync(startupToken);
+
 
         // Un solo cliente para toda la sesion: reusar el HttpClient evita agotar
         // sockets y se crea perezosamente para que 'ayuda' funcione sin key.
@@ -171,6 +176,11 @@ internal static partial class Program
                     continue;
                 }
 
+                if (verb == "credenciales")
+                {
+                    lastExitCode = await ExecuteAsync(tokens);
+                    continue;
+                }
                 if (verb == "setup")
                 {
                     lastExitCode = await ExecuteAsync(tokens);
@@ -481,6 +491,7 @@ internal static partial class Program
         ConsoleUi.Text("  permisos | permisos revocar   consulta o revoca permisos de sesion");
         ConsoleUi.Text("  chat <texto>          alias de run: reactor, terminal y evidencia local");
         ConsoleUi.Text("  run-chat <texto>      utilidad conversacional anterior, sin terminal");
+        ConsoleUi.Text("  credenciales verificar   comprueba aceptacion remota con limite de tiempo");
         ConsoleUi.Text("  setup [--status]     configura credenciales con entrada oculta");
         ConsoleUi.Text("  discover | selftest | ayuda   utilidades sueltas");
         ConsoleUi.Text("  salir                cierra");

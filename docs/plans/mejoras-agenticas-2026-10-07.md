@@ -40,3 +40,7 @@ Credenciales: operador -> wizard/almacen -> composicion del cliente
 Este documento es un backlog; no afirma que las propuestas esten implementadas.
 El setup y la eliminacion del fallback entre proveedores si se implementaron.
 No introduce reglas POS ni logica de negocio en Core o Kernel.
+
+## Ampliacion del 8 de octubre
+
+[Lista consolidada: fronteras, interpolacion, presupuestos y grafos](fronteras-prompts-presupuestos-grafos-2026-10-08.md).

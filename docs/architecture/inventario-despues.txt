@@ -172,6 +172,7 @@ docs/guides/resultados-observabilidad.md
 docs/guides/seguridad-datos-harness.md
 docs/guides/setup-credenciales.md
 docs/incidents/pos-planeacion-sin-ejecucion-2026-10-01.md
+docs/plans/fronteras-prompts-presupuestos-grafos-2026-10-08.md
 docs/plans/mejoras-agenticas-2026-10-07.md
 docs/plans/plan-goals-proyectos-pos-2026-10-02.md
 docs/plans/publicacion-github-2026-10-07.md

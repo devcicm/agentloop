@@ -29,6 +29,7 @@ public sealed class RunnerOptions
     /// <summary>Si true, se emite la traza del reactor a stdout.</summary>
     public bool Verbose { get; init; }
 
+    public AgentLoop.Operations.OperationIntent Intent { get; init; } = AgentLoop.Operations.OperationIntent.Build;
     public int MaxTokens { get; init; } = 2048;
 
     public string? Model { get; init; }

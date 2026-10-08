@@ -5,6 +5,7 @@ namespace AgentLoop.Tools;
 /// <summary>Una funcion que el modelo puede invocar.</summary>
 public interface ITool
 {
+    ToolCapabilities Capabilities => new();
     string Name { get; }
 
     string Description { get; }

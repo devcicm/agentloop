@@ -6,4 +6,8 @@ public sealed record OperationServices(
     string JournalDirectory,
     Func<ICompletionStream> CreateStream,
     Func<Exception,bool> IsTransient,
-    Action<string,ProjectSnapshotDto> SaveCheckpoint);
+    Action<string,ProjectSnapshotDto> SaveCheckpoint)
+{
+    public AgentLoop.Operations.HarnessPolicy Policy { get; init; } = new();
+    public AgentLoop.Skills.ISkillCatalog? Skills { get; init; }
+};

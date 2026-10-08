@@ -1,6 +1,6 @@
 # Changelog
 
-## 0.1.0-alpha.1 — candidato local, sin publicacion
+## 0.1.0-alpha.1 â€” candidato local, sin publicacion
 
 - Bibliotecas Kernel/Core, Harness, Infrastructure, Compatibility y CLI separadas.
 - Operaciones por eventos, tarjetas y cierre con evidencia del host.
@@ -36,3 +36,12 @@
 - Errores del proveedor codificados sin persistir cuerpos ni mensajes externos.
 - Actividades de trazabilidad y registro local de metadatos con rotacion.
 - Arranque detecta ausencia/formato y consulta aceptacion del catalogo; opcion offline.
+
+## Implementaci?n pendiente de publicaci?n ? 2026-10-08
+
+- Mailbox por eventos acotado, supervisi?n de tareas y parada ante efectos inciertos.
+- Pol?ticas confiables, presupuestos compartidos de inferencia/reintentos y progreso verificable.
+- Intenciones, sesiones v2, contratos de prompt y skills del operador.
+- Mapa de repositorio, revisi?n acotada y algoritmos de grafos generales.
+- Preview firmado de edici?n, respaldos restringidos y restauraci?n con hash y permiso puntual.
+- Restricci?n de or?genes HTTPS y redirecciones del proveedor.

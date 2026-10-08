@@ -61,6 +61,7 @@ public sealed class GoalRunner : IRunner
 
             var coordinator = new EventOperationCoordinator(_client, run.Model!, setup.Tools, scope, _factory.OperationServices)
             {
+                Intent = new(options.Intent, run.Objective, []),
                 MaxModelCalls = Math.Min(options.MaxIterations, project?.Budgets.MaxModelCalls ?? options.MaxIterations),
                 MaxTokens = Math.Min(options.MaxTokens, project?.Budgets.MaxOutputTokens ?? options.MaxTokens),
                 Thinking = options.Thinking,

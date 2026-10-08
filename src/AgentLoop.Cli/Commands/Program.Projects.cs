@@ -99,6 +99,7 @@ internal static partial class Program
                 with { ProjectContract = contract, ProjectServices = services, ResumeJournal = resume is null ? null : Path.GetFullPath(resume) };
             var options = new Harness.Runner.RunnerOptions
             {
+                Intent = ParseIntent(StringOption(args,"--intent") ?? "Build"),
                 WorkingDirectory = contract.Root, AllowShell = false, AllowedPaths = [contract.Root],
                 DeadlineSeconds = spec.Budgets.DeadlineSeconds,
                 MaxIterations = Math.Min(IntOption(args, "--max-ciclos", spec.Budgets.MaxModelCalls), spec.Budgets.MaxModelCalls),

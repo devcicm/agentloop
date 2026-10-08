@@ -32,11 +32,11 @@ public static class OperationTools
         return new ToolRegistry(
         [
             CardTool(ledger, bus),
-            RunTool(supervisor),
-            LaunchTool(supervisor),
+            new CapabilityTool(RunTool(supervisor), new(ToolEffect.Process, ProducesEvidence: true)),
+            new CapabilityTool(LaunchTool(supervisor), new(ToolEffect.Process)),
             WaitTool(supervisor, bus),
-            ReadTool(supervisor),
-            ProcessesTool(supervisor),
+            new CapabilityTool(ReadTool(supervisor), new(ToolEffect.None, ProducesEvidence: true)),
+            new CapabilityTool(ProcessesTool(supervisor), ToolCapabilities.Observation),
             new AgentLoop.Tools.IdempotentTool(KillTool(supervisor), cache),
             WatchTool(supervisor),
             FlowTool(supervisor),

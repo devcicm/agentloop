@@ -64,3 +64,7 @@ del actor nuevo ni deben sobrescribir la evidencia original.
 - [Resultados, errores y observabilidad](guides/resultados-observabilidad.md).
 
 - [Fronteras, prompts, presupuestos y grafos](plans/fronteras-prompts-presupuestos-grafos-2026-10-08.md).
+
+## Implementaci?n del 8 de octubre de 2026
+
+[Flujo por eventos, pol?ticas, presupuestos, skills, grafos y edici?n recuperable](guides/harness-planificacion-presupuestos.md).

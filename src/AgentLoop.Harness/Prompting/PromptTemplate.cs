@@ -1,3 +1,7 @@
+using System.Text;
+using AgentLoop.Harness.Functional;
+using AgentLoop.Kernel.Projects;
+using AgentLoop.Harness.Context;
 using System.Text.RegularExpressions;
 
 namespace AgentLoop.Prompting;
@@ -25,8 +29,9 @@ public sealed partial class PromptTemplate
     /// <summary>Huecos encontrados, en orden de aparicion y sin repetidos.</summary>
     public IReadOnlyList<PromptPlaceholder> Placeholders { get; }
 
-    public static PromptTemplate Parse(string text)
+    public static PromptTemplate Parse(string text, int maxTemplateCharacters = 48000)
     {
+        if (text.Length > maxTemplateCharacters || maxTemplateCharacters < 1) throw new PromptTemplateException("Plantilla fuera de presupuesto.");
         var clean = TextSanitizer.Plain(text);
         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var placeholders = new List<PromptPlaceholder>();
@@ -54,25 +59,40 @@ public sealed partial class PromptTemplate
     /// </summary>
     public string Render(PromptVariables variables)
     {
-        var missing = MissingVariables(variables);
-        if (missing.Count > 0)
-        {
-            var known = variables.Names.Count == 0 ? "(ninguna)" : string.Join(", ", variables.Names);
-            throw new PromptTemplateException(
-                $"Faltan variables en la plantilla: {string.Join(", ", missing)}. Definidas: {known}.");
-        }
+        var result = RenderResult(variables);
+        return result.IsOk ? result.Value!.Text : throw new PromptTemplateException(result.Error!.Message);
+    }
 
-        return PlaceholderRegex().Replace(Text, match =>
+    public Result<PromptRenderResult, Failure> RenderResult(PromptVariables variables, PromptRenderOptions? options = null, ITokenBudgetEstimator? estimator = null)
+    {
+        options ??= new(); estimator ??= new Utf8TokenBudgetEstimator();
+        var correlation = Guid.NewGuid().ToString("N");
+        try
         {
-            var value = variables[match.Groups[2].Value];
-            return ParseEscaping(match.Groups[1].Value) switch
+            if (options.MaxCharacters < 1 || options.MaxBytes < 1) throw new PromptTemplateException("Presupuesto de render invalido.");
+            var missing = MissingVariables(variables);
+            if (missing.Count > 0) throw new PromptTemplateException("Faltan variables: " + string.Join(", ", missing));
+            var builder = new StringBuilder(); var cursor = 0;
+            void Append(string value)
             {
-                PromptEscaping.Xml => TextSanitizer.Xml(value),
-                PromptEscaping.Json => TextSanitizer.Json(value),
-                PromptEscaping.Raw => value,
-                _ => TextSanitizer.Plain(value),
-            };
-        });
+                if ((long)builder.Length + value.Length > options.MaxCharacters) throw new PromptTemplateException("Prompt expandido excede presupuesto de caracteres.");
+                builder.Append(value);
+            }
+            foreach (Match match in PlaceholderRegex().Matches(Text))
+            {
+                Append(Text[cursor..match.Index]);
+                var name = match.Groups[2].Value; var spec = variables.Spec(name); var escaping = ParseEscaping(match.Groups[1].Value);
+                if (spec.Sensitive || escaping == PromptEscaping.Raw && !spec.Trusted)
+                    throw new PromptTemplateException("Variable sensible o raw no confiable rechazada.");
+                var value = variables[name];
+                Append(escaping switch { PromptEscaping.Xml => TextSanitizer.Xml(value), PromptEscaping.Json => TextSanitizer.Json(value), PromptEscaping.Raw => value, _ => TextSanitizer.Plain(value) });
+                cursor = match.Index + match.Length;
+            }
+            Append(Text[cursor..]); var text = builder.ToString(); var bytes = Encoding.UTF8.GetByteCount(text);
+            if (bytes > options.MaxBytes) throw new PromptTemplateException("Prompt expandido excede presupuesto de bytes.");
+            return Result<PromptRenderResult, Failure>.Ok(new(text, new(text.Length, bytes, estimator.Estimate(text), estimator.Version, estimator.Exact, Placeholders.Select(p => new PromptVariableAudit(p.Name,variables.Spec(p.Name).Type,variables.Spec(p.Name).Source,variables.Spec(p.Name).Trusted)).ToArray())));
+        }
+        catch (PromptTemplateException error) { return Result<PromptRenderResult, Failure>.Fail(new("prompt.invalid", error.Message, correlation)); }
     }
 
     private static PromptEscaping ParseEscaping(string prefix) => prefix.ToLowerInvariant() switch

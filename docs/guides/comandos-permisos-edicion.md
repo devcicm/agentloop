@@ -207,3 +207,7 @@ solicitudes, controles y code view; el modelo no concede permisos.
 La solucion compila sin errores ni advertencias. No se ejecutaron pruebas
 funcionales ni llamadas remotas en esta entrega; la compilacion no demuestra
 el comportamiento de los interpretes ni el consentimiento en ejecucion.
+
+## Actualizaci?n: preview obligatorio
+
+Desde el 8 de octubre, `edit_text_file` requiere `patch_id` obtenido con `preview=true` para aplicar. El apply conserva los argumentos del preview, cambia `preview=false` y a?ade el ID. Los reemplazos por l?neas requieren `old_text`. V?ase [protocolo completo y recuperaci?n](harness-planificacion-presupuestos.md).

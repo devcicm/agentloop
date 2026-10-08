@@ -9,7 +9,7 @@ namespace AgentLoop.Configuration;
 /// <summary>Persistencia local de secretos; no pertenece al kernel ni se expone como herramienta.</summary>
 public static class LocalCredentialWriter
 {
-    public static string Destination => Path.Combine(SecretStore.ResolveRepositoryRoot(), "local-secrets", SecretStore.ApiKeyFileName);
+    public static string Destination => Path.Combine(SecretStore.ResolveSecretsDirectory(), SecretStore.ApiKeyFileName);
 
     public static Result<Unit, Failure> SaveResult(string value, bool replace)
     {
@@ -55,12 +55,12 @@ public static class LocalCredentialWriter
         finally { if (File.Exists(temporary)) File.Delete(temporary); }
     }
 
-    private static void CheckGitIsolation(string path)
+    internal static void CheckGitIsolation(string path)
     {
-        var root = SecretStore.ResolveRepositoryRoot();
+        var root = Path.GetDirectoryName(path)!;
         var hasRepository = false;
         for (var parent = new DirectoryInfo(root); parent is not null; parent = parent.Parent)
-            if (Directory.Exists(Path.Combine(parent.FullName, ".git")) || File.Exists(Path.Combine(parent.FullName, ".git"))) { hasRepository = true; break; }
+            if (Directory.Exists(Path.Combine(parent.FullName, ".git")) || File.Exists(Path.Combine(parent.FullName, ".git"))) { hasRepository = true; root=parent.FullName; break; }
         if (!hasRepository) return; // Distribucion sin Git: sigue usando el almacen dedicado.
         int Git(params string[] arguments)
         {

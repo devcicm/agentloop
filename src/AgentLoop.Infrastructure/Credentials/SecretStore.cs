@@ -14,9 +14,7 @@ public static class SecretStore
 
     /// <summary>Devuelve la credencial del proveedor NVIDIA, sin fallback entre proveedores. </summary>
     public static string GetLLMApiKey()
-        => TryGetLLMApiKey(out var key, out var reason)
-            ? key!
-            : throw new InvalidOperationException(reason);
+        => ResolveCredential().Match(value => value.Value, failure => throw new FailureException(failure));
 
     public static bool TryGetLLMApiKey(out string? apiKey, out string reason)
     {
@@ -32,7 +30,7 @@ public static class SecretStore
         if (path is not null)
         {
             if (new FileInfo(path).Length > 4096) throw new FailureException(new("credentials.malformed", "Archivo de credencial demasiado grande. Usa setup.", Guid.NewGuid().ToString("N")));
-            var fromFile = File.ReadAllText(path).Trim();
+            var fromFile = BoundedFile.ReadText(path,4096).Trim();
             if (fromFile.Length > 0)
             {
                 apiKey = fromFile;
@@ -99,17 +97,32 @@ public static class SecretStore
             }
         }
 
-        return null;
+        var fallback=DefaultSecretsDirectory();
+        return Directory.Exists(fallback) ? fallback : null;
     }
 
-    /// <summary>Raiz del repo (el padre de local-secrets/), o el CWD como ultimo recurso.</summary>
+    /// <summary>Raiz Git del workspace, o CWD en distribuciones sin Git; independiente del almacen de secretos.</summary>
     public static string ResolveRepositoryRoot()
     {
-        var secrets = FindSecretsDirectory();
-        return secrets is not null
-            ? Directory.GetParent(secrets)!.FullName
-            : Directory.GetCurrentDirectory();
+        foreach (var start in new[] { Directory.GetCurrentDirectory(), AppContext.BaseDirectory })
+            for (var dir = new DirectoryInfo(start); dir is not null; dir = dir.Parent)
+                if (Directory.Exists(Path.Combine(dir.FullName,".git")) || File.Exists(Path.Combine(dir.FullName,".git"))) return dir.FullName;
+        return Directory.GetCurrentDirectory();
     }
+
+    public static string ResolveApplicationRoot()
+    {
+        for (var dir=new DirectoryInfo(AppContext.BaseDirectory);dir is not null;dir=dir.Parent)
+            if (Directory.Exists(Path.Combine(dir.FullName,".git")) || File.Exists(Path.Combine(dir.FullName,".git"))) return dir.FullName;
+        return AppContext.BaseDirectory;
+    }
+    private static string DefaultSecretsDirectory()
+    {
+        var application=ResolveApplicationRoot();
+        if (Directory.Exists(Path.Combine(application,".git")) || File.Exists(Path.Combine(application,".git"))) return Path.Combine(application,"local-secrets");
+        return Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),"AgentLoop","local-secrets");
+    }
+    public static string ResolveSecretsDirectory() => FindSecretsDirectory() ?? DefaultSecretsDirectory();
 
     /// <summary>Enmascara una key para poder loguearla sin filtrarla.</summary>
     public static string Mask(string secret)

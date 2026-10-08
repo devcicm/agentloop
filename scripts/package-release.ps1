@@ -39,7 +39,7 @@ try {
     git diff --cached --quiet
     if ($LASTEXITCODE -ne 0 -or (git rev-parse HEAD).Trim() -ne $releaseCommit) { throw 'El candidato cambio durante publish.' }
     # Copiar solo recursos declarados. Nunca copiar el workspace entero ni archivos no versionados.
-    $releaseDocuments = @('README.md','CHANGELOG.md','SECURITY.md','CONTRIBUTING.md','docs/proposito-y-alcance.md',
+    $releaseDocuments = @('docs/guides/harness-planificacion-presupuestos.md','examples/harness-policy.example.json','examples/skills/review.example.json','examples/graphs/dependencies.example.json','README.md','CHANGELOG.md','SECURITY.md','CONTRIBUTING.md','docs/proposito-y-alcance.md',
         'docs/guides/resultados-observabilidad.md','docs/guides/setup-credenciales.md','docs/plans/mejoras-agenticas-2026-10-07.md','docs/guides/instalacion.md','docs/guides/comandos-permisos-edicion.md','docs/guides/seguridad-datos-harness.md',
         'docs/guides/diagnostico-no-cierre.md','docs/architecture/flujos-operativos.md','docs/architecture/core-kernel.md',
         'docs/architecture/goals-proyectos.md','docs/plans/publicacion-github-2026-10-07.md',

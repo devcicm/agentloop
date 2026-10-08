@@ -14,6 +14,7 @@ public sealed class OperationAcceptance
     private readonly Dictionary<string, string> _checkedHashes = new(StringComparer.OrdinalIgnoreCase);
     private readonly Dictionary<string, string> _observedHashes = new(StringComparer.OrdinalIgnoreCase);
     private string? _verifiedTransaction;
+    public bool HasCriteria => _criteria.Count > 0;
     public IReadOnlyList<ObservationReceipt> Receipts => _receipts;
 
     public OperationAcceptance(CardLedger ledger, IEnumerable<ArtifactCriterion>? criteria = null)

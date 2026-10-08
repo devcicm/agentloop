@@ -230,3 +230,7 @@ atomica; requiere recuperar/reconciliar. Las herramientas tipadas no impiden
 que shell arbitrario evada este protocolo. Validaciones futuras: rango no leido,
 version cambiada, desplazamiento de lineas, preview truncado, patch alterado,
 Unicode/encoding, permisos y fallos durante escritura. No se ejecutaron pruebas.
+
+## Implementaci?n aplicada
+
+La implementaci?n de eventos, presupuestos, intenciones, contratos de prompt, skills confiables, grafos, revisi?n y edici?n recuperable se describe en [la gu?a vigente](../guides/harness-planificacion-presupuestos.md). [Evidencia y l?mites de verificaci?n](../evidence/2026-10-08-harness-planificacion/README.md). El backlog conserva propuestas de ampliaci?n; no equivale a afirmar que existe AST multilenguaje, tokenizer exacto, aislamiento de cualquier shell o verificaci?n remota completa.

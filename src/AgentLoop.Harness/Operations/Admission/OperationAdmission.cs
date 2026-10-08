@@ -3,11 +3,11 @@ namespace AgentLoop.Goals;
 
 
 /// <summary>Puerta comun de tarjetas y politica, aplicada antes de cada herramienta.</summary>
-public sealed class OperationAdmission(Scope scope, CardLedger ledger)
+public sealed class OperationAdmission(Scope scope, CardLedger ledger, ToolRegistry? registry = null)
 {
-    private static readonly HashSet<string> ReadOnly = new(StringComparer.Ordinal)
-    { "read_text_file", "code_view", "list_directory", "find_files", "get_system_context", "where_command", "get_time", "add_numbers", "procesos", "leer", "project_evidence", "project_note" };
-    public static bool IsReadOnly(string name) => ReadOnly.Contains(name);
+    [Obsolete("Usa los metadatos de ToolRegistry; una herramienta sin descriptor se considera con efectos.")]
+    public static bool IsReadOnly(string name) => false;
+    private bool ReadOnly(string name) => registry?.IsReadOnly(name) ?? false;
 
     public (ParsedToolCall Call, string? Rejection, bool Simulated) Admit(ParsedToolCall call)
     {
@@ -15,7 +15,7 @@ public sealed class OperationAdmission(Scope scope, CardLedger ledger)
         if (!scope.AllowsTool(call.Name)) return (call, "herramienta fuera del scope", false);
         if (call.ArgumentsParseFailed) return (call, "argumentos no validos", false);
         if (!scope.Policy.AllowShell && call.Name is "ejecutar" or "lanzar") return (call, "shell deshabilitado por politica", false);
-        if (call.Name != "tarjeta" && !IsReadOnly(call.Name) && ledger.OpenCount == 0)
+        if (call.Name != "tarjeta" && !ReadOnly(call.Name) && ledger.OpenCount == 0)
             return (call, "abre una transaccion antes de admitir efectos", false);
         if (scope.AllowedPaths.Count > 0 && call.Name is "ejecutar" or "lanzar")
             return (call, "shell arbitrario no admite restriccion de rutas; usa herramientas de archivo tipadas", false);
@@ -41,7 +41,7 @@ public sealed class OperationAdmission(Scope scope, CardLedger ledger)
         }
         catch (Exception ex) when (ex is JsonException or ArgumentException or NotSupportedException or IOException or UnauthorizedAccessException)
         { return (call, "argumentos/ruta invalidos: " + ex.Message, false); }
-        var simulated = scope.Policy.Mode == PolicyMode.Simular && call.Name != "tarjeta" && !IsReadOnly(call.Name);
+        var simulated = scope.Policy.Mode == PolicyMode.Simular && call.Name != "tarjeta" && !ReadOnly(call.Name);
         return (call, null, simulated);
     }
 }

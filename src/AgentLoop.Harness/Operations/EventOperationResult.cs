@@ -7,6 +7,9 @@ namespace AgentLoop.Goals;
 public sealed record EventOperationResult(OperationStatus Status, string Reason, [property: System.Text.Json.Serialization.JsonIgnore] Exception? Error = null)
 {
     public string CorrelationId { get; init; } = Guid.NewGuid().ToString("N");
+    public TimeSpan Elapsed { get; init; }
+    public AgentLoop.Operations.BudgetSnapshot? Budget { get; init; }
+    public int HttpAttempts { get; init; }
     public Failure? FailureInfo { get; init; }
     public Result<Unit, Failure> Outcome => IsSuccess ? Result<Unit, Failure>.Ok(Unit.Value)
         : Result<Unit, Failure>.Fail(FailureInfo ?? (Error is null

@@ -1,0 +1,43 @@
+{
+  "Nodes": [
+    {
+      "Id": "inspect",
+      "Kind": "task",
+      "Source": "operator",
+      "Revision": "1"
+    },
+    {
+      "Id": "implement",
+      "Kind": "task",
+      "Source": "operator",
+      "Revision": "1"
+    },
+    {
+      "Id": "verify",
+      "Kind": "task",
+      "Source": "operator",
+      "Revision": "1"
+    }
+  ],
+  "Edges": [
+    {
+      "From": "inspect",
+      "To": "implement",
+      "Kind": "dependency",
+      "Cost": 1,
+      "Verified": true
+    },
+    {
+      "From": "implement",
+      "To": "verify",
+      "Kind": "dependency",
+      "Cost": 1,
+      "Verified": true
+    }
+  ],
+  "Durations": {
+    "inspect": 1,
+    "implement": 3,
+    "verify": 2
+  }
+}

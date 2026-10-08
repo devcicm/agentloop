@@ -246,7 +246,7 @@ public sealed class ProjectRuntime
                 var note = args.GetProperty("note").GetString()!;
                 if (note.Length > Policy.MaxNoteChars) throw new InvalidOperationException("Nota excede politica.");
                 return ValueTask.FromResult(JsonSerializer.Serialize(new { artifact_id = id, hash, stored = true }));
-            }),
+            }, new(ToolEffect.HostState)),
         new DelegateTool("project_evidence", "Lee observaciones de evidencia del host por id, sin admitir rutas arbitrarias.",
             """{"type":"object","properties":{"evidence_id":{"type":"string"},"offset":{"type":"integer","minimum":0}},"required":["evidence_id"]}""",
             (args, token) =>
@@ -266,7 +266,7 @@ public sealed class ProjectRuntime
                 var count = Math.Min(Policy.EvidencePageChars, text.Length - offset);
                 return ValueTask.FromResult(JsonSerializer.Serialize(new { result.ValidationId, result.EvidenceId, result.Passed,
                     observations = text.Substring(offset, count), offset, next_offset = offset + count < text.Length ? (int?)(offset + count) : null, result.ExecutionEnvironment }));
-            }),
+            }, ToolCapabilities.Observation),
         new DelegateTool("project_validate", "Ejecuta los validadores del host para la tarea vigente. Sus resultados no los declara el modelo.",
             """{"type":"object","properties":{"work_item_id":{"type":"string"},"attempt_id":{"type":"string"}},"required":["work_item_id","attempt_id"]}""",
             async (args, token) =>
@@ -280,7 +280,7 @@ public sealed class ProjectRuntime
                 _deliveries[batch] = results;
                 return JsonSerializer.Serialize(new { batch_id = batch, codigo = results.All(r => r.Passed) ? 0 : 1,
                     results = results.Select(r => new { r.ValidationId, r.Passed, r.EvidenceId, observations = Prompting.TextSanitizer.Truncate(r.Observations, Policy.MaxDefectChars) }) });
-            }),
+            }, new(ToolEffect.Process, ProducesEvidence: true)),
         new DelegateTool("project_command", "Ejecuta un comando admitido por el perfil del host. No admite texto de shell.",
             """{"type":"object","properties":{"profile":{"type":"string"},"work_item_id":{"type":"string"},"attempt_id":{"type":"string"}},"required":["profile","work_item_id","attempt_id"]}""",
             async (args, token) =>
@@ -291,6 +291,6 @@ public sealed class ProjectRuntime
                     ?? throw new InvalidOperationException("Comando no habilitado al modelo por el perfil.");
                 var result = await _environment.RunAsync(command.Id, TimeSpan.FromSeconds(command.TimeoutSeconds), token);
                 return JsonSerializer.Serialize(new { codigo = result.ExitCode, output = result.Output, cleanupConfirmed = result.CleanupConfirmed });
-            }),
+            }, new(ToolEffect.Process, ProducesEvidence: true)),
     ]);
 }

@@ -2624,7 +2624,9 @@
       "src/AgentLoop.Infrastructure/Files/Editing/TextDocumentSnapshot.cs",
       "src/AgentLoop.Infrastructure/Files/Editing/TextEditingOptions.cs",
       "src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs",
-      "src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs"
+      "src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs",
+      "src/AgentLoop.Infrastructure/Files/Editing/EditRecoveryStore.cs",
+      "src/AgentLoop.Infrastructure/Files/Editing/TextPatchProposal.cs"
     ],
     "types": [
       "BuiltInTools"

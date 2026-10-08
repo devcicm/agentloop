@@ -1,0 +1,19 @@
+{
+  "Id": "repository-review",
+  "Version": "1",
+  "Purpose": "Explicar estructura y responsabilidades con evidencia de archivos",
+  "Intents": [
+    "Review",
+    "Explain"
+  ],
+  "RequiredTools": [
+    "project_map",
+    "code_view"
+  ],
+  "Procedure": "Mapear primero el repositorio. Seleccionar archivos relevantes. Leerlos con code_view. Citar archivo, rango y hash. Separar hechos de hip?tesis. Informar cobertura parcial. No ejecutar efectos.",
+  "Criteria": [
+    "Cada afirmaci?n funcional cita contenido observado",
+    "Se declaran archivos no inspeccionados y l?mites"
+  ],
+  "MaxCalls": 8
+}

@@ -13,8 +13,8 @@ el host valida y ejecuta, y las tarjetas exigen comprobacion antes del cierre.
 Core/Kernel conservan contratos y estado independientes del proveedor y del
 dominio. Los proyectos de negocio se definen mediante contratos y perfiles externos.
 
-[Proposito, alcance y limites](docs/proposito-y-alcance.md) ·
-[Diagramas de flujo operativos](docs/architecture/flujos-operativos.md) ·
+[Proposito, alcance y limites](docs/proposito-y-alcance.md) Â·
+[Diagramas de flujo operativos](docs/architecture/flujos-operativos.md) Â·
 [Plan de publicacion](docs/plans/publicacion-github-2026-10-07.md).
 
 ## Candidato de version
@@ -23,8 +23,8 @@ dominio. Los proyectos de negocio se definen mediante contratos y perfiles exter
 global.json; version comun en Directory.Build.props. Licencia pendiente de
 eleccion y migracion a .NET 10 antes de una entrega estable.
 
-[Instalacion y uso desde ZIP](docs/guides/instalacion.md) ·
-[Changelog](CHANGELOG.md) · [Contribuir](CONTRIBUTING.md) · [Seguridad](SECURITY.md).
+[Instalacion y uso desde ZIP](docs/guides/instalacion.md) Â·
+[Changelog](CHANGELOG.md) Â· [Contribuir](CONTRIBUTING.md) Â· [Seguridad](SECURITY.md).
 
 ```powershell
 dotnet run --project src/AgentLoop.Cli -- version
@@ -158,9 +158,9 @@ El ejemplo acredita archivos/JSON; para comportamiento se instala un validador e
 Las 415 comprobaciones y el ejercicio aislado anteriores corresponden a 5132301.
 Validacion posterior del Core/Kernel: [pruebas locales y NVIDIA con Docker](docs/evidence/2026-10-04-validacion-core-kernel/README.md).
 
-[Indice documental](docs/README.md) ·
-[Arquitectura y pendientes](docs/architecture/implementacion-coordinador-eventos-2026-09-30.md) ·
-[Inventario y limpieza](docs/archive/limpieza-datos-repo-2026-09-30.md) ·
+[Indice documental](docs/README.md) Â·
+[Arquitectura y pendientes](docs/architecture/implementacion-coordinador-eventos-2026-09-30.md) Â·
+[Inventario y limpieza](docs/archive/limpieza-datos-repo-2026-09-30.md) Â·
 [Indice de evidencia](docs/evidence/README.md)
 
 Comprobaciones existentes: `dotnet run --project src/AgentLoop.Cli -- selftest` o `dotnet run --project src/AgentLoop.Cli -- selftest-coordinator`.
@@ -175,3 +175,7 @@ en el chat ni en argumentos. [Wizard y limites](docs/guides/setup-credenciales.m
 Arranque interactivo: comprueba credenciales locales y catalogo remoto (20 s);
 `--offline` omite red. Consulta `credenciales verificar`.
 [Errores y trazabilidad](docs/guides/resultados-observabilidad.md).
+
+## Implementaci?n del 8 de octubre de 2026
+
+[Flujo por eventos, pol?ticas, presupuestos, skills, grafos y edici?n recuperable](docs/guides/harness-planificacion-presupuestos.md).

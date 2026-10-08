@@ -6,6 +6,8 @@ public class TransportOptions
 {
     public required string ApiKey { get; init; }
 
+    public IReadOnlyList<string> AllowedOrigins { get; init; } = [];
+
     public string BaseUrl { get; init; } = "";
 
     public TimeSpan Timeout { get; init; } = TimeSpan.FromMinutes(5);
@@ -23,6 +25,7 @@ public class TransportOptions
 
     public double BackoffBaseSeconds { get; init; } = 1.0;
 
+    public double RetryAfterCapSeconds { get; init; } = 30;
     public double MaxBackoffSeconds { get; init; } = 5.0;
 
     public string UserAgent { get; init; } = "agentloop-dotnet/0.1";

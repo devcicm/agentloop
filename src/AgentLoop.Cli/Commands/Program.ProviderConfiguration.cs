@@ -19,6 +19,7 @@ internal static partial class Program
         return new NvidiaClient(new NvidiaOptions
         {
             ApiKey = apiKey!,
+            AllowedOrigins = new[] { NvidiaOptions.DefaultBaseUrl }.Concat(HarnessPolicyLoader.Load().AllowedProviderOrigins).ToArray(),
             BaseUrl = Environment.GetEnvironmentVariable("NVIDIA_BASE_URL") ?? NvidiaOptions.DefaultBaseUrl,
         })
         {

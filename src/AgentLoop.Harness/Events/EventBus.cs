@@ -26,12 +26,26 @@ public sealed class EventBus
     public Guid RunId { get; init; }
     public bool AsyncObservers { get; init; }
     private readonly object _observerGate = new();
+    private int _pendingObservers;
+    public int MaxObserverPending { get; init; } = 512;
     private Task _observerMailbox = Task.CompletedTask;
 
-    public IDisposable Subscribe(Action<AgentEvent> subscriber)
+    public int MaxPending { get; init; } = 4096;
+    public Action<AgentEvent, AgentLoop.Harness.Functional.Failure>? OnSubscriberFailed { get; set; }
+    public IDisposable Subscribe(Action<AgentEvent> subscriber, Action<Exception>? onFailure = null)
     {
-        lock (_publicationGate) _subscribers.Add(subscriber);
-        return new Subscription(this, subscriber);
+        void Safe(AgentEvent item)
+        {
+            try { subscriber(item); }
+            catch (Exception error)
+            {
+                Interlocked.Increment(ref _observerFailures);
+                try { OnSubscriberFailed?.Invoke(item, AgentLoop.Harness.Functional.Failures.FromException(error, item.RunId.ToString("N"))); } catch { Interlocked.Increment(ref _observerFailures); }
+                try { onFailure?.Invoke(error); } catch { Interlocked.Increment(ref _observerFailures); }
+            }
+        }
+        lock (_publicationGate) _subscribers.Add(Safe);
+        return new Subscription(this, Safe);
     }
 
     private sealed class Subscription(EventBus bus, Action<AgentEvent> handler) : IDisposable
@@ -73,8 +87,10 @@ public sealed class EventBus
         if (observers is null) return;
         if (AsyncObservers)
         {
+            if (Interlocked.Increment(ref _pendingObservers) > MaxObserverPending)
+            { Interlocked.Decrement(ref _pendingObservers); Interlocked.Increment(ref _observerFailures); return; }
             lock (_observerGate)
-                _observerMailbox = _observerMailbox.ContinueWith(_ => NotifyInline(observers, item),
+                _observerMailbox = _observerMailbox.ContinueWith(_ => { try { NotifyInline(observers,item); } finally { Interlocked.Decrement(ref _pendingObservers); } },
                     CancellationToken.None, TaskContinuationOptions.None, TaskScheduler.Default);
             return;
         }
@@ -133,6 +149,8 @@ public sealed class EventBus
             return item with { Sequence = 0 };
         }
 
+        if (_pending.Count >= MaxPending)
+            throw new AgentLoop.Harness.Functional.FailureException(new("events.capacity", "Cola de eventos fuera de presupuesto; entrega no completada.", RunId.ToString("N")));
         _pending.Enqueue(item);
 
         lock (_historyGate)

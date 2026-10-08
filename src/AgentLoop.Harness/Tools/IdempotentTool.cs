@@ -30,6 +30,7 @@ public sealed class IdempotentTool : ITool
     }
 
     public string Name => _inner.Name;
+    public ToolCapabilities Capabilities => _inner.Capabilities;
 
     public string Description => _inner.Description;
 

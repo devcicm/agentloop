@@ -61,6 +61,9 @@ internal static partial class Program
         return command switch
         {
             "version" or "--version" => PrintVersion(),
+            "skills" => ShowSkills(args),
+            "code-review" or "repo-map" => await InspectRepositoryAsync(args,cancellationToken),
+            "ediciones" => args.Length>1 ? await RestoreEditAsync(args,cancellationToken) : InspectEdits(args),
             "setup" => SetupCredentials(args),
             "credenciales" => args.Length == 2 && args[1] == "verificar"
                 ? await VerifyCredentialsAsync(cancellationToken) : Fail("Uso: credenciales verificar"),

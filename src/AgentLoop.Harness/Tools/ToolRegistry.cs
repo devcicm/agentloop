@@ -17,6 +17,9 @@ public sealed class ToolRegistry
     public static ToolRegistry Empty { get; } = new([]);
 
     public int Count => _tools.Count;
+    public ToolCapabilities Capabilities(string name) => _tools.TryGetValue(name, out var tool) ? tool.Capabilities : new();
+    public bool IsReadOnly(string name) => Capabilities(name).ReadOnly;
+    public ToolRegistry WithCapabilities(ToolCapabilities capabilities) => new(_tools.Values.Select(t => new CapabilityTool(t, capabilities)), _scope);
 
     public ToolRegistry Combine(ToolRegistry other)
     {
@@ -136,7 +139,7 @@ public sealed class ToolRegistry
         catch (Exception ex)
         {
             var uncertain = invoked && ex is not AgentLoop.Terminals.ExecutionRejectedException
-                && !AgentLoop.Goals.OperationAdmission.IsReadOnly(call.Name);
+                && !IsReadOnly(call.Name);
             return new ToolExecution(call.Id, call.Name,
                 JsonSerializer.Serialize(new ToolFailureDto(DataGuard.Display($"{ex.GetType().Name}: {ex.Message}"), uncertain)), Failed: true)
                 { EffectsMayHaveOccurred = uncertain };

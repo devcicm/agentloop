@@ -19,5 +19,5 @@ public sealed class NvidiaOptions : TransportOptions
     public static IReadOnlyList<string> SupportedModels { get; } =
         NvidiaModelCatalog.Models;
 
-    public NvidiaOptions() { BaseUrl = DefaultBaseUrl; }
+    public NvidiaOptions() { BaseUrl = DefaultBaseUrl; AllowedOrigins = [DefaultBaseUrl]; }
 }

@@ -167,6 +167,7 @@ docs/guides/consola-ui.md
 docs/guides/contexto-y-memoria.md
 docs/guides/contexto-y-recursos.md
 docs/guides/diagnostico-no-cierre.md
+docs/guides/harness-planificacion-presupuestos.md
 docs/guides/instalacion.md
 docs/guides/resultados-observabilidad.md
 docs/guides/seguridad-datos-harness.md
@@ -180,8 +181,11 @@ docs/proposito-y-alcance.md
 examples/contracts/minimal.example.json
 examples/fixtures/minimal/README.txt
 examples/fixtures/minimal/definition.json
+examples/graphs/dependencies.example.json
+examples/harness-policy.example.json
 examples/profiles/artifacts.example.json
 examples/profiles/docker.template.json
+examples/skills/review.example.json
 global.json
 local-secrets/README.md
 scripts/audit-architecture.py
@@ -197,6 +201,7 @@ src/AgentLoop.Cli/Commands/Program.Discovery.cs
 src/AgentLoop.Cli/Commands/Program.Dispatch.cs
 src/AgentLoop.Cli/Commands/Program.Journey.cs
 src/AgentLoop.Cli/Commands/Program.Operations.cs
+src/AgentLoop.Cli/Commands/Program.Planning.cs
 src/AgentLoop.Cli/Commands/Program.Presentation.cs
 src/AgentLoop.Cli/Commands/Program.Projects.cs
 src/AgentLoop.Cli/Commands/Program.ProviderConfiguration.cs
@@ -244,7 +249,15 @@ src/AgentLoop.Core/Evidence/UnavailableEvidenceManifest.cs
 src/AgentLoop.Core/GlobalUsings.cs
 src/AgentLoop.Core/Goals/AcceptanceCriteria.cs
 src/AgentLoop.Core/Goals/Goal.cs
+src/AgentLoop.Core/Graphs/DirectedGraph.cs
+src/AgentLoop.Core/Graphs/GraphPlanning.cs
 src/AgentLoop.Core/LLM/ResponseBudgets.cs
+src/AgentLoop.Core/Operations/DecisionPolicy.cs
+src/AgentLoop.Core/Operations/HarnessPolicy.cs
+src/AgentLoop.Core/Operations/InferenceBudgetLedger.cs
+src/AgentLoop.Core/Operations/ModelBudgetPolicy.cs
+src/AgentLoop.Core/Operations/ProgressTracker.cs
+src/AgentLoop.Core/Primitives/CanonicalJson.cs
 src/AgentLoop.Core/Primitives/Composable.cs
 src/AgentLoop.Core/Primitives/Defer.cs
 src/AgentLoop.Core/Primitives/Failure.cs
@@ -289,9 +302,11 @@ src/AgentLoop.Harness/Context/IConversationMemory.cs
 src/AgentLoop.Harness/Context/IConversationSessionStore.cs
 src/AgentLoop.Harness/Context/OperationContextBuilder.cs
 src/AgentLoop.Harness/Context/OperationContract.cs
+src/AgentLoop.Harness/Context/OperationKnowledgeGraph.cs
 src/AgentLoop.Harness/Context/OperationTaskContext.cs
 src/AgentLoop.Harness/Events/AgentEventFormatting.cs
 src/AgentLoop.Harness/Events/EventBus.cs
+src/AgentLoop.Harness/Events/EventMailbox.cs
 src/AgentLoop.Harness/Execution/Contracts/CommandRisk.cs
 src/AgentLoop.Harness/Execution/Contracts/CommandRiskAssessment.cs
 src/AgentLoop.Harness/Execution/Contracts/ExecutionPolicy.cs
@@ -367,6 +382,7 @@ src/AgentLoop.Harness/Projects/ProjectValidationExecutor.cs
 src/AgentLoop.Harness/Projects/ReconciliationDto.cs
 src/AgentLoop.Harness/Prompting/PromptEscaping.cs
 src/AgentLoop.Harness/Prompting/PromptPlaceholder.cs
+src/AgentLoop.Harness/Prompting/PromptRenderResult.cs
 src/AgentLoop.Harness/Prompting/PromptTemplate.cs
 src/AgentLoop.Harness/Prompting/PromptTemplateException.cs
 src/AgentLoop.Harness/Prompting/PromptVariables.cs
@@ -399,6 +415,7 @@ src/AgentLoop.Harness/Security/SafeStreamingText.cs
 src/AgentLoop.Harness/Security/Scope.cs
 src/AgentLoop.Harness/Security/StrictJson.cs
 src/AgentLoop.Harness/Security/ToolArgumentValidator.cs
+src/AgentLoop.Harness/Tools/CapabilityTool.cs
 src/AgentLoop.Harness/Tools/DelegateTool.cs
 src/AgentLoop.Harness/Tools/IdempotentTool.cs
 src/AgentLoop.Harness/Tools/OperationTools.cs
@@ -408,8 +425,11 @@ src/AgentLoop.Harness/Traceability/Correlation.cs
 src/AgentLoop.Harness/Traceability/CorrelationContext.cs
 src/AgentLoop.Harness/Traceability/CorrelationPropagator.cs
 src/AgentLoop.Infrastructure/AgentLoop.Infrastructure.csproj
+src/AgentLoop.Infrastructure/CodeReview/GraphPlanningTool.cs
+src/AgentLoop.Infrastructure/CodeReview/RepositoryReviewTools.cs
 src/AgentLoop.Infrastructure/Composition/DefaultGoalRunSetupFactory.cs
 src/AgentLoop.Infrastructure/Composition/GoalRunFactory.cs
+src/AgentLoop.Infrastructure/Composition/HarnessPolicyLoader.cs
 src/AgentLoop.Infrastructure/Composition/OperationServiceFactory.cs
 src/AgentLoop.Infrastructure/Composition/ProjectProfileLoader.cs
 src/AgentLoop.Infrastructure/Credentials/LocalCredentialWriter.cs
@@ -428,9 +448,12 @@ src/AgentLoop.Infrastructure/Execution/Processes/ShellCommandRiskClassifier.cs
 src/AgentLoop.Infrastructure/Execution/Processes/ShellProcessStartInfoFactory.cs
 src/AgentLoop.Infrastructure/Execution/Validation/CommandProjectValidator.cs
 src/AgentLoop.Infrastructure/Execution/Validation/CommandValidatorFactory.cs
+src/AgentLoop.Infrastructure/Files/BoundedFile.cs
+src/AgentLoop.Infrastructure/Files/Editing/EditRecoveryStore.cs
 src/AgentLoop.Infrastructure/Files/Editing/TextDocumentSnapshot.cs
 src/AgentLoop.Infrastructure/Files/Editing/TextEditingOptions.cs
 src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs
+src/AgentLoop.Infrastructure/Files/Editing/TextPatchProposal.cs
 src/AgentLoop.Infrastructure/Files/Editing/TextReadReceipt.cs
 src/AgentLoop.Infrastructure/Files/EvidenceManifest.cs
 src/AgentLoop.Infrastructure/GlobalUsings.cs
@@ -460,7 +483,9 @@ src/AgentLoop.Infrastructure/Providers/Parsing/CompletionParser.cs
 src/AgentLoop.Infrastructure/Providers/Parsing/StreamAccumulator.cs
 src/AgentLoop.Infrastructure/Providers/README.md
 src/AgentLoop.Infrastructure/Providers/Transport/ChatCompletionsTransport.cs
+src/AgentLoop.Infrastructure/Providers/Transport/ProviderEndpointPolicy.cs
 src/AgentLoop.Infrastructure/Providers/Transport/TransientErrorClassifier.cs
+src/AgentLoop.Infrastructure/Skills/FileSkillCatalog.cs
 src/AgentLoop.Infrastructure/Tools/ArithmeticTools.cs
 src/AgentLoop.Infrastructure/Tools/BuiltInTools.cs
 src/AgentLoop.Infrastructure/Tools/FileTools.cs
@@ -477,6 +502,7 @@ src/AgentLoop.Kernel/LLM/ChatRequest.cs
 src/AgentLoop.Kernel/LLM/ChatRoles.cs
 src/AgentLoop.Kernel/LLM/ILLMClient.cs
 src/AgentLoop.Kernel/LLM/ModelInfo.cs
+src/AgentLoop.Kernel/LLM/RequestAttemptBudget.cs
 src/AgentLoop.Kernel/LLM/ResponseFormat.cs
 src/AgentLoop.Kernel/LLM/Responses/ParsedCompletion.cs
 src/AgentLoop.Kernel/LLM/Responses/ParsedToolCall.cs
@@ -506,7 +532,9 @@ src/AgentLoop.Kernel/Projects/ProjectCommandResult.cs
 src/AgentLoop.Kernel/Projects/ProjectProcessNotice.cs
 src/AgentLoop.Kernel/Projects/ProjectRecoveryPolicy.cs
 src/AgentLoop.Kernel/README.md
+src/AgentLoop.Kernel/Skills/SkillDefinition.cs
 src/AgentLoop.Kernel/Tools/ITool.cs
+src/AgentLoop.Kernel/Tools/ToolCapabilities.cs
 tests/AgentLoop.SelfTests/AgentLoop.SelfTests.csproj
 tests/AgentLoop.SelfTests/Context/SessionPersistenceSelfTest.cs
 tests/AgentLoop.SelfTests/Distribution/ReleaseReadinessSelfTest.cs

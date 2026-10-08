@@ -1,3 +1,4 @@
+using AgentLoop.Operations;
 using System.Text.Json;
 namespace AgentLoop.StateMachines;
 
@@ -12,6 +13,21 @@ namespace AgentLoop.StateMachines;
 public sealed class ConversationSession
 {
     private readonly List<ChatMessage> _messages = [];
+    public OperationIntentState TaskState { get; private set; } = new(OperationIntent.General,"",[]);
+    public void SetIntent(OperationIntent intent) => TaskState=TaskState with { Intent=intent };
+    public void BindObjective(string objective)
+    {
+        objective=DataGuard.Input(objective);
+        if (objective.Length>6000) throw new ArgumentException("Objetivo fijado fuera de presupuesto.");
+        TaskState=TaskState with { Objective=objective };
+    }
+    public void AddConstraint(string constraint)
+    {
+        constraint=DataGuard.Input(constraint);
+        if (TaskState.Constraints.Count>=32 || TaskState.Constraints.Sum(s=>s.Length)+constraint.Length>8000) throw new ArgumentException("Restricciones fuera de presupuesto.");
+        TaskState=TaskState with { Constraints=TaskState.Constraints.Append(constraint).Distinct().ToArray() };
+    }
+    public void ClearConstraints() => TaskState=TaskState with { Constraints=[] };
     public IConversationSessionStore? SessionStore { get; init; }
     private IConversationSessionStore Store => SessionStore ?? throw new InvalidOperationException("No hay adaptador de almacenamiento de sesiones configurado.");
 
@@ -42,11 +58,23 @@ public sealed class ConversationSession
     }
 
     public void SaveSession(string path) => Store.Write(path,
-        JsonSerializer.Serialize(_messages, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower }));
+        JsonSerializer.Serialize(new { version=2,messages=_messages,task_state=TaskState }, new JsonSerializerOptions { WriteIndented = true, PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower }));
 
     public void LoadSession(string path)
     {
-        var messages = JsonSerializer.Deserialize<List<ChatMessage>>(StrictJson.Parse(Store.Read(path, 4000000), 4000000).GetRawText(), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower, PropertyNameCaseInsensitive = true })
+        var document=StrictJson.Parse(Store.Read(path,4000000),4000000);
+        var root=document;
+        var state=TaskState;
+        if (root.ValueKind==JsonValueKind.Object)
+        {
+            state=JsonSerializer.Deserialize<OperationIntentState>(root.GetProperty("task_state").GetRawText(),new JsonSerializerOptions { PropertyNamingPolicy=JsonNamingPolicy.SnakeCaseLower }) ?? throw new InvalidOperationException("Estado de tarea invalido.");
+            if (!Enum.IsDefined(state.Intent) || state.Objective is null || state.Objective.Length>6000 || state.Constraints is null || state.Constraints.Count>32 || state.Constraints.Any(c=>c is null) || state.Constraints.Sum(c=>c.Length)>8000)
+                throw new InvalidOperationException("Estado de tarea fuera de contrato.");
+            if (root.GetProperty("version").GetInt32()!=2) throw new InvalidOperationException("Version de sesion no admitida.");
+            state=state with { Objective=DataGuard.Input(state.Objective), Constraints=state.Constraints.Select(DataGuard.Input).ToArray() };
+            root=root.GetProperty("messages");
+        }
+        var messages = JsonSerializer.Deserialize<List<ChatMessage>>(root.GetRawText(), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower, PropertyNameCaseInsensitive = true })
             ?? throw new InvalidOperationException("Sesion vacia o invalida.");
         var pending = new HashSet<string>(StringComparer.Ordinal);
         foreach (var message in messages)
@@ -79,7 +107,7 @@ public sealed class ConversationSession
 
     public PromptTemplate SystemTemplate { get; private set; } = SystemPrompt.Default;
 
-    public PromptVariables Variables { get; } = new();
+    public PromptVariables Variables { get; init; } = new();
 
     public IReadOnlyList<ChatMessage> Messages => _messages;
 
@@ -93,7 +121,19 @@ public sealed class ConversationSession
 
     public void UseSystemTemplate(PromptTemplate template) => SystemTemplate = template;
 
-    public string RenderSystemPrompt() => SystemTemplate.Render(Variables) + Memory?.Render();
+    public PromptRenderOptions RenderOptions { get; init; } = new();
+    public PromptRenderMetadata? LastRender { get; private set; }
+    public string RenderSystemPrompt()
+    {
+        var rendered=SystemTemplate.RenderResult(Variables,RenderOptions);
+        if (!rendered.IsOk) throw new FailureException(rendered.Error!);
+        LastRender=rendered.Value!.Metadata;
+        var memory=Memory?.Render() ?? "";
+        var result=rendered.Value.Text + (memory.Length==0 ? "" : "\nDATOS DE MEMORIA DEL OPERADOR:\n"+memory);
+        if (result.Length > RenderOptions.MaxCharacters || System.Text.Encoding.UTF8.GetByteCount(result) > RenderOptions.MaxBytes)
+            throw new FailureException(new("prompt.memory_budget","Prompt y memoria no caben en el presupuesto de render.",Guid.NewGuid().ToString("N")));
+        return result;
+    }
 
     /// <summary>Prepara el contexto del turno: sistema fresco + historial + nueva entrada.</summary>
     public ChatTurnContext StartTurn(string userPrompt)
@@ -114,6 +154,7 @@ public sealed class ConversationSession
     public void Clear()
     {
         _messages.Clear();
+        TaskState=TaskState with { Objective="",Constraints=[] };
         Exchanges = 0;
         Turns = 0;
         TotalUsage = TokenUsage.Empty;

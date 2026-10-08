@@ -5,8 +5,8 @@ namespace AgentLoop.Harness.Functional;
 /// <summary>
 /// Tipo suma con dos casos: Ok(valor) o Fail(error). Es el reemplazo
 /// del campo nullable "puede haber pasado algo mal" que contamina muchos
-/// tipos del harness. Con un tipo suma el compilador obliga a PatternMatch,
-/// asi "se me olvido comprobar el Failure" deja de compilar.
+/// tipos del harness. El consumidor debe comprobar IsOk o usar Match;
+/// el compilador no fuerza esa comprobacion.
 ///
 /// Diferencia con la version minimalista que venia en Composition.cs:
 /// aqui cada caso lleva datos reales (no E=default en Ok), soporta
@@ -18,24 +18,28 @@ namespace AgentLoop.Harness.Functional;
 /// </summary>
 public readonly record struct Result<T, E>
 {
+    private readonly bool _initialized;
+    public bool IsInitialized => _initialized;
     public bool IsOk { get; }
     public T? Value { get; }
     public E? Error { get; }
 
     private Result(T? value, E? error, bool isOk)
     {
+        _initialized = true;
         Value = value;
         Error = error;
         IsOk = isOk;
     }
 
-    public static Result<T, E> Ok(T value) => new(value, default, true);
-    public static Result<T, E> Fail(E error) => new(default, error, false);
+    public static Result<T, E> Ok(T value) => value is null ? throw new ArgumentNullException(nameof(value)) : new(value, default, true);
+    public static Result<T, E> Fail(E error) => error is null ? throw new ArgumentNullException(nameof(error)) : new(default, error, false);
 
     /// <summary>Transforma el valor de exito conservando el error si lo hay.</summary>
     public Result<TOut, E> Map<TOut>(Func<T, TOut> step)
     {
         ArgumentNullException.ThrowIfNull(step);
+        if (!_initialized) throw new InvalidOperationException("Result sin inicializar.");
         return IsOk ? Result<TOut, E>.Ok(step(Value!)) : Result<TOut, E>.Fail(Error!);
     }
 
@@ -43,6 +47,7 @@ public readonly record struct Result<T, E>
     public Result<TOut, E> Bind<TOut>(Func<T, Result<TOut, E>> step)
     {
         ArgumentNullException.ThrowIfNull(step);
+        if (!_initialized) throw new InvalidOperationException("Result sin inicializar.");
         return IsOk ? step(Value!) : Result<TOut, E>.Fail(Error!);
     }
 
@@ -51,6 +56,7 @@ public readonly record struct Result<T, E>
     {
         ArgumentNullException.ThrowIfNull(onOk);
         ArgumentNullException.ThrowIfNull(onFail);
+        if (!_initialized) throw new InvalidOperationException("Result sin inicializar.");
         return IsOk ? onOk(Value!) : onFail(Error!);
     }
 

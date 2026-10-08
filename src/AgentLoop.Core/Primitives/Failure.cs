@@ -23,6 +23,7 @@ public static class Failures
         UnauthorizedAccessException => new("storage.denied", "Acceso al recurso local denegado.", correlationId),
         IOException => new("storage.io", "Fallo de entrada o salida local.", correlationId),
         System.Net.Http.HttpRequestException => new("provider.transport", "No se pudo conectar con el proveedor.", correlationId, true),
+        System.Text.Json.JsonException => new("input.json_invalid", "JSON de configuracion o contrato invalido.", correlationId),
         ArgumentException => new("input.invalid", "Configuracion o argumento invalido.", correlationId),
         InvalidOperationException => new("operation.invalid", "La operacion no puede continuar con el estado actual.", correlationId),
         _ => new("operation.unexpected", "Fallo inesperado; consulta el identificador de correlacion.", correlationId),

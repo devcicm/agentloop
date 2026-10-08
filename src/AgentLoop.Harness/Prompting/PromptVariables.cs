@@ -12,6 +12,8 @@ public sealed partial class PromptVariables
 {
     private readonly Dictionary<string, string> _values = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<string> _order = [];
+    private readonly Dictionary<string, PromptVariableSpec> _specs = new(StringComparer.OrdinalIgnoreCase);
+    public PromptVariableSpec Spec(string name) => _specs.GetValueOrDefault(name) ?? new(MaxCharacters: MaxValueLength);
 
     public PromptVariables(int maxValueLength = TextSanitizer.DefaultMaxLength)
         => MaxValueLength = maxValueLength;
@@ -33,7 +35,7 @@ public sealed partial class PromptVariables
     /// <c>{{...}}</c>; si no, se rechaza aqui en vez de quedar como variable fantasma
     /// que nunca se interpola.
     /// </summary>
-    public PromptVariables Set(string name, string? value)
+    public PromptVariables Set(string name, string? value, PromptVariableSpec? spec = null)
     {
         if (!NameRegex().IsMatch(name))
         {
@@ -41,12 +43,22 @@ public sealed partial class PromptVariables
                 $"Nombre de variable invalido: '{name}'. Debe empezar por letra o '_' y seguir con letras, numeros, '_', '.' o '-'.");
         }
 
+        spec ??= new(MaxCharacters: MaxValueLength);
+        var clean = TextSanitizer.Plain(value);
+        if (spec.Sensitive || DataGuard.Redact(clean) != clean) throw new PromptTemplateException("Los secretos no son variables de prompt.");
+        if (spec.MaxCharacters < 1) throw new PromptTemplateException("Limite de variable invalido.");
+        if (clean.Length > Math.Min(spec.MaxCharacters, MaxValueLength) && !spec.AllowTruncation)
+            throw new PromptTemplateException("La variable excede su contrato; no se truncara silenciosamente.");
+        if (spec.Type == PromptValueType.Integer && !long.TryParse(clean, System.Globalization.NumberStyles.Integer, System.Globalization.CultureInfo.InvariantCulture, out _)
+            || spec.Type == PromptValueType.Boolean && !bool.TryParse(clean, out _)) throw new PromptTemplateException("Tipo de variable invalido.");
+        if (spec.Type == PromptValueType.Json) { try { using var json = System.Text.Json.JsonDocument.Parse(clean); } catch (System.Text.Json.JsonException) { throw new PromptTemplateException("Variable JSON invalida."); } }
+        _specs[name] = spec;
         if (_values.TryAdd(name, string.Empty))
         {
             _order.Add(name);
         }
 
-        _values[name] = TextSanitizer.Truncate(TextSanitizer.Plain(value), MaxValueLength);
+        _values[name] = TextSanitizer.Truncate(clean, Math.Min(spec.MaxCharacters, MaxValueLength));
         return this;
     }
 
@@ -57,6 +69,7 @@ public sealed partial class PromptVariables
             return false;
         }
 
+        _specs.Remove(name);
         _order.RemoveAll(n => string.Equals(n, name, StringComparison.OrdinalIgnoreCase));
         return true;
     }

@@ -5,6 +5,10 @@ namespace AgentLoop;
 
 internal static partial class Program
 {
+    private static AgentLoop.Operations.OperationIntent ParseIntent(string? value)
+        => string.IsNullOrWhiteSpace(value) ? AgentLoop.Operations.OperationIntent.General
+            : Enum.TryParse<AgentLoop.Operations.OperationIntent>(value, true, out var intent) && Enum.IsDefined(intent)
+                ? intent : throw new ArgumentException("Intencion invalida: General, Explain, Review, Edit, Build o Diagnose.");
     private static readonly object ObservationGate = new();
 
     private static int ReportFailure(Failure failure)
@@ -39,7 +43,14 @@ internal static partial class Program
 
     private static void ObserveOperationResult(EventOperationResult result)
     {
-        ObserveBoundary(new("harness.operation", result.CorrelationId, result.IsSuccess, result.Outcome.Error?.Code, TimeSpan.Zero));
+        ObserveBoundary(new("harness.operation", result.CorrelationId, result.IsSuccess, result.Outcome.Error?.Code, result.Elapsed));
+        ConsoleUi.Field("Duracion",$"{result.Elapsed.TotalSeconds:0.0}s");
+        ConsoleUi.Field("Solicitudes",result.HttpAttempts);
+        if (result.Budget is { } budget)
+        {
+            ConsoleUi.Field("Consumo",$"{budget.ChargedUnits} unidades | estimado={budget.Estimated} | {budget.Estimator}");
+            ConsoleUi.Field("Costo",budget.Cost is { } cost ? cost.ToString(System.Globalization.CultureInfo.InvariantCulture) : "desconocido: tarifas no configuradas");
+        }
         if (!result.IsSuccess) ReportFailure(result.Outcome.Error!);
     }
 

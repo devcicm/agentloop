@@ -65,11 +65,13 @@ internal static partial class Program
         var settings = new SessionSettings
         {
             Thinking = policy,
+            Intent = ParseIntent(StringOption(args,"--intent")),
             Model = model,
             Stream = ResolveStreaming(args, fallback: true),
             Policy = sessionPolicy,
         };
 
+        thread.SetIntent(settings.Intent);
         PrintInteractiveBanner(tools, settings);
         var credentialState = SecretStore.ResolveCredential();
         if (!credentialState.IsOk) ReportFailure(credentialState.Error!);
@@ -176,7 +178,7 @@ internal static partial class Program
                     continue;
                 }
 
-                if (verb == "credenciales")
+                if (verb is "skills" or "code-review" or "repo-map" or "ediciones" or "credenciales")
                 {
                     lastExitCode = await ExecuteAsync(tokens);
                     continue;
@@ -256,6 +258,8 @@ internal static partial class Program
 
         public required string Model { get; set; }
 
+        public IReadOnlyList<ArtifactCriterion>? Criteria { get; set; }
+        public AgentLoop.Operations.OperationIntent Intent { get; set; }
         public bool Stream { get; set; }
         public ExecutionPolicy Policy { get; init; } = new();
         public Action<EventOperationCoordinator?>? OnCoordinator { get; set; }
@@ -272,6 +276,31 @@ internal static partial class Program
         var policy = settings.Thinking;
         var model = settings.Model;
 
+        if (verb == "intencion") { RunSessionEdit(() => { settings.Intent = ParseIntent(rest); thread.SetIntent(settings.Intent); ConsoleUi.Field("Intencion",settings.Intent); }); return true; }
+        if (verb is "objetivo-fijar" or "restriccion")
+        {
+            RunSessionEdit(() =>
+            {
+                if (verb=="objetivo-fijar") thread.BindObjective(rest=="limpiar" ? "" : rest);
+                else if (rest=="limpiar") thread.ClearConstraints(); else thread.AddConstraint(rest);
+                ConsoleUi.Field("Tarea",thread.TaskState.Objective); ConsoleUi.Field("Restricciones",thread.TaskState.Constraints.Count);
+            }); return true;
+        }
+        if (verb == "criterio")
+        {
+            RunSessionEdit(() =>
+            {
+                if (rest == "limpiar") settings.Criteria = null;
+                else
+                {
+                    var path=Path.GetFullPath(rest.Trim().Trim('"'),settings.Policy.WorkingDirectory);
+                    ProjectContractAdmission.CheckResource(path);
+                    if (!Scope.Minimal(settings.Policy).AllowsPath(path)) throw new InvalidOperationException("Criterio fuera del scope.");
+                    settings.Criteria=(settings.Criteria ?? []).Append(new ArtifactCriterion(path)).ToArray();
+                }
+                ConsoleUi.Field("Criterios",settings.Criteria?.Count ?? 0);
+            }); return true;
+        }
         switch (verb)
         {
             case "memoria":
@@ -447,7 +476,7 @@ internal static partial class Program
         {
             edit();
         }
-        catch (Exception ex) when (ex is InvalidOperationException or ArgumentOutOfRangeException or IOException or JsonException or UnauthorizedAccessException)
+        catch (Exception ex) when (ex is InvalidOperationException or ArgumentException or IOException or JsonException or UnauthorizedAccessException)
         {
             ConsoleUi.Error($"  ERROR: {ex.Message}");
         }
@@ -491,6 +520,10 @@ internal static partial class Program
         ConsoleUi.Text("  permisos | permisos revocar   consulta o revoca permisos de sesion");
         ConsoleUi.Text("  chat <texto>          alias de run: reactor, terminal y evidencia local");
         ConsoleUi.Text("  run-chat <texto>      utilidad conversacional anterior, sin terminal");
+        ConsoleUi.Text("  objetivo-fijar <texto>|limpiar | restriccion <texto>|limpiar   contexto explicito");
+        ConsoleUi.Text("  criterio <ruta>|limpiar   artefactos que deben cambiar; requerido para Edit/Build");
+        ConsoleUi.Text("  skills [intencion] | code-review --root <ruta> | ediciones   contexto y recuperacion");
+        ConsoleUi.Text("  intencion General|Explain|Review|Edit|Build|Diagnose   declara el proposito");
         ConsoleUi.Text("  credenciales verificar   comprueba aceptacion remota con limite de tiempo");
         ConsoleUi.Text("  setup [--status]     configura credenciales con entrada oculta");
         ConsoleUi.Text("  discover | selftest | ayuda   utilidades sueltas");

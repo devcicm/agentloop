@@ -5,9 +5,14 @@ namespace AgentLoop.Goals;
 /// <summary>Bounded user requirements; never promote assistant reasoning or tool dumps into system instructions.</summary>
 public static class OperationContextBuilder
 {
-    public static OperationTaskContext Build(string objective, string system, IReadOnlyList<ChatMessage> history)
+    public static OperationTaskContext Build(string objective, string system, IReadOnlyList<ChatMessage> history, AgentLoop.Operations.OperationIntentState? state = null)
     {
         objective = DataGuard.Input(objective);
+        if (state is { } control && (control.Objective.Length>0 || control.Constraints.Count>0))
+        {
+            var bound="OBJETIVO FIJADO POR OPERADOR:\n"+control.Objective+"\nRESTRICCIONES DEL OPERADOR:\n"+string.Join("\n",control.Constraints)+"\nSOLICITUD ACTUAL:\n"+objective;
+            return new(bound,LimitSessionContext(system),true);
+        }
         var continuation = objective.Length <= 300 && Regex.IsMatch(objective.Trim(),
             @"^(?:(?:ok|si|bien)[, .]+)?(?:apruebo|contin[u\u00fa]a(?:r)?\b|procede\b.*(?:plan|ejecuci[o\u00f3]n)|ejecuta\b.*plan)", RegexOptions.IgnoreCase);
         var requirements = continuation

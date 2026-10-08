@@ -66,6 +66,7 @@ public static class ProjectContractAdmission
         }
         foreach (var item in work.Values)
         {
+            if (item.EstimatedSeconds is { } duration && (!double.IsFinite(duration) || duration < 0)) throw Invalid("Duracion estimada invalida.");
             References(item.DependsOn, work, "dependsOn");
             References(item.ArtifactIds, artifacts, "artifactIds");
             References(item.ValidationIds, validations, "validationIds");

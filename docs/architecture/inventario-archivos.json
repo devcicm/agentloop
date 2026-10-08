@@ -676,6 +676,10 @@
     "nature": "documentacion"
   },
   {
+    "path": "docs/guides/harness-planificacion-presupuestos.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/guides/instalacion.md",
     "nature": "documentacion"
   },
@@ -728,12 +732,24 @@
     "nature": "configuracion/ejemplo"
   },
   {
+    "path": "examples/graphs/dependencies.example.json",
+    "nature": "recurso/evidencia"
+  },
+  {
+    "path": "examples/harness-policy.example.json",
+    "nature": "recurso/evidencia"
+  },
+  {
     "path": "examples/profiles/artifacts.example.json",
     "nature": "configuracion/ejemplo"
   },
   {
     "path": "examples/profiles/docker.template.json",
     "nature": "configuracion/ejemplo"
+  },
+  {
+    "path": "examples/skills/review.example.json",
+    "nature": "recurso/evidencia"
   },
   {
     "path": "global.json",
@@ -821,7 +837,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "89e68fea4db1b57e7ca24567e76d0724938b4ea0f71bb87726ec53b106458fc6",
+    "sha256": "6b8947af19bacd6d71d62906eba52d2b9c4a99425ffd51e8a93b80a78f8be17b",
     "purpose": [
       "Cancelacion y traduccion de errores a codigo de salida. Vive aparte porque el modo interactivo entra aqui una vez por comando y no puede morirse en el primero."
     ],
@@ -845,11 +861,23 @@
     "types": [
       "Program"
     ],
-    "sha256": "dc1043f50a1d7ac880e73c39f40104a11c3cdad281ea238ba3899aafdf4fe96c",
+    "sha256": "24b3679ef86eaabe5a0eb7ebd6048f32c70760cd8828f82a88dfb7f6cdd9bf07",
     "purpose": [
       "La entrada principal del CLI publica un objetivo y ejecuta el reactor."
     ],
     "nature": "comando/host"
+  },
+  {
+    "path": "src/AgentLoop.Cli/Commands/Program.Planning.cs",
+    "sha256": "c92e85aea65a0e39d3e4f59ad25a7747d9884ef494adde15688c928f1e9b8aad",
+    "namespace": "AgentLoop",
+    "types": [
+      "Program"
+    ],
+    "purpose": [
+      "Contrato o estructura: Program.Planning"
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Cli/Commands/Program.Presentation.cs",
@@ -869,7 +897,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "78848b0e76c96add0eaa3641f29fdc14915dacb1525a4da260aad041e5735d1d",
+    "sha256": "af60982d80466ca45ae86bfe9cf2e4915086eaaf6cea9db3d505728421eb02b4",
     "purpose": [
       "Declaracion ClassDeclaration: Program"
     ],
@@ -881,7 +909,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "c9fd337309647d222c23eca5c99b751b5263bb43edf3aa21b6152849e5076fa8",
+    "sha256": "0bebba2158ec5412fa415e17274f073cbd443d3dd7edb4c9d27d475705fd6001",
     "purpose": [
       "Comprueba en vivo que el modelo responde antes de lanzar una prueba larga. Un ping minimo (una pregunta de un token, sin thinking) distingue: - disponible: el gateway devolvio 200. - sin acceso/saldo (401/402/403): la cuenta no puede usarlo. - no disponible (404 / model_not_found / no available channel): el gateway no lo sirve. - transporte (status 0): no se pudo contactar. No lanza: devuelve el veredicto para que el caller decida."
     ],
@@ -889,7 +917,7 @@
   },
   {
     "path": "src/AgentLoop.Cli/Commands/Program.Results.cs",
-    "sha256": "918f206bab229068bf7f435e4902b1ff28d7db8ea83e65e494f4b1e60ec75c23",
+    "sha256": "eed5506a7c5dc1e6cdf87c71c4b5e8c049965dc1c16193b5166254c526256994",
     "namespace": "AgentLoop",
     "types": [
       "Program"
@@ -951,7 +979,7 @@
     "types": [
       "Program"
     ],
-    "sha256": "398fa6f3fd4a77d2a81a365009ebce19fad7267f82b4ad43d119637215bdbd77",
+    "sha256": "367d860a8c921b75a3f78955cac8a69a5ac38c2ed09c9e9e2241d4f8b5d2fe17",
     "purpose": [
       "Visual Studio arranca el binario con los argumentos fijos del perfil, asi que no hay donde teclear un comando. Cuando no llegan argumentos y hay una consola de verdad detras, el CLI se ofrece como prompt en vez de imprimir la ayuda y morir. Con stdin redirigido (tuberias, CI) se mantiene el comportamiento de siempre."
     ],
@@ -1382,6 +1410,36 @@
     "nature": "regla/estado"
   },
   {
+    "path": "src/AgentLoop.Core/Graphs/DirectedGraph.cs",
+    "sha256": "93b4c779633ef23800113c3491c46cb4cc52cb7880f257b5b9c0a20195c7d2e7",
+    "namespace": "AgentLoop.Graphs",
+    "types": [
+      "GraphNode",
+      "GraphEdge",
+      "GraphPath",
+      "DirectedGraph"
+    ],
+    "purpose": [
+      "Grafo dirigido acotado: topologia, impacto, componentes fuertes y rutas ponderadas."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Graphs/GraphPlanning.cs",
+    "sha256": "c23b7d05a0ac8241594f3d2ed0d478a73abbd8cff76aefeeaeb8929a5eb44f8f",
+    "namespace": "AgentLoop.Graphs",
+    "types": [
+      "GraphCut",
+      "AndOrAlternative",
+      "AndOrPlan",
+      "GraphPlanning"
+    ],
+    "purpose": [
+      "Edmonds-Karp; capacidades explicitas no equivalen a permisos o aislamiento operativo."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Core/LLM/ResponseBudgets.cs",
     "namespace": "AgentLoop.Provider",
     "types": [
@@ -1392,6 +1450,84 @@
       "Declaracion ClassDeclaration: ResponseBudgets"
     ],
     "nature": "regla/estado"
+  },
+  {
+    "path": "src/AgentLoop.Core/Operations/DecisionPolicy.cs",
+    "sha256": "ffc24d1ecbe97e1a16331c12aa0bfa4e68bede1d720cdf6585379fb0714ac919",
+    "namespace": "AgentLoop.Operations",
+    "types": [
+      "OperationIntent",
+      "DecisionKind",
+      "OperationIntentState",
+      "DecisionSnapshot",
+      "DecisionPolicy"
+    ],
+    "purpose": [
+      "Precondiciones deterministas; el LLM propone alternativas solo si el host necesita una decision."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Operations/HarnessPolicy.cs",
+    "sha256": "c65ff6037649dd0680b87997bdada64411d149a462999a60ef541edfb2b1af67",
+    "namespace": "AgentLoop.Operations",
+    "types": [
+      "HarnessPolicy"
+    ],
+    "purpose": [
+      "Limites y decisiones generales del host; no contiene reglas de negocio."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Operations/InferenceBudgetLedger.cs",
+    "sha256": "06f37230607438b4e25b12b31e6e550a0587473c69e814a994f4c56b79981637",
+    "namespace": "AgentLoop.Operations",
+    "types": [
+      "BudgetReservation",
+      "BudgetSnapshot",
+      "InferenceBudgetLedger"
+    ],
+    "purpose": [
+      "Reservas por llamada; razonamiento se contabiliza dentro de completion, nunca dos veces."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Operations/ModelBudgetPolicy.cs",
+    "sha256": "6f79d2ef379a5d23111a4dd854643cfb9d3b9c27c795df8e8fdac82d8e197764",
+    "namespace": "AgentLoop.Operations",
+    "types": [
+      "ModelBudgetPolicy"
+    ],
+    "purpose": [
+      "Datos configurados por modelo; no incorpora tarifas ni ventanas supuestas del proveedor."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Operations/ProgressTracker.cs",
+    "sha256": "1413180b2d11fcb5127dc34be2e547a0e8e630d1745f2aa8d1a1b1d371c96953",
+    "namespace": "AgentLoop.Operations",
+    "types": [
+      "ProgressTracker"
+    ],
+    "purpose": [
+      "Distingue observaciones nuevas de repeticion; errores repetidos nunca acreditan progreso."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Core/Primitives/CanonicalJson.cs",
+    "sha256": "e24936f32492e5d6aa4bc4828d76af4db3995efb7f82ad6e9b8d30cb4d4c1399",
+    "namespace": "AgentLoop.Harness.Functional",
+    "types": [
+      "CanonicalJson"
+    ],
+    "purpose": [
+      "Contrato o estructura: CanonicalJson"
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Core/Primitives/Composable.cs",
@@ -1419,7 +1555,7 @@
   },
   {
     "path": "src/AgentLoop.Core/Primitives/Failure.cs",
-    "sha256": "c0398c795aa494b2c37d34897d820d40afbcb440abd120a0fc67ecafddb54235",
+    "sha256": "c2d18bcf708ac234f6c4d3a81ef1cf25f266417c780c397141ca08fba98706e9",
     "namespace": "AgentLoop.Harness.Functional",
     "types": [
       "Failure",
@@ -1510,7 +1646,7 @@
     "types": [
       "Result"
     ],
-    "sha256": "777eb88bd42b0833482407e6cea6a5effbb245ecff78878e47e5ffed512bf18b",
+    "sha256": "fe830e3a497fc4b8e411dada946ea5d7ceb9a301a385f50b1838b113de7175ad",
     "purpose": [
       "Tipo suma con dos casos: Ok(valor) o Fail(error). Es el reemplazo del campo nullable \"puede haber pasado algo mal\" que contamina muchos tipos del harness. Con un tipo suma el compilador obliga a PatternMatch, asi \"se me olvido comprobar el Failure\" deja de compilar. Diferencia con la version minimalista que venia en Composition.cs: aqui cada caso lleva datos reales (no E=default en Ok), soporta equality estructural completa, y expone helpers (Map, Bind, Match) que la libreria estandar no da. Convencion: T es el valor de exito, E es el motivo de fallo. Si el fallo no aporta dato (tipo unit), usar ."
     ],
@@ -1678,7 +1814,7 @@
     "types": [
       "WorkItemDto"
     ],
-    "sha256": "78e3c02b1275bed43d6e7b1e9ca64acaa83d3784e02411c5124c9681f919aa91",
+    "sha256": "c008146c4067dfb61105e7e84f9ae21769af95ababd9f3e29f51be611308161f",
     "purpose": [
       "Declaracion RecordDeclaration: WorkItemDto"
     ],
@@ -1750,7 +1886,7 @@
     "types": [
       "ProjectState"
     ],
-    "sha256": "c3da7f96716c419b14e106453f72278744479547ef1b3ffed0bcc6982533eaac",
+    "sha256": "6fe46f5aa243c091498650710074f0e319e45cff2719ff0d5aadad0979fa617e",
     "purpose": [
       "Mutated only by the operation mailbox; dependency scheduling is triggered by events."
     ],
@@ -1852,7 +1988,7 @@
     "types": [
       "ConversationSession"
     ],
-    "sha256": "fab0ae524ea807165c73e5f40dae2040a19157abe3c1a1ccb31f891e962176a5",
+    "sha256": "50a71f4d10223bd84099b9cf9c01383a6b70544abdae5c180070fde949a66103",
     "purpose": [
       "El hilo que sobrevive entre comandos del CLI interactivo. Guarda la conversacion sin el mensaje de sistema: ese se vuelve a renderizar en cada turno para que {{hora}} y demas parametros esten frescos, en vez de quedar congelados en los que hubiera al arrancar la sesion."
     ],
@@ -1888,7 +2024,7 @@
     "types": [
       "OperationContextBuilder"
     ],
-    "sha256": "0d00f7bc750a5ef8605b216ac5bd9c7573e9e9b739de595305ebbdd3295184e7",
+    "sha256": "cfdb8d79ec684a5b186313e3e96985db24d6467f344423255b2de31de952d7c6",
     "purpose": [
       "Bounded user requirements; never promote assistant reasoning or tool dumps into system instructions."
     ],
@@ -1905,6 +2041,18 @@
       "Contrato compartido de tarjetas y entorno, independiente de ejecutores."
     ],
     "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Context/OperationKnowledgeGraph.cs",
+    "sha256": "9ed844f71cf6d618c4eb050d3d87aee28fc506e39f8042c1b393801ccd98e45a",
+    "namespace": "AgentLoop.Goals",
+    "types": [
+      "OperationKnowledgeGraph"
+    ],
+    "purpose": [
+      "Proyeccion de hechos del host; nunca incorpora aristas propuestas por el LLM como hechos verificados."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Harness/Context/OperationTaskContext.cs",
@@ -1936,11 +2084,23 @@
     "types": [
       "EventBus"
     ],
-    "sha256": "42f4d31047c75f7aa467ca20711eebde808b8f58f0c4e8c49ebb6ffc533763e1",
+    "sha256": "bd447d5f642b688753787d05b95f49a374cce8314a730a0caaaec912101b8620",
     "purpose": [
       "Cola de sucesos con senal. Cualquiera publica desde cualquier hilo (handlers de salida de procesos, temporizadores, herramientas) y el agente se entera esperando la senal. La senal es un reset event automatico y no un contador: quien espera no gira en vacio ni bloquea un hilo, y una publicacion no se pierde aunque llegue justo cuando nadie estaba esperando todavia."
     ],
     "nature": "orquestacion/puerto"
+  },
+  {
+    "path": "src/AgentLoop.Harness/Events/EventMailbox.cs",
+    "sha256": "d39b241c10ad01c4c65fd451212c095e77718befae1d7cb4e31761c375552b97",
+    "namespace": "AgentLoop.Events",
+    "types": [
+      "EventMailbox"
+    ],
+    "purpose": [
+      "Despacho serial disparado por publicaciones; controles prioritarios y cola finita, sin latido."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Harness/Execution/Contracts/CommandRisk.cs",
@@ -2594,7 +2754,7 @@
     "types": [
       "OperationAcceptance"
     ],
-    "sha256": "4f9a7c5ba4a04dd87b306ad374f6358b0ab0d154c3c0a10df379d4eb569d56fb",
+    "sha256": "f4207c04c8ec2725c08c72b3bc4b9119800ac5f11ae433d5ce0e710a44479074",
     "purpose": [
       "Observaciones producidas por herramientas y criterios fijados al admitir el objetivo."
     ],
@@ -2606,7 +2766,7 @@
     "types": [
       "OperationAdmission"
     ],
-    "sha256": "ad3208dd4a033c6b3d10d1062bb2f4782a900174081752554e8db6e20d6fb1b4",
+    "sha256": "1bccd4ec5ac27c60ab2fe2e6fa7f1d1ecf5957edbc8deb6992dc2f661a4666f4",
     "purpose": [
       "Puerta comun de tarjetas y politica, aplicada antes de cada herramienta."
     ],
@@ -2618,7 +2778,7 @@
     "types": [
       "EventOperationCoordinator"
     ],
-    "sha256": "421fb09d5b26d4778d67cb62fe9418237977c0b319a36555e6a0185007209840",
+    "sha256": "8e84f30f39869a7ba446b49568c2a8deb37995367cb02e034f93a58116a1666d",
     "purpose": [
       "Un actor de operacion. Cada publicacion agenda su handler; no itera estados ni llama StepAsync. Modelo y herramientas publican resultados desde tareas independientes."
     ],
@@ -2630,7 +2790,7 @@
     "types": [
       "EventOperationResult"
     ],
-    "sha256": "aed3041a8597f8faa5f3b059eefede770846605b0fced01f979271b7ae47b639",
+    "sha256": "c9a370063386f281bf95b8f35f0390f628943abe198a86db116cbeda73d70ff8",
     "purpose": [
       "Declaracion RecordDeclaration: EventOperationResult"
     ],
@@ -2666,7 +2826,7 @@
     "types": [
       "OperationServices"
     ],
-    "sha256": "c84be10172d5db574fec8a472b2302e5acb55929f5a585c3cba94ca19b8e31e2",
+    "sha256": "d53ef4b00a05f7e2718ae158cc2f21623aaa7c40417e4887e0a33e5347131175",
     "purpose": [
       "Adaptadores instalados por el host para parseo, stream, recuperacion y persistencia de operaciones."
     ],
@@ -2786,7 +2946,7 @@
     "types": [
       "ProjectRuntime"
     ],
-    "sha256": "b19f350d4795d8c395168499e219b4a28b0c547b5172ad947893afaf17ed90eb",
+    "sha256": "48616db2127b8b975867ed37848553efa6f128224150c7346323a45a5d6b02f7",
     "purpose": [
       "Project projection owned by the existing actor. Async validators return immutable deliveries."
     ],
@@ -2841,12 +3001,29 @@
     "nature": "orquestacion/puerto"
   },
   {
+    "path": "src/AgentLoop.Harness/Prompting/PromptRenderResult.cs",
+    "sha256": "c0c185531ec5156456e1bd5190e08b9f4f5010f9b9ee33aeda22acde2e468186",
+    "namespace": "AgentLoop.Prompting",
+    "types": [
+      "PromptValueType",
+      "PromptVariableSpec",
+      "PromptRenderOptions",
+      "PromptVariableAudit",
+      "PromptRenderMetadata",
+      "PromptRenderResult"
+    ],
+    "purpose": [
+      "Contrato o estructura: PromptRenderResult"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Harness/Prompting/PromptTemplate.cs",
     "namespace": "AgentLoop.Prompting",
     "types": [
       "PromptTemplate"
     ],
-    "sha256": "96efb7fe80d55f486e81f826d17bc92c64c2b8f62f39dd38430db5145f272be7",
+    "sha256": "ccdb270eb03481e2c4d8ec781a930fb8e35b42bbecb880d2e49d43b947359de0",
     "purpose": [
       "Plantilla de prompt con interpolacion {{variable}}. El modo de escapado va en el propio hueco: {{xml:contexto}}, {{json:payload}}, {{raw:plantilla}}. Sin prefijo se asume . Lo que no encaje con la forma de un hueco se deja tal cual, para que una plantilla pueda contener JSON con llaves sin que haya que escaparlo."
     ],
@@ -2870,7 +3047,7 @@
     "types": [
       "PromptVariables"
     ],
-    "sha256": "f98b8f167f046b5f75d085ac1f3b0d05f76340a0a6397d966e9768fbea35e138",
+    "sha256": "5b248c3e7d6f1339efd88f4b7a4c2bf666364fa3363dc9015b15f4cbb7fdf662",
     "purpose": [
       "Bolsa de parametros del prompt. Mantiene el orden de insercion para que listarlas sea estable, e higieniza y recorta cada valor al entrar: lo que se guarda aqui es exactamente lo que vera el modelo, sin sorpresas en el render."
     ],
@@ -3024,7 +3201,7 @@
     "types": [
       "GoalRunner"
     ],
-    "sha256": "3d2a7147eb7de10199e9307ff63ef3728aea35ecfd4f447ae42e1d4f9ca723c4",
+    "sha256": "7b96f284e277705dd6a9e18f1543221e20d85fa716d9f3682a41521f1ee5714e",
     "purpose": [
       "Implementacion de que delega el setup completo al y ejecuta el coordinador de eventos. Antes de este commit GoalRunner.RunAsync construia su propio Scope, bus, supervisor, ledger, tools, GoalContext, StepRecorder y RunContext inline (~120 lineas); ahora son ~30: pide el setup al factory, configura el reactor con la instrumentacion propia y espera su resultado terminal."
     ],
@@ -3048,7 +3225,7 @@
     "types": [
       "RunnerOptions"
     ],
-    "sha256": "7c8fc994d1e49de1385374bb756e261f773ef4dd40afd260520ca9bd2da048dd",
+    "sha256": "4435b351cd100696f3f5ea5a1b0b9a99e8485f43c4d3803cb350b8e73cde0219",
     "purpose": [
       "Opciones que afinan como se ejecuta un Run."
     ],
@@ -3168,7 +3345,7 @@
     "types": [
       "ProtectedResources"
     ],
-    "sha256": "59a29687315abec295eddbcb87cd2dfb6e30bbe7bbec436556e99eb962c09f04",
+    "sha256": "bb2798f25b5971e9ce97e91d69663981daddad8781f794fed4791b91af49ced1",
     "purpose": [
       "Declaracion ClassDeclaration: ProtectedResources"
     ],
@@ -3223,12 +3400,24 @@
     "nature": "orquestacion/puerto"
   },
   {
+    "path": "src/AgentLoop.Harness/Tools/CapabilityTool.cs",
+    "sha256": "24aee46619800b86776ed5c9a2dbd7b226a02228cb29993fcb5e9d806a15d4c2",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "CapabilityTool"
+    ],
+    "purpose": [
+      "Metadatos fijados por composicion confiable; los argumentos del modelo no pueden cambiarlos."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Harness/Tools/DelegateTool.cs",
     "namespace": "AgentLoop.Tools",
     "types": [
       "DelegateTool"
     ],
-    "sha256": "16769a158eb2937fe62834333ebbb7a7d6c735765531867ed6eba197d13591fd",
+    "sha256": "36b42fa20cbd7826dc737026f91e5e1bc7cdd3aed49b7372f8b5314d458e3af7",
     "purpose": [
       "Adaptador para declarar una tool desde un delegado y un schema en texto."
     ],
@@ -3240,7 +3429,7 @@
     "types": [
       "IdempotentTool"
     ],
-    "sha256": "7c854472c696a8681bbfe84fd672ce9a15f95e19a5437a8c35b2ef58a9ec3700",
+    "sha256": "022ea3f261b07f15400907128fc4311c7e5f6c5b2eb140e6aed7fc137d7f397b",
     "purpose": [
       "Decorator que envuelve cualquier con cache por hash: la primera llamada ejecuta el handler y guarda el resultado; las siguientes con la misma combinacion (tool + argumentos) devuelven el resultado cacheado sin reejecutar. Pensado para tools read-only (leer, procesos, kill, observar) cuyo resultado es estable entre llamadas. NO se aplica a ejecutar ni lanzar porque tienen efectos reales y un retry legitimo del modelo debe poder reejecutarlas. La clave se calcula sobre el JSON de argumentos. Cambiar el orden de las claves produce la misma clave (el calculo ordena). El cache es bounded LRU: cuando se llena, descarta la entrada menos usada recientemente."
     ],
@@ -3252,7 +3441,7 @@
     "types": [
       "OperationTools"
     ],
-    "sha256": "93962d6b2cc97604d620a6711d3c8e5cf3af5e39f31fc716ddc6aad836170f95",
+    "sha256": "9df56e1389edb278bee13fb4dc2e7b66a384f75477f9204c7127abccfd3f0fda",
     "purpose": [
       "Las herramientas con las que el agente opera: jugar tarjetas de estado y manejar terminales. Reparto deliberado: ejecutar es para lo corto (espera el resultado), y lanzar + esperar/leer/observar es para lo largo, que es lo que evita que el agente se quede parado delante de un proceso de diez minutos. Ninguna de las dos bloquea un hilo: la espera es sobre reset events."
     ],
@@ -3276,7 +3465,7 @@
     "types": [
       "ToolRegistry"
     ],
-    "sha256": "f3c09399d3d6fb8fc4acfd1be83cc6b7b435782eb74b35b59ebe0a5bf25134a6",
+    "sha256": "0feabc681cb74b183e1bab69434459fc520ebe30f6b7c66fe2cbfa3497626eea",
     "purpose": [
       "Catalogo de herramientas: genera los schemas y despacha las llamadas."
     ],
@@ -3323,6 +3512,34 @@
     "nature": "configuracion/ejemplo"
   },
   {
+    "path": "src/AgentLoop.Infrastructure/CodeReview/GraphPlanningTool.cs",
+    "sha256": "0b3c6c7c1a646f90fb6214a2812c18f006719ff9a8ad9f8f44f4a767669a6384",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "GraphAnalysisRequest",
+      "GraphPlanningTool"
+    ],
+    "purpose": [
+      "Contrato o estructura: GraphPlanningTool"
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/CodeReview/RepositoryReviewTools.cs",
+    "sha256": "a6aa32ed6b7740101c81d58b2b0fb2b82dbbd4bc5fc96f4816ffdc86e3e6e0a9",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "RepositoryReviewOptions",
+      "CodeReference",
+      "CodeReviewReport",
+      "RepositoryReviewTools"
+    ],
+    "purpose": [
+      "Mapa con hashes y referencias acotadas. No ejecuta codigo; interpretaciones del LLM no son evidencia del host."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Infrastructure/Composition/DefaultGoalRunSetupFactory.cs",
     "namespace": "AgentLoop.Harness.Composition",
     "types": [
@@ -3340,11 +3557,23 @@
     "types": [
       "GoalRunFactory"
     ],
-    "sha256": "48b1420449ef08fe3e1b1833522e78343834b6874c9723aa84d2f7ea95cc4bd8",
+    "sha256": "2eb3a459b4080c76ec53f0e228576a6712f6abce320986092b10f82945e2eaea",
     "purpose": [
       "Composicion compartida del harness de operaciones: monta bus con identidad causal, supervisor, tarjetas, registro canonical de tools filtrado por Scope, contexto y captura local de evidencia. GoalRunner usa el actor por eventos; el puerto ILLMClient separa al proveedor del motor."
     ],
     "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Composition/HarnessPolicyLoader.cs",
+    "sha256": "0f3066e9bf8ada4e0a272964ebd05ce9cdcbb8c0fd5dc042b3eddf8fdced9074",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "HarnessPolicyLoader"
+    ],
+    "purpose": [
+      "Contrato o estructura: HarnessPolicyLoader"
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Infrastructure/Composition/OperationServiceFactory.cs",
@@ -3352,7 +3581,7 @@
     "types": [
       "OperationServiceFactory"
     ],
-    "sha256": "0e5c3741766cc9974d2e234f2cdd34e8734f3b1154d9edebcf3125f87995be7b",
+    "sha256": "b90b771d108fa8ff60a3ce34e9fbfcf634dcc77b27a6aa3562b741d7ffd063d3",
     "purpose": [
       "Declaracion ClassDeclaration: OperationServiceFactory"
     ],
@@ -3372,7 +3601,7 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Credentials/LocalCredentialWriter.cs",
-    "sha256": "95287fd4e8f89052ec295c0b60eb72ecbc30a3ec3e5eaef00ea080e6b7850f9a",
+    "sha256": "ec45dabe6b838b0c9c1961f8891f58fd78c82ee38247415a9e88a886f7d68923",
     "namespace": "AgentLoop.Configuration",
     "types": [
       "LocalCredentialWriter"
@@ -3388,7 +3617,7 @@
     "types": [
       "SecretStore"
     ],
-    "sha256": "64bce07ea0670bcc5dd2fef6c0d5494008edf412543b68a9451c9ae1168a8bc8",
+    "sha256": "8e1cc62b140dce8ec7da636a545a48c712bb3cccdd126077111956b06d3d99a1",
     "purpose": [
       "Resuelve secretos locales. Prioridad: NVIDIA_API_KEY, archivo NVIDIA, archivo legado y variable legada."
     ],
@@ -3563,6 +3792,30 @@
     "nature": "adaptador/efecto"
   },
   {
+    "path": "src/AgentLoop.Infrastructure/Files/BoundedFile.cs",
+    "sha256": "f0b8e724664f9e85b4a908142a8ca67f4280f5681fb05ab7ed6d212749312359",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "BoundedFile"
+    ],
+    "purpose": [
+      "Lectura acotada incluso si el archivo cambia de tamaÃƒÂ±o; no asigna el documento completo antes de comprobar."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/Editing/EditRecoveryStore.cs",
+    "sha256": "cda59c13bb370d0214eb391f48ba78165beeaa5fe92dfcc0176ff18376ff79b8",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "EditRecoveryStore"
+    ],
+    "purpose": [
+      "Original durable bajo el almacen protegido; un fallo de escritura exige reconciliar, no reintentar ciegamente."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Infrastructure/Files/Editing/TextDocumentSnapshot.cs",
     "sha256": "66d851f537466249c0389bc4bf4b11670c629d91950ee8f7ef05513e3e46cd40",
     "namespace": "AgentLoop.Tools",
@@ -3576,7 +3829,7 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Files/Editing/TextEditingOptions.cs",
-    "sha256": "e85d2e15fbc40820b647debd0e084a44f8adf7ae9486773d049d52f430b9bc11",
+    "sha256": "67252983685b6d50d0498a6a5b8fde131617b70094afb6da98d0d7379f9ffb16",
     "namespace": "AgentLoop.Tools",
     "types": [
       "TextEditingOptions"
@@ -3588,13 +3841,25 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs",
-    "sha256": "18b37486fee03ec9c3018b94949497d1594ed76279f36c216f8128e9e25a3552",
+    "sha256": "b01be1072d96896ef66f9d35b544348a6404d1ed9ce568b77f1f817004466b34",
     "namespace": "AgentLoop.Tools",
     "types": [
       "TextEditingTools"
     ],
     "purpose": [
       "Edicion vinculada a lectura y version. Cada registro tiene sus propios recibos en memoria."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Files/Editing/TextPatchProposal.cs",
+    "sha256": "d90749aa4a2989ffb3dc702f8e88ea22014dc4146fe0c80a12ddc3e1914d297d",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "TextPatchProposal"
+    ],
+    "purpose": [
+      "Propuesta inmutable de la misma version leida; diff completo disponible por paginas."
     ],
     "nature": "adaptador/implementacion"
   },
@@ -3723,7 +3988,7 @@
     "types": [
       "ProjectContractAdmission"
     ],
-    "sha256": "e9f79f1c397ea0d15593246ab7738872bdd6b93872bb2685e16ca8ba53f4e058",
+    "sha256": "0296b7c6151825efece591b774f044f127aa54ca13dc0d5b3d0ab035ba2bc92a",
     "purpose": [
       "Pure admission: reads a bounded contract, validates references and paths, creates no project or process."
     ],
@@ -3771,7 +4036,7 @@
     "types": [
       "TransportOptions"
     ],
-    "sha256": "313740895679c0c9349c1cd3d4b97c47ec94bc875617c9e190dae21488620b5c",
+    "sha256": "521d80282e06b9e1c1399b1b02273c55a92dd38c69ad31d47bc2ce9a14e5607f",
     "purpose": [
       "Reintentos solo para 5xx y 429 transitorios. El backoff exponencial puede acumular segundos facilmente: 3 reintentos con base 1 y tope 5 dan 1+2+4 = 7s de espera + los timeouts de cada intento. Con 6 reintentos y base 2 (el valor anterior) se llegaba a 34s de espera solo en backoff, y con timeouts largos eso era el doble. 3 reintentos cubre el caso habitual del gateway sin que un solo timeout se convierta en minutos de espera."
     ],
@@ -3855,7 +4120,7 @@
     "types": [
       "NvidiaClient"
     ],
-    "sha256": "7d19dc93757afe3d747ef782a2832dfba6c1ec58d2d1cd8a70ade906d7526189",
+    "sha256": "b1833bd42e691e464738ee8d709b74c9cb6cf29abb134b4ab644885da0e1190b",
     "purpose": [
       "CAPA 1 - cliente asincrono OpenAI-compatible para NVIDIA NIM. Adaptacion y parseo del protocolo NVIDIA NIM."
     ],
@@ -3879,7 +4144,7 @@
     "types": [
       "NvidiaOptions"
     ],
-    "sha256": "822d151156f64f24da94606b2522e37eb4380ebca02414c598ecc68623049792",
+    "sha256": "a6ee0733664544cc4b4864fdce234473db5f1ba72397be3e8e95e006ffaa8c28",
     "purpose": [
       "Configuracion del cliente HTTP contra el gateway."
     ],
@@ -3931,11 +4196,23 @@
     "types": [
       "ChatCompletionsTransport"
     ],
-    "sha256": "63a18ce757e58e5999cc30039975b055788d5a86a451605f9d3a4e955544bb43",
+    "sha256": "9dbcde550d7c51317e7d5b1e57d4847d504a0b4918326f0613bc38fbaa16db3a",
     "purpose": [
       "Shared cancellable HTTP retries; no model-specific payload decisions."
     ],
     "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Providers/Transport/ProviderEndpointPolicy.cs",
+    "sha256": "5a68b11b00fb919e7300e980097f0bc87b44ba3bc86b23e52f8f1de6d79bf9d7",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ProviderEndpointPolicy"
+    ],
+    "purpose": [
+      "Contrato o estructura: ProviderEndpointPolicy"
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Infrastructure/Providers/Transport/TransientErrorClassifier.cs",
@@ -3948,6 +4225,18 @@
       "Declaracion ClassDeclaration: TransientErrorClassifier"
     ],
     "nature": "adaptador/efecto"
+  },
+  {
+    "path": "src/AgentLoop.Infrastructure/Skills/FileSkillCatalog.cs",
+    "sha256": "0bdd7f9b67de56dedb38ffae92749be81acfce7dcca2b5d0967eb62a2571e238",
+    "namespace": "AgentLoop.Harness.Composition",
+    "types": [
+      "FileSkillCatalog"
+    ],
+    "purpose": [
+      "Solo carga procedimientos del directorio confiable elegido por el operador; nunca los descubre del prompt."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Infrastructure/Tools/ArithmeticTools.cs",
@@ -3967,7 +4256,7 @@
     "types": [
       "BuiltInTools"
     ],
-    "sha256": "0d61b0ba23c70ab9ad62e360c696a5c57e570a38a719b6afe6ac16edf6b89e60",
+    "sha256": "773628c3e57b1e674f23cd9c2cd8b0107bd03dbd6eb0730a5d2f04b248e637d4",
     "purpose": [
       "Set por defecto para chat, run e interactive."
     ],
@@ -4130,6 +4419,18 @@
       "Entrada de GET /models."
     ],
     "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/LLM/RequestAttemptBudget.cs",
+    "sha256": "3a5477fe276d1b8bdd9d79fb70e56a0f8b879da90483dee714609c49bf8bbec5",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "RequestAttemptBudget"
+    ],
+    "purpose": [
+      "Cuota de solicitudes HTTP compartida entre adaptadores y reintentos del mismo objetivo."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "src/AgentLoop.Kernel/LLM/ResponseFormat.cs",
@@ -4472,16 +4773,42 @@
     "nature": "documentacion"
   },
   {
+    "path": "src/AgentLoop.Kernel/Skills/SkillDefinition.cs",
+    "sha256": "ac232d407ec21d45c23171408b86b6c76ebc1ce914f81b4397cd8b191cf44b75",
+    "namespace": "AgentLoop.Skills",
+    "types": [
+      "SkillDefinition",
+      "ISkillCatalog"
+    ],
+    "purpose": [
+      "Procedimiento del operador. Sus herramientas son requisitos, nunca concesiones de permisos."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Kernel/Tools/ITool.cs",
     "namespace": "AgentLoop.Tools",
     "types": [
       "ITool"
     ],
-    "sha256": "e03afeded6b70babc83d43c24ab012224fc23e364574cc77df81769f75ec77b3",
+    "sha256": "08cbfd9108f0f55f44a3395b7c902fb13177e192552ae9ed4e4f8a3a58aacef5",
     "purpose": [
       "Una funcion que el modelo puede invocar."
     ],
     "nature": "contrato/primitiva"
+  },
+  {
+    "path": "src/AgentLoop.Kernel/Tools/ToolCapabilities.cs",
+    "sha256": "4036952543ae5efd6ad8fe441ad74c5edf327e340d73bea38f7cc16c7b95f80d",
+    "namespace": "AgentLoop.Tools",
+    "types": [
+      "ToolEffect",
+      "ToolCapabilities"
+    ],
+    "purpose": [
+      "Contrato o estructura: ToolCapabilities"
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "tests/AgentLoop.SelfTests/AgentLoop.SelfTests.csproj",

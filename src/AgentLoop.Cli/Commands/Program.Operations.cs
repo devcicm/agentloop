@@ -18,7 +18,7 @@ internal static partial class Program
     {
         if (maxCycles < 1 || deadline < 1) throw new InvalidOperationException("Los presupuestos deben ser positivos.");
         var policy = settings.Policy;
-        var taskContext = OperationContextBuilder.Build(objective, "", thread.Messages);
+        var taskContext = OperationContextBuilder.Build(objective, "", thread.Messages,thread.TaskState);
         var run = Harness.Core.Run.FromObjective(taskContext.Objective, deadline, settings.Model);
         var renderer = settings.Stream ? new DeltaRenderer() : null;
         var consoleGate = new object();
@@ -43,6 +43,8 @@ internal static partial class Program
         };
         var coordinator = new EventOperationCoordinator(client, settings.Model, tools, Scope.Minimal(policy), OperationServiceFactory.Create())
         {
+            Intent = new(settings.Intent, taskContext.Objective, thread.TaskState.Constraints),
+            Criteria = settings.Criteria,
             MaxModelCalls = maxCycles,
             MaxTokens = 2048, Thinking = settings.Thinking, Stream = settings.Stream,
             OnDelta = renderer is null ? null : delta => { lock (consoleGate) renderer.Render(delta); },
@@ -176,6 +178,7 @@ internal static partial class Program
 
         var coordinator = new EventOperationCoordinator(client, model, setup.Tools, scope, OperationServiceFactory.Create())
         {
+            Intent = new(ParseIntent(StringOption(args,"--intent")), objective, []),
             Criteria = StringOption(args, "--artifact") is { } artifact
                 ? [new ArtifactCriterion(artifact, StringOption(args, "--contains"), args.Contains("--json"), !args.Contains("--allow-existing"))]
                 : null,

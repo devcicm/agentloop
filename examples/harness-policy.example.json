@@ -1,0 +1,11 @@
+{
+  "MaxHttpAttempts": 40,
+  "MaxRepeatedActions": 3,
+  "MaxExplorationActions": 12,
+  "MaxActionsWithoutProgress": 24,
+  "MaxInputUnits": 96000,
+  "ContextMargin": 1024,
+  "ContextWindowUnits": 128000,
+  "MaxTotalTokenUnits": 2000000,
+  "RequireExplicitCriteria": true
+}

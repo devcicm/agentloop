@@ -12,11 +12,13 @@ public sealed class DelegateTool : ITool
         string name,
         string description,
         string parametersJsonSchema,
-        Func<JsonElement, CancellationToken, ValueTask<string>> handler)
+        Func<JsonElement, CancellationToken, ValueTask<string>> handler,
+        ToolCapabilities? capabilities = null)
     {
         Name = name;
         Description = description;
         _handler = handler;
+        Capabilities = capabilities ?? new();
 
         var schema = StrictJson.Parse(parametersJsonSchema);
         var fields = JsonSerializer.Deserialize<Dictionary<string, JsonElement>>(schema.GetRawText())!;
@@ -25,6 +27,7 @@ public sealed class DelegateTool : ITool
     }
 
     public string Name { get; }
+    public ToolCapabilities Capabilities { get; }
 
     public string Description { get; }
 

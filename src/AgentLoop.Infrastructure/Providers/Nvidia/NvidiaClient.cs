@@ -22,6 +22,8 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
 
     public NvidiaClient(NvidiaOptions options, HttpClient? httpClient = null)
     {
+        if (options.MaxRetries < 0 || options.Timeout <= TimeSpan.Zero || options.BackoffBaseSeconds < 0 || options.MaxBackoffSeconds < 0 || options.RetryAfterCapSeconds < 0) throw new ArgumentException("Presupuestos de transporte invalidos.");
+        ProviderEndpointPolicy.Validate(options.BaseUrl, options.AllowedOrigins);
         _options = options;
         if (string.IsNullOrWhiteSpace(options.ApiKey))
         {
@@ -29,7 +31,7 @@ public sealed class NvidiaClient : ILLMClient, IDisposable
         }
 
         _ownsHttpClient = httpClient is null;
-        _http = httpClient ?? new HttpClient();
+        _http = httpClient ?? new HttpClient(new HttpClientHandler { AllowAutoRedirect = false });
         _http.Timeout = options.Timeout;
         _transport = new(_http, options);
         _http.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", options.ApiKey);

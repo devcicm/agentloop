@@ -28,6 +28,10 @@ eventos, tarjetas, permisos y evidencia como autoridad de ejecucion.
 | Media | Grafo de dependencias parcial, sin mapa del codigo y evidencia integrado | Grafos tipados, procedencia, revision e invalidacion incremental |
 | Media | Seleccion de trabajo por primer habilitado, sin funcion de coste | Planificador configurable con dependencias y presupuestos |
 | Media | No hay resolver de skills operativas | Skills versionadas con contratos, permisos, presupuestos y criterios |
+| Alta | Explicacion del repo sin cobertura/procedencia explicita | Revision con referencias de archivos/simbolos, alcance inspeccionado y distincion entre observado e inferido |
+| Alta | Revision y reemplazo de codigo sin contrato semantico comun | Objetivo de cambio, rango/version leidos, precondiciones, diff, relectura y validacion pertinente |
+| Media | Vista de codigo duplica contenido y texto numerado | Presupuesto de respuesta y representacion para modelo configurable, conservando numeros de linea y recibos |
+| Media | Edicion existente escribe sobre el archivo abierto y revierte best-effort | Definir recuperacion durable de parches y tratamiento de caidas durante escritura; no afirmar atomicidad |
 
 ## Interpolacion: existente y faltante
 
@@ -144,3 +148,85 @@ al planificador y nunca amplian permisos.
 Validaciones futuras: expansion repetida, escapes, Unicode, campos sensibles,
 presupuestos agotados, tokens desconocidos, ciclos, invalidacion de descendientes
 y decisiones sin ruta valida. No se ejecutaron pruebas en esta ampliacion documental.
+
+## Code review: conocer y explicar el proyecto
+
+Separar dos solicitudes del operador: explicar que hace el codigo y revisar sus
+defectos. Ambas requieren lectura y referencias; una explicacion no autoriza
+escrituras. El alcance debe indicar revision Git, carpetas inspeccionadas y partes
+no examinadas. No afirmar cobertura completa por leer el README.
+
+Procedimiento propuesto, parametrizable por lenguaje y herramientas disponibles:
+
+1. Inventariar archivos pertinentes, manifiestos, puntos de entrada y dependencias,
+   excluyendo secretos, binarios, generados y datos privados.
+2. Construir/consultar el grafo de archivos, simbolos, llamadas y recursos con
+   procedencia y hash. Los resultados de un parser y los del LLM conservan su origen.
+3. Leer el subgrafo que explica la funcionalidad solicitada dentro del presupuesto.
+4. Responder con proposito, entradas/salidas, recorrido de ejecucion, efectos,
+   limites y referencias de archivo/linea de la revision inspeccionada.
+5. Para revision de defectos, emitir hallazgos con severidad, evidencia, condiciones
+   necesarias y propuesta. Diferenciar defecto confirmado, riesgo e hipotesis.
+6. Entregar `Result<CodeReviewReport, Failure>`; validar cobertura minima del
+   contrato de revision. La respuesta del LLM no acredita una prueba ejecutada.
+
+El reporte puede declarar `purpose`, `entryPoints`, `flows`, `dependencies`,
+`effects`, `findings`, `references`, `coverage` y `unknowns`. Son DTOs propuestos,
+no tipos ya implementados. Contexto externo del repo se considera dato no confiable.
+
+## Edicion de lineas especificas: capacidad existente y ampliacion
+
+`src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs` ya implementa:
+
+- `code_view`: lectura paginada con numeracion, hash y `read_receipt`.
+- `edit_text_file` con `mode=lines`: rango inclusivo desde 1, comprobacion del
+  recibo/rango/version, `old_text` opcional y preview.
+- Rechazo de documentos modificados desde la lectura, conservacion de encoding
+  y saltos, e invalidacion de recibos tras aplicar.
+
+Ejemplo de propuesta para una herramienta, no comando directo del prompt CLI:
+
+```json
+{
+  "path": "src/modulo.cs",
+  "read_receipt": "<recibo real de code_view>",
+  "mode": "lines",
+  "start_line": 42,
+  "end_line": 45,
+  "old_text": "<contenido exacto previamente leido>",
+  "new_text": "<reemplazo propuesto>",
+  "preview": true
+}
+```
+
+No inventar recibos ni editar con numeros de linea de otra version. Leer el rango
+completo, incluidos sus saltos. Para codigo, proponer `old_text` obligatorio o
+selector por simbolo con precondicion de hash, configurable por contrato. Un
+reemplazo textual no equivale a un refactor semantico.
+
+El preview actual muestra extractos de hasta 512 caracteres, no un diff completo.
+Agregar un patch/diff paginado con identificador, hash base, rangos y efectos.
+El permiso debe vincularse al patch y su version; una confirmacion de preview no
+debe autorizar una propuesta distinta. Aplicar cambios multiples de atras hacia
+adelante o como patch de la misma version para evitar desplazar rangos pendientes.
+
+```text
+Solicitud de explicacion/revision
+  -> scope -> mapa del repo -> lectura pertinente
+  -> reporte con referencias y cobertura
+       |
+Solicitud autorizada de cambio
+  -> leer codigo y contexto -> recibo/version/rango
+  -> proponer patch y diff completo -> comprobar precondiciones
+  -> admision y permiso cuando corresponda
+  -> aplicar -> nuevo hash -> invalidar recibos y grafo afectado
+  -> releer -> validadores autorizados por contrato
+  -> evidencia del cambio y sus limites -> cierre
+```
+
+El editor usa escritura sobre un handle exclusivo con rollback best-effort.
+Una caida del proceso o sistema durante escritura no equivale a una transaccion
+atomica; requiere recuperar/reconciliar. Las herramientas tipadas no impiden
+que shell arbitrario evada este protocolo. Validaciones futuras: rango no leido,
+version cambiada, desplazamiento de lineas, preview truncado, patch alterado,
+Unicode/encoding, permisos y fallos durante escritura. No se ejecutaron pruebas.

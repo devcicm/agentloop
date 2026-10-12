@@ -1,7 +1,21 @@
 # Plan de publicacion de AgentLoop en GitHub
 
 Fecha: 2026-10-07. Revision inspeccionada: `544a647`.
-Estado: plan; no se crearon remotos, repositorios, tags ni releases.
+Estado historico del plan. La publicacion de codigo se realizo el 2026-10-12;
+no se creo tag ni GitHub Release.
+
+## Publicacion publica — 2026-10-12
+
+- Repositorio: <https://github.com/devcicm/agentloop> (`devcicm/agentloop`).
+- Visibilidad: publica; rama predeterminada: `main`.
+- Primer commit publicado: `03aa5d4c20ba26f296b3c2371f8d78b05963ae36`.
+- La licencia MIT, CI versionada y la auditoria de secretos son parte del
+  contenido publicado. La auditoria de Git no encontro candidatos de secretos.
+- No hay tag, GitHub Release ni artefacto adjunto. El paquete local se prepara
+  y audita por separado antes de una futura release.
+
+Las tablas de estado posteriores son una fotografia historica del 7 de octubre;
+no describen el remoto ni el contenido final de la publicacion de 2026-10-12.
 
 ## Actualización de endurecimiento — 2026-10-11
 

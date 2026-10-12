@@ -19,9 +19,9 @@ dominio. Los proyectos de negocio se definen mediante contratos y perfiles exter
 
 ## Candidato de version
 
-`0.1.0-alpha.1`: preparacion local, sin publicacion en GitHub. SDK fijado en
-global.json; version comun en Directory.Build.props. Licencia pendiente de
-eleccion y migracion a .NET 10 antes de una entrega estable.
+`0.1.0-alpha.1`: preview local. SDK fijado en global.json; version comun en
+Directory.Build.props. Se distribuye bajo licencia MIT; la migracion a .NET 10
+sigue pendiente antes de una entrega estable.
 
 [Instalacion y uso desde ZIP](docs/guides/instalacion.md) Â·
 [Changelog](CHANGELOG.md) Â· [Contribuir](CONTRIBUTING.md) Â· [Seguridad](SECURITY.md).

@@ -33,12 +33,10 @@ La suite incluye nuevas regresiones de permisos, here-strings y edicion, y
 casos de aprobacion por ID, rechazo, continuo y deadline. Los casos anteriores
 se adaptaron al contrato de lectura previa y clasificador instalado.
 
-La licencia sigue pendiente de eleccion: el script normal bloquea distribucion
-sin LICENSE. Se permite solo el candidato interno con opcion explicita. SDK 10
-no esta instalado localmente; la preview usa .NET 9, con migracion pendiente antes
-de estable. El workflow release.yml prepara assets de Actions; no crea borradores
-ni releases. Activarlo en GitHub, conectar remoto, push, merge remoto y tag
-siguen pendientes de una instruccion posterior de publicacion.
+La licencia MIT esta incluida. SDK 10 no esta instalado localmente; la preview
+usa .NET 9, con migracion pendiente antes de estable. El workflow release.yml
+prepara assets de Actions; no crea borradores ni releases. Un tag y una GitHub
+Release requieren una instruccion posterior de publicacion.
 
 Resultados locales: [evidencia del candidato](../evidence/2026-10-07-candidato-local/README.md).
 Build del clon aislado sin errores/advertencias, 474 comprobaciones, ZIP auditado

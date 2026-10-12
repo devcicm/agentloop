@@ -24,7 +24,7 @@ public static class EditRecoveryStore
             if (OperatingSystem.IsWindows())
             {
                 var user = WindowsIdentity.GetCurrent().User ?? throw new InvalidOperationException("Usuario local no resuelto.");
-                var acl = new FileSecurity(); acl.SetAccessRuleProtection(true, false); acl.SetOwner(user);
+                var acl = new FileSecurity(); acl.SetAccessRuleProtection(true, false);
                 acl.AddAccessRule(new FileSystemAccessRule(user, FileSystemRights.FullControl, AccessControlType.Allow)); file.SetAccessControl(acl);
             }
             else File.SetUnixFileMode(backup, UnixFileMode.UserRead | UnixFileMode.UserWrite);

@@ -155,6 +155,8 @@ docs/evidence/2026-10-04-validacion-core-kernel/selftest.txt
 docs/evidence/2026-10-04-validacion-core-kernel/summary.json
 docs/evidence/2026-10-07-candidato-local/README.md
 docs/evidence/2026-10-07-candidato-local/summary.json
+docs/evidence/2026-10-08-harness-planificacion/README.md
+docs/evidence/2026-10-11-quality-gate/README.md
 docs/evidence/README.md
 docs/evidence/eventos-antes-2026-09-28.log
 docs/evidence/eventos-despues-2026-09-28.log
@@ -343,6 +345,7 @@ src/AgentLoop.Harness/Lifecycle/RunLifecycleMutex.cs
 src/AgentLoop.Harness/Lifecycle/RunLifecycleState.cs
 src/AgentLoop.Harness/Lifecycle/TryTransitionResult.cs
 src/AgentLoop.Harness/Observability/ConsoleObserver.cs
+src/AgentLoop.Harness/Observability/HarnessTelemetry.cs
 src/AgentLoop.Harness/Observability/IRunObserver.cs
 src/AgentLoop.Harness/Observability/LogLevel.cs
 src/AgentLoop.Harness/Observability/MetricsCollector.cs
@@ -558,5 +561,6 @@ tests/AgentLoop.SelfTests/Legacy/BuiltInSelfTests.cs
 tests/AgentLoop.SelfTests/Program.cs
 tests/AgentLoop.SelfTests/Prompting/SanitizationSelfTest.cs
 tests/AgentLoop.SelfTests/Provider/Nvidia/ProviderContractSelfTest.cs
+tests/AgentLoop.SelfTests/Provider/ProviderTransportSelfTest.cs
 tests/AgentLoop.SelfTests/Security/SecuritySelfTest.cs
 tests/AgentLoop.SelfTests/Tools/IdempotentToolSelfTest.cs

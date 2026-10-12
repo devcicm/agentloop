@@ -58,6 +58,7 @@ public sealed class GoalRunner : IRunner
         try
         {
             setup.RunContext.Steps.OnRunStart(run.Id);
+            setup.RunContext.Metrics.Increment("runs.started");
 
             var coordinator = new EventOperationCoordinator(_client, run.Model!, setup.Tools, scope, _factory.OperationServices)
             {
@@ -71,14 +72,25 @@ public sealed class GoalRunner : IRunner
                     setup.RunContext.Steps.OnLog(new StructuredLog(DateTimeOffset.Now, LogLevel.Info, "reactor", line));
                     if (options.Verbose) Console.WriteLine(AgentLoop.Security.DataGuard.Display(line));
                 },
-                RecordModel = (completion, elapsed) => setup.RunContext.Steps.Record(new ModelStep(
-                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, completion.Model ?? run.Model!,
-                    completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,
-                    completion.Thinking.Observed ? completion.Thinking.ToString() : null)),
-                RecordTool = (tool, output, succeeded, elapsed) => setup.RunContext.Steps.Record(new ToolStep(
-                    setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, tool,
-                    string.Empty, output, succeeded, elapsed)),
+                RecordModel = (completion, elapsed) =>
+                {
+                    setup.RunContext.Metrics.Increment("model.calls");
+                    setup.RunContext.Metrics.Increment("model.prompt_units", completion.Usage.PromptTokens);
+                    setup.RunContext.Metrics.Increment("model.completion_units", completion.Usage.CompletionTokens);
+                    setup.RunContext.Steps.Record(new ModelStep(setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now,
+                        completion.Model ?? run.Model!, completion.Usage.PromptTokens, completion.Usage.CompletionTokens, elapsed,
+                        completion.Thinking.Observed ? completion.Thinking.ToString() : null));
+                },
+                RecordTool = (tool, output, succeeded, elapsed) =>
+                {
+                    setup.RunContext.Metrics.Increment("tool.calls");
+                    setup.RunContext.Metrics.Increment(succeeded ? "tool.succeeded" : "tool.failed");
+                    setup.RunContext.Steps.Record(new ToolStep(setup.RunContext.Steps.NextSequence(), DateTimeOffset.Now, tool,
+                        string.Empty, output, succeeded, elapsed));
+                },
             };
+
+            setup.RunContext.Metrics.Increment("operations.started");
 
             var operationResult = await coordinator.RunAsync(setup.GoalContext, cancellationToken).ConfigureAwait(false);
 
@@ -89,6 +101,10 @@ public sealed class GoalRunner : IRunner
                 : new RunResult.Failure(operationResult.Reason, operationResult.Error);
 
             setup.RunContext.Status = succeeded ? RunStatus.Succeeded : operationResult.Status == OperationStatus.Cancelled ? RunStatus.Cancelled : RunStatus.Failed;
+            setup.RunContext.Metrics.Increment("operations.completed");
+            setup.RunContext.Metrics.Increment("operations." + setup.RunContext.Status.ToString().ToLowerInvariant());
+            setup.RunContext.Metrics.Increment("provider.http_attempts", operationResult.HttpAttempts);
+            setup.RunContext.Metrics.Increment("inference.units", operationResult.Budget?.ChargedUnits ?? 0);
             setup.RunContext.FailureReason = result.IsSuccess ? null : (result as RunResult.Failure)?.Reason;
 
             setup.RunContext.Steps.Record(new TransitionStep(

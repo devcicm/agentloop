@@ -628,6 +628,14 @@
     "nature": "recurso/evidencia"
   },
   {
+    "path": "docs/evidence/2026-10-08-harness-planificacion/README.md",
+    "nature": "documentacion"
+  },
+  {
+    "path": "docs/evidence/2026-10-11-quality-gate/README.md",
+    "nature": "documentacion"
+  },
+  {
     "path": "docs/evidence/README.md",
     "nature": "captura historica"
   },
@@ -1988,7 +1996,7 @@
     "types": [
       "ConversationSession"
     ],
-    "sha256": "50a71f4d10223bd84099b9cf9c01383a6b70544abdae5c180070fde949a66103",
+    "sha256": "6c382096adf0cc45835a3700e211d2796e5f8cd3c906f0521432092e42efd539",
     "purpose": [
       "El hilo que sobrevive entre comandos del CLI interactivo. Guarda la conversacion sin el mensaje de sistema: ese se vuelve a renderizar en cada turno para que {{hora}} y demas parametros esten frescos, en vez de quedar congelados en los que hubiera al arrancar la sesion."
     ],
@@ -2533,6 +2541,18 @@
     "nature": "orquestacion/puerto"
   },
   {
+    "path": "src/AgentLoop.Harness/Observability/HarnessTelemetry.cs",
+    "sha256": "38d741247457dcaffc43b39ab2a84f3f3b63a0da3146625614e3235972313e0a",
+    "namespace": "AgentLoop.Harness.Observability",
+    "types": [
+      "HarnessTelemetry"
+    ],
+    "purpose": [
+      "Telemetría opcional y sin datos de prompts, rutas ni credenciales."
+    ],
+    "nature": "adaptador/implementacion"
+  },
+  {
     "path": "src/AgentLoop.Harness/Observability/IRunObserver.cs",
     "namespace": "AgentLoop.Harness.Observability",
     "types": [
@@ -2778,7 +2798,7 @@
     "types": [
       "EventOperationCoordinator"
     ],
-    "sha256": "8e84f30f39869a7ba446b49568c2a8deb37995367cb02e034f93a58116a1666d",
+    "sha256": "9a1460007dc5d7a684f484e617f967a5b90b13a7006d5d340b61247bf350d75c",
     "purpose": [
       "Un actor de operacion. Cada publicacion agenda su handler; no itera estados ni llama StepAsync. Modelo y herramientas publican resultados desde tareas independientes."
     ],
@@ -3201,7 +3221,7 @@
     "types": [
       "GoalRunner"
     ],
-    "sha256": "7b96f284e277705dd6a9e18f1543221e20d85fa716d9f3682a41521f1ee5714e",
+    "sha256": "de64d0191e651d47ece86b7e232c258762402fb55d9756aaa2bf4bd64437d2ff",
     "purpose": [
       "Implementacion de que delega el setup completo al y ejecuta el coordinador de eventos. Antes de este commit GoalRunner.RunAsync construia su propio Scope, bus, supervisor, ledger, tools, GoalContext, StepRecorder y RunContext inline (~120 lineas); ahora son ~30: pide el setup al factory, configura el reactor con la instrumentacion propia y espera su resultado terminal."
     ],
@@ -3601,7 +3621,7 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Credentials/LocalCredentialWriter.cs",
-    "sha256": "ec45dabe6b838b0c9c1961f8891f58fd78c82ee38247415a9e88a886f7d68923",
+    "sha256": "5d993f5aaecbf17ce424db0c0f64bbc04deaf76ff58883fe75776ee19da39dd7",
     "namespace": "AgentLoop.Configuration",
     "types": [
       "LocalCredentialWriter"
@@ -3805,7 +3825,7 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Files/Editing/EditRecoveryStore.cs",
-    "sha256": "cda59c13bb370d0214eb391f48ba78165beeaa5fe92dfcc0176ff18376ff79b8",
+    "sha256": "fe57a7029e93db106c984be1d6cb2cc87779dc368403b3b4253bde945d150da0",
     "namespace": "AgentLoop.Tools",
     "types": [
       "EditRecoveryStore"
@@ -3841,7 +3861,7 @@
   },
   {
     "path": "src/AgentLoop.Infrastructure/Files/Editing/TextEditingTools.cs",
-    "sha256": "b01be1072d96896ef66f9d35b544348a6404d1ed9ce568b77f1f817004466b34",
+    "sha256": "6e2f7d98090e67d21d20092db85240ff88e2128aa8636f903e82fe8420309539",
     "namespace": "AgentLoop.Tools",
     "types": [
       "TextEditingTools"
@@ -4820,7 +4840,7 @@
     "types": [
       "SessionPersistenceSelfTest"
     ],
-    "sha256": "6989ba12d24ade49ea62d133e744fea02e3fab666eb4e2a3613963b846f7cef3",
+    "sha256": "c4a56a05bec5168846edd3805187dafd8dd6f69961b0ea043da1e8996abae8d4",
     "purpose": [
       "Declaracion ClassDeclaration: SessionPersistenceSelfTest"
     ],
@@ -4828,7 +4848,7 @@
   },
   {
     "path": "tests/AgentLoop.SelfTests/Distribution/ReleaseReadinessSelfTest.cs",
-    "sha256": "d6c05cc668e61bb882a9ad168bf4b38a44a52203f417f3709712a419fa59615a",
+    "sha256": "f0be8069ec3a8ff7f8caa185dd366397c45c9337496e4f34b954d8be93bc8311",
     "namespace": "AgentLoop.Verification",
     "types": [
       "ReleaseReadinessSelfTest"
@@ -4938,7 +4958,7 @@
     "types": [
       "EventCoordinatorSelfTest"
     ],
-    "sha256": "8fcc1847dfc5d0a3a4c952e763b055bfbe51eb6a808eef552243e9385e6dc42f",
+    "sha256": "5c93eb92e83c4dda2b9e42e7f713fc0517fe7905339ddf38b8bf50d9079f0d51",
     "purpose": [
       "Pruebas de contratos observables del coordinador de eventos, sin red."
     ],
@@ -5034,7 +5054,7 @@
     "types": [
       "BuiltInSelfTests"
     ],
-    "sha256": "bc501daf9d24b5913f3d790cc5e0d37b452a335b8edabf1b8200b717d4cf53bf",
+    "sha256": "147310e64eff322a5682cdc9c2547eeb04fd3862f0be27d424f5e2aa890cd0aa",
     "purpose": [
       "Verifica sin red la mecanica de la operacion dirigida por eventos: los reset events, el bus, las reglas transaccionales del libro mayor y el supervisor de procesos. Lo que se comprueba aqui no son literales sino propiedades: que una espera sin senal caduca y con senal no, que una tarjeta fuera de orden se rechaza, que cerrar la transaccion anidada no cierra la operacion. Esos son los invariantes que sostienen todo lo demas, y son justo los que se rompen en silencio."
     ],
@@ -5046,7 +5066,7 @@
     "types": [
       "VerificationProgram"
     ],
-    "sha256": "bef2345efa1dbf1c35db493d863e1ca903a4c75b6ede98d8ca674d5687b299fa",
+    "sha256": "da72d8a33de65c42802ab34e6702345cf6d6a034cdd3ac15f7765fc169eae08b",
     "purpose": [
       "Declaracion ClassDeclaration: VerificationProgram"
     ],
@@ -5075,6 +5095,18 @@
       "Offline payload tests through the real HTTP client and SSE path."
     ],
     "nature": "prueba/fixture"
+  },
+  {
+    "path": "tests/AgentLoop.SelfTests/Provider/ProviderTransportSelfTest.cs",
+    "sha256": "c60f41662c0d56781975fa63986abd4d9023fc8735c9153367ad5ac349341352",
+    "namespace": "AgentLoop.Provider",
+    "types": [
+      "ProviderTransportSelfTest"
+    ],
+    "purpose": [
+      "Contratos offline de fronteras HTTP: origen, reintentos y cuota compartida."
+    ],
+    "nature": "adaptador/implementacion"
   },
   {
     "path": "tests/AgentLoop.SelfTests/Security/SecuritySelfTest.cs",

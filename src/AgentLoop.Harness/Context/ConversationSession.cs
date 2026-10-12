@@ -71,7 +71,13 @@ public sealed class ConversationSession
             if (!Enum.IsDefined(state.Intent) || state.Objective is null || state.Objective.Length>6000 || state.Constraints is null || state.Constraints.Count>32 || state.Constraints.Any(c=>c is null) || state.Constraints.Sum(c=>c.Length)>8000)
                 throw new InvalidOperationException("Estado de tarea fuera de contrato.");
             if (root.GetProperty("version").GetInt32()!=2) throw new InvalidOperationException("Version de sesion no admitida.");
-            state=state with { Objective=DataGuard.Input(state.Objective), Constraints=state.Constraints.Select(DataGuard.Input).ToArray() };
+            // An objective is optional until the operator binds one. Treating its
+            // empty default as hostile input made a fresh saved session unloadable.
+            state=state with
+            {
+                Objective=state.Objective.Length == 0 ? "" : DataGuard.Input(state.Objective),
+                Constraints=state.Constraints.Select(DataGuard.Input).ToArray()
+            };
             root=root.GetProperty("messages");
         }
         var messages = JsonSerializer.Deserialize<List<ChatMessage>>(root.GetRawText(), new JsonSerializerOptions { PropertyNamingPolicy = JsonNamingPolicy.SnakeCaseLower, PropertyNameCaseInsensitive = true })
@@ -99,6 +105,7 @@ public sealed class ConversationSession
         if (pending.Count > 0 || messages.Count > 0 && (messages[0].Role != ChatRoles.User || messages[^1].Role != ChatRoles.Assistant || messages[^1].ToolCalls is not null))
             throw new InvalidOperationException("La sesion debe contener intercambios completos.");
         Clear();
+        TaskState=state;
         _messages.AddRange(messages.Select(m => new ChatMessage { Role = m.Role, Content = DataGuard.Display(m.Content),
             Name = m.Name, ToolCallId = m.ToolCallId, ToolCalls = m.ToolCalls }));
         Exchanges = messages.Count(m => m.Role == ChatRoles.User);

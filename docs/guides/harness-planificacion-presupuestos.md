@@ -107,3 +107,19 @@ Los originales quedan bajo el almac?n dedicado `edit-backups`, con acceso restri
 La evidencia de esta implementaci?n es compilaci?n Release y auditor?as est?ticas de arquitectura, secretos y diff. No se ejecutaron pruebas automatizadas ni inferencias remotas nuevas. Los informes de pruebas anteriores y ZIP anteriores corresponden a su revisi?n original. No validan estas modificaciones. No se public? una versi?n.
 
 Quedan como ampliaciones: ?ndices sem?nticos multilenguaje, tokenizer exacto por proveedor, m?tricas operativas de larga duraci?n, transacciones at?micas generales y aislamiento uniforme de cualquier shell. El comportamiento con proveedores reales y carreras de cancelaci?n requiere pruebas espec?ficas antes de una publicaci?n.
+
+## Actualización de calidad — 2026-10-11
+
+La suite sin red cubre ahora el contrato de transporte: el endpoint debe ser
+HTTPS y de un origen permitido, un 5xx puede reintentarse y todos los intentos
+consumen una misma cuota. No usa credenciales ni llama a NVIDIA.
+
+`AgentLoop.Harness` ofrece `ActivitySource` y `Meter` para exportadores que el
+host instale. Sus etiquetas solo incluyen intención, estado, resultado y
+conteos; nunca llevan prompts, argumentos de tools, rutas o secretos. El
+Journey suma contadores de operaciones, modelo, tools, unidades y solicitudes
+HTTP.
+
+La edición recuperable falla cerrada si el sistema no permite crear el respaldo
+con ACL privada. En ese caso no modifica el archivo original. La migración a
+.NET 10 LTS sigue pendiente porque esta máquina solo dispone del SDK 9.0.316.

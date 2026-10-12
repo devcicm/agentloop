@@ -41,7 +41,9 @@ public static class LocalCredentialWriter
                     var identity = WindowsIdentity.GetCurrent().User ?? throw new InvalidOperationException("No se pudo resolver el usuario local.");
                     var acl = new FileSecurity();
                     acl.SetAccessRuleProtection(true, false);
-                    acl.SetOwner(identity);
+                    // The creating account already owns a freshly-created file. Taking
+                    // ownership again needs SeRestorePrivilege on some managed hosts.
+                    // Only the DACL is needed to make the file private.
                     acl.AddAccessRule(new FileSystemAccessRule(identity, FileSystemRights.FullControl, AccessControlType.Allow));
                     stream.SetAccessControl(acl);
                 }

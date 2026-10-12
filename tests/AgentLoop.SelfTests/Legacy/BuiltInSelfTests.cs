@@ -342,8 +342,9 @@ public static class BuiltInSelfTests
 
         var projectsOk = await ProjectSelfTest.RunAsync(cancellationToken);
         var sessionOk = SessionPersistenceSelfTest.Run();
+        var providerTransportOk = await ProviderTransportSelfTest.RunAsync(cancellationToken);
         var releaseOk = await ReleaseReadinessSelfTest.RunAsync(cancellationToken);
-        var ok = releaseOk && sessionOk && projectsOk && loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk && coordinatorOk;
+        var ok = releaseOk && providerTransportOk && sessionOk && projectsOk && loopOk && promptOk && thinkingOk && streamOk && goalOk && sanitizeOk && concurrencyOk && idempotentOk && lifecycleOk && compositionOk && watchdogOk && diagnosisOk && dispatcherOk && pipelineProbeOk && truncationOk && eventsOk && coordinatorOk;
         Console.WriteLine();
         Console.WriteLine(ok ? "SELF-TEST OK" : "SELF-TEST FALLIDO");
         return ok ? 0 : 1;

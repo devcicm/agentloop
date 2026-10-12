@@ -268,7 +268,12 @@ public sealed class TextEditingTools
                 next="Relee y valida el cambio; el patch no demuestra correccion semantica."});
         }
         catch (Exception error) when (!effectStarted && error is not OperationCanceledException)
-        { return JsonSerializer.Serialize(new { error=DataGuard.Display(error.Message),effects_started=false }); }
+        {
+            // A stable category is safe to expose and lets the caller distinguish a
+            // denied local capability from a stale receipt without leaking paths.
+            var category = error is UnauthorizedAccessException ? "permission_denied" : "edit_rejected";
+            return JsonSerializer.Serialize(new { error=DataGuard.Display(error.Message), error_code=category, effects_started=false });
+        }
         finally { _gate.Release(); }
     }
     private static string PatchSignature(JsonElement args)

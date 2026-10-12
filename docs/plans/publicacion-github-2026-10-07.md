@@ -3,6 +3,24 @@
 Fecha: 2026-10-07. Revision inspeccionada: `544a647`.
 Estado: plan; no se crearon remotos, repositorios, tags ni releases.
 
+## Actualización de endurecimiento — 2026-10-11
+
+Se añadió una puerta local de calidad para la siguiente publicación:
+
+- La suite sin red incorpora los contratos HTTP de proveedor: HTTPS/origen
+  confiable, reintento transitorio y presupuesto compartido de intentos.
+- El protocolo de edición de release prueba `preview` seguido de `patch_id` al
+  aplicar. Si el entorno no permite crear un respaldo con permisos privados,
+  la escritura falla cerrada y el archivo original queda intacto.
+- El coordinador expone `ActivitySource` y `Meter` de `AgentLoop.Harness`.
+  Solo etiqueta intención, estado y conteos controlados por el host; no emite
+  prompts, argumentos, rutas ni credenciales. Los Journeys ahora incluyen
+  contadores de operaciones, modelo, tools, unidades y solicitudes HTTP.
+
+La máquina de preparación solo tiene SDK 9.0.316. La migración a .NET 10 LTS
+continúa siendo requisito antes de una versión estable y no se simuló mediante
+un cambio de `TargetFramework` sin poder compilarlo. No se realizó publicación.
+
 ## Aplicacion local del plan (7 de octubre)
 
 La rama `release/0.1.0-alpha.1` prepara el candidato sin publicar. Implementados:

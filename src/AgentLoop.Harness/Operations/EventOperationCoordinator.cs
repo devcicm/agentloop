@@ -91,6 +91,9 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         _httpBudget = new(_policy.MaxHttpAttempts);
         _skills = services.Skills?.Find(Intent.Intent.ToString(), tools.Names.ToHashSet(StringComparer.Ordinal)) ?? [];
         _started = true;
+        using var operation = HarnessTelemetry.Activities.StartActivity("operation", ActivityKind.Internal);
+        operation?.SetTag("agentloop.intent", Intent.Intent.ToString());
+        HarnessTelemetry.OperationStarted();
         _context = context;
         _knowledgeGraph = new(context.Bus.RunId.ToString("N"), _policy.MaxKnowledgeNodes);
         _project = context.Project;
@@ -139,7 +142,11 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
             context.Ledger.ValidationGuard = null;
             scope.Policy.AsyncConfirm = previousConfirmation;
         }
-        return result with { Budget=_budget.Snapshot,HttpAttempts=HttpAttempts,Elapsed=_elapsed.Elapsed };
+        var completed = result with { Budget=_budget.Snapshot,HttpAttempts=HttpAttempts,Elapsed=_elapsed.Elapsed };
+        operation?.SetTag("agentloop.status", completed.Status.ToString());
+        operation?.SetTag("agentloop.http_attempts", completed.HttpAttempts);
+        HarnessTelemetry.OperationEnded(completed.Status);
+        return completed;
     }
 
     public void Control(AgentEventKind kind)
@@ -298,6 +305,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
 
     private void StartModel(AgentEvent cause)
     {
+        HarnessTelemetry.ModelRequested();
         if (_context.Cycles >= Math.Min(MaxModelCalls, _skills.Count == 0 ? MaxModelCalls : _skills.Min(s => s.MaxCalls))) { Stop(OperationStatus.Failed, "presupuesto de llamadas al modelo agotado"); return; }
         var facts = _facts.ToArray();
         if (facts.Length == 0) return;
@@ -546,6 +554,7 @@ public sealed class EventOperationCoordinator(ILLMClient client, string model, T
         if (projectError is not null) { Stop(OperationStatus.Failed, projectError); return; }
         Observe(() => OnToolCall?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed));
         RecordTool?.Invoke(execution.ToolName, output, !execution.Failed, delivery.Elapsed);
+        HarnessTelemetry.ToolCompleted(!execution.Failed);
         var fact = Publish(execution.Failed ? AgentEventKind.Error : AgentEventKind.HerramientaFinalizada,
             "resultado registrado de " + execution.ToolName, new { call_id = execution.ToolCallId, receipt_id = receipt?.Id });
         AddFact(fact);

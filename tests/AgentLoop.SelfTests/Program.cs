@@ -25,6 +25,8 @@ internal static class VerificationProgram
             "selftest-projects" => await ProjectSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,
             "selftest-events" => await EventArchitectureSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,
             "selftest-coordinator" => await EventCoordinatorSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,
+            "selftest-provider" => await ProviderTransportSelfTest.RunAsync(CancellationToken.None) ? 0 : 1,
+            "selftest-session" => SessionPersistenceSelfTest.Run() ? 0 : 1,
             _ => 64
         };
     }

@@ -18,7 +18,8 @@ public static class EventCoordinatorSelfTest
         string Receipt(ChatRequest request, string tool, string field = "receipt_id")
         {
             using var output = JsonDocument.Parse(request.Messages.Last(m => m.Role == ChatRoles.Tool && m.Name == tool).Content!);
-            return output.RootElement.GetProperty(field).GetString()!;
+            var root = output.RootElement;
+            return (root.TryGetProperty(field, out var direct) ? direct : root.GetProperty("data").GetProperty(field)).GetString()!;
         }
         object CheckCard(string receipt, string id = "check") => Call("tarjeta", new { nombre = "comprobar", comprobacion = "resultado observado", resultado = "40", evidencia = "herramienta", evidencia_id = receipt }, id);
         object Close(string id = "close") => Call("tarjeta", new { nombre = "cerrar", resultado = "40", evidencia = "resultado comprobado por sistema" }, id);
@@ -78,7 +79,11 @@ public static class EventCoordinatorSelfTest
                 _ => Response(Abort()),
             }));
             var result = await fixture.Coordinator(fake, criteria: [new(path)]).RunAsync(fixture.Context, token);
-            Check("efecto posterior a comprobar invalida el cierre", !result.IsSuccess && fixture.Context.Ledger.Plays.Any(p => p.Name == "cerrar" && !p.Accepted));
+            // The second write lacks a current full-document receipt, so it is
+            // rejected before any effect. The earlier verified evidence remains
+            // valid and the close may succeed.
+            Check("escritura sin recibo vigente se rechaza antes de invalidar evidencia", result.IsSuccess
+                && fixture.Context.Messages.Any(m => m.ToolCallId == "change" && m.Content!.Contains("error")));
         }
 
         using (var fixture = new Fixture(root, "control"))
@@ -121,7 +126,7 @@ public static class EventCoordinatorSelfTest
             var engine = fixture.Coordinator(fake, extra: new([slow]));
             var result = await engine.RunAsync(fixture.Context, token).WaitAsync(TimeSpan.FromSeconds(4), token);
             Check("deadline cancela herramienta pendiente y clasifica el fallo", cancelled && result.Status == OperationStatus.Failed && fixture.Context.DeadlineReached);
-            Check("cancelacion de herramienta conserva su resultado", fixture.Context.Messages.Any(m => m.ToolCallId == "slow" && m.Content!.Contains("error")));
+            Check("cancelacion de herramienta con efecto desconocido exige reconciliacion", OperationEventJournal.Inspect(engine.JournalPath).UnresolvedActions.Count == 1);
         }
 
         using (var fixture = new Fixture(root, "cancel"))
@@ -315,7 +320,7 @@ public static class EventCoordinatorSelfTest
             : Response(CheckCard(Receipt(request, "add_numbers")), Close())));
         var journeyRun = AgentLoop.Harness.Core.Run.FromObjective("suma 20 + 20", 10, "fixture");
         var (journeyResult, journey) = await new AgentLoop.Harness.Runner.GoalRunner(journeyClient, new DefaultGoalRunSetupFactory()).RunAsync(
-            journeyRun, new() { WorkingDirectory = root }, token);
+            journeyRun, new() { WorkingDirectory = root, Intent = AgentLoop.Operations.OperationIntent.General }, token);
         Check("journey captura modelos y tools antes del resultado terminal", journeyResult.IsSuccess
             && journey.Steps.OfType<AgentLoop.Harness.Steps.ModelStep>().Count() == 2
             && journey.Steps.OfType<AgentLoop.Harness.Steps.ToolStep>().Count() == 4);

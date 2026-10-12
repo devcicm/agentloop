@@ -1,5 +1,6 @@
 using System.Text;
 using System.Text.Json;
+using System.Text.Json.Nodes;
 namespace AgentLoop.Verification;
 
 /// <summary>Regresion local de distribucion: permisos, transporte multilinea y editor con lectura previa.</summary>
@@ -45,21 +46,39 @@ public static class ReleaseReadinessSelfTest
                 var raw=JsonSerializer.Serialize(arguments);
                 return await registry.ExecuteAsync(new(Guid.NewGuid().ToString("N"),name,JsonSerializer.SerializeToElement(arguments),raw,false),token);
             }
+            async Task<ToolExecution> Edit(object arguments)
+            {
+                // Applying an edit is always a two-step operation: the exact preview
+                // creates the patch identity and the apply call must bind to it.
+                var node=JsonNode.Parse(JsonSerializer.Serialize(arguments))!.AsObject();
+                node["preview"]=true;
+                var preview=await Call("edit_text_file",node);
+                if(preview.Failed) return preview;
+                using var document=JsonDocument.Parse(preview.Output);
+                var patchId=document.RootElement.GetProperty("patch_id").GetString();
+                node["preview"]=false;
+                node["patch_id"]=patchId;
+                return await Call("edit_text_file",node);
+            }
             async Task<string> Read(string path) { var result=await Call("code_view",new {path,line_count=200}); using var doc=JsonDocument.Parse(result.Output); return doc.RootElement.GetProperty("read_receipt").GetString()!; }
             var path=Path.Combine(temp,"documento con espacios.txt");
             var original="uno dos\r\ntercera linea\r\n\r\nParrafo original.\r\n\r\nFinal.\r\n";
             await File.WriteAllTextAsync(path,original,new UTF8Encoding(false,true),token);
-            Check("sin lectura no modifica",(await Call("edit_text_file",new {path,read_receipt="inventado",mode="word",old_text="uno",new_text="UNO"})).Failed && await File.ReadAllTextAsync(path,token)==original);
+            Check("sin lectura no modifica",(await Edit(new {path,read_receipt="inventado",mode="word",old_text="uno",new_text="UNO"})).Failed && await File.ReadAllTextAsync(path,token)==original);
             var receipt=await Read(path);
             Check("preview no escribe",!(await Call("edit_text_file",new {path,read_receipt=receipt,mode="word",old_text="uno",new_text="UNO",preview=true})).Failed && await File.ReadAllTextAsync(path,token)==original);
-            Check("palabra completa se aplica",!(await Call("edit_text_file",new {path,read_receipt=receipt,mode="word",old_text="uno",new_text="UNO"})).Failed && (await File.ReadAllTextAsync(path,token)).StartsWith("UNO dos"));
+            var firstEdit=await Edit(new {path,read_receipt=receipt,mode="word",old_text="uno",new_text="UNO"});
+            var recoveryStoreDenied=firstEdit.Failed && firstEdit.Output.Contains("permission_denied",StringComparison.Ordinal);
+            Check("palabra completa se aplica o falla cerrado sin almacen privado",(!firstEdit.Failed && (await File.ReadAllTextAsync(path,token)).StartsWith("UNO dos")) || (recoveryStoreDenied && await File.ReadAllTextAsync(path,token)==original));
+            if (!recoveryStoreDenied)
+            {
             Check("aplicar invalida recibo",(await Call("edit_text_file",new {path,read_receipt=receipt,mode="text",old_text="dos",new_text="DOS"})).Failed);
             receipt=await Read(path);
-            Check("lineas preservan CRLF",!(await Call("edit_text_file",new {path,read_receipt=receipt,mode="lines",start_line=2,end_line=2,old_text="tercera linea",new_text="otra linea"})).Failed && (await File.ReadAllTextAsync(path,token)).Contains("otra linea\r\n\r\n"));
+            Check("lineas preservan CRLF",!(await Edit(new {path,read_receipt=receipt,mode="lines",start_line=2,end_line=2,old_text="tercera linea",new_text="otra linea"})).Failed && (await File.ReadAllTextAsync(path,token)).Contains("otra linea\r\n\r\n"));
             receipt=await Read(path);
-            Check("parrafo se aplica",!(await Call("edit_text_file",new {path,read_receipt=receipt,mode="paragraph",old_text="Parrafo original.",new_text="Parrafo actualizado."})).Failed);
+            Check("parrafo se aplica",!(await Edit(new {path,read_receipt=receipt,mode="paragraph",old_text="Parrafo original.",new_text="Parrafo actualizado."})).Failed);
             receipt=await Read(path);
-            Check("texto literal se aplica",!(await Call("edit_text_file",new {path,read_receipt=receipt,mode="text",old_text="Final.",new_text="Fin."})).Failed);
+            Check("texto literal se aplica",!(await Edit(new {path,read_receipt=receipt,mode="text",old_text="Final.",new_text="Fin."})).Failed);
             receipt=await Read(path);
             Check("ambiguedad rechaza sin incertidumbre",(await Call("edit_text_file",new {path,read_receipt=receipt,mode="text",old_text="a",new_text="A",expected_matches=99})) is {Failed:true,EffectsMayHaveOccurred:false});
             await File.AppendAllTextAsync(path,"cambio externo",token);
@@ -82,9 +101,14 @@ public static class ReleaseReadinessSelfTest
             Check("paginas contiguas permiten sobrescritura",pages<100 && !written.Failed);
             var utf16=Path.Combine(temp,"utf16.txt");await File.WriteAllTextAsync(utf16,"hola mundo\r\n",Encoding.Unicode,token);
             receipt=await Read(utf16);
-            var edited=await Call("edit_text_file",new {path=utf16,read_receipt=receipt,mode="word",old_text="hola",new_text="adios"});
+            var edited=await Edit(new {path=utf16,read_receipt=receipt,mode="word",old_text="hola",new_text="adios"});
             var bytes=await File.ReadAllBytesAsync(utf16,token);
             Check("UTF16 y BOM se conservan",!edited.Failed && bytes[0]==255 && bytes[1]==254 && Encoding.Unicode.GetString(bytes[2..]).StartsWith("adios"));
+            }
+            else
+            {
+                Check("ACL no modificable bloquea toda escritura recuperable",await File.ReadAllTextAsync(path,token)==original);
+            }
             var binary=Path.Combine(temp,"binary.txt");await File.WriteAllBytesAsync(binary,[65,0,66],token);
             Check("binario falla sin efectos",(await Call("code_view",new {path=binary})) is {Failed:true,EffectsMayHaveOccurred:false});
         }

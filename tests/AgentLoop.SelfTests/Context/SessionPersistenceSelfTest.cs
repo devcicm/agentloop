@@ -13,6 +13,9 @@ public static class SessionPersistenceSelfTest
             var store = new FileConversationSessionStore();
             var session = new ConversationSession { SessionStore = store };
             session.UseSystemTemplate(PromptTemplate.Parse("Sistema de prueba."));
+            session.SetIntent(AgentLoop.Operations.OperationIntent.Review);
+            session.BindObjective("revisar el repositorio");
+            session.AddConstraint("citar archivos observados");
             var context = session.StartTurn("hola");
             context.Messages.Add(ChatMessage.FromAssistant("listo"));
             session.CommitTurn(context);
@@ -21,6 +24,8 @@ public static class SessionPersistenceSelfTest
             var restored = new ConversationSession { SessionStore = store };
             restored.LoadSession(path);
             Check("sesion persiste y recupera mensajes con adaptador instalado", restored.Messages.Count == 2 && restored.Messages[1].Content == "listo");
+            Check("sesion conserva intencion objetivo y restricciones", restored.TaskState.Intent == AgentLoop.Operations.OperationIntent.Review
+                && restored.TaskState.Objective == "revisar el repositorio" && restored.TaskState.Constraints.SequenceEqual(["citar archivos observados"]));
             var memory = new FileConversationMemory(root);
             memory.Remember("idioma=espanol");
             Check("memoria explicita persiste independiente del historial",new FileConversationMemory(root).Notes["idioma"] == "espanol");
